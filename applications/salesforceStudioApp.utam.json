@@ -1,0 +1,330 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as the main application shell for Salesforce Studio, providing navigation and content layout",
+            "Includes support for immersive chat mode, agentic shell interactions, and enhanced project creation features",
+            "Contains navigation components, router container, canvas areas, side panel chat, and close button functionality",
+            "Supports both standard and immersive modes with dynamic layout sizing and interactive elements",
+            "Selector: setup_platform_unifiedapp-salesforce-studio-app"
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "css": "setup_platform_unifiedapp-salesforce-studio-app"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "studioMat",
+                "selector": {
+                    "css": "setup_platform_unifiedapp-salesforce-studio-welcome-mat"
+                },
+                "type": "utam-applications/pageObjects/salesforceStudioWelcomeMat",
+                "public": true
+            },
+            {
+                "name": "studioHome",
+                "selector": {
+                    "css": "setup_platform_unifiedapp-salesforce-studio-home"
+                },
+                "type": "utam-applications/pageObjects/salesforceStudioHome",
+                "public": true
+            },
+            {
+                "name": "routerContainer",
+                "selector": {
+                    "css": "lwr-router-container"
+                },
+                "public": true,
+                "description": "Represents the router container that handles navigation events.",
+                "elements": [
+                    {
+                        "name": "routeInterceptor",
+                        "selector": {
+                            "css": "setup_platform_unifiedapp-salesforce-studio-route-interceptor"
+                        },
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "appLayout",
+                                "public": true,
+                                "type": "utam-lightning/pageObjects/layout",
+                                "selector": {
+                                    "css": "lightning-layout"
+                                },
+                                "elements": [
+                                    {
+                                        "name": "navigationBar",
+                                        "selector": {
+                                            "css": "setup_platform_unifiedapp-salesforce-studio-navigation"
+                                        },
+                                        "description": "Represents the navigation component on the side."
+                                    },
+                                    {
+                                        "name": "canvasArea",
+                                        "selector": {
+                                            "css": "lightning-layout-item.canvas"
+                                        },
+                                        "public": true,
+                                        "elements": [
+                                            {
+                                                "name": "salesforceStudioPageLayout",
+                                                "selector": {
+                                                    "css": "setup_platform_unifiedapp-salesforce-studio-page-layout"
+                                                },
+                                                "elements": [
+                                                    {
+                                                        "name": "sfStudioProjectPanel",
+                                                        "selector": {
+                                                            "css": "app_dev_agent-sf-studio-project-panel"
+                                                        },
+                                                        "type": "utam-app_dev_agent/pageObjects/sfStudioProjectPanel",
+                                                        "public": true
+                                                    }
+                                                ],
+                                                "type": "utam-applications/pageObjects/salesforceStudioPageLayout",
+                                                "public": true
+                                            },
+                                            {
+                                                "name": "sfStudioHome",
+                                                "selector": {
+                                                    "css": "app_dev_agent-sf-studio-home"
+                                                },
+                                                "type": "utam-app_dev_agent/pageObjects/sfStudioHome",
+                                                "public": true
+                                            },
+                                            {
+                                                "name": "assistantPanel",
+                                                "selector": {
+                                                    "css": "runtime_copilot-assistant-panel"
+                                                },
+                                                "public": true,
+                                                "elements": [
+                                                    {
+                                                        "name": "panelMessageBlock",
+                                                        "selector": {
+                                                            "css": "app_dev_agent-panel-message-block"
+                                                        },
+                                                        "type": "utam-app_dev_agent/pageObjects/panelMessageBlock",
+                                                        "public": true
+                                                    },
+                                                    {
+                                                        "name": "panelMessageInput",
+                                                        "selector": {
+                                                            "css": "app_dev_agent-panel-message-input"
+                                                        },
+                                                        "type": "utam-app_dev_agent/pageObjects/panelMessageInput",
+                                                        "public": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "name": "agenticShell",
+                                                "selector": {
+                                                    "css": "app_dev_agent-agentic-shell"
+                                                },
+                                                "type": "utam-app_dev_agent/pageObjects/agenticShell",
+                                                "public": true,
+                                                "description": "The agentic shell component that handles chat interactions"
+                                            },
+                                            {
+                                                "name": "lwrOutlet",
+                                                "selector": {
+                                                    "css": "lwr-outlet"
+                                                },
+                                                "public": true,
+                                                "description": "The Lightning Web Runtime outlet for dynamic content rendering"
+                                            },
+                                            {
+                                                "name": "navigationWrapper",
+                                                "selector": {
+                                                    "css": "setup_platform_unifiedapp-salesforce-studio-navigation-wrapper"
+                                                },
+                                                "public": true,
+                                                "description": "The navigation wrapper component"
+                                            }
+                                        ],
+                                        "type": "utam-lightning/pageObjects/layoutItem",
+                                        "description": "Represents the main content area of the application."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "immersiveStudioLogo",
+                "selector": {
+                    "css": ".immersive-screen-studio-logo img"
+                },
+                "public": true,
+                "description": "The Salesforce Studio logo displayed in immersive mode"
+            },
+            {
+                "name": "closeButton",
+                "selector": {
+                    "css": "lightning-icon.close-icon"
+                },
+                "type": "clickable",
+                "public": true,
+                "description": "The close button for immersive chat mode"
+            },
+            {
+                "name": "containerDiv",
+                "selector": {
+                    "css": ".container"
+                },
+                "public": true,
+                "description": "Main container div for the application layout"
+            },
+            {
+                "name": "sidePanelChat",
+                "selector": {
+                    "css": ".side-panel-chat"
+                },
+                "public": true,
+                "description": "The side panel chat container"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isNavBarVisible",
+            "description": {
+                "text": [
+                    "Checks if the studio nav bar is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "navigationBar",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCloseButtonVisible",
+            "description": {
+                "text": [
+                    "Checks if the close button for immersive chat is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickCloseButton",
+            "description": {
+                "text": [
+                    "Clicks the close button to exit immersive chat mode"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isImmersiveLogoVisible",
+            "description": {
+                "text": [
+                    "Checks if the immersive mode Salesforce Studio logo is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "immersiveStudioLogo",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSidePanelChatVisible",
+            "description": {
+                "text": [
+                    "Checks if the side panel chat is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "sidePanelChat",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isAgenticShellPresent",
+            "description": {
+                "text": [
+                    "Checks if the agentic shell component is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "agenticShell",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isLwrOutletPresent",
+            "description": {
+                "text": [
+                    "Checks if the LWR outlet is present for content rendering"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lwrOutlet",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isNavigationWrapperVisible",
+            "description": {
+                "text": [
+                    "Checks if the navigation wrapper is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "navigationWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

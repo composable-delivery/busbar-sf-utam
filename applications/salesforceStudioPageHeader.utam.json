@@ -1,0 +1,163 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a page header with an icon, title, optional description, and optional right-aligned controls.",
+            "Selector: setup_platform_unifiedapp-salesforce-studio-page-header"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-salesforce-studio-page-header"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "headerGrid",
+                "selector": {
+                    "css": ".slds-grid.slds-gutters"
+                },
+                "description": "Represents the main grid layout of the header",
+                "elements": [
+                    {
+                        "name": "iconSlot",
+                        "selector": {
+                            "css": "[slot='iconOverride']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for overriding the icon",
+                        "public": true
+                    },
+                    {
+                        "name": "defaultIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the default icon inside the icon slot",
+                        "public": true
+                    },
+                    {
+                        "name": "titleText",
+                        "selector": {
+                            "css": "h1.slds-text-heading_large"
+                        },
+                        "description": "Represents the title text of the header"
+                    },
+                    {
+                        "name": "descriptionText",
+                        "selector": {
+                            "css": "p.slds-text-color_weak"
+                        },
+                        "description": "Represents the optional description text of the header",
+                        "nullable": true
+                    },
+                    {
+                        "name": "rightSlot",
+                        "selector": {
+                            "css": "[slot='right']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for right-aligned controls",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isHeaderGridVisible",
+            "description": {
+                "text": [
+                    "Check that the main grid layout of the header is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerGrid",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTitleTextVisible",
+            "description": {
+                "text": [
+                    "Check that the title text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Get the text of the header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isDescriptionTextVisible",
+            "description": {
+                "text": [
+                    "Check that the description text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDescriptionText",
+            "description": {
+                "text": [
+                    "Get the text of the description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyDescriptionTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"descriptionText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}
