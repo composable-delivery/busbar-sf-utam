@@ -1,0 +1,64 @@
+{
+  "description": "Chained method composition example",
+  "root": true,
+  "selector": { "css": "search-form" },
+  "shadow": {
+    "elements": [
+      {
+        "name": "searchInput",
+        "type": ["editable"],
+        "selector": { "css": "input.search-box" }
+      },
+      {
+        "name": "searchButton",
+        "type": ["clickable"],
+        "selector": { "css": "button.search-btn" }
+      },
+      {
+        "name": "resultsList",
+        "type": "container",
+        "selector": { "css": "ul.results" },
+        "public": true
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "performSearch",
+      "compose": [
+        {
+          "element": "searchInput",
+          "apply": "clearAndType",
+          "args": [
+            {
+              "name": "query",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "element": "searchButton",
+          "apply": "click"
+        }
+      ]
+    },
+    {
+      "name": "searchAndGetResults",
+      "compose": [
+        {
+          "apply": "performSearch",
+          "args": [
+            {
+              "name": "query",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "element": "resultsList",
+          "returnElement": true
+        }
+      ]
+    }
+  ]
+}

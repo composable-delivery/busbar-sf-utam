@@ -1,0 +1,6 @@
+{
+  "description": "Invalid - unknown element type",
+  "root": true,
+  "selector": { "css": ".button" },
+  "type": ["invalidType", "clickable"]
+}

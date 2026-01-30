@@ -1,0 +1,40 @@
+{
+  "description": "Filter method example with list elements",
+  "root": true,
+  "selector": { "css": "todo-list" },
+  "shadow": {
+    "elements": [
+      {
+        "name": "todoItems",
+        "type": ["clickable"],
+        "selector": { "css": "li.todo-item" },
+        "public": true,
+        "list": true
+      },
+      {
+        "name": "completedItems",
+        "type": ["clickable"],
+        "selector": { "css": "li.completed" },
+        "public": true,
+        "list": true
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "getActiveTodos",
+      "compose": [
+        {
+          "element": "todoItems",
+          "filter": [
+            {
+              "matcher": {
+                "type": "isVisible"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

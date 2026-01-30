@@ -1,0 +1,10 @@
+# Insta snapshot testing configuration for utam-compiler
+
+# Store snapshots next to the test files
+snapshot_path = "snapshots"
+
+# Use the compact representation for snapshot files
+snapshot_update = "auto"
+
+# Glob patterns for test files
+glob_filter = "*.rs"
