@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/action_bar_row\").",
+            "Represents the Android view with the top record actions.",
+            "Find an action and navigate to it, or navigate to the overflow."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/actionBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/action_bar_row\")"
+    },
+    "methods": [
+        {
+            "name": "clickAction",
+            "compose": [
+                {
+                    "element": "actionItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasAction",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "uiautomator": "resourceId(\"com.salesforce.chatter:id/actionbar_row_item_name\").text(\"%s\")",
+                                "args": [
+                                    {
+                                        "name": "item",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickMore",
+            "compose": [
+                {
+                    "element": "showMore",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "actionItem",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/actionbar_row_item_name\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "item",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "actions",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/actionbar_row_item_name\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "showMore",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/actionbar_row_overflow_button\")"
+            }
+        }
+    ]
+}

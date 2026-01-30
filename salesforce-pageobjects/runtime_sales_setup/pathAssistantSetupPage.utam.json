@@ -1,0 +1,46 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".oneAlohaPage"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .oneAlohaPage",
+            "Represents the oneAlohaPage which contains an iframe for path setup.",
+            "Use the composeEnterFrame to get the iframe containing the path setup component."
+        ]
+    },
+    "methods": [
+        {
+            "name": "composeEnterFrame",
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "utam-runtime_sales_setup/pageObjects/pathAssistantSetupIframe",
+                    "apply": "enterFrameAndLoad",
+                    "args": [
+                        {
+                            "type": "elementReference",
+                            "value": "pathSettingsIframe"
+                        },
+                        {
+                            "type": "rootPageObject",
+                            "value": "utam-runtime_sales_setup/pageObjects/pathAssistantSetupIframe"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "pathSettingsIframe",
+            "type": "frame",
+            "public": true,
+            "selector": {
+                "css": "iframe"
+            }
+        }
+    ]
+}

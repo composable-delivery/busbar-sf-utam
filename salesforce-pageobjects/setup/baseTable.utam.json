@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that extends Lightning Datatable to provide custom cell types for toggles and buttons or formatted text.",
+            "Selector: src-base-table"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "tableToggle",
+                "selector": {
+                    "css": "setup-table-toggle-switch"
+                },
+                "type": "utam-setup/pageObjects/tableToggleSwitch",
+                "description": "Represents the custom toggle switch component used for inputToggle type cells",
+                "public": true
+            },
+            {
+                "name": "textOrBaseButton",
+                "selector": {
+                    "css": "setup-table-base-button"
+                },
+                "type": "utam-setup/pageObjects/tableBaseButton",
+                "description": "Represents the custom button component used for textOrBaseButton type cells",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "formattedText",
+                "selector": {
+                    "css": "lightning-base-formatted-text"
+                },
+                "description": "Represents the custom formatted text component used as an alternative to the button in textOrBaseButton type cells",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

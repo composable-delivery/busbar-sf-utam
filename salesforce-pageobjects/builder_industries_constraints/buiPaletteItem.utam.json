@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-palette-item",
+            "Constraint Builder Business UI Palette Item"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            },
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,74 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-data-provider-config-editor",
+            "Represents the block builder data provider config editor component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "dataProviderConfigurationForm",
+                        "type": "utam-builder-framework/pageObjects/dataProviderConfigurationForm",
+                        "selector": {
+                            "css": "builder_framework-data-provider-configuration-form"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "footerButtons",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button",
+                            "returnAll": true
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForConfigurationForm",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "dataProviderConfigurationForm"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

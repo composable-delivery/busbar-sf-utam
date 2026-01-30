@@ -1,0 +1,60 @@
+{
+    "root": true,
+    "selector": {
+        "css": "div[class*=oneUtilityBarContainer]"
+    },
+    "description": {
+        "text": [
+            "Selector: .oneUtilityBarContainer.",
+            "Represents the one:utilityBarContainer Aura component.",
+            "Access the dockable panel."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "dockablePanel",
+            "selector": {
+                "css": "div[class*=forceDockingPanel--dockable%s]",
+                "args": [
+                    {
+                        "name": "apiName",
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": "utam-force/pageObjects/dockingPanel"
+        },
+        {
+            "name": "utilityBarItems",
+            "public": true,
+            "selector": {
+                "css": "li.slds-utility-bar__item button",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "utilityBarItem",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": "div[data-component-id*=%s] button",
+                "args": [
+                    {
+                        "name": "utilityBarItemName",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "utilityBarItemPanelHeader",
+            "public": true,
+            "wait": true,
+            "selector": {
+                "css": "div.slds-is-open[role='dialog'].slds-utility-panel h2"
+            }
+        }
+    ]
+}

@@ -1,0 +1,202 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeCell[`enabled == true`].",
+            "Represents the iOS Chatter post cell contained within the feed scrollview.",
+            "Perform actions for social media posts."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/chatter/chatterPostCell",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "feedActor",
+            "selector": {
+                "accessid": "feedCell.actorName"
+            }
+        },
+        {
+            "name": "actionButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "feedCell.chevronButton"
+            }
+        },
+        {
+            "name": "postText",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "feedCell.textBody"
+            }
+        },
+        {
+            "name": "postTime",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "feedCell.timestamp"
+            }
+        },
+        {
+            "name": "likes",
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[2]"
+            }
+        },
+        {
+            "name": "commentsViews",
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[3]"
+            }
+        },
+        {
+            "name": "likeButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "feedCell.like.button"
+            }
+        },
+        {
+            "name": "commentButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "feedCell.comment.button"
+            }
+        },
+        {
+            "name": "shareButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "feedCell.share.button"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getFeedActor",
+            "compose": [
+                {
+                    "element": "feedActor",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "openAction",
+            "compose": [
+                {
+                    "element": "actionButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getPostText",
+            "compose": [
+                {
+                    "element": "postText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getPostTime",
+            "compose": [
+                {
+                    "element": "postTime",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getLikes",
+            "compose": [
+                {
+                    "element": "likes",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCommentsViews",
+            "compose": [
+                {
+                    "element": "commentsViews",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "like",
+            "compose": [
+                {
+                    "element": "likeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "comment",
+            "compose": [
+                {
+                    "element": "commentButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "share",
+            "compose": [
+                {
+                    "element": "shareButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openPostDetail",
+            "compose": [
+                {
+                    "element": "postTime",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "selector": {
+        "css": ".oneConsoleObjectHome"
+    },
+    "root": true,
+    "description": {
+        "text": [
+            "Selector: .oneConsoleObjectHome.",
+            "Represents the one:consoleObjectHome Aura component.",
+            "Access the list view."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "listView",
+            "type": "utam-force/pageObjects/listViewManager",
+            "selector": {
+                "css": ".forceListViewManager"
+            },
+            "public": true
+        }
+    ]
+}

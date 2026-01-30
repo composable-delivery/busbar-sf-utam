@@ -1,0 +1,187 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a user interface for a DevOps Center application, including search functionality, filter options, metadata changes table, and connection status indication. It also supports drag-and-drop functionality for adding ingredients to a soup recipe.",
+            "Selector: src-soup"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "connectToDoc",
+                "selector": {
+                    "css": "devops_center-connect-to-doce"
+                },
+                "description": "Represents a component to connect to DevOps Center",
+                "public": true
+            },
+            {
+                "name": "searchInput",
+                "selector": {
+                    "css": "lightning-input[data-id=\"search\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents a search input for filtering by file name"
+            },
+            {
+                "name": "filterButtonIcon",
+                "selector": {
+                    "css": "lightning-button-icon[data-id=\"Filters\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents a clickable filter icon button"
+            },
+            {
+                "name": "metadataChangesTable",
+                "selector": {
+                    "css": "devops_center-metadata-changes-table"
+                },
+                "description": "Represents a table of metadata changes",
+                "public": true
+            },
+            {
+                "name": "connectedIndicator",
+                "selector": {
+                    "css": "lightning-icon.utility-linked"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents an indicator of connection status when connected",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "notConnectedIndicator",
+                "selector": {
+                    "css": "lightning-icon.utility-unlinked"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents an indicator of connection status when not connected",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "goToDevopsCenterButton",
+                "selector": {
+                    "css": "lightning-button.slds-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents a button to go to the DevOps Center"
+            },
+            {
+                "name": "viewChangesFilters",
+                "selector": {
+                    "css": "devops_center-view-changes-filters"
+                },
+                "description": "Represents filters for the view changes",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "searchByFileName",
+            "description": {
+                "text": [
+                    "Enter text in the search input and trigger change"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickFilterButton",
+            "description": {
+                "text": [
+                    "Click on the filter button icon to open the filter options"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "filterButtonIcon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getSearchInputValue",
+            "description": {
+                "text": [
+                    "Return the current value of the search input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "isFilterButtonIconVisible",
+            "description": {
+                "text": [
+                    "Check if the filter button icon is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "filterButtonIcon",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickGoToDevopsCenterButton",
+            "description": {
+                "text": [
+                    "Click the button to navigate to the DevOps Center"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "goToDevopsCenterButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isGoToDevopsCenterButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the button to navigate to the DevOps Center is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "goToDevopsCenterButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        }
+    ]
+}

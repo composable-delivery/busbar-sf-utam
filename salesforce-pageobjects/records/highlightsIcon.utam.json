@@ -1,0 +1,80 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .highlights-icon-container",
+            "Represents the records-highlights-icon-container Lightning web component.",
+            "Get image source or image title. Check if the highlights icon is present."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "highlightsIcon",
+                "selector": {
+                    "css": ".highlights-icon-container img"
+                }
+            },
+            {
+                "type": "utam-force/pageObjects/recordAvatar",
+                "name": "avatar",
+                "public": true,
+                "selector": {
+                    "css": "force-record-avatar"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the image title"
+                ],
+                "return": "String value"
+            },
+            "name": "getImageTitle",
+            "compose": [
+                {
+                    "element": "highlightsIcon",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if the highlights icon is present"
+                ],
+                "return": "boolean value"
+            },
+            "name": "isHighlightsIconPresent",
+            "compose": [
+                {
+                    "element": "highlightsIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the image source"
+                ],
+                "return": "String value"
+            },
+            "name": "getImageSource",
+            "compose": [
+                {
+                    "element": "highlightsIcon",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "src"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

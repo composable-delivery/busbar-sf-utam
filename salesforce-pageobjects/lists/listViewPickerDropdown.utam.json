@@ -1,0 +1,122 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-list-view-picker-dropdown.",
+            "Represents the list view picker Lightning web component.",
+            "Access the list view picker details"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "pickerGroupedCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            },
+            {
+                "name": "groupedComboboxContainer",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "public": true,
+                            "name": "innerBaseCombobox",
+                            "type": "utam-lightning/pageObjects/baseCombobox",
+                            "selector": {
+                                "css": "lightning-base-combobox"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "spinnerGroupedComboboxContainer",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "public": true,
+                            "name": "spinnerBaseCombobox",
+                            "selector": {
+                                "css": "lightning-base-combobox"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "innerBaseComboboxSpinner",
+                                        "selector": {
+                                            "css": "div.slds-spinner"
+                                        },
+                                        "wait": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "setInputTextAndWaitForItemsToLoad",
+            "compose": [
+                {
+                    "element": "pickerGroupedCombobox",
+                    "apply": "typeText",
+                    "args": [
+                        {
+                            "type": "string",
+                            "name": "text"
+                        }
+                    ]
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "innerBaseComboboxSpinner",
+                                    "apply": "isPresent",
+                                    "matcher": {
+                                        "type": "isTrue"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "innerBaseComboboxSpinner",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "selectItemByText",
+            "compose": [
+                {
+                    "element": "pickerGroupedCombobox",
+                    "apply": "pickItemByLabel",
+                    "args": [
+                        {
+                            "type": "string",
+                            "name": "text"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

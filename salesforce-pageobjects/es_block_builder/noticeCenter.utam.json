@@ -1,0 +1,194 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-notice-center",
+            "Shows the errors relative to `referenceElement` as a popup."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "lightning-popup"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "popup",
+                "type": "utam-lightning/pageObjects/popup",
+                "selector": {
+                    "css": "lightning-popup"
+                },
+                "elements": [
+                    {
+                        "name": "section",
+                        "type": [],
+                        "selector": {
+                            "css": "section"
+                        },
+                        "elements": [
+                            {
+                                "name": "header",
+                                "type": [],
+                                "selector": {
+                                    "css": "header"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "icon",
+                                        "type": "utam-lightning/pageObjects/icon",
+                                        "selector": {
+                                            "css": "lightning-icon"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "noticeCenterHeader",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "h2"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "buttonIconClose",
+                                        "type": "utam-lightning/pageObjects/buttonIcon",
+                                        "selector": {
+                                            "css": "lightning-button-icon"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "sectionBody",
+                                "type": [],
+                                "selector": {
+                                    "css": "section",
+                                    "returnAll": true
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "sectionByIndex",
+                                "type": [],
+                                "selector": {
+                                    "css": "section:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "noticeLabel",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "b"
+                                        }
+                                    },
+                                    {
+                                        "name": "list",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "ul"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "listItems",
+                                                "type": [
+                                                    "actionable",
+                                                    "clickable"
+                                                ],
+                                                "selector": {
+                                                    "css": "li",
+                                                    "returnAll": true
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "listItemByIndex",
+                                                "type": [
+                                                    "actionable",
+                                                    "clickable"
+                                                ],
+                                                "selector": {
+                                                    "css": "li:nth-of-type(%d)",
+                                                    "args": [
+                                                        {
+                                                            "name": "noticeMessage",
+                                                            "type": "number"
+                                                        }
+                                                    ]
+                                                },
+                                                "elements": [
+                                                    {
+                                                        "public": true,
+                                                        "name": "noticeMessageText",
+                                                        "type": [
+                                                            "actionable",
+                                                            "clickable"
+                                                        ],
+                                                        "selector": {
+                                                            "css": "a"
+                                                        }
+                                                    },
+                                                    {
+                                                        "public": true,
+                                                        "name": "noticeMessageLinkLabel",
+                                                        "type": [
+                                                            "actionable",
+                                                            "clickable"
+                                                        ],
+                                                        "selector": {
+                                                            "css": "a:nth-of-type(2)"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

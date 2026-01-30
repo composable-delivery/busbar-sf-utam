@@ -1,0 +1,131 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-lwc-record-layout.",
+            "Represents the records-lwc-record-layout Lightning web component.",
+            "Access generated content, generated content list, input name or a section by index. Get all items, all sections, or wait for highlights."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Wait for highlights2 to be loaded"
+                ],
+                "return": "highlights2"
+            },
+            "name": "waitForHighlights2",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "highlights2"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "waitForLoad",
+                    "chain": true,
+                    "returnType": "utam-records/pageObjects/highlights2"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get all record layout items"
+                ],
+                "return": "recordLayoutItem"
+            },
+            "name": "getAllItems",
+            "compose": [
+                {
+                    "apply": "waitForSections",
+                    "returnType": "utam-records/pageObjects/recordLayoutSection",
+                    "returnAll": true
+                },
+                {
+                    "chain": true,
+                    "element": "items",
+                    "returnType": "utam-records/pageObjects/recordLayoutItem",
+                    "returnAll": true
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "forcegeneratedRecordLayout2",
+                "selector": {
+                    "css": ".forcegenerated-record-layout2"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "type": "container",
+                            "public": true,
+                            "name": "generatedContent"
+                        },
+                        {
+                            "type": "container",
+                            "public": true,
+                            "name": "generatedContentList",
+                            "selector": {
+                                "css": ":scope > *",
+                                "returnAll": true
+                            }
+                        },
+                        {
+                            "name": "highlights2",
+                            "type": "utam-records/pageObjects/highlights2",
+                            "selector": {
+                                "css": "records-highlights2,records-highlights2-mobile"
+                            }
+                        },
+                        {
+                            "name": "inputName",
+                            "public": true,
+                            "type": "utam-records/pageObjects/recordLayoutInputName",
+                            "selector": {
+                                "css": "records-record-layout-input-name"
+                            }
+                        },
+                        {
+                            "name": "sections",
+                            "public": true,
+                            "wait": true,
+                            "type": "utam-records/pageObjects/recordLayoutSection",
+                            "selector": {
+                                "css": "records-record-layout-section",
+                                "returnAll": true
+                            }
+                        },
+                        {
+                            "name": "section",
+                            "public": true,
+                            "wait": true,
+                            "type": "utam-records/pageObjects/recordLayoutSection",
+                            "selector": {
+                                "css": "records-record-layout-section:nth-of-type(%d)",
+                                "args": [
+                                    {
+                                        "name": "indexStartingOne",
+                                        "type": "number"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

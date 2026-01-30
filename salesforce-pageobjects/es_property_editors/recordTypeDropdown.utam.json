@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Selector: es_property_editors-record-type-dropdown",
+            "Provides access to lightning combobox"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                }
+            }
+        ]
+    }
+}

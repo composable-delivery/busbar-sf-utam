@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup-list-panel.",
+            "Represents the setup:listPanel Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "public": true,
+                "type": "container",
+                "name": "listDecorator",
+                "selector": {
+                    "css": "[data-id='tabset-listDecorator']"
+                }
+            },
+            {
+                "public": true,
+                "name": "commonList",
+                "type": "utam-lists/pageObjects/commonList",
+                "selector": {
+                    "css": "lst-common-list"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForCommonList",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "commonList"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

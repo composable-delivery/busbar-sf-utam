@@ -1,0 +1,147 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This Lightning Web Component represents a Project Studio Page Layout with a spinner overlay for loading state, a page layout with a title, icon, description, breadcrumbs, and slots for header icon, right header actions, and main page content. It allows for actions such as editing or deleting a project.",
+            "Selector: dev_workspace-project-studio-page-layout"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-project-studio-page-layout"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinnerOverlay",
+                "selector": {
+                    "css": ".spinner-overlay"
+                },
+                "description": "Represents the loading spinner overlay",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "spinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        },
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "description": "Represents the spinner component indicating loading state",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "pageLayout",
+                "selector": {
+                    "css": "setup_platform_unifiedapp-salesforce-studio-page-layout"
+                },
+                "type": "utam-applications/pageObjects/salesforceStudioPageLayout",
+                "description": "Represents the main container for the Project Studio Page Layout",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "headerIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the workspace icon in the header",
+                        "public": true
+                    },
+                    {
+                        "name": "actionMenu",
+                        "selector": {
+                            "css": "lightning-button-menu"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonMenu",
+                        "description": "Represents the menu for project actions like edit or delete",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "editMenuItem",
+                                "selector": {
+                                    "css": "lightning-menu-item[value='Edit']"
+                                },
+                                "type": "utam-lightning/pageObjects/menuItem",
+                                "description": "Represents the menu item for editing the project",
+                                "public": true
+                            },
+                            {
+                                "name": "deleteMenuItem",
+                                "selector": {
+                                    "css": "lightning-menu-item[value='Delete']"
+                                },
+                                "type": "utam-lightning/pageObjects/menuItem",
+                                "description": "Represents the menu item for deleting the project",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "pageContentSlot",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the main content area where child components can be injected",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSpinnerOverlayVisible",
+            "description": {
+                "text": [
+                    "Check if the spinner overlay is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSpinnerPresent",
+            "description": {
+                "text": [
+                    "Check if the spinner is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifySpinnerOverlayPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"spinnerOverlay\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .flexipageComponent[data-component-id='flexipage_filterListCard'].",
+            "Represents the filter list card Flexipage component.",
+            "Access the list contents."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".flexipageComponent[data-component-id='flexipage_filterListCard']"
+    },
+    "elements": [
+        {
+            "name": "listContent",
+            "type": "utam-lists/pageObjects/listContent",
+            "public": true,
+            "selector": {
+                "css": ".listContent"
+            }
+        }
+    ]
+}

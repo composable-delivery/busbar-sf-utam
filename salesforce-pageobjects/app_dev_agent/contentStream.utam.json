@@ -1,0 +1,115 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays text with a typewriter animation effect, queuing incoming text values and animating them sequentially.",
+            "Selector: app_dev_agent-content-stream"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "streamingText",
+                "selector": {
+                    "css": ".streaming-text"
+                },
+                "description": "Represents the main container for streaming text",
+                "elements": [
+                    {
+                        "name": "formattedRichText",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the rich text component displaying static text",
+                        "public": true
+                    },
+                    {
+                        "name": "breakElements",
+                        "selector": {
+                            "css": "br",
+                            "returnAll": true
+                        },
+                        "description": "Represents line break elements for chunks",
+                        "nullable": true
+                    },
+                    {
+                        "name": "textChunks",
+                        "selector": {
+                            "css": "span",
+                            "returnAll": true
+                        },
+                        "description": "Represents span elements for text chunks",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStreamingTextVisible",
+            "description": {
+                "text": [
+                    "Check that streaming text container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "streamingText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTextChunkVisible",
+            "description": {
+                "text": [
+                    "Check if a specific text chunk is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "textChunks",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyBreakElementsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"breakElements\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "breakElements",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyTextChunksPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"textChunks\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "textChunks",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

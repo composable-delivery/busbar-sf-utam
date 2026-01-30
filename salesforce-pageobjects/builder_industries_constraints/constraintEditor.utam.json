@@ -1,0 +1,340 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-constraint-editor",
+            "Constraint Builder constraint editor component"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "builder_industries_constraints-constraint-editor"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "headerSection",
+                "type": "utam-builder-framework/pageObjects/focusableSection",
+                "selector": {
+                    "css": "builder_framework-focusable-section:nth-of-type(1)"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "header",
+                        "type": "utam-builder_industries_constraints/pageObjects/header",
+                        "selector": {
+                            "css": "builder_industries_constraints-header"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "toolbar",
+                        "type": "utam-builder-framework/pageObjects/toolbar",
+                        "selector": {
+                            "css": "builder_framework-toolbar"
+                        },
+                        "elements": [
+                            {
+                                "name": "toolBox",
+                                "type": [],
+                                "selector": {
+                                    "css": "span[slot='toolBox']"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "sidebarToggleButton",
+                                        "type": "utam-lightning/pageObjects/buttonIcon",
+                                        "selector": {
+                                            "css": "lightning-button-icon"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "uiSelectorButtonGroup",
+                                        "type": "utam-lightning/pageObjects/buttonGroup",
+                                        "selector": {
+                                            "css": "lightning-button-group"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "selectedUIButton",
+                                                "type": "utam-lightning/pageObjects/button",
+                                                "selector": {
+                                                    "css": "lightning-button"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "uiSelectorDropdownButton",
+                                                "type": "utam-lightning/pageObjects/buttonMenu",
+                                                "selector": {
+                                                    "css": "lightning-button-menu"
+                                                },
+                                                "elements": [
+                                                    {
+                                                        "public": true,
+                                                        "name": "selectVisualBuilder",
+                                                        "type": "utam-lightning/pageObjects/menuItem",
+                                                        "selector": {
+                                                            "css": "lightning-menu-item:nth-of-type(1)"
+                                                        }
+                                                    },
+                                                    {
+                                                        "public": true,
+                                                        "name": "selectCMLEditor",
+                                                        "type": "utam-lightning/pageObjects/menuItem",
+                                                        "selector": {
+                                                            "css": "lightning-menu-item:nth-of-type(2)"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "errors",
+                                "type": [],
+                                "selector": {
+                                    "css": "span[slot='errors']"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "errorPopoverButton",
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "selector": {
+                                            "css": "button[class*='slds-button_icon-error']"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "errorIcon",
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "selector": {
+                                                    "css": "lightning-icon[class='error-icon']"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "spanContent",
+                                                "type": [],
+                                                "selector": {
+                                                    "css": "span"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "errorMessagesPopover",
+                                        "type": "utam-builder_industries_constraints/pageObjects/popover",
+                                        "selector": {
+                                            "css": "builder_industries_constraints-popover"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "actions",
+                                "type": [],
+                                "selector": {
+                                    "css": "span[slot='actions']"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "docStateStatusBadge",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "span"
+                                        }
+                                    },
+                                    {
+                                        "name": "commandButtonGroup",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "ul[class='slds-button-group-row']"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "activateButtonRow",
+                                                "type": [
+                                                    "actionable",
+                                                    "clickable"
+                                                ],
+                                                "selector": {
+                                                    "css": "li:nth-of-type(1)"
+                                                },
+                                                "elements": [
+                                                    {
+                                                        "public": true,
+                                                        "name": "activateButton",
+                                                        "type": "utam-builder_industries_constraints/pageObjects/commandButton",
+                                                        "selector": {
+                                                            "css": "builder_industries_constraints-command-button"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "saveButtonRow",
+                                                "type": [
+                                                    "actionable",
+                                                    "clickable"
+                                                ],
+                                                "selector": {
+                                                    "css": "li:nth-of-type(2)"
+                                                },
+                                                "elements": [
+                                                    {
+                                                        "public": true,
+                                                        "name": "saveButton",
+                                                        "type": "utam-builder_industries_constraints/pageObjects/commandButton",
+                                                        "selector": {
+                                                            "css": "builder_industries_constraints-command-button"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "sidebarRail",
+                "type": "utam-builder_industries_constraints/pageObjects/rail",
+                "selector": {
+                    "css": "builder_industries_constraints-rail"
+                }
+            },
+            {
+                "public": true,
+                "name": "sidebar",
+                "type": "utam-builder_industries_constraints/pageObjects/sidebar",
+                "selector": {
+                    "css": "builder_industries_constraints-sidebar"
+                }
+            },
+            {
+                "public": true,
+                "name": "editorBody",
+                "type": [],
+                "selector": {
+                    "css": "div[class*='editor-main-body']"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "editorSection",
+                        "type": "utam-builder-framework/pageObjects/focusableSection",
+                        "selector": {
+                            "css": "builder_framework-focusable-section"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "cmlEditor",
+                                "type": "utam-builder_industries_constraints/pageObjects/cmlEditor",
+                                "selector": {
+                                    "css": "builder_industries_constraints-cml-editor"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "constraintCanvasHeading",
+                                "type": [],
+                                "selector": {
+                                    "css": "div[class*='slds-text-heading_medium']"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "addConstraintButton",
+                                "type": "utam-lightning/pageObjects/button",
+                                "selector": {
+                                    "css": "lightning-button:nth-of-type(1)"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "constraintsIllustration",
+                                "type": "utam-builder_industries_constraints/pageObjects/illustration",
+                                "selector": {
+                                    "css": "builder_industries_constraints-illustration"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "writeConstraintsButton",
+                                "type": "utam-lightning/pageObjects/button",
+                                "selector": {
+                                    "css": "div[class='slds-text-align_center'] lightning-button"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "resizablePanel",
+                "type": "utam-builder_industries_constraints/pageObjects/resizablePanel",
+                "selector": {
+                    "css": "builder_industries_constraints-resizable-panel"
+                },
+                "elements": [
+                    {
+                        "name": "resizablePanelHeader",
+                        "type": [],
+                        "selector": {
+                            "css": "div[slot='header']"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "typeDetailPanelHeader",
+                                "type": "utam-builder_industries_constraints/pageObjects/typeDetailPanelHeader",
+                                "selector": {
+                                    "css": "builder_industries_constraints-type-detail-panel-header"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "resizablePanelBody",
+                        "type": [],
+                        "selector": {
+                            "css": "div[slot='body']"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "typeDetail",
+                                "type": "utam-builder_industries_constraints/pageObjects/typeDetail",
+                                "selector": {
+                                    "css": "builder_industries_constraints-type-detail"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

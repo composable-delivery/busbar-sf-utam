@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .slds-button",
+            "Represents the ui:button Aura component.",
+            "Get button name, click on button"
+        ]
+    },
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getButtonName",
+            "description": "Gets the text of the button",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "Performs a click action on button element",
+            "compose": [
+                {
+                    "apply": "scrollToCenter",
+                    "element": "root"
+                },
+                {
+                    "apply": "click",
+                    "element": "root"
+                }
+            ]
+        }
+    ]
+}

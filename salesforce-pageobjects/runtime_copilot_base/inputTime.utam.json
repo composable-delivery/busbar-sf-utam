@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows the user to input a time value, which is then processed and emitted with additional formatting.",
+            "Selector: runtime_copilot_base-input-time"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "timeInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents a time input field that the user can interact with",
+                "public": true
+            }
+        ]
+    }
+}

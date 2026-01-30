@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-empty-state.",
+            "Represents the empty state Lightning web component.",
+            "Wait for the empty state component to load."
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForLoad",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "isPresent"
+                                },
+                                {
+                                    "apply": "returnSelf"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "description": {
+                "text": [
+                    "Wait until the component has loaded"
+                ],
+                "return": "void"
+            }
+        }
+    ]
+}

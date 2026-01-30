@@ -1,0 +1,189 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-calendar",
+            "Represents the lightning-calendar Lightning web component.",
+            "Get the month, get the date. Click today, click a day by date, or click a day by row and column on the calendar."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "getMonthText",
+            "description": {
+                "text": [
+                    "Get calendar current month title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "currentMonth",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "todayDateHasFocus",
+            "description": {
+                "text": [
+                    "Checks if current date has focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "todaysDate",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "clickDayByRowAndColumn",
+            "description": "Click calendar day cell by row and column number",
+            "compose": [
+                {
+                    "element": "dayIndexedCell",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDayByDate",
+            "description": "Click calendar day cell with matching date",
+            "compose": [
+                {
+                    "element": "dayByDate",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getDayText",
+            "description": {
+                "text": [
+                    "Get day text by by row and column number"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "dayIndexedCell",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickToday",
+            "description": "Clicks today button in calendar",
+            "compose": [
+                {
+                    "element": "todayButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "month",
+                "selector": {
+                    "css": ".slds-datepicker__filter_month"
+                },
+                "elements": [
+                    {
+                        "name": "prevMonthButton",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": ".slds-align-middle:nth-of-type(1) lightning-button-icon"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "nextMonthButton",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": ".slds-align-middle:nth-of-type(2) lightning-button-icon"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "currentMonth",
+                        "selector": {
+                            "css": "h2[id*='month-title']"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "yearSelector",
+                "type": "utam-lightning/pageObjects/select",
+                "selector": {
+                    "css": "lightning-select"
+                },
+                "public": true
+            },
+            {
+                "name": "todaysDate",
+                "type": "clickable",
+                "selector": {
+                    "css": "td[aria-current='date']"
+                },
+                "public": true
+            },
+            {
+                "name": "days",
+                "selector": {
+                    "css": "table"
+                },
+                "elements": [
+                    {
+                        "name": "dayIndexedCell",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "tr:nth-of-type(%d) td:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "row",
+                                    "type": "number"
+                                },
+                                {
+                                    "name": "column",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "dayByDate",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "tr td[data-value='%s']",
+                            "args": [
+                                {
+                                    "name": "date",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "todayButton",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button[name='today']"
+                }
+            }
+        ]
+    }
+}

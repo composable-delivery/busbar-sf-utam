@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-text-area.",
+            "Represents the records-record-layout-text-area Lightning web component.",
+            "Access the text area."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "textArea",
+                "selector": {
+                    "css": "lightning-textarea"
+                },
+                "type": "utam-lightning/pageObjects/textarea",
+                "public": true
+            }
+        ]
+    }
+}

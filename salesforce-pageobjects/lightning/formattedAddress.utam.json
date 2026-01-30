@@ -1,0 +1,109 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-address",
+            "Represents the lightning-formatted-address Lightning web component.",
+            "Get the address link aria-label, or text content. Check if the address filed is disabled."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedAddressLink",
+                "nullable": true,
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "name": "sldsTruncate",
+                "public": true,
+                "selector": {
+                    "css": ".slds-truncate",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "staticMap",
+                "type": "utam-lightning/pageObjects/staticMap",
+                "selector": {
+                    "css": "lightning-static-map"
+                },
+                "public": true,
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTextContent",
+            "description": {
+                "text": [
+                    "Get formatted address line text content"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sldsTruncate",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Get address link title text"
+                ],
+                "return": "string|null",
+                "deprecated": "This method will be deprecated in 244 release, use getAriaLabel method instead."
+            },
+            "compose": [
+                {
+                    "element": "formattedAddressLink",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getAriaLabel",
+            "description": {
+                "text": [
+                    "Get formatted address link aria-label"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "formattedAddressLink",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isEnabled",
+            "description": {
+                "text": [
+                    "Checks if address link is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "formattedAddressLink",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

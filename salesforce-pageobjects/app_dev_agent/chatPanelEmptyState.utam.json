@@ -1,0 +1,66 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a chat panel with an agent icon and a message input area, displaying a skeleton text loader indicating that the chat is loading or not yet active.",
+            "Selector: app_dev_agent-chat-panel-empty-state"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "chatContainer",
+                "selector": {
+                    "css": ".chat-container"
+                },
+                "description": "Represents the main container for the chat panel.",
+                "elements": [
+                    {
+                        "name": "agentIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the AI App Dev Agent icon in the chat panel.",
+                        "public": true
+                    },
+                    {
+                        "name": "skeletonTextLoader",
+                        "selector": {
+                            "css": "app_dev_agent-skeleton"
+                        },
+                        "type": "utam-app_dev_agent/pageObjects/skeleton",
+                        "description": "Represents the skeleton text loader indicating chat is loading.",
+                        "public": true
+                    },
+                    {
+                        "name": "messageInputArea",
+                        "selector": {
+                            "css": "app_dev_agent-panel-message-input"
+                        },
+                        "type": "utam-app_dev_agent/pageObjects/panelMessageInput",
+                        "description": "Represents the message input area of the chat panel.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isChatContainerVisible",
+            "description": {
+                "text": [
+                    "Check that chat container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

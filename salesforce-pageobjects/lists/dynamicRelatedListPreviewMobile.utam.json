@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-dynamic-related-list-preview-mobile",
+            "Represents the mobile preview implementation of the dynamic related list component",
+            "Uses the resolved fields implementation for preview-specific rendering",
+            "Handles preview-specific UI layout and interactions"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": [
+                    "clickable"
+                ],
+                "name": "button",
+                "selector": {
+                    "css": "button"
+                },
+                "public": true
+            },
+            {
+                "name": "highlightsIcon",
+                "selector": {
+                    "css": "record-highlights-icon"
+                },
+                "public": true
+            },
+            {
+                "name": "relatedListLabel",
+                "selector": {
+                    "css": "h2 span .slds-truncate"
+                },
+                "public": true
+            },
+            {
+                "name": "relatedListCount",
+                "selector": {
+                    "css": "h2 span .slds-shrink-none"
+                },
+                "public": true
+            },
+            {
+                "type": "utam-lists/pageObjects/dynamicRelatedListWithResolvedFields",
+                "name": "dynamicRelatedListWithResolvedFields",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-dynamic-related-list-with-resolved-fields"
+                }
+            }
+        ]
+    }
+}

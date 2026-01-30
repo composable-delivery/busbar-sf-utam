@@ -1,0 +1,97 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-primitive-datatable-tooltip-bubble",
+            "Get the button to close a lightning-primitive-datatable-tooltip-bubble.",
+            "Get the list of messages within the bubble."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-primitive-datatable-tooltip-bubble"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "closeButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon[data-close='true']"
+                }
+            },
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Clicks the leave button to discard edits to the list and leave the list view",
+                    "Waits for the confirm modal to disappear"
+                ]
+            },
+            "name": "clickCloseButton",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "clickButton"
+                }
+            ]
+        },
+        {
+            "name": "hasMultipleErrors",
+            "description": {
+                "text": [
+                    "Checks if error content contains a list of errors"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "list",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

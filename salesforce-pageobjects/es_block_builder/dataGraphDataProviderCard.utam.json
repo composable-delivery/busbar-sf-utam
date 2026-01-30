@@ -1,0 +1,73 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a card with a title and optionally a badge if it is the default data graph provider.",
+            "Selector: src-data-graph-data-provider-card"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseCard",
+                "selector": {
+                    "css": "es_block_builder-data-provider-base-card"
+                },
+                "type": "utam-es_block_builder/pageObjects/dataProviderBaseCard",
+                "description": "Represents the base card component",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "cardTitle",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the title of the card"
+                    },
+                    {
+                        "name": "defaultBadge",
+                        "selector": {
+                            "css": "lightning-badge"
+                        },
+                        "type": "utam-lightning/pageObjects/badge",
+                        "description": "Represents the badge displayed if the card is the default data graph provider",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isCardTitleVisible",
+            "description": {
+                "text": [
+                    "Check that the card title is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getCardTitleText",
+            "description": {
+                "text": [
+                    "Get text from the card title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cardTitle",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

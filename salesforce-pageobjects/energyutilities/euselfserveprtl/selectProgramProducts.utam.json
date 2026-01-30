@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "programProductDisplays",
+                "type": "utam-energyutilities-euselfserveprtl/pageObjects/programProductDisplay",
+                "selector": {
+                    "css": "c-program-product-display",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "programProductDisplayByIndex",
+                "type": "utam-energyutilities-euselfserveprtl/pageObjects/programProductDisplay",
+                "selector": {
+                    "css": "c-program-product-display:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

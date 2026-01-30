@@ -1,0 +1,74 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-click-to-dial",
+            "Represents the lightning-click-to-dial Lightning web component.",
+            " Click the phone number, get the enabled phone number, or the disabled phone number."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "clickPhoneNumber",
+            "description": "Click phone number to dial",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getEnabledPhoneNumber",
+            "description": {
+                "text": [
+                    "Get the enabled phone number"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getDisabledPhoneNumber",
+            "description": {
+                "text": [
+                    "Get the disabled phone number"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "enabledIcon",
+                "public": true,
+                "selector": {
+                    "css": "span[class*='slds-icon_container'] svg"
+                }
+            },
+            {
+                "name": "disabledIcon",
+                "public": true,
+                "selector": {
+                    "css": "span[class*='slds-icon_container'] svg"
+                }
+            }
+        ]
+    }
+}

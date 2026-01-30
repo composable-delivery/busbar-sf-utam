@@ -1,0 +1,77 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .actualNode",
+            "Represents the canvas iframe."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "webruntime-app"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "name": "unused",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": ".actualNode"
+                                    }
+                                },
+                                {
+                                    "value": false
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "headingLazy",
+            "public": true,
+            "selector": {
+                "css": "div[data-fqn='lightning/heading'] .actualBlock"
+            },
+            "elements": [
+                {
+                    "name": "richText",
+                    "selector": {
+                        "css": "lightning-formatted-rich-text"
+                    },
+                    "shadow": {
+                        "elements": [
+                            {
+                                "name": "heading",
+                                "public": true,
+                                "selector": {
+                                    "css": "h1"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "iframeContent",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        }
+    ]
+}

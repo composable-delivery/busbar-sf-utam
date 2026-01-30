@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: record_flexipage-mobile-record-page-decorator",
+            "Represents the record_flexipage-mobile-record-page-decorator Lightning web component.",
+            "Get the flexipage-record-home-template-desktop2, ",
+            "flexipage-record-home-left-sidebar-template-desktop2, records-record-layout-event-broker, or records-mobile-form-header components."
+        ]
+    },
+    "elements": [
+        {
+            "type": "utam-flexipage/pageObjects/recordHomeTemplateDesktop2",
+            "name": "templateDesktop2",
+            "selector": {
+                "css": "flexipage-record-home-template-desktop2"
+            },
+            "public": true
+        },
+        {
+            "type": "utam-flexipage/pageObjects/recordHomeLeftSidebarTemplateDesktop2",
+            "name": "leftSidebarTemplateDesktop2",
+            "selector": {
+                "css": "flexipage-record-home-left-sidebar-template-desktop2"
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-records/pageObjects/recordLayoutEventBroker",
+                "name": "eventBroker",
+                "selector": {
+                    "css": "records-record-layout-event-broker"
+                },
+                "public": true
+            },
+            {
+                "type": "utam-records/pageObjects/mobileFormHeader",
+                "name": "mobileFormHeader",
+                "selector": {
+                    "css": "records-mobile-form-header"
+                },
+                "public": true
+            }
+        ]
+    }
+}

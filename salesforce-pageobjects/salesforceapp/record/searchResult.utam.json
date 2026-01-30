@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the search result view.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "clickRecordMatchingTitle",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasRecord",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "getVisibleRecordCards",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getVisibleRecordWithTitle",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

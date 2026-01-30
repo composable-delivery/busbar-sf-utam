@@ -1,0 +1,115 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-timepicker",
+            "Represents the lightning-timepicker Lightning web component,",
+            "Get the lightning-base-combobox component that contains the time value.",
+            "Get the lightning-helptext component that contains the time picker help text.",
+            "Get the label text and check if the time picker is a required field."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": "clickable",
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "label"
+                },
+                "elements": [
+                    {
+                        "name": "required",
+                        "selector": {
+                            "css": ".slds-required"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "helptext",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "public": true
+            },
+            {
+                "name": "timeCombobox",
+                "type": "utam-lightning/pageObjects/baseCombobox",
+                "selector": {
+                    "css": "lightning-base-combobox"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "description": "Click timepicker element",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasFocus",
+            "description": {
+                "text": [
+                    "Is root element focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Is value required for time combobox"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "required",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "clear",
+            "description": "Clears time combobox value",
+            "compose": [
+                {
+                    "element": "timeCombobox",
+                    "apply": "clear"
+                }
+            ]
+        }
+    ]
+}

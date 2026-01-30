@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component is a collection of related cards and fields used to display various types of data, including records, emails, phone numbers, URLs, and more. Each template corresponds to a different type of card or field, and the component dynamically chooses which template to render based on the data provided to it.",
+            "Selector: src-bundle_act_copilot-record-list_generated-templates"
+        ]
+    }
+}

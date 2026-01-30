@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .onesetupSetupHeader.",
+            "Represents the onesetup:setupHeader Aura component.",
+            "Access the breadcrumbs."
+        ]
+    },
+    "elements": [
+        {
+            "name": "breadcrumbs",
+            "type": "utam-setup/pageObjects/breadcrumbs",
+            "selector": {
+                "css": ".onesetupBreadcrumbs"
+            },
+            "public": true
+        },
+        {
+            "name": "rightHeaderButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button"
+            },
+            "public": true
+        },
+        {
+            "name": "openInBuilderButton",
+            "selector": {
+                "css": "button[title='Open in Builder']"
+            },
+            "type": [
+                "clickable"
+            ],
+            "public": true
+        }
+    ]
+}

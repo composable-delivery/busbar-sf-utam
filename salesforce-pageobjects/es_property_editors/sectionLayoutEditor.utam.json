@@ -1,0 +1,65 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-section-layout-editor",
+            "Represents the property editor for section block."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "optionVisualPicker",
+                "type": "utam-community_builder/pageObjects/optionVisualPicker",
+                "selector": {
+                    "css": "community_builder-option-visual-picker"
+                }
+            },
+            {
+                "public": true,
+                "name": "decrementButtonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon.slds-input__button_decrement"
+                }
+            },
+            {
+                "public": true,
+                "name": "counterInput",
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "input"
+                }
+            },
+            {
+                "public": true,
+                "name": "incrementButtonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon.slds-input__button_increment"
+                }
+            },
+            {
+                "public": true,
+                "name": "columnSlider",
+                "type": "utam-community_builder/pageObjects/columnSlider",
+                "selector": {
+                    "css": "community_builder-column-slider"
+                }
+            },
+            {
+                "public": true,
+                "name": "resetButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

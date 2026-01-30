@@ -1,0 +1,164 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a header with details for a \"Copilot\" entity, including API name, agent type, and active status with a checkbox.",
+            "Selector: src-copilot-home-edit-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "apiNameLabel",
+                "selector": {
+                    "css": ".slds-text-color_weak span"
+                },
+                "description": "Represents the label for the API Name"
+            },
+            {
+                "name": "apiNameValue",
+                "selector": {
+                    "css": ".slds-col:nth-of-type(1) .slds-col:not(.slds-text-color_weak) span"
+                },
+                "description": "Represents the value of the API Name"
+            },
+            {
+                "name": "agentTypeLabel",
+                "selector": {
+                    "css": ".slds-col:nth-of-type(2) .slds-text-color_weak span"
+                },
+                "description": "Represents the label for the Agent Type"
+            },
+            {
+                "name": "agentTypeValue",
+                "selector": {
+                    "css": ".slds-col:nth-of-type(2) .slds-col:not(.slds-text-color_weak) span"
+                },
+                "description": "Represents the value of the Agent Type"
+            },
+            {
+                "name": "activeStatusLabel",
+                "selector": {
+                    "css": ".slds-col:nth-of-type(3) .slds-text-color_weak span"
+                },
+                "description": "Represents the label for the Active Status"
+            },
+            {
+                "name": "activeStatusCheckbox",
+                "selector": {
+                    "css": "lightning-input[data-id=\"status\"]"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the checkbox for the Active Status",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getApiNameLabelText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the API Name label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "apiNameLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getApiNameValueText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the API Name value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "apiNameValue",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "assertApiNameValueIsVisible",
+            "description": {
+                "text": [
+                    "Checks if the API Name value is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "apiNameValue",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getAgentTypeLabelText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the Agent Type label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "agentTypeLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getAgentTypeValueText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the Agent Type value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "agentTypeValue",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "assertAgentTypeValueIsVisible",
+            "description": {
+                "text": [
+                    "Checks if the Agent Type value is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "agentTypeValue",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getActiveStatusLabelText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the Active Status label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "activeStatusLabel",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

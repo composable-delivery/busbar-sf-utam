@@ -1,0 +1,208 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally displays either a video or an image based on the content type, along with a heading and subheading message.",
+            "Selector: app_dev_agent-empty-state"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "videoWrapper",
+                "selector": {
+                    "css": ".image-wrapper"
+                },
+                "description": "Represents the wrapper for the video or image",
+                "elements": [
+                    {
+                        "name": "videoPlayer",
+                        "selector": {
+                            "css": "video.image"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the video player when the content type is video",
+                        "nullable": true
+                    },
+                    {
+                        "name": "imageDisplay",
+                        "selector": {
+                            "css": "img.image"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the image display when the content type is not video",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "messageWrapper",
+                "selector": {
+                    "css": ".message-wrapper"
+                },
+                "description": "Represents the wrapper for the heading and subheading messages",
+                "elements": [
+                    {
+                        "name": "headingText",
+                        "selector": {
+                            "css": ".empty-state-heading"
+                        },
+                        "description": "Represents the heading text for the empty state component"
+                    },
+                    {
+                        "name": "subHeadingText",
+                        "selector": {
+                            "css": ".empty-state-message"
+                        },
+                        "description": "Represents the subheading text for the empty state component"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickVideo",
+            "description": {
+                "text": [
+                    "Click on the video player"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "videoPlayer",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickImage",
+            "description": {
+                "text": [
+                    "Click on the image display"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "imageDisplay",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getHeadingText",
+            "description": {
+                "text": [
+                    "Get the text of the heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headingText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSubHeadingText",
+            "description": {
+                "text": [
+                    "Get the text of the subheading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "subHeadingText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isVideoVisible",
+            "description": {
+                "text": [
+                    "Check if the video player is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "videoPlayer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isImageVisible",
+            "description": {
+                "text": [
+                    "Check if the image display is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "imageDisplay",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageWrapperVisible",
+            "description": {
+                "text": [
+                    "Check if the message wrapper is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyVideoPlayerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"videoPlayer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "videoPlayer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyImageDisplayPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"imageDisplay\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "imageDisplay",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

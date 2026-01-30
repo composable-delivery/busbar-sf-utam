@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: focusableSection"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "section",
+                "type": [],
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "sectionContainer",
+                        "type": "container",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "sectionContent",
+            "public": true,
+            "type": "container",
+            "selector": {
+                "css": "*"
+            }
+        }
+    ]
+}

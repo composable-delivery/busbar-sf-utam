@@ -1,0 +1,205 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-tree-item",
+            "Represents the lightning-tree-item Lightning web component.",
+            "Toggle a tree branch by clicking the toggle button.",
+            "Get a tree branch or link text, URL, or href value of the link.",
+            "Click the link of the tree item. Get the count of root-level items.",
+            "Retrieve a specific lightning-tree-item by text value match from the lightning-tree-item."
+        ]
+    },
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "toggleTreeBranch",
+            "description": "Toggle tree branch on click",
+            "compose": [
+                {
+                    "element": "toggleButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isOpen",
+            "description": {
+                "text": [
+                    "Checks if the lightning-tree-item is open or not based on the value of aria-expanded attribute"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-expanded"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "tabIndex",
+            "description": {
+                "text": [
+                    "Get lightning-tree-item tabindex value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "tabIndex"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isSelected",
+            "description": {
+                "text": [
+                    "Checks if the lightning-tree-item is selected or not based on the value of aria-selected attribute"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-selected"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getTreeBranchText",
+            "description": {
+                "text": [
+                    "Get tree branch text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickTreeLink",
+            "description": "Click the tree item link",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTreeLinkHref",
+            "description": {
+                "text": [
+                    "Get tree link href attribute"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getRootLevelItemsCount",
+            "description": {
+                "text": [
+                    "Get count of item at root level"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "element": "rootLevelItems",
+                    "apply": "size"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "treeItem",
+                "public": true,
+                "type": "utam-lightning/pageObjects/treeItem",
+                "selector": {
+                    "css": "lightning-tree-item:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "rootLevelItems",
+                "selector": {
+                    "css": "lightning-tree-item[aria-level='1']",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "toggleButton",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                }
+            },
+            {
+                "name": "link",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    }
+}

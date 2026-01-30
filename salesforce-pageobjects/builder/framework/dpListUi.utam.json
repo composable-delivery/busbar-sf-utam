@@ -1,0 +1,68 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: dpListUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "interactionCard",
+                                "type": "utam-builder-framework/pageObjects/interactionCard",
+                                "selector": {
+                                    "css": "builder_framework-interaction-card"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

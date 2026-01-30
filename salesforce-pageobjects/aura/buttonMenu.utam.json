@@ -1,0 +1,106 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .slds-dropdown",
+            "Represents the lightning:buttonMenu Aura component.",
+            "Toggle the menu, or check if the menu is open."
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleMenu",
+            "description": "Toggles the menu open or closed",
+            "compose": [
+                {
+                    "element": "menuTrigger",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isMenuOpened",
+            "description": "Checks if the menu is open",
+            "compose": [
+                {
+                    "element": "menuTrigger",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-expanded"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickMenuItem",
+            "description": "Clicks a menu item with the specified text",
+            "compose": [
+                {
+                    "element": "menuItemByText",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "menuTrigger",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button"
+            }
+        },
+        {
+            "name": "menuItemByIndex",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "li.slds-dropdown__item:nth-of-type(%d) a",
+                "args": [
+                    {
+                        "name": "itemIndex",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "allMenuItems",
+            "selector": {
+                "css": "li.slds-dropdown__item a",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "menuItemByText",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "li.slds-dropdown__item a",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        }
+    ]
+}

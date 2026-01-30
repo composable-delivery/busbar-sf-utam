@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: sfa-output-stage-name.",
+            "Represents the lists formatted text Lightning web component.",
+            "Access the text content."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the inner text"
+                ],
+                "return": "String value"
+            }
+        }
+    ]
+}

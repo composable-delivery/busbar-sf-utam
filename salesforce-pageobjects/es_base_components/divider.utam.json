@@ -1,0 +1,16 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the divider element in the CMS builder runtime"
+        ]
+    },
+    "elements": [
+        {
+            "name": "horizontalRule",
+            "selector": {
+                "css": "hr"
+            }
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "description": {
+        "text": [
+            "Selector: runtime_sales_activities-activity-panel-composer.",
+            "Represents the runtime_sales_activities:activity-panel-composer Lightning Web Component.",
+            "Get the buttonGroup by name."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonGroup",
+                "type": "utam-lightning/pageObjects/buttonGroup",
+                "selector": {
+                    "css": "lightning-button-group[data-target-selection-name='%s']",
+                    "args": [
+                        {
+                            "name": "buttonGroupName",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "public": true
+            }
+        ]
+    }
+}

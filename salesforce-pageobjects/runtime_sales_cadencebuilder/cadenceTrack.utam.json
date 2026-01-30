@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Cadence Track component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "trackTitle",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "descTitle",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "descText",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text:nth-of-type(3)"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Options to buy page object with conditional purchase components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "purchaseNowComponent",
+                "type": "utam-online-sales/pageObjects/purchaseNow",
+                "selector": {
+                    "css": "runtime_online_sales-purchase-now"
+                }
+            },
+            {
+                "public": true,
+                "name": "purchaseOptionsComponent",
+                "type": "utam-online-sales/pageObjects/purchaseOptions",
+                "selector": {
+                    "css": "runtime_online_sales-purchase-options"
+                }
+            }
+        ]
+    }
+}

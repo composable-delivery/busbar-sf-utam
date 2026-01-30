@@ -1,0 +1,48 @@
+{
+    "selector": {
+        "css": "setup_access_summaries-access-summary-page"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_access_summaries-access-summary-page."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "permissionsTabSet",
+                "public": true,
+                "selector": {
+                    "css": "setup_access_summaries-access-summary-tab-set.permissions_tabset"
+                },
+                "type": "utam-access-summaries/pageObjects/accessSummaryTabSet"
+            },
+            {
+                "name": "groupMembershipTabSet",
+                "public": true,
+                "selector": {
+                    "css": "setup_access_summaries-access-summary-tab-set.group_membership_tabset"
+                },
+                "type": "utam-access-summaries/pageObjects/accessSummaryTabSet"
+            },
+            {
+                "name": "userPermissionSetTabSet",
+                "public": true,
+                "selector": {
+                    "css": "setup_access_summaries-access-summary-tab-set.user_permission_set_tabset"
+                },
+                "type": "utam-access-summaries/pageObjects/accessSummaryTabSet"
+            },
+            {
+                "name": "userFieldHistoryTrackingTable",
+                "public": true,
+                "selector": {
+                    "css": "setup_access_summaries-user-field-history-tracking-table"
+                },
+                "type": "utam-access-summaries/pageObjects/userFieldHistoryTrackingTable"
+            }
+        ]
+    }
+}

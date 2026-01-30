@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: dxp_content_layout-grid",
+            "Represents the dxp_content_layout/grid component.",
+            "Get a list of dxp_data_provider-repeater-items."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "dxp_content_layout-grid"
+    },
+    "elements": [
+        {
+            "name": "repeaterItems",
+            "selector": {
+                "css": "dxp_data_provider-repeater-item",
+                "returnAll": true
+            },
+            "public": true,
+            "nullable": true,
+            "type": "utam-dxp_data_provider/pageObjects/repeaterItem"
+        }
+    ]
+}

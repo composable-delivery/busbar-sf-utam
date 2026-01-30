@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a help text tooltip using a button icon and a popover container.",
+            "Selector: src-base-helptext"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonIcon",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button-icon"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseButtonIcon",
+                "description": "Represents the button icon that triggers the tooltip",
+                "public": true
+            },
+            {
+                "name": "tooltipContainer",
+                "selector": {
+                    "css": "runtime_copilot_base-base-popover-container"
+                },
+                "description": "Represents the container for the tooltip content",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "tooltipContent",
+                        "selector": {
+                            "css": "[slot='tooltip']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the tooltip provided through a named slot",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

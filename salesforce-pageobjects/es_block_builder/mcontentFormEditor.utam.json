@@ -1,0 +1,69 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-mcontent-form-editor",
+            "Represents the block builder dynamic authoring form component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "titleEditor",
+                "selector": {
+                    "css": "es_block_builder-input-title-editor"
+                },
+                "type": "utam-es_block_builder/pageObjects/inputTitleEditor"
+            },
+            {
+                "public": true,
+                "name": "apiNameEditor",
+                "selector": {
+                    "css": "es_block_builder-input-api-name-editor"
+                },
+                "type": "utam-es_block_builder/pageObjects/inputApiNameEditor"
+            },
+            {
+                "public": true,
+                "name": "readOnlyTitle",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedText"
+            },
+            {
+                "public": true,
+                "name": "slugEditor",
+                "selector": {
+                    "css": "es_block_builder-url-name-input"
+                },
+                "type": "utam-es_block_builder/pageObjects/urlNameInput"
+            },
+            {
+                "public": true,
+                "name": "readOnlySlug",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText"
+            },
+            {
+                "public": true,
+                "name": "schemaDrivenContentEditor",
+                "selector": {
+                    "css": "es_block_builder-schema-driven-content-editor"
+                },
+                "type": "utam-es_block_builder/pageObjects/schemaDrivenContentEditor"
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner"
+            }
+        ]
+    }
+}

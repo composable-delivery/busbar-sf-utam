@@ -1,0 +1,117 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays organization information and allows interaction with soup ingredients by drag and drop.",
+            "Selector: src-soup"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "orgInfoTitleText",
+                "selector": {
+                    "css": ".slds-text-title"
+                },
+                "description": "Represents the title text for the organization information"
+            },
+            {
+                "name": "sandboxNameText",
+                "selector": {
+                    "css": ".sandbox-name"
+                },
+                "description": "Represents the sandbox name text",
+                "nullable": true
+            },
+            {
+                "name": "loadingText",
+                "selector": {
+                    "css": ".slds-text-color_weak"
+                },
+                "description": "Represents the loading text when sandbox name is not available",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getOrgInfoTitleText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the organization info title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "orgInfoTitleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSandboxNameText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the sandbox name if available"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sandboxNameText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isLoadingTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the loading text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifySandboxNameTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"sandboxNameText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "sandboxNameText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

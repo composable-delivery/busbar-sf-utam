@@ -1,0 +1,161 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays work items or an error message, with support for dynamic content and nested child components.",
+            "Selector: src-sme-work-items-renderer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "errorAlert",
+                "selector": {
+                    "css": "div.slds-notify_alert"
+                },
+                "description": "Represents the error alert container displayed when there is an error",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "errorIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the error icon inside the error alert",
+                        "public": true
+                    },
+                    {
+                        "name": "errorMessage",
+                        "selector": {
+                            "css": "p"
+                        },
+                        "description": "Represents the error message text inside the error alert"
+                    }
+                ]
+            },
+            {
+                "name": "workItemContainers",
+                "selector": {
+                    "css": "div.slds-m-vertical_large",
+                    "returnAll": true
+                },
+                "description": "Represents the container for each work item",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "workItemSummary",
+                        "selector": {
+                            "css": "div.slds-text-heading_small"
+                        },
+                        "description": "Represents the summary text of the work item"
+                    },
+                    {
+                        "name": "agentViewContainer",
+                        "selector": {
+                            "css": "app_dev_agent-view-container"
+                        },
+                        "description": "Represents the child component for rendering the agent view for each work item",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isErrorAlertVisible",
+            "description": {
+                "text": [
+                    "Check if the error alert is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorAlert",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessageText",
+            "description": {
+                "text": [
+                    "Get the text content of the error message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "areWorkItemsPresent",
+            "description": {
+                "text": [
+                    "Check if work item containers are present"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "workItemContainers",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getWorkItemSummaries",
+            "description": {
+                "text": [
+                    "Get the text content of each work item summary"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "workItemSummary",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorAlertPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorAlert\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorAlert",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyWorkItemContainersPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"workItemContainers\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "workItemContainers",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

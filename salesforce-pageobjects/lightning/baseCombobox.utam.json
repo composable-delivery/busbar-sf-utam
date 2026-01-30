@@ -1,0 +1,590 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-base-combobox.",
+            "Represents the lightning-base-combobox Lightning web component.",
+            "Expand the combo box, which clicks the trigger input and waits for results to load. Enter search or trigger text, or get the entered search or trigger text. Check if the input is read only and wait for the result items to load. Retrieve the trigger icon, list of groups, list of base-combobox-item page objects, or a base-combobox-item at a specific index. Retrieve a specific base-combobox-item by text value match and the selected base-combobox-item."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInputAttribute",
+            "description": {
+                "text": [
+                    "Gets the html attribute of trigger input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "triggerInput",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attributeName",
+                            "type": "string",
+                            "description": "Attribute name"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "expand",
+            "description": "Performs click action on the trigger input and waits for dropdown list to open",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "click"
+                                },
+                                {
+                                    "element": "itemsWrapper",
+                                    "apply": "isVisible"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isOpen",
+            "description": {
+                "text": [
+                    "Checks if the combobox is open"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "opened",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clear",
+            "description": "Removes or clears the text inside the trigger input",
+            "compose": [
+                {
+                    "element": "triggerInput",
+                    "apply": "clear"
+                }
+            ]
+        },
+        {
+            "name": "setTriggerText",
+            "description": "Sets the text as value to the trigger input",
+            "compose": [
+                {
+                    "element": "triggerInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string",
+                            "description": "Text to be entered in the trigger input"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTriggerText",
+            "description": "Gets the text entered in the trigger input",
+            "compose": [
+                {
+                    "element": "triggerInput",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-value"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputText",
+            "description": "Gets the text input value",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getValue",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "isDropdownOpened",
+            "description": {
+                "text": [
+                    "Checks if combobox dropdown is opened"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "comboboxWrapper",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-open"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isDisabled",
+            "description": {
+                "text": [
+                    "Checks if trigger input is disabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "triggerInput",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-disabled"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isReadonly",
+            "description": {
+                "text": [
+                    "Checks if ready-only attribute is set on trigger input"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "triggerInput",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-readonly"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "waitForItemsToLoad",
+            "description": "Waits for all dropdown list items to load",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "lightning-base-combobox-item"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hasItemByValue",
+            "description": "Check if the value is present",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "lightning-base-combobox-item[data-value='%s']",
+                                "args": [
+                                    {
+                                        "name": "dataValue",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForItemByValue",
+            "description": "Waits for a dropdown item to load with matching data value",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "lightning-base-combobox-item[data-value='%s']",
+                                                "args": [
+                                                    {
+                                                        "name": "dataValue",
+                                                        "type": "string"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "expandForDisabledInput",
+            "description": "Performs a click action on expand button and waits for the dropdown to open, in case combobox doesn't allow user input",
+            "compose": [
+                {
+                    "element": "expandButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "itemsWrapper",
+                    "apply": "waitForVisible"
+                }
+            ]
+        },
+        {
+            "name": "pickItem",
+            "description": "Performs click action on the combobox list item based on the index starting from one",
+            "compose": [
+                {
+                    "element": "item"
+                },
+                {
+                    "chain": true,
+                    "apply": "clickItem"
+                }
+            ]
+        },
+        {
+            "name": "pickItemByLabel",
+            "description": "Performs click action on the combobox list item based on the text value",
+            "compose": [
+                {
+                    "element": "itemByLabel",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "apply": "clickItem"
+                }
+            ]
+        },
+        {
+            "name": "getFocusedItemValue",
+            "description": {
+                "text": [
+                    "Gets the currently focused item value and returns null if combobox is not expanded"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "focusedItem",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-value"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "setSelectedItemText",
+            "description": {
+                "text": [
+                    "Sets the text as value to the trigger input"
+                ],
+                "deprecated": "This method will be deprecated in future release, use setTriggerText method instead."
+            },
+            "compose": [
+                {
+                    "element": "selectedItemInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clearSelection",
+            "description": "Clears the inputPill",
+            "compose": [
+                {
+                    "element": "clearSelectionButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectItemByValue",
+            "description": "Select an item in the combobox by its value.",
+            "compose": [
+                {
+                    "element": "itemByValue",
+                    "apply": "clickItem"
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "description": "Applies focus on the input element",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "focus"
+                }
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "editable",
+        "actionable",
+        "clickable"
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "input",
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "input"
+                }
+            },
+            {
+                "name": "opened",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".slds-is-open"
+                },
+                "nullable": true
+            },
+            {
+                "name": "expandButton",
+                "selector": {
+                    "css": "button"
+                },
+                "type": "clickable"
+            },
+            {
+                "name": "triggerInput",
+                "selector": {
+                    "css": ".slds-combobox__input"
+                },
+                "type": [
+                    "editable",
+                    "clickable",
+                    "actionable"
+                ],
+                "public": true
+            },
+            {
+                "name": "triggerIcon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                },
+                "public": true
+            },
+            {
+                "name": "groups",
+                "selector": {
+                    "css": "ul[role='group']",
+                    "returnAll": true
+                },
+                "public": true
+            },
+            {
+                "name": "itemsWrapper",
+                "selector": {
+                    "css": "div.slds-dropdown_fluid"
+                }
+            },
+            {
+                "name": "comboboxWrapper",
+                "selector": {
+                    "css": ".slds-dropdown-trigger"
+                }
+            },
+            {
+                "name": "items",
+                "selector": {
+                    "css": "lightning-base-combobox-item",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/baseComboboxItem",
+                "public": true
+            },
+            {
+                "name": "focusedItem",
+                "selector": {
+                    "css": "lightning-base-combobox-item.slds-has-focus"
+                },
+                "nullable": true
+            },
+            {
+                "name": "item",
+                "selector": {
+                    "css": "lightning-base-combobox-item:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "indexStartingOne",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/baseComboboxItem",
+                "public": true
+            },
+            {
+                "name": "itemByValue",
+                "selector": {
+                    "css": "lightning-base-combobox-item",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/baseComboboxItem",
+                "filter": {
+                    "apply": "getItemValue",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "public": true
+            },
+            {
+                "name": "itemByLabel",
+                "selector": {
+                    "css": "lightning-base-combobox-item",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/baseComboboxItem",
+                "filter": {
+                    "apply": "getItemLabel",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "public": true
+            },
+            {
+                "name": "selectedItemInput",
+                "selector": {
+                    "css": ".slds-combobox__input"
+                },
+                "type": "editable",
+                "public": true
+            },
+            {
+                "name": "checkedItem",
+                "selector": {
+                    "css": "[aria-checked=true]"
+                },
+                "public": true
+            },
+            {
+                "name": "clearSelectionButton",
+                "selector": {
+                    "css": "button[title='Clear Selection']"
+                },
+                "type": "clickable"
+            }
+        ]
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Landing Page Card.",
+            "Verify the card and its components."
+        ]
+    },
+    "interface": true,
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "getCardTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "getActionList",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionList"
+        },
+        {
+            "name": "getRecordList",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList"
+        },
+        {
+            "name": "hasViewMoreButton",
+            "returnType": "boolean"
+        },
+        {
+            "name": "viewMore"
+        }
+    ]
+}

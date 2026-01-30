@@ -1,0 +1,119 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays an error message with an icon and provides a refresh link to reload the page.",
+            "Selector: src-message-error"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".message-status_container"
+                },
+                "description": "Represents the container for the message status including icon, text, and refresh link",
+                "elements": [
+                    {
+                        "name": "statusIcon",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon.message-status_icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon indicating the error status",
+                        "public": true
+                    },
+                    {
+                        "name": "statusText",
+                        "selector": {
+                            "css": ".message-status_text"
+                        },
+                        "description": "Represents the text container for the error message",
+                        "elements": [
+                            {
+                                "name": "messageContent",
+                                "selector": {
+                                    "css": ".message-status-text_small"
+                                },
+                                "description": "Represents the actual error message displayed to the user"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "refreshLink",
+                        "selector": {
+                            "css": ".link-button.slds-text-link.slds-col_bump-left"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the link to refresh the page"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRefreshLink",
+            "description": {
+                "text": [
+                    "Simulates a click action on the refresh link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "refreshLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getStatusMessageText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the status message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the status container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRefreshLinkVisible",
+            "description": {
+                "text": [
+                    "Checks if the refresh link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "refreshLink",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

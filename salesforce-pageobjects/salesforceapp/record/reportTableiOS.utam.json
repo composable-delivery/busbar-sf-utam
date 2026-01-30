@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the iOS table in the report home view."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/reportTable",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ]
+}

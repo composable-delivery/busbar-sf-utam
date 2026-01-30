@@ -1,0 +1,50 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-data-provider-base-container",
+            "Serves as a container to property editor components."
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "dataProviderEditorContainer",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='dataProviderEditor']"
+            }
+        },
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child",
+                "returnAll": true
+            }
+        },
+        {
+            "public": true,
+            "name": "colorEditor",
+            "type": "utam-es_property_editors/pageObjects/colorEditor",
+            "selector": {
+                "css": "es_property_editors-color-editor",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getInput().getLabelText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "colorEditorLabel",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

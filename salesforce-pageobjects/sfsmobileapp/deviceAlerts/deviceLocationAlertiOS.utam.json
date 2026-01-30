@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a device alert for allowing or denying location access during app login."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/deviceAlerts/deviceLocationAlert",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeAlert[`label ENDSWITH 'to use your location?'`]"
+    },
+    "elements": [
+        {
+            "name": "allowAccessLocationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "Allow While Using App"
+            }
+        },
+        {
+            "name": "denyAccessLocationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "Don't Allow"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickAllowAccessLocation",
+            "compose": [
+                {
+                    "element": "allowAccessLocationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDenyAccessLocation",
+            "compose": [
+                {
+                    "element": "denyAccessLocationBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

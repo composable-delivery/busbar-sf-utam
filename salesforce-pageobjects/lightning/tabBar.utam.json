@@ -1,0 +1,113 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-tab-bar",
+            "Represents the lightning-tab-bar Lightning web component.",
+            "Get all tabs, get the active tab text, or click a tab by label."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getActiveTabText",
+            "description": {
+                "text": [
+                    "Get active tab text label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "activeTab",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickTab",
+            "description": "Click tab by label and scroll to center",
+            "compose": [
+                {
+                    "element": "tabByLabel",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "tabByLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "tabLinkByLabelHasFocus",
+            "description": "Checks if lightning-tab with given label has focus at the moment",
+            "compose": [
+                {
+                    "element": "tabLinkByLabel",
+                    "apply": "isFocused"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "tabByLabel",
+                "selector": {
+                    "css": "li[title*='%s']",
+                    "args": [
+                        {
+                            "name": "label",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "public": true,
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            },
+            {
+                "name": "tabLinkByLabel",
+                "selector": {
+                    "css": "li[title*='%s'] > a",
+                    "args": [
+                        {
+                            "name": "label",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "tabs",
+                "selector": {
+                    "css": "li a",
+                    "returnAll": true
+                },
+                "public": true,
+                "type": [
+                    "clickable"
+                ]
+            },
+            {
+                "name": "activeTab",
+                "selector": {
+                    "css": "li[class*='slds-is-active'] a"
+                },
+                "type": [
+                    "clickable"
+                ]
+            },
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "overflowMenu",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            }
+        ]
+    }
+}

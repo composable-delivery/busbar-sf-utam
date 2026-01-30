@@ -1,0 +1,68 @@
+{
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-product-catalog"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: product catalog page object"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "cartIcon",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='cartIcon']"
+                }
+            },
+            {
+                "public": true,
+                "name": "productCatalogCart",
+                "type": "utam-online-sales/pageObjects/productCatalogCart",
+                "selector": {
+                    "css": "runtime_online_sales-product-catalog-cart"
+                }
+            },
+            {
+                "public": true,
+                "name": "productCard",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/productCard",
+                "selector": {
+                    "css": "runtime_online_sales-product-card",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "skuDetails",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/skuDetails",
+                "selector": {
+                    "css": "runtime_online_sales-sku-details"
+                }
+            },
+            {
+                "public": true,
+                "name": "starterUpgrade",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/starterUpgrade",
+                "selector": {
+                    "css": "runtime_online_sales-starter-upgrade"
+                }
+            },
+            {
+                "name": "tabset",
+                "public": true,
+                "type": "utam-lightning/pageObjects/tabset",
+                "selector": {
+                    "css": "lightning-tabset"
+                }
+            }
+        ]
+    }
+}

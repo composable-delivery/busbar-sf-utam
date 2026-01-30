@@ -1,0 +1,162 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a setup page header with optional breadcrumbs, title, icon, and additional customizable slots for content.",
+            "Selector: src-lwc-setup-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "headerContainer",
+                "selector": {
+                    "css": ".slds-page-header.slds-m-bottom_small"
+                },
+                "description": "Represents the main container of the page header",
+                "elements": [
+                    {
+                        "name": "leftSlotContent",
+                        "selector": {
+                            "css": "[slot='left']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot for left-aligned content",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "defaultIcon",
+                                "selector": {
+                                    "css": "lightning-icon.slds-p-around_x-small"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Represents the default SLDS icon in the header",
+                                "public": true
+                            },
+                            {
+                                "name": "lightningBreadcrumbs",
+                                "selector": {
+                                    "css": "lightning-breadcrumbs"
+                                },
+                                "type": "utam-lightning/pageObjects/breadcrumbs",
+                                "description": "Represents the breadcrumb container when breadcrumbs are visible",
+                                "nullable": true,
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "breadcrumbItem",
+                                        "selector": {
+                                            "css": "lightning-breadcrumb.breadcrumb-item"
+                                        },
+                                        "type": "utam-lightning/pageObjects/breadcrumb",
+                                        "description": "Represents an individual breadcrumb item",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "iconOverrideSlotContent",
+                        "selector": {
+                            "css": "[slot='iconOverride']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot for overriding the default icon",
+                        "public": true
+                    },
+                    {
+                        "name": "breadcrumbsSlotContent",
+                        "selector": {
+                            "css": "[slot='breadcrumbs']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot for breadcrumb content",
+                        "public": true
+                    },
+                    {
+                        "name": "titleRightSlotContent",
+                        "selector": {
+                            "css": "[slot='titleRight']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot for additional elements on the right side of the title",
+                        "public": true
+                    },
+                    {
+                        "name": "titleText",
+                        "selector": {
+                            "css": "span.slds-page-header__title.slds-truncate"
+                        },
+                        "description": "Represents the main title text in the header"
+                    },
+                    {
+                        "name": "rightSlotContent",
+                        "selector": {
+                            "css": "[slot='right']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot for right-aligned actions or controls",
+                        "public": true
+                    },
+                    {
+                        "name": "detailsSlotContent",
+                        "selector": {
+                            "css": "[slot='details']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot for additional details below the header",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isHeaderContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the main header container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderTitleText",
+            "description": {
+                "text": [
+                    "Get the text of the main title in the header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isHeaderTitlePresent",
+            "description": {
+                "text": [
+                    "Check that the main title is present in the header"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

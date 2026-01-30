@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_sales_opportunitysplit-opportunity-line-item-split-datatable",
+            "Represents the datatable used in the splits component."
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForLoad",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "isPresent"
+                                },
+                                {
+                                    "apply": "returnSelf"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "description": {
+                "text": [
+                    "Wait until the component has loaded"
+                ],
+                "return": "void"
+            }
+        }
+    ],
+    "type": "actionable"
+}

@@ -1,0 +1,81 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: EditBillingAddressModal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "inputs",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "combos",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox",
+                            "returnAll": true
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "buttons",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "buttonByIndex",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

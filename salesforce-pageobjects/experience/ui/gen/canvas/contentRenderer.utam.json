@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that dynamically renders canvas UEM blocks in header and body slots.",
+            "Selector: experience_ui_gen_canvas-content-renderer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "headerContainer",
+                "type": "container",
+                "selector": {
+                    "css": "[slot='header']"
+                }
+            },
+            {
+                "public": true,
+                "name": "bodyContainer",
+                "type": "container",
+                "selector": {
+                    "css": "[slot='body']"
+                }
+            }
+        ]
+    }
+}

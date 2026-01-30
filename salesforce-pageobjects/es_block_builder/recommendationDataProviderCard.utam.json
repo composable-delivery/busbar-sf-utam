@@ -1,0 +1,195 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a card with a title and dynamic content, and conditionally disables action buttons based on the content's publication status.",
+            "Selector: src-recommendation-data-provider-card"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dataProviderBaseCard",
+                "selector": {
+                    "css": "es_block_builder-data-provider-base-card"
+                },
+                "type": "utam-es_block_builder/pageObjects/dataProviderBaseCard",
+                "description": "Represents the base card component wrapping the content",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "titleSlot",
+                        "selector": {
+                            "css": "[slot='title']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for the card title",
+                        "public": true
+                    },
+                    {
+                        "name": "titleText",
+                        "selector": {
+                            "css": "h4.slds-truncate.slds-text-title_bold"
+                        },
+                        "description": "Represents the title text inside the title slot"
+                    },
+                    {
+                        "name": "actionsSlot",
+                        "selector": {
+                            "css": "[slot='actions']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for action buttons",
+                        "public": true
+                    },
+                    {
+                        "name": "emptyActionsDiv",
+                        "selector": {
+                            "css": "div.empty-actions"
+                        },
+                        "description": "Represents the empty actions div when actions are disabled",
+                        "nullable": true
+                    },
+                    {
+                        "name": "activeRecommenderTitle",
+                        "selector": {
+                            "css": "p.slds-p-horizontal_small.slds-text-color_weak"
+                        },
+                        "description": "Represents the paragraph displaying the active recommender title"
+                    },
+                    {
+                        "name": "recommenderText",
+                        "selector": {
+                            "css": "p.slds-p-horizontal_small:not(.slds-text-color_weak)"
+                        },
+                        "description": "Represents the paragraph displaying the recommender text"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTitleTextVisible",
+            "description": {
+                "text": [
+                    "Check that title text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Get text from title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isEmptyActionsDivVisible",
+            "description": {
+                "text": [
+                    "Check that empty actions div is present and visible when actions are disabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyActionsDiv",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isActiveRecommenderTitleVisible",
+            "description": {
+                "text": [
+                    "Check that active recommender title is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "activeRecommenderTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getActiveRecommenderTitleText",
+            "description": {
+                "text": [
+                    "Get text from active recommender title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "activeRecommenderTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRecommenderTextVisible",
+            "description": {
+                "text": [
+                    "Check that recommender text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommenderText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRecommenderText",
+            "description": {
+                "text": [
+                    "Get text from recommender"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recommenderText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyEmptyActionsDivPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"emptyActionsDiv\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyActionsDiv",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

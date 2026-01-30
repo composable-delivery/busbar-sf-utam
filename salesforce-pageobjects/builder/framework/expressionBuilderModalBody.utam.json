@@ -1,0 +1,116 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to build expressions by adding conditions, setting logical operators, and defining custom logic. It provides dynamic form fields, condition management, and supports validation of the input data.",
+            "This is a Page Object that is marked for internal distribution only (until conditional formatting is GA).",
+            "Marked this way, it will only be published to internal artifacts.",
+            "Selector: builder_framework-expression-builder-modal-body"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "expressionBuilderForm",
+                "selector": {
+                    "css": "builder_framework-expression-builder-form"
+                },
+                "type": "utam-builder-framework/pageObjects/expressionBuilderForm",
+                "description": "Represents the form area where users can define expressions with various fields.",
+                "public": true
+            },
+            {
+                "name": "whenCombobox",
+                "selector": {
+                    "css": "lightning-combobox[data-when]"
+                },
+                "type": "utam-lightning/pageObjects/combobox",
+                "description": "Represents the dropdown for selecting logical operators (When condition).",
+                "public": true
+            },
+            {
+                "name": "customLogicInput",
+                "selector": {
+                    "css": "lightning-input.customLogicInput"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the input for custom logic, shown based on the selected 'When' condition.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "conditionsList",
+                "selector": {
+                    "css": "ul"
+                },
+                "description": "Represents the list that contains all the added conditions.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "conditionItems",
+                        "selector": {
+                            "css": "builder_framework-expression-builder-condition",
+                            "returnAll": true
+                        },
+                        "type": "utam-builder-framework/pageObjects/expressionBuilderCondition",
+                        "description": "Represents the individual condition items in the conditions list.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "addConditionButton",
+                "selector": {
+                    "css": "lightning-button[data-add-button]"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the button to add a new condition.",
+                "public": true
+            },
+            {
+                "name": "errorIcon",
+                "selector": {
+                    "css": "lightning-icon.slds-align-middle"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the error icon displayed when conditions are not met, shown based on the condition validation.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isConditionsListVisible",
+            "description": {
+                "text": [
+                    "Check that conditions list is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "conditionsList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyConditionsListPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"conditionsList\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "conditionsList",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

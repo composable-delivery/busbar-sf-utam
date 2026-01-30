@@ -1,0 +1,238 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an error notification with optional links for learning more or retrying an action.",
+            "Selector: app_dev_agent-error-notification"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "errorNotificationContainer",
+                "selector": {
+                    "css": ".slds-theme_error"
+                },
+                "description": "Represents the container for the error notification",
+                "elements": [
+                    {
+                        "name": "errorIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the error icon in the notification",
+                        "public": true
+                    },
+                    {
+                        "name": "titleText",
+                        "selector": {
+                            "css": ".notification-title"
+                        },
+                        "description": "Represents the title text of the notification",
+                        "nullable": true,
+                        "elements": [
+                            {
+                                "name": "learnMoreLink",
+                                "selector": {
+                                    "css": ".inline-link"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the 'Learn More' link in the title line",
+                                "nullable": true
+                            },
+                            {
+                                "name": "retryLink",
+                                "selector": {
+                                    "css": ".inline-link"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the 'Retry' link in the title line",
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "descriptionText",
+                        "selector": {
+                            "css": ".notification-description"
+                        },
+                        "description": "Represents the description text of the notification",
+                        "nullable": true
+                    },
+                    {
+                        "name": "mediaFigure",
+                        "selector": {
+                            "css": ".slds-media__figure"
+                        },
+                        "description": "Represents the media figure container"
+                    },
+                    {
+                        "name": "mediaBody",
+                        "selector": {
+                            "css": ".slds-media__body"
+                        },
+                        "description": "Represents the media body container"
+                    },
+                    {
+                        "name": "commentsIcon",
+                        "selector": {
+                            "css": "lightning-icon.comments-icn"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the comments icon"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isErrorNotificationVisible",
+            "description": {
+                "text": [
+                    "Check if the error notification container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorNotificationContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorNotificationTitle",
+            "description": {
+                "text": [
+                    "Retrieve the text of the notification title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getErrorNotificationDescription",
+            "description": {
+                "text": [
+                    "Retrieve the text of the notification description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickLearnMoreLink",
+            "description": {
+                "text": [
+                    "Click the 'Learn More' link if it's visible"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "learnMoreLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickRetryLink",
+            "description": {
+                "text": [
+                    "Click the 'Retry' link if it's visible"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "retryLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "verifyTitleTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"titleText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLearnMoreLinkPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"learnMoreLink\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "learnMoreLink",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRetryLinkPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"retryLink\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "retryLink",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyDescriptionTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"descriptionText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

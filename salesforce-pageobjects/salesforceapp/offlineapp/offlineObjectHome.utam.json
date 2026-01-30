@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Offline object home window.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "getRecordList",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList"
+        },
+        {
+            "name": "pullToRefresh"
+        },
+        {
+            "name": "clickSearch"
+        }
+    ]
+}

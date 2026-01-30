@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component appears to be a base card container that could be used as a foundational piece for other components to build upon. It extends from 'lightning/primitiveContainer', indicating that it might be used for displaying content within a card-like UI structure.",
+            "Selector: src-base-card"
+        ]
+    }
+}

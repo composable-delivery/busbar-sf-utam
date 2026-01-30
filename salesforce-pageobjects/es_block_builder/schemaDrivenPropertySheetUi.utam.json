@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-schema-driven-property-sheet-ui",
+            "Provides access to propertySheetUi component."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "builder_framework-property-sheet-ui"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "propertySheetUi",
+                "type": "utam-builder-framework/pageObjects/propertySheetUi",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                }
+            }
+        ]
+    }
+}

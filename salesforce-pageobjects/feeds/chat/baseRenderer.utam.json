@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that renders data based on a schema, allowing interaction through editable fields when not in a disabled or read-only state.",
+            "Selector: src-base-renderer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "rendererWrapper",
+                "selector": {
+                    "css": "section.renderer"
+                },
+                "description": "Represents the main container of the renderer component.",
+                "elements": [
+                    {
+                        "name": "inputField",
+                        "selector": {
+                            "css": "lightning-input",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/input",
+                        "description": "Represents all input fields for data entry.",
+                        "public": true
+                    },
+                    {
+                        "name": "readOnlyContent",
+                        "selector": {
+                            "css": "[slot='readOnlyContent']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot for read-only data.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRendererWrapperVisible",
+            "description": {
+                "text": [
+                    "Checks if the renderer wrapper is visible on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rendererWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

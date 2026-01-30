@@ -1,0 +1,66 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-email",
+            "Represents the lightning-formatted-email Lightning web component.",
+            "Get the href attribute or the text value."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedEmailIcon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "selector": {
+                    "css": "lightning-primitive-icon"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "formattedEmailLink",
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLinkHref",
+            "description": {
+                "text": [
+                    "Get formatted email link URL/href"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "formattedEmailLink",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getLinkInnerText",
+            "description": {
+                "text": [
+                    "Get formatted email link inner text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "formattedEmailLink",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

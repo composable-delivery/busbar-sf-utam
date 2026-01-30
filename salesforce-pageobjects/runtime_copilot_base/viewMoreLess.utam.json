@@ -1,0 +1,98 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays a welcome message with the ability to toggle between a truncated \"View More\" and an expanded \"View Less\" state based on the content length.",
+            "Selector: src-view-more-less"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageContainer",
+                "selector": {
+                    "css": ".welcome-message-text lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "description": "Represents the container for the message that can be expanded or collapsed.",
+                "public": true
+            },
+            {
+                "name": "viewToggleLink",
+                "selector": {
+                    "css": "a.view-more-click"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the link for toggling the view state of the message.",
+                "nullable": true,
+                "wait": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickViewToggle",
+            "description": {
+                "text": [
+                    "Clicks the \"View More/Less\" toggle link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "viewToggleLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isViewToggleVisible",
+            "description": {
+                "text": [
+                    "Checks if the \"View More/Less\" toggle link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "viewToggleLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isViewTogglePresent",
+            "description": {
+                "text": [
+                    "Checks if the \"View More/Less\" toggle link is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "viewToggleLink",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyViewToggleLinkPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"viewToggleLink\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "viewToggleLink",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

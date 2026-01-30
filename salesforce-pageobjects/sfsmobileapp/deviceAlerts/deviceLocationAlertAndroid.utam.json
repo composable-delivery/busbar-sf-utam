@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a device alert for allowing or denying location access during app login."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/deviceAlerts/deviceLocationAlert",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.android.packageinstaller:id/permission_icon\")"
+    },
+    "elements": [
+        {
+            "name": "allowAccessLocationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.android.permissioncontroller:id/permission_allow_always_button\")"
+            }
+        },
+        {
+            "name": "denyAccessLocationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.android.permissioncontroller:id/permission_deny_button\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickAllowAccessLocation",
+            "compose": [
+                {
+                    "element": "allowAccessLocationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDenyAccessLocation",
+            "compose": [
+                {
+                    "element": "denyAccessLocationBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

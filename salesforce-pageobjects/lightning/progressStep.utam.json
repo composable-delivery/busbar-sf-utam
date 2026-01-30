@@ -1,0 +1,120 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-progress-step",
+            "Represents the lightning-progress-step Lightning web component.",
+            "Click the progress button. Get the label text or the class attribute."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "clickable"
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "progressLabel",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "[data-label]"
+                }
+            },
+            {
+                "name": "div",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "div"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "description": "Click on progress step",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getClassName",
+            "description": {
+                "text": [
+                    "Get progress step class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Is progress step in focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "isFocused",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get progress step label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "progressLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAttribute",
+            "description": {
+                "text": [
+                    "Get progress step attribute by name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "div",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attribute",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

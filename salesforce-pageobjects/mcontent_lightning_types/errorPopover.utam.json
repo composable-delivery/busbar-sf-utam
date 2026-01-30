@@ -1,0 +1,125 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: errorPopover",
+            "Selector: mcontent_lightning_types-error-popover",
+            "Error popover when creating a new lightning type"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent_lightning_types-error-popover"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "name": "section",
+                "type": [],
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "buttonIcon1",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon"
+                        }
+                    },
+                    {
+                        "name": "header",
+                        "type": [],
+                        "selector": {
+                            "css": "header"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "icon",
+                                "type": "utam-lightning/pageObjects/icon",
+                                "selector": {
+                                    "css": "lightning-icon"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "headingContent",
+                                "type": [],
+                                "selector": {
+                                    "css": "h2#dialog-heading"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "body",
+                        "type": [],
+                        "selector": {
+                            "css": "div#dialog-body"
+                        },
+                        "elements": [
+                            {
+                                "name": "list",
+                                "type": [],
+                                "selector": {
+                                    "css": "ul"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "listItems",
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "selector": {
+                                            "css": "li",
+                                            "returnAll": true
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "listItemByIndex",
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "selector": {
+                                            "css": "li:nth-of-type(%d)",
+                                            "args": [
+                                                {
+                                                    "name": "index",
+                                                    "type": "number"
+                                                }
+                                            ]
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "formattedRichText",
+                                                "type": "utam-lightning/pageObjects/formattedRichText",
+                                                "selector": {
+                                                    "css": "lightning-formatted-rich-text"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

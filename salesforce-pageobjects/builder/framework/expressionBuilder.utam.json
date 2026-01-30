@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: expressionBuilder"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "emptyContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='empty']"
+            }
+        },
+        {
+            "public": true,
+            "name": "addingContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='adding']"
+            }
+        },
+        {
+            "public": true,
+            "name": "summaryContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='summary']"
+            }
+        }
+    ]
+}

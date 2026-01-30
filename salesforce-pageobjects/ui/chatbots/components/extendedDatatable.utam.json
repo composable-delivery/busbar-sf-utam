@@ -1,0 +1,135 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "An extension of the Lightning Datatable component that supports various custom cell types with different layouts, attributes, and interactivity options. It also allows for optional hiding of the table border and includes custom styles.",
+            "Selector: src-extended-datatable"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "rows",
+                "selector": {
+                    "css": "table > tbody > tr",
+                    "returnAll": true
+                },
+                "public": true
+            },
+            {
+                "name": "multiLineTextCell",
+                "selector": {
+                    "css": "lightning-datatable customMultiLineTextType",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with multiline text.",
+                "public": true
+            },
+            {
+                "name": "multiLineTextEditCell",
+                "selector": {
+                    "css": "lightning-datatable customMultiLineTextType",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with multiline text in edit mode.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "urlOrTextCell",
+                "selector": {
+                    "css": "lightning-datatable urlOrText",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells that can display either a URL or text.",
+                "public": true
+            },
+            {
+                "name": "dataAndInfoCell",
+                "selector": {
+                    "css": "lightning-datatable dataAndInfo",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with additional information.",
+                "public": true
+            },
+            {
+                "name": "cellImage",
+                "selector": {
+                    "css": "lightning-datatable cellImage",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells that contain an image.",
+                "public": true
+            },
+            {
+                "name": "selectOptionCell",
+                "selector": {
+                    "css": "lightning-datatable selectOption",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with a selectable option.",
+                "public": true
+            },
+            {
+                "name": "linkButtonCell",
+                "selector": {
+                    "css": "lightning-datatable linkButton",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with a link button.",
+                "public": true
+            },
+            {
+                "name": "statusFieldCell",
+                "selector": {
+                    "css": "lightning-datatable statusField",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with status indicators.",
+                "public": true
+            },
+            {
+                "name": "ootbMetricCell",
+                "selector": {
+                    "css": "lightning-datatable ootbMetric",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells with out-of-the-box metrics.",
+                "public": true
+            },
+            {
+                "name": "dynamicComponentCell",
+                "selector": {
+                    "css": "lightning-datatable dynamic",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells that can dynamically load components.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "conversationHistoryCell",
+                "selector": {
+                    "css": "lightning-datatable conversationHistory",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents cells that display conversation history.",
+                "public": true
+            }
+        ]
+    }
+}

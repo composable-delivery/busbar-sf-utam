@@ -1,0 +1,25 @@
+{
+    "exposeRootElement": true,
+    "description": {
+        "text": [
+            "Selector:div[data-style-id]"
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "type": "container",
+            "name": "content",
+            "public": true,
+            "selector": {
+                "css": "%s",
+                "args": [
+                    {
+                        "name": "cssString",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

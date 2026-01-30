@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Footer component for generative canvas tiles",
+            "Contains AI generation indicator text"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "aiTextIndicator",
+                "public": true,
+                "description": "Text indicating content is AI generated",
+                "selector": {
+                    "css": "span.aiTextStyle"
+                }
+            }
+        ]
+    }
+}

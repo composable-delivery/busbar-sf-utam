@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListRecord.",
+            "Represents the force:listRecord Aura component.",
+            "Access the title of a list record in a related list on the Salesforce mobile app."
+        ]
+    },
+    "elements": [
+        {
+            "name": "itemTitle",
+            "public": true,
+            "selector": {
+                "css": ".itemTitle"
+            }
+        }
+    ]
+}

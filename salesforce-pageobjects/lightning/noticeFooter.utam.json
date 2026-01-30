@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-notice-footer",
+            "Represents the lightning-notice-footer Lightning web component.",
+            "Get the button to click to close the notice."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "public": true,
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

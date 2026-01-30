@@ -1,0 +1,22 @@
+{
+    "description": {
+        "text": [
+            "Selector: one-app-nav-bar-item-dropdown.",
+            "Represents the one-app-nav-bar-item-dropdown Lightning web component.",
+            "Access the dropdown."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dropdown",
+                "type": "utam-global/pageObjects/appNavBarMenuButton",
+                "public": true,
+                "selector": {
+                    "css": "one-app-nav-bar-menu-button"
+                }
+            }
+        ]
+    }
+}

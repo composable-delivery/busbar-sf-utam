@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Overview tab of a Work Order."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/record/workOrderObjectOverview",
+    "root": true,
+    "exposeRootElement": true,
+    "platform": "native",
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "WORK ORDER"
+    },
+    "elements": [
+        {
+            "name": "serviceReportSection",
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/service_report_card\")"
+            },
+            "type": "utam-sfsmobileapp/pageObjects/sections/serviceReportSection"
+        }
+    ]
+}

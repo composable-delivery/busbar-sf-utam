@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-entity-share-picklist",
+            "Represents the force_entity-share-picklist component",
+            "Returns inner lightning picklist component"
+        ]
+    },
+    "elements": [
+        {
+            "name": "picklistRoot",
+            "selector": {
+                "css": "force-entity-share-picklist"
+            },
+            "shadow": {
+                "elements": [
+                    {
+                        "name": "picklist",
+                        "type": "utam-lightning/pageObjects/picklist",
+                        "selector": {
+                            "css": "lightning-picklist"
+                        },
+                        "public": true
+                    }
+                ]
+            }
+        }
+    ]
+}

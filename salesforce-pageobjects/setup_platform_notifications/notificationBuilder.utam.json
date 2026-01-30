@@ -1,0 +1,20 @@
+{
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "iframe",
+                "selector": {
+                    "css": "iframe[name='builderFrame']"
+                },
+                "public": true
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

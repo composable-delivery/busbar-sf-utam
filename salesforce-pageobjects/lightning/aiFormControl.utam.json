@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-ai-form-control",
+            "Represents the lightning-ai-form-control Lightning web component.",
+            "Get the diffent exposed slots exposed"
+        ]
+    },
+    "elements": [
+        {
+            "name": "startSlot",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='start'] > *"
+            },
+            "public": true
+        },
+        {
+            "name": "controlSlot",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='control'] > *"
+            },
+            "public": true
+        },
+        {
+            "name": "endSlot",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='end'] > *"
+            },
+            "public": true
+        }
+    ]
+}

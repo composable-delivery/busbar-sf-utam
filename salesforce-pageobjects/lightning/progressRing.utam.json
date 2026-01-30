@@ -1,0 +1,130 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-progress-ring",
+            "Represents the lightning-progress-ring Lightning web component.",
+            "Get the assistive text. Get the current value of the ring.",
+            "Check if the ring is active, or is expired, or has a warning."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "assistiveText",
+                "selector": {
+                    "css": ".slds-assistive-text"
+                }
+            },
+            {
+                "name": "variantActiveStep",
+                "selector": {
+                    "css": ".slds-progress-ring.slds-progress-ring_active-step"
+                },
+                "nullable": true
+            },
+            {
+                "name": "variantExpired",
+                "selector": {
+                    "css": ".slds-progress-ring.slds-progress-ring_expired"
+                },
+                "nullable": true
+            },
+            {
+                "name": "variantWarning",
+                "selector": {
+                    "css": ".slds-progress-ring.slds-progress-ring_warning"
+                },
+                "nullable": true
+            },
+            {
+                "name": "currentValue",
+                "selector": {
+                    "css": "[aria-valuenow]"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Get assistive text of progress ring"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getValue",
+            "description": {
+                "text": [
+                    "Get current percentage value of the progress ring"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "currentValue",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-valuenow"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isActiveStepVariant",
+            "description": {
+                "text": [
+                    "Is progress ring of active step variant"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "variantActiveStep",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isExpiredVariant",
+            "description": {
+                "text": [
+                    "Is progress ring of expired variant"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "variantExpired",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isWarningVariant",
+            "description": {
+                "text": [
+                    "Is progress ring of warning variant"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "variantWarning",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

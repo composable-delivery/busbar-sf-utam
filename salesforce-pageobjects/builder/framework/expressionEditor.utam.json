@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: expressionEditor"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "autocompleteCombobox",
+                "type": "utam-builder-framework/pageObjects/autocompleteCombobox",
+                "selector": {
+                    "css": "builder_framework-autocomplete-combobox"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: webruntimedesign-popover-open-button",
+            "Representing a plus button for opening a cmp palette modal"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "icon",
+            "type": "utam-lightning/pageObjects/icon",
+            "selector": {
+                "css": "lightning-icon"
+            }
+        }
+    ]
+}

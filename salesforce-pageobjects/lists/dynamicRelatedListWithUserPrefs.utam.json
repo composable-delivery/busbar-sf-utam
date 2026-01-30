@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-dynamic-related-list-with-user-prefs.",
+            "Represents the dynamic related list component with user preferences.",
+            "Handles user preferences and list view management for related lists."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedListViewManager",
+                "name": "relatedListViewManager",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-list-view-manager"
+                }
+            }
+        ]
+    }
+}

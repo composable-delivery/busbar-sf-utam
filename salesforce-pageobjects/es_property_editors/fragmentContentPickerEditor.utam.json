@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "contentCard",
+                "selector": {
+                    "css": "mcontent_content_detail-content-card"
+                }
+            }
+        ]
+    }
+}

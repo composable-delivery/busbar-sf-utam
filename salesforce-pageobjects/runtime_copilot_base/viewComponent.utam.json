@@ -1,0 +1,488 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This LWC component dynamically renders a list of child components based on the provided component definition. It is designed to handle value change events and can be configured to be disabled or read-only.",
+            "Selector: runtime_copilot_base-view-component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dynamicComponentContainer",
+                "selector": {
+                    "css": "[data-view-component]"
+                },
+                "type": "container",
+                "wait": true,
+                "description": "Container for the dynamic component that handles value change events.",
+                "public": true
+            },
+            {
+                "name": "outputRichText",
+                "selector": {
+                    "css": "runtime_copilot_base-output-rich-text"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/outputRichText",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "outputMarkdown",
+                "selector": {
+                    "css": "runtime_copilot_base-output-markdown"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/outputMarkdown",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "streamObserver",
+                "selector": {
+                    "css": "runtime_copilot_base-stream-observer"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/streamObserver",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "baseMarkdownText",
+                "selector": {
+                    "css": "runtime_copilot_base-base-markdown-text"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseMarkdownText",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "outputList",
+                "selector": {
+                    "css": "runtime_copilot_base-output-list"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/outputList",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "outputText",
+                "selector": {
+                    "css": "runtime_copilot_base-output-text"
+                },
+                "public": true
+            },
+            {
+                "name": "inputText",
+                "selector": {
+                    "css": "runtime_copilot_base-input-text"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/inputText",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "esOutputDate",
+                "selector": {
+                    "css": "es_property_editors-output-date"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "outputDateTime",
+                            "selector": {
+                                "css": "lightning-formatted-date-time"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "esOutputNumber",
+                "selector": {
+                    "css": "es_property_editors-output-number"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "outputNumber",
+                            "selector": {
+                                "css": "lightning-formatted-number"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "esOutputBoolean",
+                "selector": {
+                    "css": "es_property_editors-output-boolean"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "outputBoolean",
+                            "selector": {
+                                "css": "lightning-formatted-text"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "fcoutputDateTimeString",
+                "selector": {
+                    "css": "feeds_chat-output-date-time-string"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "outputStringDateTime",
+                            "selector": {
+                                "css": "lightning-formatted-date-time"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "fcoutputTime",
+                "selector": {
+                    "css": "feeds_chat-output-time"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "outputTime",
+                            "selector": {
+                                "css": "lightning-formatted-time"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "baseSelectRecord",
+                "selector": {
+                    "css": "runtime_copilot_base-base-select-record"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseSelectRecord",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "selectRecordId",
+                "selector": {
+                    "css": "runtime_copilot_base-select-record-id"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/selectRecordId",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "selectRecordInfo",
+                "selector": {
+                    "css": "runtime_copilot_base-select-record-info"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/selectRecordInfo",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "viewRecordList",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-list"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordList",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "viewRecordId",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-id"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordId",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "viewRecordIdList",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-id-list"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordIdList",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "recordPicker",
+                "selector": {
+                    "css": "runtime_copilot_base-record-picker"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/recordPicker",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "viewComponentBeforeRecommendationButton",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "recommendationButton",
+                            "selector": {
+                                "css": "runtime_copilot_base-recommendation-button"
+                            },
+                            "type": "utam-runtime_copilot_base/pageObjects/recommendationButton",
+                            "nullable": true,
+                            "wait": true,
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "feedsChatViewRecordList",
+                "selector": {
+                    "css": "feeds_chat-view-record-list"
+                },
+                "nullable": true,
+                "type": "utam-feeds-chat/pageObjects/viewRecordList",
+                "public": true
+            },
+            {
+                "name": "viewRecordForm",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-form"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordForm",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "selectSingleText",
+                "selector": {
+                    "css": "runtime_copilot_base-select-single-text"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/selectSingleText",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "selectSingleIntegerAndNumber",
+                "selector": {
+                    "css": "runtime_copilot_base-select-single-integer-and-number"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/selectSingleIntegerAndNumber",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "selectSingleDateAndDateTimeString",
+                "selector": {
+                    "css": "runtime_copilot_base-select-single-date-and-datetime-string"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/selectSingleDateAndDateTimeString",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "messageActionable",
+                "selector": {
+                    "css": "runtime_copilot_base-message-actionable"
+                },
+                "wait": true,
+                "type": "utam-runtime_copilot_base/pageObjects/messageActionable",
+                "public": true
+            },
+            {
+                "name": "viewVerticalLayout",
+                "selector": {
+                    "css": "runtime_copilot_base-view-vertical-layout"
+                },
+                "wait": true,
+                "type": "utam-runtime_copilot_base/pageObjects/viewVerticalLayout",
+                "public": true
+            },
+            {
+                "name": "recommendedActionLayout",
+                "selector": {
+                    "css": "runtime_copilot_base-recommended-action-layout"
+                },
+                "wait": true,
+                "type": "utam-runtime_copilot_base/pageObjects/recommendedActionLayout",
+                "public": true
+            },
+            {
+                "name": "viewActionLayoutButtonGroup",
+                "selector": {
+                    "css": "runtime_copilot_base-view-action-layout"
+                },
+                "wait": true,
+                "public": true,
+                "type": "utam-runtime_copilot_base/pageObjects/viewActionLayout"
+            },
+            {
+                "name": "viewActionLayout",
+                "selector": {
+                    "css": "runtime_copilot_base-view-action-layout"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "viewComponentInActionLayout",
+                            "selector": {
+                                "css": "runtime_copilot_base-view-component"
+                            },
+                            "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                            "nullable": true,
+                            "description": "Recursive reference to same component inside dynamic component",
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "blockDynamicAction",
+                "selector": {
+                    "css": "runtime_copilot_base-block-dynamic-action"
+                },
+                "elements": [
+                    {
+                        "name": "viewComponentInBlockDynamicAction",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Recursive reference to same component inside dynamic component",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "blockRecommendedAction",
+                "selector": {
+                    "css": "runtime_copilot_base-block-recommended-action"
+                },
+                "elements": [
+                    {
+                        "name": "viewComponentInBlockRecommendedAction",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Recursive reference to same component inside dynamic component",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "recommendationUtterance",
+                "selector": {
+                    "css": "runtime_copilot_base-recommendation-utterance"
+                },
+                "public": true,
+                "type": "utam-runtime_copilot_base/pageObjects/recommendationUtterance"
+            },
+            {
+                "name": "viewActionButton",
+                "selector": {
+                    "css": "runtime_copilot_base-view-action-button"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "baseButtonCompleteInActionButton",
+                            "selector": {
+                                "css": "runtime_copilot_base-base-button-complete"
+                            },
+                            "public": true,
+                            "type": "utam-runtime_copilot_base/pageObjects/baseButtonComplete"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "baseButtonComplete",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button-complete"
+                },
+                "public": true,
+                "type": "utam-runtime_copilot_base/pageObjects/baseButtonComplete"
+            },
+            {
+                "name": "blockViewMoreRecordsAction",
+                "selector": {
+                    "css": "runtime_copilot_base-block-view-more-records-action"
+                },
+                "wait": true,
+                "nullable": true,
+                "public": true,
+                "type": "utam-runtime_copilot_base/pageObjects/blockViewMoreRecordsAction"
+            },
+            {
+                "name": "messageObserver",
+                "selector": {
+                    "css": "runtime_copilot_base-message-observer"
+                },
+                "wait": true,
+                "nullable": true,
+                "public": true,
+                "type": "utam-runtime_copilot_base/pageObjects/messageObserver"
+            },
+            {
+                "name": "dynamicComponent",
+                "selector": {
+                    "css": "[data-view-component]"
+                },
+                "description": {
+                    "text": [
+                        "This is workaround to access content inside container that is currently not supported"
+                    ]
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "viewComponents",
+                            "selector": {
+                                "css": "runtime_copilot_base-view-component",
+                                "returnAll": true
+                            },
+                            "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                            "description": "Recursive reference to same component inside dynamic component",
+                            "public": true,
+                            "nullable": true
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

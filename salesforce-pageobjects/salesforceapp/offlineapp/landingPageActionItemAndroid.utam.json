@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"action_item\").",
+            "Represents the Android Action item inside of Action Row.",
+            "Verify the action and its name."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "action",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(className(\"android.widget.TextView\"))"
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "getActionName",
+            "compose": [
+                {
+                    "element": "action",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

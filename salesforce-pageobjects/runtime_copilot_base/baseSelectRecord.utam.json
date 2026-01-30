@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to select records from a picklist, supporting both single and multiple selections, with a loading spinner displayed when data is being fetched.",
+            "Selector: runtime_copilot_base-base-select-record"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner displayed while data is being fetched.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "multiRecordPicklist",
+                "selector": {
+                    "css": "runtime_copilot_base-multi-record-picklist"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/multiRecordPicklist",
+                "description": "Represents the multi-selection picklist for record selection.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "recordPicklist",
+                "selector": {
+                    "css": "runtime_copilot_base-record-picklist"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/recordPicklist",
+                "description": "Represents the single-selection picklist for record selection.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

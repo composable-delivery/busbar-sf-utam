@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Draft summary row on Landing page and Briefcase.",
+            "Verify the draft summary row."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "drillIn"
+        },
+        {
+            "name": "getDraftsTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "getDraftsCount",
+            "returnType": "string"
+        },
+        {
+            "name": "getSyncErrorMsg",
+            "returnType": "string"
+        },
+        {
+            "name": "hasDraftsIcon",
+            "returnType": "boolean"
+        },
+        {
+            "name": "hasDraftsErrorIcon",
+            "returnType": "boolean"
+        }
+    ]
+}

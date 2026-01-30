@@ -1,0 +1,56 @@
+{
+    "description": {
+        "text": [
+            "Selector: div.skip-timeline-wrapper.",
+            "Represents the runtime_sales_activities:activity-panel-composer Lightning Web Component.",
+            "Get the upcomingActivities, pastActivities or activityTimelineFixedStencils."
+        ],
+        "author": "Salesforce"
+    },
+    "selector": {
+        "css": ".runtime_sales_activitiesActivityTimelineFixedLayout"
+    },
+    "root": true,
+    "elements": [
+        {
+            "name": "upcomingActivities",
+            "public": true,
+            "selector": {
+                "css": ".standardTimelineUpcomingActivities"
+            }
+        },
+        {
+            "name": "pastActivities",
+            "public": true,
+            "selector": {
+                "css": "past-activity-groups .pastActivities .activityHistories"
+            }
+        },
+        {
+            "name": "activityTimelineFixedStencils",
+            "type": "utam-activities/pageObjects/activityTimelineFixedStencil",
+            "selector": {
+                "css": "li.row.Event.runtime_sales_activitiesActivityTimelineFixedStencil",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "subjectLink",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": ".subjectLink[title='%s']",
+                "args": [
+                    {
+                        "name": "subjectLinkTitle",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

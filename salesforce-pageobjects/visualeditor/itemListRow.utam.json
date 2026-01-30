@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector:  .visualEditorItemListRow",
+            "Represents the visualEditor:ItemListRow Aura component.",
+            "Delete a rule, edit a rule or get rule details."
+        ]
+    },
+    "methods": [
+        {
+            "name": "deleteRule",
+            "description": "Deletes a rule",
+            "compose": [
+                {
+                    "element": "criteriaDelete",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "editRule",
+            "description": "Edits a rule",
+            "compose": [
+                {
+                    "element": "criteriaLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getRuleDetails",
+            "description": "Shows the details a rule",
+            "compose": [
+                {
+                    "element": "criteriaLabel",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "criteriaLabel",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.criteriaLabel"
+            }
+        },
+        {
+            "name": "criteriaDelete",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.criteriaDelete"
+            }
+        }
+    ]
+}

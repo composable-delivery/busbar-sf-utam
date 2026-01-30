@@ -1,0 +1,160 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a modal for selecting entities with a search input, a datatable, and Save/Cancel buttons.",
+            "Selector: experience_ui_gen_canvas-entity-selector-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with a title",
+                "public": true
+            },
+            {
+                "name": "searchInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents the search input for filtering entities"
+            },
+            {
+                "name": "entitiesTable",
+                "selector": {
+                    "css": "lightning-datatable"
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents the table displaying entities available for selection",
+                "public": true
+            },
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the spinner that indicates loading state",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button[label='Cancel']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the Cancel button"
+            },
+            {
+                "name": "saveButton",
+                "selector": {
+                    "css": "lightning-button[label='Save']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the Save button"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "enterSearchTerm",
+            "description": {
+                "text": [
+                    "Clear search input and type a search term"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clear"
+                },
+                {
+                    "element": "searchInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Click the Cancel button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSaveButton",
+            "description": {
+                "text": [
+                    "Click the Save button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isCancelButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the Cancel button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "isSaveButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the Save button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        }
+    ]
+}

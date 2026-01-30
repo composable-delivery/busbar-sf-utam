@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that encapsulates a time input field, allowing the user to enter a time and commit the value, which then dispatches a 'valuechange' event with the entered time.",
+            "Selector: src-input-time"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "timeInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the time input field that accepts user input and commits the value",
+                "public": true
+            }
+        ]
+    }
+}

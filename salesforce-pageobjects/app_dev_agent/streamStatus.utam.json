@@ -1,0 +1,86 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a stream status message with a typing animation.",
+            "Selector: app_dev_agent-stream-status"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".status-container"
+                },
+                "description": "Represents the container for the typing animation and status message",
+                "elements": [
+                    {
+                        "name": "starContainer",
+                        "selector": {
+                            "css": ".star-container"
+                        },
+                        "description": "Represents the container for the star SVG elements",
+                        "elements": [
+                            {
+                                "name": "stars",
+                                "selector": {
+                                    "css": "svg.stars",
+                                    "returnAll": true
+                                },
+                                "description": "Represents the star SVG elements used for the typing animation"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Check that status container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isStarContainerVisible",
+            "description": {
+                "text": [
+                    "Check that star container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "starContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "areStarsPresent",
+            "description": {
+                "text": [
+                    "Check that star SVG elements are present"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "stars",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

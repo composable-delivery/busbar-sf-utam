@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the report home view.",
+            "Interact with report content or navigate back from the report."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "getReportSummary",
+            "returnType": "utam-salesforceapp/pageObjects/record/reportSummary"
+        },
+        {
+            "name": "getReportTable",
+            "returnType": "utam-salesforceapp/pageObjects/record/reportTable"
+        }
+    ]
+}

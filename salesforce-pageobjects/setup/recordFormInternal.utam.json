@@ -1,0 +1,105 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup-record-form-internal",
+            "This Component renders record form details using the lightning-form component"
+        ]
+    },
+    "elements": [
+        {
+            "name": "recordForm",
+            "selector": {
+                "css": "lightning-form"
+            },
+            "type": "utam-lightning/pageObjects/form",
+            "description": "Represents the main form component",
+            "public": true,
+            "elements": [
+                {
+                    "name": "sections",
+                    "selector": {
+                        "css": "dxp_records-section",
+                        "returnAll": true
+                    },
+                    "type": "utam-dxp_records/pageObjects/section",
+                    "description": "Represents each section of the form",
+                    "public": true,
+                    "elements": [
+                        {
+                            "name": "rows",
+                            "selector": {
+                                "css": ".slds-form__row",
+                                "returnAll": true
+                            },
+                            "description": "Represents each row within a section",
+                            "elements": [
+                                {
+                                    "name": "fields",
+                                    "selector": {
+                                        "css": ".field-container",
+                                        "returnAll": true
+                                    },
+                                    "description": "Represents each field container within a row",
+                                    "elements": [
+                                        {
+                                            "name": "formField",
+                                            "selector": {
+                                                "css": "lightning-form-field"
+                                            },
+                                            "type": "utam-lightning/pageObjects/formField",
+                                            "description": "Represents each form field within a field container",
+                                            "public": true
+                                        },
+                                        {
+                                            "name": "undoButton",
+                                            "selector": {
+                                                "css": "lightning-button-icon.field-undo-button"
+                                            },
+                                            "type": "utam-lightning/pageObjects/buttonIcon",
+                                            "description": "Represents the undo button for fields with changes",
+                                            "nullable": true,
+                                            "public": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "isRowPresent",
+            "description": {
+                "text": [
+                    "Check that row is present and visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "rows",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isFieldContainerPresent",
+            "description": {
+                "text": [
+                    "Check that field container is present and visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "fields",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

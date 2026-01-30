@@ -1,0 +1,100 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-modal. Represents the wizard for creating a new notification type. Allows access to the wizards contents and footer."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "waitForWizardBodyContainer",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "[slot='wizard-body']"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "returnSelf"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "wizardContent",
+                "selector": {
+                    "css": ".slds-modal__content"
+                },
+                "elements": [
+                    {
+                        "type": "container",
+                        "name": "wizardBodyContainer",
+                        "public": true,
+                        "selector": {
+                            "css": "[slot='wizard-body']"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "wizardFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "name": "cancel",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.cancel"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "next",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.next"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "back",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.back"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "done",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.done"
+                        },
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays navigation buttons for transitioning between phases in an assistant flow.",
+            "Selector: src-assistant-page-nav-bar"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "container",
+                "selector": {
+                    "css": ".container"
+                },
+                "description": "Represents the container element for the navigation buttons",
+                "elements": [
+                    {
+                        "name": "previousButton",
+                        "selector": {
+                            "css": "lightning-button[icon-name='utility:back']"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the \"Previous\" navigation button",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "nextButton",
+                        "selector": {
+                            "css": "lightning-button[icon-name='utility:forward']"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the \"Next\" navigation button",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isContainerVisible",
+            "description": {
+                "text": [
+                    "Check that container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "container",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

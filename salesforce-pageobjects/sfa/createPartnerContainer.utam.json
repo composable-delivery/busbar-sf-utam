@@ -1,0 +1,111 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: sfa-create-partner.",
+            "Represents the sfa-create-partner Lightning web component.",
+            "You can retrieve an account field, row field and primary button by row index."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the number of data rows"
+                ],
+                "return": "Integer value"
+            },
+            "name": "getNumRows",
+            "compose": [
+                {
+                    "element": "dataRows",
+                    "apply": "size"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "createPartnerRoot",
+            "selector": {
+                "css": "sfa-create-partner"
+            },
+            "shadow": {
+                "elements": [
+                    {
+                        "name": "noPrimaryRow",
+                        "public": true,
+                        "selector": {
+                            "css": "tr.noPrimaryRow"
+                        },
+                        "elements": [
+                            {
+                                "name": "noPrimaryButton",
+                                "public": true,
+                                "type": "utam-lightning/pageObjects/input",
+                                "selector": {
+                                    "css": "lightning-input.slds-form-element"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "dataRows",
+                        "public": true,
+                        "selector": {
+                            "css": "tr.dataRow",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "name": "row",
+                        "public": true,
+                        "selector": {
+                            "css": "tr.dataRow:nth-child(%d)",
+                            "args": [
+                                {
+                                    "name": "rowIndex",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "name": "primaryButton",
+                                "public": true,
+                                "type": "utam-lightning/pageObjects/input",
+                                "selector": {
+                                    "css": "lightning-input.slds-form-element"
+                                }
+                            },
+                            {
+                                "name": "accountField",
+                                "public": true,
+                                "type": "utam-lightning/pageObjects/lookup",
+                                "selector": {
+                                    "css": "lightning-lookup"
+                                }
+                            },
+                            {
+                                "name": "roleField",
+                                "public": true,
+                                "type": "utam-lightning/pageObjects/combobox",
+                                "selector": {
+                                    "css": "lightning-combobox"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "addRowButton",
+                        "public": true,
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button.addRowButton"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-copilot-details-record-form",
+            "<Description>"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "name": "recordFormAgentDetail",
+                "type": "utam-ui-chatbots-components/pageObjects/recordFormAgentDetail",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-record-form-agent-detail"
+                },
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "button",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button"
+            }
+        },
+        {
+            "public": true,
+            "name": "button1",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button:nth-of-type(2)"
+            }
+        }
+    ]
+}

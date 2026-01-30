@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-input-name.",
+            "Represents the lightning-form-input-name Lightning web component.",
+            "Access the input name."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputName",
+                "type": "utam-lightning/pageObjects/inputName",
+                "selector": {
+                    "css": "lightning-input-name"
+                },
+                "public": true
+            }
+        ]
+    }
+}

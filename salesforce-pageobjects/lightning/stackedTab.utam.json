@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-stacked-tab",
+            "Represents the lightning-stacked-tab Lightning web component.",
+            "Gets the tab label or icon name, Click on the tab"
+        ]
+    },
+    "root": true,
+    "type": "clickable",
+    "selector": {
+        "css": "lightning-stacked-tab"
+    },
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": "Gets the tab label",
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickTab",
+            "description": "Perform click action on the tab",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getIcon",
+            "description": {
+                "text": [
+                    "Gets the icon name displayed next to the tab label"
+                ],
+                "return": "string with icon name and Defaults to chevronright"
+            },
+            "compose": [
+                {
+                    "element": "icon",
+                    "apply": "getName",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "type": "clickable",
+                "selector": {
+                    "css": ".slds-button"
+                },
+                "elements": [
+                    {
+                        "name": "label",
+                        "selector": {
+                            "css": ".slds-truncate"
+                        }
+                    },
+                    {
+                        "name": "icon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

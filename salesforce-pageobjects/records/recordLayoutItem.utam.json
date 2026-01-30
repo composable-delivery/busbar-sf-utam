@@ -1,0 +1,724 @@
+{
+    "type": [
+        "actionable"
+    ],
+    "exposeRootElement": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-item.",
+            "Represents the records-record-layout-item Lightning web component.",
+            "Access the input field, input, input wrapper, record date time, geo location, input name, input address, record text area, rich text, record picklist, formatted text, formatted name, record type, formatted phone, formatted location, formatted number, formatted rich text, modstamp, owner lookup, record layout lookup, label, inline edit button, help text, or undo button. Get label text, input, lookup, picklist, or stage name picklist. Edit the item or wait for the output field."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the label text"
+                ],
+                "return": "String value"
+            },
+            "name": "getLabelText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "field-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Gets the target field's API name"
+                ],
+                "return": "String value"
+            },
+            "name": "getTargetField",
+            "compose": [
+                {
+                    "element": "itemWrapper",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-target-selection-name"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if there is label text"
+                ],
+                "return": "boolean value"
+            },
+            "name": "hasLabelText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "field-label"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click the inline edit button and wait for the input field to be loaded"
+                ],
+                "return": "input field element"
+            },
+            "name": "edit",
+            "compose": [
+                {
+                    "element": "inlineEditButton",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "inlineEditButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "[slot='inputField']"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the text input field"
+                ],
+                "return": "input"
+            },
+            "name": "getTextInput",
+            "compose": [
+                {
+                    "returnType": "utam-records/pageObjects/recordLayoutBaseInput",
+                    "element": "inputField",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-records/pageObjects/recordLayoutBaseInput"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "element": "input",
+                    "returnType": "utam-lightning/pageObjects/input"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the lookup field"
+                ],
+                "return": "lookup"
+            },
+            "name": "getLookup",
+            "compose": [
+                {
+                    "returnType": "utam-records/pageObjects/recordLayoutLookup",
+                    "element": "inputField",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-records/pageObjects/recordLayoutLookup"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "element": "lookup",
+                    "returnType": "utam-lightning/pageObjects/lookup"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the picklist field"
+                ],
+                "return": "picklist"
+            },
+            "name": "getPicklist",
+            "compose": [
+                {
+                    "returnType": "utam-records/pageObjects/recordPicklist",
+                    "element": "inputField",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-records/pageObjects/recordPicklist"
+                        }
+                    ]
+                },
+                {
+                    "apply": "getBasePicklist",
+                    "returnType": "utam-lightning/pageObjects/picklist",
+                    "chain": true
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the date picker field"
+                ],
+                "return": "datepicker"
+            },
+            "name": "getDatepicker",
+            "compose": [
+                {
+                    "returnType": "utam-lightning/pageObjects/input",
+                    "element": "inputField",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-lightning/pageObjects/input"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "element": "datepicker",
+                    "returnType": "utam-lightning/pageObjects/datepicker"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Wait for the output field to be loaded"
+                ],
+                "return": "Self"
+            },
+            "name": "waitForOutputField",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "[slot='outputField']"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if the field is input field"
+                ],
+                "return": "boolean value"
+            },
+            "name": "isInputField",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "[slot*='input']"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if there is lightning wrapped input element"
+                ],
+                "return": "boolean value"
+            },
+            "name": "hasLightningWrappedInput",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "records-record-layout-base-input"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if there is picklist wrapper element"
+                ],
+                "return": "boolean value"
+            },
+            "name": "hasSfaPicklistWrapper",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "sfa-input-stage-name, sfa-input-forecast-category"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hasSfaEmailWrapper",
+            "description": {
+                "text": [
+                    "Check if there is an email wrapper element"
+                ],
+                "return": "boolean value"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "emailui-formatted-email-account, emailui-formatted-email-case, emailui-formatted-email-contact, emailui-formatted-email-lead"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Gets an email action wrapper"
+                ],
+                "return": "utam-lightning/pageObjects/formattedEmail"
+            },
+            "name": "getSfaFormattedEmailActionWrapper",
+            "compose": [
+                {
+                    "element": "sfaEmailWrapper",
+                    "returnType": "utam-email/pageObjects/sfaEmailWrapper"
+                },
+                {
+                    "chain": true,
+                    "element": "emailWrapper",
+                    "returnType": "utam-email/pageObjects/formattedEmailWrapper"
+                },
+                {
+                    "chain": true,
+                    "element": "formattedEmail",
+                    "returnType": "utam-lightning/pageObjects/formattedEmail"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Gets an email action wrapper"
+                ],
+                "return": "utam-lightning/pageObjects/formattedEmail"
+            },
+            "name": "getFormattedEmailActionWrapper",
+            "compose": [
+                {
+                    "returnType": "utam-email/pageObjects/formattedEmailWrapper",
+                    "element": "outputField",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-email/pageObjects/formattedEmailWrapper"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "element": "formattedEmail",
+                    "returnType": "utam-lightning/pageObjects/formattedEmail"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": "container",
+            "name": "inputField",
+            "public": true,
+            "selector": {
+                "css": "[slot*='input']"
+            }
+        },
+        {
+            "type": "container",
+            "name": "outputField",
+            "public": true,
+            "selector": {
+                "css": "[slot='outputField']"
+            }
+        },
+        {
+            "type": "utam-email/pageObjects/sfaEmailWrapper",
+            "name": "sfaEmailWrapper",
+            "nullable": true,
+            "selector": {
+                "css": "emailui-formatted-email-account, emailui-formatted-email-case, emailui-formatted-email-contact, emailui-formatted-email-lead"
+            }
+        },
+        {
+            "type": "utam-lightning/pageObjects/input",
+            "name": "input",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "css": "lightning-input"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutBaseInput",
+            "name": "lightningInputWrapper",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-base-input"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutCheckbox",
+            "name": "recordCheckbox",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-checkbox"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutInputDateTime",
+            "name": "recordDateTime",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "css": "records-record-layout-input-date-time"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutInputLocation",
+            "name": "geoLocation",
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-input-location"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutInputName",
+            "name": "inputName",
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-input-name"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutInputAddress",
+            "name": "inputAddress",
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-input-address"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutTextArea",
+            "name": "recordTextArea",
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-text-area"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutRichText",
+            "name": "richText",
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-rich-text"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordPicklist",
+            "name": "recordPicklist",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "css": "records-record-picklist"
+            }
+        },
+        {
+            "name": "formattedText",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedText",
+            "selector": {
+                "css": "lightning-formatted-text"
+            }
+        },
+        {
+            "name": "formattedName",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedName",
+            "selector": {
+                "css": "lightning-formatted-name"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordType",
+            "name": "recordType",
+            "public": true,
+            "selector": {
+                "css": "records-record-type"
+            }
+        },
+        {
+            "name": "formattedPhone",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedPhone",
+            "selector": {
+                "css": "lightning-formatted-phone"
+            }
+        },
+        {
+            "name": "outputPhone",
+            "public": true,
+            "type": "utam-records/pageObjects/outputPhone",
+            "selector": {
+                "css": "records-output-phone"
+            }
+        },
+        {
+            "name": "formattedLocation",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedLocation",
+            "selector": {
+                "css": "lightning-formatted-location"
+            }
+        },
+        {
+            "name": "formattedNumber",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedNumber",
+            "selector": {
+                "css": "lightning-formatted-number"
+            }
+        },
+        {
+            "name": "formattedRichText",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedRichText",
+            "selector": {
+                "css": "lightning-formatted-rich-text"
+            }
+        },
+        {
+            "name": "formattedUrl",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedUrl",
+            "selector": {
+                "css": "lightning-formatted-url"
+            }
+        },
+        {
+            "name": "formattedEmail",
+            "public": true,
+            "type": "utam-lightning/pageObjects/formattedEmail",
+            "selector": {
+                "css": "lightning-formatted-email"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/modstamp",
+            "name": "modstamp",
+            "public": true,
+            "selector": {
+                "css": "records-modstamp"
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/ownerLookup",
+            "name": "ownerLookup",
+            "public": true,
+            "selector": {
+                "css": "force-owner-lookup"
+            }
+        },
+        {
+            "type": "utam-records/pageObjects/recordLayoutLookup",
+            "name": "recordLayoutLookup",
+            "public": true,
+            "selector": {
+                "css": "records-record-layout-lookup"
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/alohaPage",
+            "name": "alohaPage",
+            "public": true,
+            "selector": {
+                "css": "force-aloha-page"
+            }
+        },
+        {
+            "type": "editable",
+            "name": "inputFieldObject",
+            "public": true,
+            "selector": {
+                "css": "[slot*='input']"
+            },
+            "shadow": {
+                "elements": [
+                    {
+                        "name": "lightingInputObject",
+                        "type": "editable",
+                        "public": true,
+                        "selector": {
+                            "css": "lightning-input"
+                        },
+                        "shadow": {
+                            "elements": [
+                                {
+                                    "type": "editable",
+                                    "public": true,
+                                    "name": "lightningPrimitiveInputSimple",
+                                    "selector": {
+                                        "css": "lightning-primitive-input-simple"
+                                    },
+                                    "shadow": {
+                                        "elements": [
+                                            {
+                                                "type": "editable",
+                                                "public": true,
+                                                "name": "editableFieldOpportunity",
+                                                "selector": {
+                                                    "css": "input.slds-input"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "lightningPrimitiveInput",
+                        "selector": {
+                            "css": "lightning-primitive-input-simple"
+                        },
+                        "shadow": {
+                            "elements": [
+                                {
+                                    "type": "editable",
+                                    "public": true,
+                                    "name": "modifiableField",
+                                    "selector": {
+                                        "css": "input.slds-input"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "itemWrapper",
+                "nullable": true,
+                "selector": {
+                    "css": "[data-target-selection-name]"
+                }
+            },
+            {
+                "name": "inlineEditButton",
+                "selector": {
+                    "css": "button.inline-edit-trigger"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "public": true
+            },
+            {
+                "name": "helpText",
+                "public": true,
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                }
+            },
+            {
+                "name": "undoButton",
+                "public": true,
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

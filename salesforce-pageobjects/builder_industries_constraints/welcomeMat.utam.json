@@ -1,0 +1,206 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-welcome-mat",
+            "Constraint Builder welcome mat component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "closeButton",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button[class*='slds-modal__close']"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "closeButtonIcon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon[icon-name='utility:close']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "closeButtonAssistiveText",
+                        "type": [],
+                        "selector": {
+                            "css": "span[class='slds-assistive-text']"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "modalContent",
+                "type": [],
+                "selector": {
+                    "css": "div#welcome-mat-106-content"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "infoTitle",
+                        "type": [],
+                        "selector": {
+                            "css": "h2#welcome-mat-106-label"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "infoDescription",
+                        "type": [],
+                        "selector": {
+                            "css": "p"
+                        }
+                    },
+                    {
+                        "name": "infoList",
+                        "type": [],
+                        "selector": {
+                            "css": "ol"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "infolistItems",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li",
+                                    "returnAll": true
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "infolistItemByIndex",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "listItemBullet",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "b"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "uiChoiceTiles",
+                        "type": [],
+                        "selector": {
+                            "css": "ul[class*='slds-welcome-mat__tiles']"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "uiChoiceHeader",
+                                "type": [],
+                                "selector": {
+                                    "css": "b"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "cmlEditorTile",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li[class*='slds-welcome-mat__tile']:nth-of-type(1)"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "cmlEditorIcon",
+                                        "type": "utam-lightning/pageObjects/icon",
+                                        "selector": {
+                                            "css": "lightning-icon"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "cmlEditorTitle",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "h3[class='slds-welcome-mat__tile-title']"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "cmlEditorDescription",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "p[class='slds-welcome-mat__tile-description']"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "public": true,
+                                "name": "businessUiTile",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li[class*='slds-welcome-mat__tile']:nth-of-type(2)"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "businessUiIcon",
+                                        "type": "utam-lightning/pageObjects/icon",
+                                        "selector": {
+                                            "css": "lightning-icon"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "businessUiTitle",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "h3[class='slds-welcome-mat__tile-title']"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "businessUiDescription",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "p[class='slds-welcome-mat__tile-description']"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

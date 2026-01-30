@@ -1,0 +1,83 @@
+{
+    "description": {
+        "text": [
+            "Selector: .oneConsoleTabItem.",
+            "Represents the one:consoleTabItem Lightning web component.",
+            "Access the title. Select or close the tab."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the title text"
+                ],
+                "return": "the title text"
+            },
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click the close tab button"
+                ],
+                "return": "none"
+            },
+            "name": "closeTab",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Select a tab by clicking"
+                ],
+                "return": "none"
+            },
+            "name": "selectTab",
+            "compose": [
+                {
+                    "element": "tabHeader",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "tabHeader",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.tabHeader"
+            }
+        },
+        {
+            "name": "title",
+            "selector": {
+                "css": "span.title"
+            }
+        },
+        {
+            "name": "closeButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".close button.slds-button"
+            }
+        }
+    ]
+}

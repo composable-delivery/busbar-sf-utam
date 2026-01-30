@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: addNewLightningTypeBtn",
+            "Selector: mcontent_lightning_types-add-new-lightning-type-btn",
+            "Button for creating a new lightning type"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent_lightning_types-add-new-lightning-type-btn"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

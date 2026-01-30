@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the view with the record type actions.",
+            "Find an action and navigate to it; check if record type action exists; get the type actions list."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "selectRecordTypeWithLabel",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getRecordTypes",
+            "returnType": [
+                "clickable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "hasRecordType",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-text",
+            "Provides access to lightning input component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input,es_property_editors-pill-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "mergeFieldButton",
+                "type": "utam-es_property_editors/pageObjects/mergeFieldButton",
+                "selector": {
+                    "css": "es_property_editors-merge-field-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "inputContentContainer",
+                "type": "editable",
+                "selector": {
+                    "css": "lightning-input,es_property_editors-pill-input .content-container"
+                }
+            }
+        ]
+    }
+}

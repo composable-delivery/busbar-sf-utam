@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-primitive-datatable-tooltip",
+            "Get the button to open a lightning-primitive-datatable-tooltip-bubble."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Clicks the leave button to discard edits to the list and leave the list view",
+                    "Waits for the confirm modal to disappear"
+                ]
+            },
+            "name": "clickTooltipButton",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

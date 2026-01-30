@@ -1,0 +1,217 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/stageLeftContainer\").",
+            "Represents the Android profile menu fragment.",
+            "Get logged in info, navigate to an item in the list, or logout."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/profileMenuNav",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/stageLeftContainer\")"
+    },
+    "elements": [
+        {
+            "name": "userName",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/user_title\")"
+            }
+        },
+        {
+            "name": "orgName",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/user_org_name\")"
+            }
+        },
+        {
+            "name": "profileLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/profile_standard_title\")"
+            }
+        },
+        {
+            "name": "favoritesLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/favorites_standard_title\")"
+            }
+        },
+        {
+            "name": "changeAcctLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/change_account_standard_title\")"
+            }
+        },
+        {
+            "name": "pendingChangesLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/pending_changes_standard_title\")"
+            }
+        },
+        {
+            "name": "syncPendingImg",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/sash\").description(\"Sync Pending\")"
+            }
+        },
+        {
+            "name": "feedbackLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedback_standard_title\")"
+            }
+        },
+        {
+            "name": "settingsLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/settings_standard_title\")"
+            }
+        },
+        {
+            "name": "helpLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/help_standard_title\")"
+            }
+        },
+        {
+            "name": "logoutLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/logout_standard_title\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getUserName",
+            "compose": [
+                {
+                    "element": "userName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getOrgName",
+            "compose": [
+                {
+                    "element": "orgName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "openProfile",
+            "compose": [
+                {
+                    "element": "profileLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openFavorites",
+            "compose": [
+                {
+                    "element": "favoritesLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "changeAccount",
+            "compose": [
+                {
+                    "element": "changeAcctLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openPendingChanges",
+            "compose": [
+                {
+                    "element": "pendingChangesLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasPendingChangesToSync",
+            "compose": [
+                {
+                    "element": "syncPendingImg",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "openFeedback",
+            "compose": [
+                {
+                    "element": "feedbackLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openSettings",
+            "compose": [
+                {
+                    "element": "settingsLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openHelp",
+            "compose": [
+                {
+                    "element": "helpLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "logout",
+            "compose": [
+                {
+                    "element": "logoutLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

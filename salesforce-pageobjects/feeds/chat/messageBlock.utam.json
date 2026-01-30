@@ -1,0 +1,129 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that represents a chat message block with an avatar, a message body, and an optional feedback tooltip that appears on hover for inbound messages.",
+            "Selector: src-message-block"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "userAvatar",
+                "selector": {
+                    "css": "feeds_chat-base-avatar"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            },
+            {
+                "name": "messageBodyContent",
+                "selector": {
+                    "css": ".slds-chat-message__body > *:first-child"
+                },
+                "type": "container",
+                "description": "Represents the container for the message body.",
+                "public": true
+            },
+            {
+                "name": "avatarContainer",
+                "selector": {
+                    "css": ".slds-avatar.slds-chat-avatar"
+                },
+                "description": "Represents the container for the user's avatar.",
+                "elements": [
+                    {
+                        "name": "clientAvatar",
+                        "selector": {
+                            "css": "feeds_chat-user-avatar"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/userAvatar",
+                        "description": "Represents the avatar of the user, which can be Einstein or the current user.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "messageBody",
+                "selector": {
+                    "css": ".slds-chat-message__body"
+                },
+                "description": "Represents the main body of the chat message.",
+                "elements": [
+                    {
+                        "name": "messageSlotContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the default slot within the message body.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "feedbackTooltip",
+                "selector": {
+                    "css": "feeds_chat-feedback-tooltip"
+                },
+                "type": "utam-feeds-chat/pageObjects/feedbackTooltip",
+                "description": "Represents the feedback tooltip which is conditionally rendered for inbound messages.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isAvatarContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the avatar container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "avatarContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageBodyVisible",
+            "description": {
+                "text": [
+                    "Check if the message body is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageBody",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Retrieve the text content from the message body"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageBody",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: \"Einstein\"",
+            "Represents the iOS copilot launcher container."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/copilot/copilotLauncher",
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "Einstein"
+    },
+    "methods": [
+        {
+            "name": "launchCopilot",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasCopilot",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

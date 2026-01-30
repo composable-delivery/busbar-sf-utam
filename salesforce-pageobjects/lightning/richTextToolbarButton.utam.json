@@ -1,0 +1,112 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-rich-text-toolbar-button",
+            "Represents the lightning-rich-text-toolbar-button Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "popoverBody",
+            "type": "container",
+            "selector": {
+                "css": ".slds-popover__body slot > *",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": ".slds-button"
+                },
+                "public": true
+            },
+            {
+                "name": "popover",
+                "type": "utam-lightning/pageObjects/popup",
+                "selector": {
+                    "css": "lightning-popup"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "button"
+                }
+            ]
+        },
+        {
+            "name": "isPopoverOpened",
+            "compose": [
+                {
+                    "apply": "isOpen",
+                    "element": "popover",
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "getClassName",
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "button"
+                }
+            ]
+        },
+        {
+            "name": "isDisabled",
+            "compose": [
+                {
+                    "apply": "getAttribute",
+                    "element": "button",
+                    "args": [
+                        {
+                            "value": "disabled"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isSelected",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-selected"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

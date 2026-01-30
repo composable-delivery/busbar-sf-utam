@@ -1,0 +1,186 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that allows users to view, add, and delete goals related to a meeting. It displays a list of goals, provides the ability to add a new goal, and includes buttons for saving or canceling changes. The component can show loading indicators when fetching data and allows for dynamic content updates.",
+            "Selector: experience_ui_gen_canvas-tile-meeting-goals"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "goalsList",
+                "selector": {
+                    "css": "ol.slds-list_ordered"
+                },
+                "description": "Represents the ordered list of goals.",
+                "elements": [
+                    {
+                        "name": "goalItem",
+                        "selector": {
+                            "css": "div.two-columns",
+                            "returnAll": true
+                        },
+                        "description": "Represents a single goal item within the list, which includes the goal content and potentially a delete button.",
+                        "elements": [
+                            {
+                                "name": "goalContent",
+                                "selector": {
+                                    "css": "li"
+                                },
+                                "description": "Represents the content of a goal."
+                            },
+                            {
+                                "name": "deleteGoalButton",
+                                "selector": {
+                                    "css": "lightning-button-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/buttonIcon",
+                                "description": "Represents the delete button for a goal, allowing it to be removed from the list.",
+                                "nullable": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "addGoalButton",
+                "selector": {
+                    "css": "lightning-button[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the button to add a new goal.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "newGoalInput",
+                "selector": {
+                    "css": "lightning-input[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the input field for typing a new goal.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the cancel button to discard changes.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "saveButton",
+                "selector": {
+                    "css": "lightning-button[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the save button to save the new goal.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "loadingTile",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-loading-tile"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/loadingTile",
+                "description": "Represents the loading tile indicating content generation.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a spinner indicating a loading state.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isGoalsListVisible",
+            "description": {
+                "text": [
+                    "Check if the goals list is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "goalsList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getGoalContent",
+            "description": {
+                "text": [
+                    "Get the text content of a goal"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "goalContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isGoalItemPresent",
+            "description": {
+                "text": [
+                    "Check if a goal item is present in the list"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "goalItem",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

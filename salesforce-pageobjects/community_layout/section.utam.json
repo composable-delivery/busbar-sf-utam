@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: community_layout-section"
+        ]
+    },
+    "elements": [
+        {
+            "name": "columnsContent",
+            "selector": {
+                "css": ".columns-content"
+            },
+            "elements": [
+                {
+                    "public": true,
+                    "name": "column",
+                    "type": "utam-community_layout/pageObjects/column",
+                    "selector": {
+                        "css": "community_layout-column:nth-of-type(%d)",
+                        "args": [
+                            {
+                                "name": "index",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "columns",
+                    "type": "utam-community_layout/pageObjects/column",
+                    "selector": {
+                        "css": "community_layout-column",
+                        "returnAll": true
+                    },
+                    "public": true
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the 'All Lists' drawer layout of an object.",
+            "Find a record by label, and get its title or navigate to it."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "root": true,
+    "methods": [
+        {
+            "name": "clickListCellWithLabel",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasListCell",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "getVisibleListCells",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/searchBar"
+        },
+        {
+            "name": "getVisibleListWithLabel",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

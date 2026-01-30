@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: defaultEmailTemplatePageTemplate"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "table",
+                "type": [],
+                "selector": {
+                    "css": "table"
+                },
+                "elements": [
+                    {
+                        "name": "tableRow",
+                        "type": [],
+                        "selector": {
+                            "css": "tr"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "tableCell",
+                                "type": [],
+                                "selector": {
+                                    "css": "td"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "componentsContainer",
+                                        "type": "container",
+                                        "selector": {
+                                            "css": "[slot='components']"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

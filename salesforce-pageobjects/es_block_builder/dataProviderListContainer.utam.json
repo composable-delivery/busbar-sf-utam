@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of data provider containers.",
+            "Selector: src-data-provider-list-container"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dataProviderContainers",
+                "selector": {
+                    "css": "es_block_builder-data-provider-container",
+                    "returnAll": true
+                },
+                "type": "utam-es_block_builder/pageObjects/dataProviderContainer",
+                "description": "Represents each data provider container in the list",
+                "public": true
+            }
+        ]
+    }
+}

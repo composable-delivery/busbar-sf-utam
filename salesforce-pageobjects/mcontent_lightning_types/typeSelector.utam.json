@@ -1,0 +1,107 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: typeSelector",
+            "Apex class selection component with search and combobox",
+            "Selector: mcontent_lightning_types-type-selector"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent_lightning_types-type-selector"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "h2Content",
+                "type": [],
+                "selector": {
+                    "css": "h2"
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "public": true,
+                "name": "groupedCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForTypeSelectorVisible",
+            "description": "Waits for the type selector component to become visible",
+            "compose": [
+                {
+                    "apply": "waitForVisible"
+                }
+            ]
+        },
+        {
+            "name": "waitForApexComboboxVisible",
+            "description": "Waits for the Apex class combobox to become visible",
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "waitForVisible"
+                }
+            ]
+        },
+        {
+            "name": "typeApexClass",
+            "description": "Types text into the Apex class combobox",
+            "args": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "typeText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "selectApexClassByLabel",
+            "description": "Selects an Apex class from the dropdown by its label",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "pickItemByLabel",
+                    "args": [
+                        {
+                            "name": "label",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
