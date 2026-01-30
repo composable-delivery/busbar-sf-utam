@@ -28,7 +28,6 @@ pub mod prelude {
     pub use thirtyfour::prelude::*;
 }
 
-// TODO: Re-enable once modules are implemented
 pub use elements::*;
 pub use error::{UtamError, UtamResult};
 // pub use shadow::*;

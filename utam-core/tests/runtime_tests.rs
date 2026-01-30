@@ -40,7 +40,6 @@ fn test_traits_exported() {
     fn _uses_clickable<T: Clickable>(_: T) {}
 }
 
-#[cfg(test)]
 mod clickable_tests {
     use super::*;
     

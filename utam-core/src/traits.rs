@@ -12,7 +12,6 @@ use thirtyfour::WebElement;
 ///
 /// This trait provides access to the underlying WebElement and serves
 /// as the foundation for more specific interaction traits.
-#[async_trait]
 pub trait Actionable: Send + Sync {
     /// Get a reference to the underlying WebElement
     fn inner(&self) -> &WebElement;

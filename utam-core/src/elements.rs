@@ -4,7 +4,6 @@
 //! various traits for type-safe element interactions.
 
 use crate::traits::{Actionable, Clickable};
-use async_trait::async_trait;
 use thirtyfour::WebElement;
 
 /// A wrapper around WebElement that implements the Clickable trait.
@@ -54,7 +53,6 @@ impl ClickableElement {
     }
 }
 
-#[async_trait]
 impl Actionable for ClickableElement {
     fn inner(&self) -> &WebElement {
         &self.element
