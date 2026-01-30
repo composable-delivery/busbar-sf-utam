@@ -12,3 +12,6 @@ lcov.info
 
 # Pre-commit
 .pre-commit-cache/
+# Insta snapshot review files
+*.snap.new
+.pending-snapshots/

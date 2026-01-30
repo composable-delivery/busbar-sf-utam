@@ -1,0 +1,7 @@
+{
+  "description": "Simple clickable button",
+  "root": true,
+  "selector": { "css": "button.submit-btn" },
+  "type": ["clickable"],
+  "exposeRootElement": true
+}

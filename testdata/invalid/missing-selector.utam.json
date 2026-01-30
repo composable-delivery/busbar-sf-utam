@@ -1,0 +1,5 @@
+{
+  "description": "Invalid - missing required selector",
+  "root": true,
+  "type": ["clickable"]
+}
