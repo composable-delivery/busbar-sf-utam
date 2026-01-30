@@ -13,25 +13,23 @@
 //! login.login("user", "pass").await?;
 //! ```
 
-mod elements;
+pub mod elements;
 mod error;
 mod shadow;
-mod traits;
+pub mod traits;
 mod wait;
 
 pub mod prelude {
-    // TODO: Re-enable once modules are implemented
-    // pub use crate::elements::*;
+    pub use crate::elements::*;
     pub use crate::error::{UtamError, UtamResult};
+    pub use crate::traits::*;
     // pub use crate::shadow::*;
-    // pub use crate::traits::*;
     // pub use crate::wait::*;
     pub use thirtyfour::prelude::*;
 }
 
-// TODO: Re-enable once modules are implemented
-// pub use elements::*;
+pub use elements::*;
 pub use error::{UtamError, UtamResult};
 // pub use shadow::*;
-// pub use traits::*;
+pub use traits::*;
 // pub use wait::*;
