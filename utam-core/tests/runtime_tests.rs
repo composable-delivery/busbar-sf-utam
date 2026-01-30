@@ -9,11 +9,40 @@ use utam_core::prelude::*;
 
 #[test]
 fn test_error_types() {
-    // Test that error types can be constructed
-    let _error = UtamError::ElementNotFound {
+    // Test that error types can be constructed and displayed
+    let error1 = UtamError::ElementNotFound {
         name: "testButton".to_string(),
         selector: ".test".to_string(),
     };
+    assert!(error1.to_string().contains("testButton"));
+    assert!(error1.to_string().contains(".test"));
+
+    let error2 = UtamError::Timeout {
+        condition: "element to be visible".to_string(),
+    };
+    assert!(error2.to_string().contains("Timeout"));
+
+    let error3 = UtamError::ShadowRootNotFound {
+        element: "myElement".to_string(),
+    };
+    assert!(error3.to_string().contains("myElement"));
+
+    let error4 = UtamError::InvalidSelector {
+        selector: "invalid[".to_string(),
+    };
+    assert!(error4.to_string().contains("invalid["));
+
+    let error5 = UtamError::FrameNotFound {
+        name: "myFrame".to_string(),
+    };
+    assert!(error5.to_string().contains("myFrame"));
+
+    let error6 = UtamError::AssertionFailed {
+        expected: "foo".to_string(),
+        actual: "bar".to_string(),
+    };
+    assert!(error6.to_string().contains("foo"));
+    assert!(error6.to_string().contains("bar"));
 }
 
 #[test]
