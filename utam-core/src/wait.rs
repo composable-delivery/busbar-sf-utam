@@ -80,13 +80,15 @@ where
     loop {
         interval.tick().await;
 
+        // Check timeout before evaluating predicate to ensure we don't exceed configured timeout
+        if start.elapsed() > config.timeout {
+            return Err(UtamError::Timeout {
+                condition: description.to_string(),
+            });
+        }
+
         match predicate().await? {
             Some(value) => return Ok(value),
-            None if start.elapsed() > config.timeout => {
-                return Err(UtamError::Timeout {
-                    condition: description.to_string(),
-                });
-            }
             None => continue,
         }
     }

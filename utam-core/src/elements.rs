@@ -33,6 +33,17 @@ impl BaseElement {
     /// # Errors
     ///
     /// Returns error if WebDriver operation fails
+    ///
+    /// # Implementation Notes
+    ///
+    /// This method attempts to call `is_enabled()` on the element to check if it's
+    /// still attached to the DOM. If the element has become stale (no longer in DOM),
+    /// the WebDriver will return an error containing "stale" or "no such element".
+    ///
+    /// **Note**: This error detection relies on substring matching in error messages,
+    /// which may not work with all WebDriver implementations or localized error messages.
+    /// This is a limitation of the current thirtyfour API which doesn't provide
+    /// specific error types for stale elements.
     pub async fn is_present(&self) -> UtamResult<bool> {
         // Try to get a property to check if element is still attached to DOM
         // If it throws a stale element exception, it's not present
@@ -40,6 +51,7 @@ impl BaseElement {
             Ok(_) => Ok(true),
             Err(e) => {
                 // Check if it's a stale element error
+                // This is fragile but necessary given current thirtyfour API
                 let err_str = e.to_string().to_lowercase();
                 if err_str.contains("stale") || err_str.contains("no such element") {
                     Ok(false)
@@ -117,6 +129,7 @@ impl BaseElement {
     /// # Returns
     ///
     /// Returns `Ok(())` when the element becomes invisible within the timeout period.
+    /// A stale element (removed from DOM) is also considered invisible.
     ///
     /// # Errors
     ///
@@ -133,6 +146,11 @@ impl BaseElement {
         let element = self.clone();
         wait_for(
             || async {
+                // If element is not present (stale), consider it invisible
+                if !element.is_present().await? {
+                    return Ok(Some(()));
+                }
+                // Otherwise check if it's invisible
                 if !element.is_visible().await? {
                     Ok(Some(()))
                 } else {
@@ -226,21 +244,5 @@ impl BaseElement {
             "element to become enabled",
         )
         .await
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_base_element_can_be_cloned() {
-        // This test validates that BaseElement implements Clone
-        // The actual clone functionality is verified at compile time
-        // We just need a placeholder test to ensure the trait is present
-    }
-
-    #[test]
-    fn test_base_element_can_be_debugged() {
-        // This test validates that BaseElement implements Debug
-        // The actual debug functionality is verified at compile time
     }
 }

@@ -186,7 +186,9 @@ async fn test_wait_respects_poll_interval() {
 
     let elapsed = start.elapsed();
     assert!(result.is_ok());
-    // Should take at least 4 * 200ms = 800ms (initial tick is immediate, then 3 more)
+    // The first tick from tokio::time::interval completes immediately, then
+    // three more ticks are needed (each after 200ms) to reach count >= 3.
+    // Total minimum time: 3 * 200ms = 600ms
     // Allow some tolerance for timing
     assert!(elapsed >= Duration::from_millis(600), "Expected at least 600ms, got {:?}", elapsed);
 }
