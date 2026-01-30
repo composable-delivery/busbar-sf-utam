@@ -27,7 +27,7 @@ fn test_clickable_element_creation() {
     // Test that ClickableElement can be type-checked at compile time
     // This ensures the API is stable even without a live WebDriver
     fn _assert_implements_traits<T: Clickable + Actionable>(_: &T) {}
-    
+
     // This test passes if the code compiles, showing that ClickableElement
     // properly implements both Actionable and Clickable traits
 }
@@ -42,7 +42,7 @@ fn test_traits_exported() {
 
 mod clickable_tests {
     use super::*;
-    
+
     /// Test that ClickableElement wraps WebElement correctly
     #[test]
     fn test_clickable_element_api() {
@@ -51,12 +51,12 @@ mod clickable_tests {
         // 1. ClickableElement can be constructed
         // 2. It exposes the correct methods
         // 3. The types are correct
-        
+
         // We can't actually test behavior without a WebDriver, but we can
         // verify the API is correct through type checking
         fn _verify_api_signature() {
             use std::time::Duration;
-            
+
             // Verify method signatures exist (compile-time check)
             async fn _test_methods(element: &ClickableElement) -> UtamResult<()> {
                 element.click().await?;
@@ -67,7 +67,7 @@ mod clickable_tests {
             }
         }
     }
-    
+
     /// Test that traits are properly structured
     #[test]
     fn test_trait_hierarchy() {

@@ -62,12 +62,7 @@ pub trait Clickable: Actionable {
     /// button.double_click().await?;
     /// ```
     async fn double_click(&self) -> UtamResult<()> {
-        self.inner()
-            .handle
-            .action_chain()
-            .double_click_element(self.inner())
-            .perform()
-            .await?;
+        self.inner().handle.action_chain().double_click_element(self.inner()).perform().await?;
         Ok(())
     }
 
@@ -85,12 +80,7 @@ pub trait Clickable: Actionable {
     /// button.right_click().await?;
     /// ```
     async fn right_click(&self) -> UtamResult<()> {
-        self.inner()
-            .handle
-            .action_chain()
-            .context_click_element(self.inner())
-            .perform()
-            .await?;
+        self.inner().handle.action_chain().context_click_element(self.inner()).perform().await?;
         Ok(())
     }
 
@@ -115,11 +105,7 @@ pub trait Clickable: Actionable {
     /// ```
     async fn click_and_hold(&self, duration: Duration) -> UtamResult<()> {
         let handle = &self.inner().handle;
-        handle
-            .action_chain()
-            .click_and_hold_element(self.inner())
-            .perform()
-            .await?;
+        handle.action_chain().click_and_hold_element(self.inner()).perform().await?;
         tokio::time::sleep(duration).await;
         handle.action_chain().release().perform().await?;
         Ok(())
