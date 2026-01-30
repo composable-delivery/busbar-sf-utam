@@ -20,9 +20,7 @@ pub trait Actionable: Send + Sync {
 
     /// Get a WebDriver instance from the element's session handle
     fn driver(&self) -> WebDriver {
-        WebDriver {
-            handle: self.inner().handle.clone(),
-        }
+        WebDriver { handle: self.inner().handle.clone() }
     }
 
     /// Focus on this element
@@ -35,32 +33,21 @@ pub trait Actionable: Send + Sync {
     async fn blur(&self) -> UtamResult<()> {
         // Blur by executing JavaScript since thirtyfour doesn't have a direct blur method
         let driver = self.driver();
-        driver
-            .execute("arguments[0].blur();", vec![self.inner().to_json()?])
-            .await?;
+        driver.execute("arguments[0].blur();", vec![self.inner().to_json()?]).await?;
         Ok(())
     }
 
     /// Scroll this element into view
     async fn scroll_into_view(&self) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .execute(
-                "arguments[0].scrollIntoView();",
-                vec![self.inner().to_json()?],
-            )
-            .await?;
+        driver.execute("arguments[0].scrollIntoView();", vec![self.inner().to_json()?]).await?;
         Ok(())
     }
 
     /// Move the mouse to this element
     async fn move_to(&self) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .action_chain()
-            .move_to_element_center(self.inner())
-            .perform()
-            .await?;
+        driver.action_chain().move_to_element_center(self.inner()).perform().await?;
         Ok(())
     }
 }
@@ -79,33 +66,21 @@ pub trait Clickable: Actionable {
     /// Double-click this element
     async fn double_click(&self) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .action_chain()
-            .double_click_element(self.inner())
-            .perform()
-            .await?;
+        driver.action_chain().double_click_element(self.inner()).perform().await?;
         Ok(())
     }
 
     /// Right-click (context click) this element
     async fn right_click(&self) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .action_chain()
-            .context_click_element(self.inner())
-            .perform()
-            .await?;
+        driver.action_chain().context_click_element(self.inner()).perform().await?;
         Ok(())
     }
 
     /// Click and hold this element
     async fn click_and_hold(&self) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .action_chain()
-            .click_and_hold_element(self.inner())
-            .perform()
-            .await?;
+        driver.action_chain().click_and_hold_element(self.inner()).perform().await?;
         Ok(())
     }
 }
@@ -149,11 +124,7 @@ pub trait Draggable: Actionable {
     /// Drag this element to another element
     async fn drag_and_drop(&self, target: &WebElement) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .action_chain()
-            .drag_and_drop_element(self.inner(), target)
-            .perform()
-            .await?;
+        driver.action_chain().drag_and_drop_element(self.inner(), target).perform().await?;
         Ok(())
     }
 
@@ -167,35 +138,22 @@ pub trait Draggable: Actionable {
         duration: Duration,
     ) -> UtamResult<()> {
         let driver = self.driver();
-        
+
         // Click and hold
-        driver
-            .action_chain()
-            .click_and_hold_element(self.inner())
-            .perform()
-            .await?;
+        driver.action_chain().click_and_hold_element(self.inner()).perform().await?;
 
         // Wait for specified duration
         tokio::time::sleep(duration).await;
 
         // Move to target and release
-        driver
-            .action_chain()
-            .move_to_element_center(target)
-            .release()
-            .perform()
-            .await?;
+        driver.action_chain().move_to_element_center(target).release().perform().await?;
         Ok(())
     }
 
     /// Drag this element by a pixel offset
     async fn drag_and_drop_by_offset(&self, x: i64, y: i64) -> UtamResult<()> {
         let driver = self.driver();
-        driver
-            .action_chain()
-            .drag_and_drop_element_by_offset(self.inner(), x, y)
-            .perform()
-            .await?;
+        driver.action_chain().drag_and_drop_element_by_offset(self.inner(), x, y).perform().await?;
         Ok(())
     }
 }

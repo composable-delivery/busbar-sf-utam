@@ -42,9 +42,7 @@ pub struct ClickableElement {
 impl ClickableElement {
     /// Create a new ClickableElement from a WebElement
     pub fn new(element: WebElement) -> Self {
-        Self {
-            base: BaseElement::new(element),
-        }
+        Self { base: BaseElement::new(element) }
     }
 
     /// Get the underlying WebElement
@@ -72,9 +70,7 @@ pub struct EditableElement {
 impl EditableElement {
     /// Create a new EditableElement from a WebElement
     pub fn new(element: WebElement) -> Self {
-        Self {
-            base: BaseElement::new(element),
-        }
+        Self { base: BaseElement::new(element) }
     }
 
     /// Get the underlying WebElement
@@ -102,9 +98,7 @@ pub struct DraggableElement {
 impl DraggableElement {
     /// Create a new DraggableElement from a WebElement
     pub fn new(element: WebElement) -> Self {
-        Self {
-            base: BaseElement::new(element),
-        }
+        Self { base: BaseElement::new(element) }
     }
 
     /// Get the underlying WebElement
