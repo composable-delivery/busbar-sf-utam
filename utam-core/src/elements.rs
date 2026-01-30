@@ -11,9 +11,13 @@ use crate::error::{UtamError, UtamResult};
 /// Rectangle representing an element's position and size
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ElementRectangle {
+    /// The x-coordinate of the element's top-left corner
     pub x: f64,
+    /// The y-coordinate of the element's top-left corner
     pub y: f64,
+    /// The width of the element
     pub width: f64,
+    /// The height of the element
     pub height: f64,
 }
 
@@ -106,7 +110,8 @@ impl BaseElement {
         match self.inner.tag_name().await {
             Ok(_) => Ok(true),
             Err(e) => {
-                // Check if it's a stale element error
+                // Note: We use string matching because thirtyfour doesn't expose
+                // typed error variants for WebDriver errors
                 if e.to_string().contains("stale element") {
                     Ok(false)
                 } else {
@@ -121,6 +126,55 @@ impl BaseElement {
         Ok(self.inner.is_displayed().await?)
     }
 
+    /// Helper function to check if an element is found by selector
+    ///
+    /// Returns Ok(true) if element is found, Ok(false) if not found,
+    /// or Err for other errors
+    async fn element_exists(&self, selector: &str) -> UtamResult<bool> {
+        match self.inner.find(By::Css(selector)).await {
+            Ok(_) => Ok(true),
+            Err(e) => {
+                // Note: We use string matching because thirtyfour doesn't expose
+                // typed error variants for WebDriver errors
+                if e.to_string().contains("no such element") {
+                    Ok(false)
+                } else {
+                    Err(UtamError::WebDriver(e))
+                }
+            }
+        }
+    }
+
+    /// Helper function to check if an element is found in a shadow root
+    async fn element_exists_in_shadow(&self, selector: &str) -> UtamResult<bool> {
+        match self.inner.get_shadow_root().await {
+            Ok(shadow_root) => {
+                match shadow_root.find(By::Css(selector)).await {
+                    Ok(_) => Ok(true),
+                    Err(e) => {
+                        // Note: We use string matching because thirtyfour doesn't expose
+                        // typed error variants for WebDriver errors
+                        if e.to_string().contains("no such element") {
+                            Ok(false)
+                        } else {
+                            Err(UtamError::WebDriver(e))
+                        }
+                    }
+                }
+            }
+            Err(e) => {
+                // If no shadow root, fall back to regular search
+                // Note: We use string matching because thirtyfour doesn't expose
+                // typed error variants for WebDriver errors
+                if e.to_string().contains("no such shadow root") {
+                    self.element_exists(selector).await
+                } else {
+                    Err(UtamError::WebDriver(e))
+                }
+            }
+        }
+    }
+
     /// Check if the element contains a child element matching the selector
     ///
     /// # Arguments
@@ -129,54 +183,9 @@ impl BaseElement {
     /// * `expand_shadow` - Whether to expand shadow DOM when searching
     pub async fn contains_element(&self, selector: &str, expand_shadow: bool) -> UtamResult<bool> {
         if expand_shadow {
-            // Try to get shadow root and search within it
-            match self.inner.get_shadow_root().await {
-                Ok(shadow_root) => {
-                    match shadow_root.find(By::Css(selector)).await {
-                        Ok(_) => Ok(true),
-                        Err(e) => {
-                            // If element not found, return false
-                            if e.to_string().contains("no such element") {
-                                Ok(false)
-                            } else {
-                                Err(UtamError::WebDriver(e))
-                            }
-                        }
-                    }
-                }
-                Err(e) => {
-                    // If no shadow root, fall back to regular search
-                    if e.to_string().contains("no such shadow root") {
-                        // Regular search within the element (non-recursive)
-                        match self.inner.find(By::Css(selector)).await {
-                            Ok(_) => Ok(true),
-                            Err(e) => {
-                                // If element not found, return false
-                                if e.to_string().contains("no such element") {
-                                    Ok(false)
-                                } else {
-                                    Err(UtamError::WebDriver(e))
-                                }
-                            }
-                        }
-                    } else {
-                        Err(UtamError::WebDriver(e))
-                    }
-                }
-            }
+            self.element_exists_in_shadow(selector).await
         } else {
-            // Regular search within the element
-            match self.inner.find(By::Css(selector)).await {
-                Ok(_) => Ok(true),
-                Err(e) => {
-                    // If element not found, return false
-                    if e.to_string().contains("no such element") {
-                        Ok(false)
-                    } else {
-                        Err(UtamError::WebDriver(e))
-                    }
-                }
-            }
+            self.element_exists(selector).await
         }
     }
 }

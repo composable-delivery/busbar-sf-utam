@@ -13,7 +13,6 @@ thirtyfour.workspace = true
 tokio.workspace = true
 async-trait.workspace = true
 thiserror.workspace = true
-serde_json.workspace = true
 
 [dev-dependencies]
 insta.workspace = true
