@@ -111,10 +111,7 @@ impl BaseElement {
                     Ok(None)
                 }
             },
-            &WaitConfig {
-                timeout,
-                ..Default::default()
-            },
+            &WaitConfig { timeout, ..Default::default() },
             "element to become visible",
         )
         .await
@@ -157,10 +154,7 @@ impl BaseElement {
                     Ok(None)
                 }
             },
-            &WaitConfig {
-                timeout,
-                ..Default::default()
-            },
+            &WaitConfig { timeout, ..Default::default() },
             "element to become invisible",
         )
         .await
@@ -197,10 +191,7 @@ impl BaseElement {
                     Ok(None)
                 }
             },
-            &WaitConfig {
-                timeout,
-                ..Default::default()
-            },
+            &WaitConfig { timeout, ..Default::default() },
             "element to be removed from DOM",
         )
         .await
@@ -237,10 +228,7 @@ impl BaseElement {
                     Ok(None)
                 }
             },
-            &WaitConfig {
-                timeout,
-                ..Default::default()
-            },
+            &WaitConfig { timeout, ..Default::default() },
             "element to become enabled",
         )
         .await

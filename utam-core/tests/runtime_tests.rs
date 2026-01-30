@@ -34,10 +34,8 @@ fn test_wait_config_default() {
 #[test]
 fn test_wait_config_custom() {
     // Test that WaitConfig can be customized
-    let config = WaitConfig {
-        timeout: Duration::from_secs(10),
-        poll_interval: Duration::from_millis(100),
-    };
+    let config =
+        WaitConfig { timeout: Duration::from_secs(10), poll_interval: Duration::from_millis(100) };
     assert_eq!(config.timeout, Duration::from_secs(10));
     assert_eq!(config.poll_interval, Duration::from_millis(100));
 }
@@ -45,17 +43,10 @@ fn test_wait_config_custom() {
 #[tokio::test]
 async fn test_wait_for_succeeds_immediately() {
     // Test wait_for when condition is immediately true
-    let config = WaitConfig {
-        timeout: Duration::from_secs(5),
-        poll_interval: Duration::from_millis(100),
-    };
+    let config =
+        WaitConfig { timeout: Duration::from_secs(5), poll_interval: Duration::from_millis(100) };
 
-    let result = wait_for(
-        || async { Ok(Some(42)) },
-        &config,
-        "test condition",
-    )
-    .await;
+    let result = wait_for(|| async { Ok(Some(42)) }, &config, "test condition").await;
 
     assert!(result.is_ok());
     assert_eq!(result.unwrap(), 42);
@@ -70,10 +61,8 @@ async fn test_wait_for_succeeds_after_polling() {
     let counter = Arc::new(AtomicU32::new(0));
     let counter_clone = counter.clone();
 
-    let config = WaitConfig {
-        timeout: Duration::from_secs(5),
-        poll_interval: Duration::from_millis(100),
-    };
+    let config =
+        WaitConfig { timeout: Duration::from_secs(5), poll_interval: Duration::from_millis(100) };
 
     let result = wait_for(
         move || {
@@ -106,12 +95,8 @@ async fn test_wait_for_times_out() {
         poll_interval: Duration::from_millis(100),
     };
 
-    let result: UtamResult<()> = wait_for(
-        || async { Ok(None) },
-        &config,
-        "impossible condition",
-    )
-    .await;
+    let result: UtamResult<()> =
+        wait_for(|| async { Ok(None) }, &config, "impossible condition").await;
 
     assert!(result.is_err());
     match result.unwrap_err() {
@@ -125,10 +110,8 @@ async fn test_wait_for_times_out() {
 #[tokio::test]
 async fn test_wait_for_propagates_errors() {
     // Test that wait_for propagates errors from predicate
-    let config = WaitConfig {
-        timeout: Duration::from_secs(5),
-        poll_interval: Duration::from_millis(100),
-    };
+    let config =
+        WaitConfig { timeout: Duration::from_secs(5), poll_interval: Duration::from_millis(100) };
 
     let result: UtamResult<()> = wait_for(
         || async {
@@ -162,10 +145,8 @@ async fn test_wait_respects_poll_interval() {
     let counter_clone = counter.clone();
     let start = Instant::now();
 
-    let config = WaitConfig {
-        timeout: Duration::from_secs(2),
-        poll_interval: Duration::from_millis(200),
-    };
+    let config =
+        WaitConfig { timeout: Duration::from_secs(2), poll_interval: Duration::from_millis(200) };
 
     let result = wait_for(
         move || {

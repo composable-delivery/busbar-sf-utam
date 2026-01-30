@@ -18,10 +18,7 @@ pub struct WaitConfig {
 
 impl Default for WaitConfig {
     fn default() -> Self {
-        Self {
-            timeout: Duration::from_secs(30),
-            poll_interval: Duration::from_millis(500),
-        }
+        Self { timeout: Duration::from_secs(30), poll_interval: Duration::from_millis(500) }
     }
 }
 
@@ -82,9 +79,7 @@ where
 
         // Check timeout before evaluating predicate to ensure we don't exceed configured timeout
         if start.elapsed() > config.timeout {
-            return Err(UtamError::Timeout {
-                condition: description.to_string(),
-            });
+            return Err(UtamError::Timeout { condition: description.to_string() });
         }
 
         match predicate().await? {
@@ -123,12 +118,7 @@ mod tests {
             poll_interval: Duration::from_millis(50),
         };
 
-        let result = wait_for(
-            || async { Ok(Some(123)) },
-            &config,
-            "test",
-        )
-        .await;
+        let result = wait_for(|| async { Ok(Some(123)) }, &config, "test").await;
 
         assert_eq!(result.unwrap(), 123);
     }
@@ -140,12 +130,8 @@ mod tests {
             poll_interval: Duration::from_millis(50),
         };
 
-        let result: UtamResult<()> = wait_for(
-            || async { Ok(None) },
-            &config,
-            "test condition",
-        )
-        .await;
+        let result: UtamResult<()> =
+            wait_for(|| async { Ok(None) }, &config, "test condition").await;
 
         assert!(result.is_err());
         if let Err(UtamError::Timeout { condition }) = result {
