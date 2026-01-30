@@ -1,5 +1,15 @@
 [package]
 name = "utam-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+utam-core = { path = "../utam-core" }
+utam-compiler = { path = "../utam-compiler" }
+tokio = { workspace = true }
 description = "Command-line interface for UTAM compiler"
 version.workspace = true
 edition.workspace = true
