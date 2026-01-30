@@ -11,7 +11,29 @@ env:
   RUST_BACKTRACE: 1
 
 jobs:
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --all --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+
   test:
+    name: Test (${{ matrix.rust }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -20,50 +42,52 @@ jobs:
     continue-on-error: ${{ matrix.rust == 'nightly' }}
     steps:
       - uses: actions/checkout@v6
-
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
-          components: rustfmt, clippy
-
       - uses: Swatinem/rust-cache@v2
-
       - name: Build
         run: cargo build --all-targets
-
       - name: Test
         run: cargo test --all-features
 
-      - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
-
-      - name: Format
-        run: cargo fmt --check
-
   coverage:
+    name: Coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: dtolnay/rust-toolchain@stable
-
+      - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@cargo-llvm-cov
-
       - name: Generate coverage
-        run: cargo llvm-cov --all-features --lcov --output-path lcov.info
-
-      - uses: codecov/codecov-action@v5
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
           fail_ci_if_error: true
+          verbose: true
 
   msrv:
+    name: MSRV
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: dtolnay/rust-toolchain@1.88
-
+      - uses: Swatinem/rust-cache@v2
       - name: Check MSRV
         run: cargo check --all-targets
+
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@cargo-audit
+      - name: Generate lockfile
+        run: cargo generate-lockfile
+      - name: Security audit
+        run: cargo audit
