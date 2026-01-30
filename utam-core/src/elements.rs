@@ -10,7 +10,7 @@ use thirtyfour::prelude::*;
 /// Base element wrapper that provides common functionality
 /// for all UTAM elements including Shadow DOM access
 pub struct BaseElement {
-    pub(crate) inner: WebElement,
+    inner: WebElement,
 }
 
 impl BaseElement {
