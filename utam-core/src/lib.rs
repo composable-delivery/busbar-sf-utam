@@ -20,18 +20,20 @@ mod traits;
 mod wait;
 
 pub mod prelude {
+    // Re-export traits
+    pub use crate::traits::{PageObject, RootPageObject};
+    pub use crate::error::{UtamError, UtamResult};
+    pub use crate::wait::{wait_for, WaitConfig};
     // TODO: Re-enable once modules are implemented
     // pub use crate::elements::*;
-    pub use crate::error::{UtamError, UtamResult};
     // pub use crate::shadow::*;
-    // pub use crate::traits::*;
-    // pub use crate::wait::*;
     pub use thirtyfour::prelude::*;
 }
 
+// Re-export main types
+pub use error::{UtamError, UtamResult};
+pub use traits::{PageObject, RootPageObject};
+pub use wait::{wait_for, WaitConfig};
 // TODO: Re-enable once modules are implemented
 // pub use elements::*;
-pub use error::{UtamError, UtamResult};
 // pub use shadow::*;
-// pub use traits::*;
-// pub use wait::*;
