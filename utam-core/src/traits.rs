@@ -19,6 +19,11 @@ pub trait Actionable: Send + Sync {
     fn inner(&self) -> &WebElement;
 
     /// Get a WebDriver instance from the element's session handle
+    ///
+    /// This method constructs a WebDriver by cloning the element's session handle.
+    /// The `handle` field is a public field of both WebDriver and WebElement in thirtyfour,
+    /// making this a safe and stable pattern. This approach is necessary because thirtyfour
+    /// doesn't provide a direct method to get a WebDriver from a WebElement.
     fn driver(&self) -> WebDriver {
         WebDriver { handle: self.inner().handle.clone() }
     }
@@ -130,8 +135,19 @@ pub trait Draggable: Actionable {
 
     /// Drag this element to another element with a duration
     ///
-    /// This performs a slower drag operation by clicking and holding,
-    /// waiting for the specified duration, then moving to the target and releasing.
+    /// This performs a slower drag operation by:
+    /// 1. Clicking and holding on the source element
+    /// 2. Waiting for the specified duration (simulates human hesitation)
+    /// 3. Moving to the target element and releasing
+    ///
+    /// Note: The duration represents a pause between clicking and moving, not the
+    /// duration of the drag movement itself. This simulates human-like behavior where
+    /// there's a delay between initiating a drag and completing it.
+    ///
+    /// # Arguments
+    ///
+    /// * `target` - The element to drag to
+    /// * `duration` - How long to wait after clicking before moving to target
     async fn drag_and_drop_with_duration(
         &self,
         target: &WebElement,
@@ -139,10 +155,10 @@ pub trait Draggable: Actionable {
     ) -> UtamResult<()> {
         let driver = self.driver();
 
-        // Click and hold
+        // Click and hold on source element
         driver.action_chain().click_and_hold_element(self.inner()).perform().await?;
 
-        // Wait for specified duration
+        // Wait for specified duration (simulates human hesitation)
         tokio::time::sleep(duration).await;
 
         // Move to target and release
