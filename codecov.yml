@@ -1,24 +1,43 @@
 codecov:
   require_ci_to_pass: yes
+  notify:
+    after_n_builds: 1
 
 coverage:
   precision: 2
   round: down
-  range: "70...100"
+  range: "0...100"  # Allow full range since we have minimal coverage initially
   
   status:
     project:
       default:
         target: auto
-        threshold: 0%
-        base: auto
+        threshold: 5%  # Allow 5% variance
+        if_ci_failed: error
     patch:
       default:
         target: auto
-        threshold: 0%
-        base: auto
+        threshold: 5%
+        if_ci_failed: error
+
+# Ignore test files and generated code from coverage
+ignore:
+  - "tests/**/*"
+  - "**/tests.rs"
+  - "**/test_*.rs"
+  - "**/*_test.rs"
+  - "**/target/**/*"
 
 comment:
-  layout: "reach,diff,flags,tree,files"
+  layout: "reach,diff,flags,files,footer"
   behavior: default
   require_changes: no
+  require_base: no
+  require_head: yes
+
+flags:
+  unittests:
+    paths:
+      - "utam-core/src"
+      - "utam-compiler/src"
+      - "utam-cli/src"

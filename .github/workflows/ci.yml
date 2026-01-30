@@ -11,54 +11,80 @@ env:
   RUST_BACKTRACE: 1
 
 jobs:
-  test:
+  # Fast checks that run in parallel
+  format:
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustfmt, clippy
+          components: rustfmt
+      - name: Check formatting
+        run: cargo fmt --all --check
 
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Build
-        run: cargo build --all-targets
-
-      - name: Test
-        run: cargo test --all-features
-
-      - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
-
-      - name: Format
-        run: cargo fmt --check
-
-  coverage:
+  clippy:
+    name: Clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Run clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
+  # Build and test job
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Build
+        run: cargo build --all-targets --all-features
+      - name: Run tests
+        run: cargo test --all-features --verbose
+
+  # Coverage job with proper configuration
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs: test  # Only run coverage after tests pass
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
       - uses: taiki-e/install-action@cargo-llvm-cov
-
       - name: Generate coverage
-        run: cargo llvm-cov --workspace --all-features --lcov --output-path lcov.info
-
-      - uses: codecov/codecov-action@v5
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         with:
           files: lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+          fail_ci_if_error: false  # Don't fail CI if codecov has issues
           verbose: true
+          flags: unittests
+          name: codecov-umbrella
 
+  # MSRV check
   msrv:
+    name: MSRV Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: dtolnay/rust-toolchain@1.88
-
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
       - name: Check MSRV
-        run: cargo check --all-targets
+        run: cargo check --all-targets --all-features

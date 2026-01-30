@@ -18,6 +18,29 @@ This repository contains the Rust implementation of UTAM (UI Test Automation Mod
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+## Development Workflow
+
+### Before Committing - REQUIRED CHECKS
+
+**ALWAYS run these commands before committing code:**
+
+1. **Format code**: `cargo fmt --all`
+2. **Run linter**: `cargo clippy --all-targets --all-features -- -D warnings`
+3. **Run tests**: `cargo test --all-features`
+4. **Build all targets**: `cargo build --all-targets --all-features`
+
+These checks are enforced by CI and pre-commit hooks. **Do not skip these steps.**
+
+### Pre-commit Hooks
+
+The repository uses pre-commit hooks (`.pre-commit-config.yaml`). Install with:
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+This ensures formatting and linting are automatically checked before commits.
+
 ## Code Style Guidelines
 
 ### Naming Conventions

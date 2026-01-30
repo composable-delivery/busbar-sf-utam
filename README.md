@@ -29,6 +29,46 @@ utam compile src/pageobjects/
 cargo test
 ```
 
+## Development
+
+### Prerequisites
+
+- Rust 1.88 or later
+- Python 3.x (for pre-commit hooks)
+
+### Setup
+
+```bash
+# Install dependencies
+cargo build
+
+# Install pre-commit hooks (recommended)
+pip install pre-commit
+pre-commit install
+
+# Run tests
+cargo test --all-features
+
+# Format code
+cargo fmt --all
+
+# Run linter
+cargo clippy --all-targets --all-features -- -D warnings
+```
+
+### Before Committing
+
+Always run these checks locally before pushing:
+
+```bash
+cargo fmt --all
+cargo clippy --all-targets --all-features -- -D warnings
+cargo test --all-features
+cargo build --all-targets --all-features
+```
+
+These checks are enforced by CI and will fail if not passing.
+
 ## Example
 
 Define a page object in JSON:
