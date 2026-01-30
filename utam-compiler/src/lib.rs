@@ -1,18 +1,32 @@
-//! UTAM Compiler Library
+//! UTAM Compiler
 //!
-//! Compiler for UTAM page object definitions.
+//! Transforms UTAM JSON page object definitions into Rust source code.
+//!
+//! # Example
+//!
+//! ```rust,ignore
+//! use utam_compiler::compile;
+//!
+//! let json = include_str!("login-form.utam.json");
+//! let rust_code = compile(json)?;
+//! ```
 
-/// Returns the version of the UTAM compiler library.
-pub fn version() -> &'static str {
-    env!("CARGO_PKG_VERSION")
-}
+mod ast;
+mod parser;
+mod validator;
+mod codegen;
+mod error;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub use ast::*;
+pub use parser::parse;
+pub use validator::validate;
+pub use codegen::generate;
+pub use error::{CompilerError, CompilerResult};
 
-    #[test]
-    fn test_version() {
-        assert!(!version().is_empty());
-    }
+/// Compile UTAM JSON to Rust source code
+pub fn compile(json: &str) -> CompilerResult<String> {
+    let ast = parse(json)?;
+    validate(&ast)?;
+    let code = generate(&ast)?;
+    Ok(code)
 }

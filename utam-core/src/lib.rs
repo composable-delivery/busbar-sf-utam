@@ -1,18 +1,35 @@
-//! UTAM Core Library
+//! UTAM Core Runtime Library
 //!
-//! Core functionality for UTAM (UI Test Automation Model) framework.
+//! This crate provides the runtime traits and types for the UTAM
+//! (UI Test Automation Model) framework.
+//!
+//! # Example
+//!
+//! ```rust,ignore
+//! use utam_core::prelude::*;
+//!
+//! // Generated page object
+//! let login = LoginForm::load(&driver).await?;
+//! login.login("user", "pass").await?;
+//! ```
 
-/// Returns the version of the UTAM core library.
-pub fn version() -> &'static str {
-    env!("CARGO_PKG_VERSION")
+mod error;
+mod traits;
+mod elements;
+mod wait;
+mod shadow;
+
+pub mod prelude {
+    pub use crate::error::{UtamError, UtamResult};
+    pub use crate::traits::*;
+    pub use crate::elements::*;
+    pub use crate::wait::*;
+    pub use crate::shadow::*;
+    pub use thirtyfour::prelude::*;
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_version() {
-        assert!(!version().is_empty());
-    }
-}
+pub use error::{UtamError, UtamResult};
+pub use traits::*;
+pub use elements::*;
+pub use wait::*;
+pub use shadow::*;

@@ -10,3 +10,23 @@ repository.workspace = true
 utam-core = { path = "../utam-core" }
 utam-compiler = { path = "../utam-compiler" }
 tokio = { workspace = true }
+description = "Command-line interface for UTAM compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "utam"
+path = "src/main.rs"
+
+[dependencies]
+utam-compiler.workspace = true
+clap.workspace = true
+console.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+glob.workspace = true
+notify.workspace = true
+tokio.workspace = true
+miette.workspace = true

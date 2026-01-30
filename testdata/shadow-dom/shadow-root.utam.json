@@ -1,0 +1,15 @@
+{
+  "description": "Component with shadow DOM",
+  "root": true,
+  "selector": { "css": "my-component" },
+  "shadow": {
+    "elements": [
+      {
+        "name": "innerButton",
+        "type": ["clickable"],
+        "selector": { "css": ".inner-btn" },
+        "public": true
+      }
+    ]
+  }
+}
