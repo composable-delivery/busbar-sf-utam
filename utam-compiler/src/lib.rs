@@ -2,7 +2,10 @@
 //!
 //! Transforms UTAM JSON page object definitions into Rust source code.
 //!
-//! # Example
+//! **Note**: Core compiler functionality is not yet implemented.
+//! The parser, validator, and code generator modules are currently stubs.
+//!
+//! # Planned Example
 //!
 //! ```rust,ignore
 //! use utam_compiler::compile;
