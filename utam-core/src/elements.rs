@@ -8,6 +8,9 @@ use crate::traits::{PageObject, RootPageObject};
 use std::marker::PhantomData;
 use thirtyfour::{By, WebElement};
 
+/// Default selector for container content: first direct child
+const DEFAULT_CONTAINER_SELECTOR: &str = ":scope > *:first-child";
+
 /// Container element for slots and dynamic content injection
 ///
 /// `Container<T>` is a generic wrapper for elements that contain dynamic content
@@ -93,6 +96,29 @@ impl<T: PageObject> Container<T> {
         self
     }
 
+    /// Helper method to find the contained element
+    ///
+    /// This method encapsulates the common logic for finding the element
+    /// using the configured selector or default.
+    async fn find_element(&self) -> UtamResult<WebElement> {
+        let selector = self
+            .selector
+            .as_ref()
+            .cloned()
+            .unwrap_or_else(|| By::Css(DEFAULT_CONTAINER_SELECTOR.to_string()));
+
+        self.root.find(selector.clone()).await.map_err(|e| {
+            UtamError::ElementNotFound {
+                name: format!("container content ({})", e),
+                selector: self
+                    .selector
+                    .as_ref()
+                    .map(|s| format!("{:?}", s))
+                    .unwrap_or_else(|| DEFAULT_CONTAINER_SELECTOR.to_string()),
+            }
+        })
+    }
+
     /// Load the contained page object
     ///
     /// Finds the element using the configured selector (or default) and
@@ -104,7 +130,7 @@ impl<T: PageObject> Container<T> {
     ///
     /// # Errors
     ///
-    /// * `UtamError::WebDriver` - If the element cannot be found
+    /// * `UtamError::ElementNotFound` - If the element cannot be found
     /// * Other errors from `T::from_element()`
     ///
     /// # Examples
@@ -117,22 +143,7 @@ impl<T: PageObject> Container<T> {
     where
         T: RootPageObject,
     {
-        let selector = self
-            .selector
-            .clone()
-            .unwrap_or_else(|| By::Css(":scope > *:first-child".to_string()));
-
-        let element = self.root.find(selector).await.map_err(|_e| {
-            UtamError::ElementNotFound {
-                name: "container content".to_string(),
-                selector: self
-                    .selector
-                    .as_ref()
-                    .map(|s| format!("{:?}", s))
-                    .unwrap_or_else(|| ":scope > *:first-child".to_string()),
-            }
-        })?;
-
+        let element = self.find_element().await?;
         T::from_element(element).await
     }
 
@@ -151,7 +162,7 @@ impl<T: PageObject> Container<T> {
     ///
     /// # Errors
     ///
-    /// * `UtamError::WebDriver` - If the element cannot be found
+    /// * `UtamError::ElementNotFound` - If the element cannot be found
     /// * Other errors from `U::from_element()`
     ///
     /// # Examples
@@ -164,22 +175,7 @@ impl<T: PageObject> Container<T> {
     /// let admin_form = container.load_as::<AdminForm>().await?;
     /// ```
     pub async fn load_as<U: RootPageObject>(&self) -> UtamResult<U> {
-        let selector = self
-            .selector
-            .clone()
-            .unwrap_or_else(|| By::Css(":scope > *:first-child".to_string()));
-
-        let element = self.root.find(selector).await.map_err(|_e| {
-            UtamError::ElementNotFound {
-                name: "container content".to_string(),
-                selector: self
-                    .selector
-                    .as_ref()
-                    .map(|s| format!("{:?}", s))
-                    .unwrap_or_else(|| ":scope > *:first-child".to_string()),
-            }
-        })?;
-
+        let element = self.find_element().await?;
         U::from_element(element).await
     }
 }
