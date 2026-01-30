@@ -191,7 +191,7 @@ mod tests {
     fn test_key_clone_and_copy() {
         // Test that Key implements Clone and Copy
         let key = Key::Enter;
-        let _cloned = key.clone();
+        let _cloned = key; // Copy, not clone, since Key implements Copy
         let _copied = key;
         let _used_again = key; // Should work because Key is Copy
     }
