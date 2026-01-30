@@ -9,3 +9,6 @@ Cargo.lock
 *.log
 coverage/
 lcov.info
+
+# Pre-commit
+.pre-commit-cache/
