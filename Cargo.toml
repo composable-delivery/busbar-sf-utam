@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+members = ["utam-core", "utam-compiler", "utam-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/composable-delivery/busbar-sf-utam"
+
+[workspace.dependencies]
+thirtyfour = "0.36.1"
+tokio = { version = "1.49.0", features = ["full"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+thiserror = "2.0.18"
+async-trait = "0.1.89"
