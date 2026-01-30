@@ -71,10 +71,7 @@ pub trait RootPageObject: PageObject {
     ///
     /// * `UtamError::Timeout` - If the page doesn't load within the timeout
     async fn wait_for_load(driver: &WebDriver, timeout: Duration) -> UtamResult<Self> {
-        let config = WaitConfig {
-            timeout,
-            ..Default::default()
-        };
+        let config = WaitConfig { timeout, ..Default::default() };
 
         wait_for(
             || async {
@@ -84,10 +81,7 @@ pub trait RootPageObject: PageObject {
                 }
             },
             &config,
-            &format!(
-                "page object with selector '{}' to load",
-                Self::ROOT_SELECTOR
-            ),
+            &format!("page object with selector '{}' to load", Self::ROOT_SELECTOR),
         )
         .await
     }

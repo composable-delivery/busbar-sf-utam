@@ -18,10 +18,7 @@ pub struct WaitConfig {
 
 impl Default for WaitConfig {
     fn default() -> Self {
-        Self {
-            timeout: Duration::from_secs(10),
-            poll_interval: Duration::from_millis(500),
-        }
+        Self { timeout: Duration::from_secs(10), poll_interval: Duration::from_millis(500) }
     }
 }
 
@@ -73,8 +70,6 @@ where
     match result {
         Ok(Ok(value)) => Ok(value),
         Ok(Err(e)) => Err(e),
-        Err(_) => Err(UtamError::Timeout {
-            condition: description.to_string(),
-        }),
+        Err(_) => Err(UtamError::Timeout { condition: description.to_string() }),
     }
 }

@@ -4,8 +4,8 @@
 
 mod common;
 
-use utam_core::prelude::*;
 use std::time::Duration;
+use utam_core::prelude::*;
 
 #[test]
 fn test_error_types() {
@@ -98,12 +98,7 @@ mod wait_tests {
             poll_interval: Duration::from_millis(100),
         };
 
-        let result = wait_for(
-            || async { Ok(Some(42)) },
-            &config,
-            "test condition",
-        )
-        .await;
+        let result = wait_for(|| async { Ok(Some(42)) }, &config, "test condition").await;
 
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), 42);
@@ -117,12 +112,8 @@ mod wait_tests {
             poll_interval: Duration::from_millis(50),
         };
 
-        let result = wait_for(
-            || async { Ok(None::<i32>) },
-            &config,
-            "test timeout condition",
-        )
-        .await;
+        let result =
+            wait_for(|| async { Ok(None::<i32>) }, &config, "test timeout condition").await;
 
         assert!(result.is_err());
         match result {

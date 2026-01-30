@@ -21,8 +21,8 @@ mod wait;
 
 pub mod prelude {
     // Re-export traits
-    pub use crate::traits::{PageObject, RootPageObject};
     pub use crate::error::{UtamError, UtamResult};
+    pub use crate::traits::{PageObject, RootPageObject};
     pub use crate::wait::{wait_for, WaitConfig};
     // TODO: Re-enable once modules are implemented
     // pub use crate::elements::*;
