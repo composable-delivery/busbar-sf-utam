@@ -39,7 +39,7 @@ jobs:
         run: cargo publish -p utam-core
 
       - name: Wait for crates.io
-        run: sleep 30
+        run: sleep 60
 
       - name: Publish utam-compiler
         env:
@@ -47,7 +47,7 @@ jobs:
         run: cargo publish -p utam-compiler
 
       - name: Wait for crates.io
-        run: sleep 30
+        run: sleep 60
 
       - name: Publish utam-cli
         env:
