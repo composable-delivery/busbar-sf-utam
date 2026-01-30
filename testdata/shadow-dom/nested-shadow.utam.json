@@ -1,0 +1,21 @@
+{
+  "description": "Component with nested shadow DOM",
+  "root": true,
+  "selector": { "css": "outer-component" },
+  "shadow": {
+    "elements": [
+      {
+        "name": "innerComponent",
+        "type": "inner-component",
+        "selector": { "css": ".inner" },
+        "public": true
+      },
+      {
+        "name": "button",
+        "type": ["clickable"],
+        "selector": { "css": "button" },
+        "public": true
+      }
+    ]
+  }
+}

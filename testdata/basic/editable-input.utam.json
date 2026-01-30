@@ -1,0 +1,7 @@
+{
+  "description": "Editable text input field",
+  "root": true,
+  "selector": { "css": "input[type='text']" },
+  "type": ["editable"],
+  "exposeRootElement": true
+}

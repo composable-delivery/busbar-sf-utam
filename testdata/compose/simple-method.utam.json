@@ -1,0 +1,56 @@
+{
+  "description": "Simple compose method example",
+  "root": true,
+  "selector": { "css": "login-form" },
+  "shadow": {
+    "elements": [
+      {
+        "name": "usernameInput",
+        "type": ["editable"],
+        "selector": { "css": "input[name='username']" }
+      },
+      {
+        "name": "passwordInput",
+        "type": ["editable"],
+        "selector": { "css": "input[name='password']" }
+      },
+      {
+        "name": "submitButton",
+        "type": ["clickable"],
+        "selector": { "css": "button[type='submit']" },
+        "public": true
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "login",
+      "compose": [
+        {
+          "element": "usernameInput",
+          "apply": "clearAndType",
+          "args": [
+            {
+              "name": "username",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "element": "passwordInput",
+          "apply": "clearAndType",
+          "args": [
+            {
+              "name": "password",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "element": "submitButton",
+          "apply": "click"
+        }
+      ]
+    }
+  ]
+}
