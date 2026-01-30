@@ -57,6 +57,16 @@ fn test_error_messages_are_human_readable() {
     let msg = error.to_string();
     assert!(msg.contains("Frame not found"));
     assert!(msg.contains("paymentFrame"));
+
+    // Test AssertionFailed error message
+    let error = UtamError::AssertionFailed {
+        expected: "visible".to_string(),
+        actual: "hidden".to_string(),
+    };
+    let msg = error.to_string();
+    assert!(msg.contains("Assertion failed"));
+    assert!(msg.contains("expected visible"));
+    assert!(msg.contains("got hidden"));
 }
 
 #[test]
