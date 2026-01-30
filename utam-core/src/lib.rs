@@ -13,23 +13,23 @@
 //! login.login("user", "pass").await?;
 //! ```
 
-mod error;
-mod traits;
 mod elements;
-mod wait;
+mod error;
 mod shadow;
+mod traits;
+mod wait;
 
 pub mod prelude {
-    pub use crate::error::{UtamError, UtamResult};
-    pub use crate::traits::*;
     pub use crate::elements::*;
-    pub use crate::wait::*;
+    pub use crate::error::{UtamError, UtamResult};
     pub use crate::shadow::*;
+    pub use crate::traits::*;
+    pub use crate::wait::*;
     pub use thirtyfour::prelude::*;
 }
 
-pub use error::{UtamError, UtamResult};
-pub use traits::*;
 pub use elements::*;
-pub use wait::*;
+pub use error::{UtamError, UtamResult};
 pub use shadow::*;
+pub use traits::*;
+pub use wait::*;

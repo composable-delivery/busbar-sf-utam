@@ -12,16 +12,16 @@
 //! ```
 
 mod ast;
-mod parser;
-mod validator;
 mod codegen;
 mod error;
+mod parser;
+mod validator;
 
 pub use ast::*;
-pub use parser::parse;
-pub use validator::validate;
 pub use codegen::generate;
 pub use error::{CompilerError, CompilerResult};
+pub use parser::parse;
+pub use validator::validate;
 
 /// Compile UTAM JSON to Rust source code
 pub fn compile(json: &str) -> CompilerResult<String> {
