@@ -5,6 +5,7 @@
 use utam_core::prelude::*;
 
 /// Mock WebDriver configuration for testing
+#[allow(dead_code)]
 pub struct MockDriverConfig {
     pub headless: bool,
     pub implicit_wait_ms: u64,
@@ -12,10 +13,7 @@ pub struct MockDriverConfig {
 
 impl Default for MockDriverConfig {
     fn default() -> Self {
-        Self {
-            headless: true,
-            implicit_wait_ms: 5000,
-        }
+        Self { headless: true, implicit_wait_ms: 5000 }
     }
 }
 
@@ -35,7 +33,6 @@ pub async fn setup_mock_driver() -> UtamResult<()> {
 
 /// Assert that an element is visible
 #[allow(dead_code)]
-#[track_caller]
 pub async fn assert_element_visible(element: &WebElement) -> UtamResult<()> {
     let is_displayed = element.is_displayed().await?;
     assert!(is_displayed, "Expected element to be visible");
@@ -44,7 +41,6 @@ pub async fn assert_element_visible(element: &WebElement) -> UtamResult<()> {
 
 /// Assert that an element is not visible
 #[allow(dead_code)]
-#[track_caller]
 pub async fn assert_element_not_visible(element: &WebElement) -> UtamResult<()> {
     let is_displayed = element.is_displayed().await?;
     assert!(!is_displayed, "Expected element to not be visible");
@@ -53,20 +49,14 @@ pub async fn assert_element_not_visible(element: &WebElement) -> UtamResult<()> 
 
 /// Assert that an element has expected text
 #[allow(dead_code)]
-#[track_caller]
 pub async fn assert_element_text(element: &WebElement, expected: &str) -> UtamResult<()> {
     let text = element.text().await?;
-    assert_eq!(
-        text, expected,
-        "Expected element text to be '{}', but got '{}'",
-        expected, text
-    );
+    assert_eq!(text, expected, "Expected element text to be '{}', but got '{}'", expected, text);
     Ok(())
 }
 
 /// Assert that an element has expected attribute value
 #[allow(dead_code)]
-#[track_caller]
 pub async fn assert_element_attribute(
     element: &WebElement,
     attr: &str,

@@ -17,16 +17,17 @@ mod error;
 mod parser;
 mod validator;
 
-pub use ast::*;
-pub use codegen::generate;
-pub use error::{CompilerError, CompilerResult};
-pub use parser::parse;
-pub use validator::validate;
+// TODO: Re-enable once modules are implemented
+// pub use ast::*;
+// pub use codegen::generate;
+// pub use error::{CompilerError, CompilerResult};
+// pub use parser::parse;
+// pub use validator::validate;
 
-/// Compile UTAM JSON to Rust source code
-pub fn compile(json: &str) -> CompilerResult<String> {
-    let ast = parse(json)?;
-    validate(&ast)?;
-    let code = generate(&ast)?;
-    Ok(code)
-}
+// /// Compile UTAM JSON to Rust source code
+// pub fn compile(json: &str) -> CompilerResult<String> {
+//     let ast = parse(json)?;
+//     validate(&ast)?;
+//     let code = generate(&ast)?;
+//     Ok(code)
+// }
