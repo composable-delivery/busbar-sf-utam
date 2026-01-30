@@ -91,3 +91,65 @@ where
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_wait_config_default_values() {
+        let config = WaitConfig::default();
+        assert_eq!(config.timeout, Duration::from_secs(30));
+        assert_eq!(config.poll_interval, Duration::from_millis(500));
+    }
+
+    #[test]
+    fn test_wait_config_clone() {
+        let config1 = WaitConfig {
+            timeout: Duration::from_secs(10),
+            poll_interval: Duration::from_millis(100),
+        };
+        let config2 = config1.clone();
+        assert_eq!(config1.timeout, config2.timeout);
+        assert_eq!(config1.poll_interval, config2.poll_interval);
+    }
+
+    #[tokio::test]
+    async fn test_wait_for_immediate_success() {
+        let config = WaitConfig {
+            timeout: Duration::from_secs(1),
+            poll_interval: Duration::from_millis(50),
+        };
+
+        let result = wait_for(
+            || async { Ok(Some(123)) },
+            &config,
+            "test",
+        )
+        .await;
+
+        assert_eq!(result.unwrap(), 123);
+    }
+
+    #[tokio::test]
+    async fn test_wait_for_timeout_error() {
+        let config = WaitConfig {
+            timeout: Duration::from_millis(200),
+            poll_interval: Duration::from_millis(50),
+        };
+
+        let result: UtamResult<()> = wait_for(
+            || async { Ok(None) },
+            &config,
+            "test condition",
+        )
+        .await;
+
+        assert!(result.is_err());
+        if let Err(UtamError::Timeout { condition }) = result {
+            assert_eq!(condition, "test condition");
+        } else {
+            panic!("Expected Timeout error");
+        }
+    }
+}
