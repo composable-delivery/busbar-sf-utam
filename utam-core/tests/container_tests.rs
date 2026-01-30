@@ -5,6 +5,7 @@
 use utam_core::prelude::*;
 
 /// Mock page object for testing
+#[allow(dead_code)]
 struct MockPageObject {
     element: WebElement,
 }
@@ -33,6 +34,7 @@ impl RootPageObject for MockPageObject {
 }
 
 /// Another mock page object for polymorphic loading tests
+#[allow(dead_code)]
 struct AnotherMockPageObject {
     element: WebElement,
 }
