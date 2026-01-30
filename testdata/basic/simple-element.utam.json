@@ -1,0 +1,7 @@
+{
+  "description": "Simple clickable button",
+  "root": true,
+  "selector": { "css": ".simple-button" },
+  "type": ["clickable"],
+  "exposeRootElement": true
+}
