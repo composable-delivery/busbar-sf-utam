@@ -1,0 +1,164 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/main_home_list\").",
+            "Represents the Android mobile home cards scrollview.",
+            "Verify cards are present or navigate to one."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/mobilehome/homeCardList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "visibleCardBadges",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/mobile_home_badge_text_view\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "visibleCardBadgeWithLabel",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/mobile_home_badge_text_view\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "cardBadgeWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceIdMatches(\".*_title\").text(\"%s\"))",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "cardEditButton",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/card_configure_button\").descriptionContains(\"%s\")",
+                "args": [
+                    {
+                        "name": "cardLabel",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasCardWithBadgeLabel",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/mobilehome/homeCardListUtils",
+                        "invoke": "hasCardWithBadgeLabel",
+                        "args": [
+                            {
+                                "name": "badgeLabel",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickCardWithBadgeLabel",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/mobilehome/homeCardListUtils",
+                        "invoke": "clickCardBadgeWithLabel",
+                        "args": [
+                            {
+                                "name": "badgeLabel",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "editCardWithBadgeLabel",
+            "compose": [
+                {
+                    "element": "cardEditButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasCardBadgeWithTitle",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "cardBadgeWithTitle",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "flickToCardWithBadgeLabel",
+            "compose": [
+                {
+                    "returnType": "string",
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/mobilehome/homeCardListUtils",
+                        "invoke": "flickToElementToGetText",
+                        "args": [
+                            {
+                                "name": "badgeLabel",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

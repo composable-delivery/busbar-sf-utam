@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component is a modal that presents a confirmation dialog for deleting a Copilot version. It displays a message to the user and a data table listing the potential impacts of the deletion. The modal has two buttons, one to confirm the deletion and another to cancel the operation.",
+            "Selector: src-modal-delete-copilot"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-modal-delete-copilot"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseFormModal",
+                "selector": {
+                    "css": "builder_service_chatbots-modal-form"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/baseFormModal",
+                "description": "Represents the base form modal for the delete confirmation",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "deleteMessageText",
+                        "selector": {
+                            "css": "p.slds-text-body_regular.slds-text-align_left"
+                        },
+                        "description": "Represents the paragraph text with the delete message"
+                    },
+                    {
+                        "name": "dataTable",
+                        "selector": {
+                            "css": "lightning-datatable"
+                        },
+                        "type": "utam-lightning/pageObjects/datatable",
+                        "description": "Represents the data table listing the impacts of deletion",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getDeleteMessageText",
+            "description": {
+                "text": [
+                    "Get the text content of the delete message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "deleteMessageText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

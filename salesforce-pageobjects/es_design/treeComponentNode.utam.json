@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_design-tree-component-node",
+            "Represents the design tree component node."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_design-tree-component-node"
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "errorComponent",
+            "type": "utam-es_design/pageObjects/errorComponent",
+            "selector": {
+                "css": "es_design-error-component"
+            }
+        },
+        {
+            "public": true,
+            "name": "divContainer",
+            "type": "container",
+            "selector": {
+                "css": "*"
+            }
+        },
+        {
+            "public": true,
+            "name": "nodeBody",
+            "type": "container",
+            "selector": {
+                "css": "es_design-tree-component-node > *"
+            }
+        },
+        {
+            "public": true,
+            "name": "regionWrapper",
+            "type": "utam-es_design/pageObjects/regionWrapper",
+            "selector": {
+                "css": "es_design-region-wrapper"
+            }
+        },
+        {
+            "public": true,
+            "name": "componentWrappers",
+            "type": "utam-es_design/pageObjects/componentWrapper",
+            "selector": {
+                "css": "es_design-component-wrapper",
+                "returnAll": true
+            }
+        },
+        {
+            "public": true,
+            "name": "componentWrapperByIndex",
+            "type": "utam-es_design/pageObjects/componentWrapper",
+            "selector": {
+                "css": "es_design-component-wrapper:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        }
+    ]
+}

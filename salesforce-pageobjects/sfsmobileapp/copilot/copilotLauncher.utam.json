@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the copilot launcher container."
+        ]
+    },
+    "root": true,
+    "type": [
+        "clickable"
+    ],
+    "exposeRootElement": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "launchCopilot"
+        },
+        {
+            "name": "hasCopilot",
+            "returnType": "boolean"
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: dxp_action-common-action-ribbon",
+            "Represents the design time Action Bar in Experience Builder.",
+            "Access the action bar"
+        ]
+    },
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "selector": {
+        "css": "dxp_action-common-action-ribbon"
+    },
+    "elements": [
+        {
+            "name": "container",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".car-button-container"
+            }
+        },
+        {
+            "name": "visibleActions",
+            "type": "utam-lightning/pageObjects/button",
+            "public": true,
+            "selector": {
+                "css": "lightning-button",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "actionMenu",
+            "type": "utam-lightning/pageObjects/buttonMenu",
+            "public": true,
+            "selector": {
+                "css": "lightning-button-menu"
+            }
+        },
+        {
+            "name": "invisibleActions",
+            "public": true,
+            "selector": {
+                "css": "lightning-menu-item",
+                "returnAll": true
+            }
+        }
+    ]
+}

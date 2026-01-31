@@ -1,0 +1,99 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A modal component that allows users to create or edit a workspace with fields for name, API name, and description. It has a header, input fields, a textarea, and buttons for canceling or saving changes.",
+            "Selector: dev_workspace-upsert-workspace-modal"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-upsert-workspace-modal"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "selector": {
+                    "css": "[data-id='dataHeader']"
+                },
+                "description": "Represents the header of the modal"
+            },
+            {
+                "public": true,
+                "name": "nameInput",
+                "selector": {
+                    "css": "[data-id='dataNameField']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the input field for the workspace name"
+            },
+            {
+                "public": true,
+                "name": "apiNameInput",
+                "selector": {
+                    "css": "[data-id='dataApiNameField']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the input field for the workspace API name"
+            },
+            {
+                "public": true,
+                "name": "descriptionTextarea",
+                "selector": {
+                    "css": "[data-id='dataDescriptionField']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the textarea for the workspace description"
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button[class='cancel-upsert-button']"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the cancel button in the modal footer",
+                "public": true
+            },
+            {
+                "name": "saveButton",
+                "selector": {
+                    "css": "[data-id='dataUpsertButton']"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the save button in the modal footer, may be disabled based on conditions",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "modalSpinner",
+                "selector": {
+                    "css": "dev_workspace-modal-spinner"
+                },
+                "type": "utam-dev-workspace/pageObjects/modalSpinner",
+                "description": "Represents the loading spinner component that appears during save operations",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getModalHeaderText",
+            "description": {
+                "text": [
+                    "Get the text of the modal header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "modalHeader",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

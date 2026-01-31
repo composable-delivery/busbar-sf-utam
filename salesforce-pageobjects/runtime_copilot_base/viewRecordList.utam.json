@@ -1,0 +1,151 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally displays a list of records either as a simple record ID list or as cards with detailed fields, depending on the data provided.",
+            "Selector: runtime_copilot_base-view-record-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "noFieldRecordList",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-id-list"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordIdList",
+                "description": "Represents a list of record IDs when no fields are available",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "homogenousCard",
+                "selector": {
+                    "css": "runtime_copilot_base-base-card"
+                },
+                "description": "Represents a card containing a homogenous list of records",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "recordHeader",
+                        "selector": {
+                            "css": "runtime_copilot_base-record-header"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/recordHeader",
+                        "description": "Represents the header of the card with the title and icon",
+                        "public": true
+                    },
+                    {
+                        "name": "recordListInternal",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-record-list-internal"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewRecordListInternal",
+                        "description": "Represents the internal list of records within the card",
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "heteroCard",
+                "selector": {
+                    "css": "runtime_copilot_base-base-card[variant='headless-card']"
+                },
+                "description": "Represents a card without a header for displaying heterogeneous records",
+                "nullable": true,
+                "public": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "recordItems",
+                        "selector": {
+                            "css": "li.record-item",
+                            "returnAll": true
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents list items of heterogeneous records"
+                    },
+                    {
+                        "name": "recordItemByIndex",
+                        "selector": {
+                            "css": "li.record-item:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "description": "element index starting from 1"
+                                }
+                            ]
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents list items of heterogeneous records",
+                        "elements": [
+                            {
+                                "name": "viewComponent",
+                                "selector": {
+                                    "css": "runtime_copilot_base-view-component"
+                                },
+                                "public": true,
+                                "nullable": true,
+                                "wait": true,
+                                "shadow": {
+                                    "elements": [
+                                        {
+                                            "name": "baseRecordForm",
+                                            "selector": {
+                                                "css": "runtime_copilot_base-base-record-form"
+                                            },
+                                            "type": "utam-runtime_copilot_base/pageObjects/baseRecordForm",
+                                            "description": "Represents the form for a single record within the heterogeneous list",
+                                            "public": true,
+                                            "nullable": true,
+                                            "wait": true
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRecordItemListVisible",
+            "description": {
+                "text": [
+                    "Check if the list of record items is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "recordItems",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRecordItemByIndexPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recordItemByIndex\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordItemByIndex",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

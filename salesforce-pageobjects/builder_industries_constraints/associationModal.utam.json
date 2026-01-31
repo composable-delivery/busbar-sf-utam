@@ -1,0 +1,103 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-association-modal",
+            "Constraint Builder association modal component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "typeInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='typeName']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "objectToMapPicker",
+                        "type": "utam-lightning/pageObjects/recordPicker",
+                        "selector": {
+                            "css": "lightning-record-picker[class*='referenceObject']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "objectEntityInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='mappedEntity']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "typeRelationshipCombobox",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox[class*='relations']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "relatedTypeInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='relatedType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "bundlePicker",
+                        "type": "utam-lightning/pageObjects/recordPicker",
+                        "selector": {
+                            "css": "lightning-record-picker[class*='selectedBundle']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "productCombobox",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox[class*='selectedProduct']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "prcRecordInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='associatedPrcRecord']"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                }
+            }
+        ]
+    }
+}

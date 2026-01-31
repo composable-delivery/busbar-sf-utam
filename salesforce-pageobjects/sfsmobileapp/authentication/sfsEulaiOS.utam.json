@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the screen viewing and accepting the EULA."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/sfsEula",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "accessid": "I Accept"
+    },
+    "methods": [
+        {
+            "name": "accept",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

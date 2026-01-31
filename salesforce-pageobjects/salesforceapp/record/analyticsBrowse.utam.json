@@ -1,0 +1,68 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the fragment for the Einstein analytics 'Browse' page.",
+            "Find a tab or a record and navigate to it."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "hasLensesTab",
+            "returnType": "boolean"
+        },
+        {
+            "name": "hasDashboardsTab",
+            "returnType": "boolean"
+        },
+        {
+            "name": "switchTabWithTitle",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasAnalyticsRecordWithTitle",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "clickAnalyticsRecordWithTitle",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "typeToSearch",
+            "args": [
+                {
+                    "name": "itemToSearch",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "clearSearch"
+        },
+        {
+            "name": "pullToRefresh"
+        }
+    ]
+}

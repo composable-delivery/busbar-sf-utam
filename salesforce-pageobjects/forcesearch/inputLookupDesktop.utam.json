@@ -1,0 +1,64 @@
+{
+    "description": {
+        "text": [
+            "Selector: .forceSearchInputLookupDesktop.",
+            "Represents the forceSearch:inputLookupDesktop Aura component.",
+            "Get the input lookup, the inputTextForAutocomplete components and inputLookupDesktopOption component by text."
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceSearchInputLookupDesktop"
+    },
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "inputLookup",
+            "public": true,
+            "selector": {
+                "css": ".uiInput--lookup"
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/label",
+            "name": "label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/inputTextForAutocomplete",
+            "name": "inputTextForAutocomplete",
+            "public": true,
+            "selector": {
+                "css": ".uiInputTextForAutocomplete"
+            }
+        },
+        {
+            "type": "utam-forcesearch/pageObjects/inputLookupDesktopOption",
+            "name": "inputLookupDesktopOption",
+            "public": true,
+            "selector": {
+                "css": ".forceSearchInputLookupDesktopOption",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getOptionLabel",
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

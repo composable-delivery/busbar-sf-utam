@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the industries common entity picker."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "groupedCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "public": true,
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            }
+        ]
+    }
+}

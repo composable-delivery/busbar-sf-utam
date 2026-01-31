@@ -1,0 +1,36 @@
+{
+    "description": {
+        "text": [
+            "Selector: .oneConsoleTabset.",
+            "Represents the one:consoleTabset Lightning web component.",
+            "Access the tab container, split-view wrapper, or the console nav."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "tabContainer",
+            "type": "utam-navex/pageObjects/consoleTabContainer",
+            "selector": {
+                "css": ".oneConsoleTabContainer"
+            },
+            "public": true
+        },
+        {
+            "name": "splitViewWrapper",
+            "type": "utam-navex/pageObjects/splitViewWrapper",
+            "selector": {
+                "css": ".navexSplitViewWrapper"
+            },
+            "public": true
+        },
+        {
+            "name": "consoleNav",
+            "type": "utam-navex/pageObjects/consoleNav",
+            "selector": {
+                "css": ".oneConsoleNav"
+            },
+            "public": true
+        }
+    ]
+}

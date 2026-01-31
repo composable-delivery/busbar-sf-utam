@@ -1,0 +1,56 @@
+{
+    "description": {
+        "text": [
+            "Selector: runtime_platform_actions-lwc-quick-action-layout",
+            "Represents the runtime_platform_actions-lwc-quick-action-layout Lightning web component.",
+            "Get the records-base-record-form component."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "container",
+                "name": "baseForm",
+                "selector": {
+                    "css": "records-base-record-form"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getBaseRecordForm",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "records-base-record-form"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "baseForm"
+                }
+            ]
+        }
+    ]
+}

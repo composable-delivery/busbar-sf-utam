@@ -1,0 +1,103 @@
+{
+    "root": true,
+    "selector": {
+        "css": "runtime_omnistudio-flexcard"
+    },
+    "exposeRootElement": true,
+    "elements": [
+        {
+            "type": "container",
+            "name": "content",
+            "public": true,
+            "selector": {
+                "css": "%s",
+                "args": [
+                    {
+                        "name": "cssString",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "cardState",
+            "public": false,
+            "selector": {
+                "css": "[data-status=\"true\"]"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "generatedFlexCard",
+                "selector": {
+                    "css": "runtime_omnistudio-generated-flexcard"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "sampleFlexCard",
+                            "selector": {
+                                "css": ".via-slds"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "flexCardStates",
+                                        "selector": {
+                                            "css": "runtime_omnistudio_flexcards-flex-card-state",
+                                            "returnAll": true
+                                        },
+                                        "public": true,
+                                        "type": "utam-omnistudio-flexcard/pageObjects/flexCardState"
+                                    },
+                                    {
+                                        "type": "container",
+                                        "name": "contentInsideShadow",
+                                        "public": true,
+                                        "selector": {
+                                            "css": "%s",
+                                            "args": [
+                                                {
+                                                    "name": "cssString",
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForCardToLoad",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "cardState"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

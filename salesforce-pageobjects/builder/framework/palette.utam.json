@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: palette"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "accordion",
+                "type": "utam-lightning/pageObjects/accordion",
+                "selector": {
+                    "css": "lightning-accordion"
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "public": true,
+                "name": "paletteSections",
+                "type": "utam-builder-framework/pageObjects/paletteSection",
+                "selector": {
+                    "css": "builder_framework-palette-section",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "paletteSectionByIndex",
+                "type": "utam-builder-framework/pageObjects/paletteSection",
+                "selector": {
+                    "css": "lightning-accordion-section:nth-of-type(%d) builder_framework-palette-section",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

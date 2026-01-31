@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dynamic message component that is rendered based on the state.",
+            "Selector: runtime_copilot_base-dynamic-message"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageResolver",
+                "selector": {
+                    "css": "runtime_copilot_base-message-resolver"
+                },
+                "description": "The component serves as a dynamic message resolver.",
+                "type": "utam-runtime_copilot_base/pageObjects/messageResolver",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "statusTyping",
+                "selector": {
+                    "css": "runtime_copilot_base-status-typing"
+                },
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "messageStatus",
+                "selector": {
+                    "css": "runtime_copilot_base-message-status"
+                },
+                "description": "The component serves as a dynamic message status.",
+                "type": "utam-runtime_copilot_base/pageObjects/messageStatus",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "streamingIndicator",
+                "selector": {
+                    "css": "runtime_copilot_base-streaming-indicator"
+                },
+                "description": "The component serves as a dynamic message status.",
+                "type": "utam-runtime_copilot_base/pageObjects/streamingIndicator",
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

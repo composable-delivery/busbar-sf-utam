@@ -1,0 +1,191 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of suggested prompts (utterances) as buttons that users can click on to select. Each button represents a recommended utterance with a label.",
+            "Selector: app_dev_agent-studio-recommended-utterances"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "utterancesGroup",
+                "selector": {
+                    "css": ".slds-grid[role='group']"
+                },
+                "description": "Represents the container for the utterance buttons.",
+                "elements": [
+                    {
+                        "name": "utteranceButtons",
+                        "selector": {
+                            "css": "button.pill-button",
+                            "returnAll": true
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the list of utterance buttons that can be interacted with."
+                    }
+                ]
+            },
+            {
+                "name": "enhancedRecUtterancesContainer",
+                "selector": {
+                    "css": ".rec-utterances-container"
+                },
+                "description": "Container for recommended utterances in enhanced project creation mode",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "enhancedUtteranceWrappers",
+                        "selector": {
+                            "css": "div",
+                            "returnAll": true
+                        },
+                        "description": "Individual wrapper divs for each utterance in enhanced mode",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "lightningButtons",
+                        "selector": {
+                            "css": "lightning-button",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Lightning buttons used in enhanced mode with send icons",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "standardModeGrid",
+                "selector": {
+                    "css": ".slds-grid.slds-grid_align-center.slds-wrap"
+                },
+                "description": "Grid container for standard mode utterances layout",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "utteranceColumns",
+                        "selector": {
+                            "css": ".slds-col",
+                            "returnAll": true
+                        },
+                        "description": "Column layout items containing utterance buttons",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "standardPillButtons",
+                        "selector": {
+                            "css": "button.pill-button",
+                            "returnAll": true
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Standard pill-style buttons in non-enhanced mode",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "utterancesGroupIsVisible",
+            "description": {
+                "text": [
+                    "Check if the utterances group is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "utterancesGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickUtteranceButton",
+            "description": {
+                "text": [
+                    "Click on a specific utterance button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "utteranceButtons",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "focusOnUtteranceButton",
+            "description": {
+                "text": [
+                    "Focus on a specific utterance button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "utteranceButtons",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "utteranceButtonIsFocused",
+            "description": {
+                "text": [
+                    "Check if a specific utterance button is focused"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "utteranceButtons",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "utteranceButtonIsEnabled",
+            "description": {
+                "text": [
+                    "Check if a specific utterance button is enabled"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "utteranceButtons",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "getUtteranceButtonText",
+            "description": {
+                "text": [
+                    "Get the text of a specific utterance button"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "utteranceButtons",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

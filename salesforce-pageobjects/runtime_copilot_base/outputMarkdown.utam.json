@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that renders markdown content within a container.",
+            "Selector: src-output-markdown"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "markdownContainer",
+                "selector": {
+                    "css": ".markdown-container"
+                },
+                "description": "Represents the container that wraps the markdown text component.",
+                "elements": [
+                    {
+                        "name": "markdownText",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-markdown-text"
+                        },
+                        "description": "Represents the custom component used to display markdown text.",
+                        "public": true,
+                        "nullable": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isMarkdownContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the markdown container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,56 @@
+{
+    "description": {
+        "text": [
+            "Selector: .setup_platform_notificationsNotificationTypesManager. Represents the list of notification types and gives access to the contained groups by their titles."
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": ".setup_platform_notificationsNotificationTypesManager"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "value": {
+                                        "css": "div.notificationTypeSettingsSection"
+                                    },
+                                    "type": "locator"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "notificationGroup",
+            "public": true,
+            "selector": {
+                "css": "div.notificationTypeSettingsSection[data-title~='%s']",
+                "args": [
+                    {
+                        "name": "notificationGroup",
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": "utam-setup_platform_notifications/pageObjects/collapsibleSection"
+        }
+    ]
+}

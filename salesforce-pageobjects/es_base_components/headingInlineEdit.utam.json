@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_base_components-heading-inline-edit",
+            "Represents the canvas heading-inline-edit component which appears after a click on the heading."
+        ]
+    },
+    "elements": [
+        {
+            "name": "inputContentContainer",
+            "type": "editable",
+            "public": true,
+            "selector": {
+                "css": "span.content-container"
+            }
+        }
+    ]
+}

@@ -1,0 +1,199 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/nav_host_fragment\").",
+            "Represents the Android fragment for the Einstein analytics 'Browse' page.",
+            "Find a tab and navigate to it, or find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/analyticsBrowse",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/nav_host_fragment\")"
+    },
+    "elements": [
+        {
+            "name": "analyticsTab",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "\"%s\"",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "analyticsRecord",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/text_view_label\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/search_view\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasLensesTab",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "accessid": "Lenses"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hasDashboardsTab",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "accessid": "Dashboards"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "switchTabWithTitle",
+            "compose": [
+                {
+                    "element": "analyticsTab",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasAnalyticsRecordWithTitle",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "uiautomator": "resourceId(\"com.salesforce.chatter:id/text_view_label\").text(\"%s\")",
+                                                "args": [
+                                                    {
+                                                        "name": "title",
+                                                        "type": "string"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickAnalyticsRecordWithTitle",
+            "compose": [
+                {
+                    "element": "analyticsRecord",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clear"
+                }
+            ]
+        },
+        {
+            "name": "pullToRefresh",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

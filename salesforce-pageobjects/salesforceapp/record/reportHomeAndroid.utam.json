@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/tab_fragment_container\").",
+            "Represents the Android report home view.",
+            "Interact with report content or navigate back from the report."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/reportHome",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/tab_fragment_container\")"
+    },
+    "elements": [
+        {
+            "name": "reportSummary",
+            "type": "utam-salesforceapp/pageObjects/record/reportSummary",
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/report_summary_info\")"
+            }
+        },
+        {
+            "name": "reportTable",
+            "type": "utam-salesforceapp/pageObjects/record/reportTable",
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/table_view\")"
+            }
+        }
+    ]
+}

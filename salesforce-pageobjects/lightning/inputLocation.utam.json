@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-input-location",
+            "Represents the lightning-input-location Lightning web component.",
+            "Gets the label, help text component, or longitude and latitude input components."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "legend"
+                },
+                "public": true
+            },
+            {
+                "name": "helptext",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "public": true
+            },
+            {
+                "name": "latitude",
+                "type": "utam-lightning/pageObjects/input",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input[data-latitude]"
+                }
+            },
+            {
+                "name": "longitude",
+                "type": "utam-lightning/pageObjects/input",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input[data-longitude]"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,66 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-record-home-left-sidebar-template-desktop2.",
+            "Represents the flexipage-record-home-template-desktop2 Lightning web component.",
+            "Get the flexipage-component2 by ID. Get the lwcHighlightsPanel or tabset2 components."
+        ]
+    },
+    "elements": [
+        {
+            "name": "component2",
+            "type": "utam-flexipage/pageObjects/component2",
+            "selector": {
+                "css": "flexipage-component2[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "componentId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "header",
+            "selector": {
+                "css": "[slot='header']"
+            },
+            "elements": [
+                {
+                    "name": "highlights",
+                    "selector": {
+                        "css": "records-lwc-highlights-panel"
+                    },
+                    "type": "utam-records/pageObjects/lwcHighlightsPanel",
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "main",
+            "selector": {
+                "css": "[slot='main']"
+            },
+            "elements": [
+                {
+                    "name": "tabset2",
+                    "selector": {
+                        "css": "flexipage-tabset2"
+                    },
+                    "type": "utam-flexipage/pageObjects/tabset2",
+                    "public": true
+                },
+                {
+                    "name": "sidebarTabset2",
+                    "selector": {
+                        "css": "flexipage-tabset2:nth-of-type(1)"
+                    },
+                    "type": "utam-flexipage/pageObjects/tabset2",
+                    "public": true
+                }
+            ]
+        }
+    ]
+}

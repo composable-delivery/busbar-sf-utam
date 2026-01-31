@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-picker.",
+            "Represents the related list choose Pricebook action.",
+            "You can access the picklist options."
+        ]
+    },
+    "elements": [
+        {
+            "name": "pricebookList",
+            "type": "utam-lightning/pageObjects/recordPicker",
+            "public": true,
+            "selector": {
+                "css": "lightning-record-picker"
+            }
+        },
+        {
+            "name": "pricebookGroupedCombobox",
+            "type": "utam-lightning/pageObjects/groupedCombobox",
+            "public": true,
+            "selector": {
+                "css": "lightning-grouped-combobox"
+            }
+        }
+    ]
+}

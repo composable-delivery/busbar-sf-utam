@@ -1,0 +1,71 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-view-manager.",
+            "Represents the related list view manager Lightning web component.",
+            "Access the View All link and the internal common list."
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForViewAllLink",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "a"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "description": {
+                "text": [
+                    "Wait for the view all link to be present"
+                ],
+                "return": "void"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/commonListInternal",
+                "name": "commonListInternal",
+                "public": true,
+                "selector": {
+                    "css": "lst-common-list-internal"
+                }
+            },
+            {
+                "type": [
+                    "clickable"
+                ],
+                "name": "viewAll",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the copilot panel header."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "closePanel"
+        },
+        {
+            "name": "getTitle",
+            "returnType": "string"
+        }
+    ]
+}

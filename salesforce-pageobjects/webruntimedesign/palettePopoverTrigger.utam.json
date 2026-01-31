@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: webruntimedesign-palette-popover-trigger",
+            "Triggers a palette popover modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "palettePopover",
+                "type": "utam-webruntimedesign/pageObjects/palettePopover",
+                "selector": {
+                    "css": "webruntimedesign-palette-popover"
+                }
+            },
+            {
+                "public": true,
+                "name": "popoverOpenButton",
+                "type": "clickable",
+                "selector": {
+                    "css": "webruntimedesign-popover-open-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "popoverCloseButton",
+                "type": "clickable",
+                "selector": {
+                    "css": "webruntimedesign-popover-close-button"
+                }
+            }
+        ]
+    }
+}

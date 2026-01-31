@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the navigation bar for the Offline App.",
+            "Click items, open the profile menu."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickBriefcaseSync"
+        },
+        {
+            "name": "clickCreateRecord"
+        },
+        {
+            "name": "clickItem",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "openProfileMenu"
+        }
+    ]
+}

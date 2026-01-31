@@ -1,0 +1,122 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a chat panel with dynamic content and handles chat interactions, including immersive chat mode and skeleton loading states.",
+            "Selector: app_dev_agent-agentic-shell"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "shellContainer",
+                "selector": {
+                    "css": "div[lwc:ref=\"shellContainer\"]"
+                },
+                "description": "Represents the main container of the chat panel",
+                "elements": [
+                    {
+                        "name": "chatPanel",
+                        "selector": {
+                            "css": "div[class='%s']",
+                            "args": [
+                                {
+                                    "name": "selectorStr",
+                                    "type": "string",
+                                    "description": "CSS selector parameter"
+                                }
+                            ]
+                        },
+                        "description": "Represents the chat panel container that is conditionally shown",
+                        "nullable": true,
+                        "elements": [
+                            {
+                                "name": "agenticShell",
+                                "selector": {
+                                    "css": "runtime_copilot-agentic-shell"
+                                },
+                                "type": "container",
+                                "description": "Represents the runtime Copilot agent shell component",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "chatPanelEmptyState",
+                        "selector": {
+                            "css": "app_dev_agent-chat-panel-empty-state"
+                        },
+                        "type": "utam-app_dev_agent/pageObjects/chatPanelEmptyState",
+                        "description": "Represents the empty state component for the chat panel",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isShellContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the main container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "shellContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the chat panel container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatPanel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatPanelPresent",
+            "description": {
+                "text": [
+                    "Check if the chat panel container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatPanel",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyChatPanelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"chatPanel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatPanel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

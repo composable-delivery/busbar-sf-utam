@@ -1,0 +1,202 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: className(\"android.view.ViewGroup\").descriptionMatches(\"^[0-9]+\").",
+            "Represents the Android Chatter post cell contained within the feed scrollview.",
+            "Perform actions for social media posts."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/chatter/chatterPostCell",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "feedActor",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_actor_name\")"
+            }
+        },
+        {
+            "name": "actionButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_chevron_down_image\")"
+            }
+        },
+        {
+            "name": "postText",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_body\")"
+            }
+        },
+        {
+            "name": "postTime",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_date\")"
+            }
+        },
+        {
+            "name": "likes",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_like\")"
+            }
+        },
+        {
+            "name": "commentsViews",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_comment\")"
+            }
+        },
+        {
+            "name": "likeButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_like_tappable_component_id\")"
+            }
+        },
+        {
+            "name": "commentButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_comment_tappable_label_id\")"
+            }
+        },
+        {
+            "name": "shareButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_share_label_id\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getFeedActor",
+            "compose": [
+                {
+                    "element": "feedActor",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "openAction",
+            "compose": [
+                {
+                    "element": "actionButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getPostText",
+            "compose": [
+                {
+                    "element": "postText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getPostTime",
+            "compose": [
+                {
+                    "element": "postTime",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getLikes",
+            "compose": [
+                {
+                    "element": "likes",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCommentsViews",
+            "compose": [
+                {
+                    "element": "commentsViews",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "like",
+            "compose": [
+                {
+                    "element": "likeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "comment",
+            "compose": [
+                {
+                    "element": "commentButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "share",
+            "compose": [
+                {
+                    "element": "shareButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openPostDetail",
+            "compose": [
+                {
+                    "element": "postTime",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

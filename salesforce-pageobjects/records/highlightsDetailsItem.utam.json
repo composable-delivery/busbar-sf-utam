@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-highlights-details-item",
+            "Represents the records-highlights-details-item Lightning web component.",
+            "Get the lightning-click-to-dial component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "clickToDial",
+            "public": true,
+            "type": "utam-lightning/pageObjects/clickToDial",
+            "selector": {
+                "css": "lightning-click-to-dial",
+                "returnAll": true
+            }
+        }
+    ]
+}

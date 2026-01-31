@@ -1,0 +1,431 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A modal component that allows users to configure input settings for a form. It includes options to disable free text input, manage prompts, upload CSV files, and save or cancel changes.",
+            "Selector: src-experience_ui_gen_canvas-/input-settings-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with a title.",
+                "public": true
+            },
+            {
+                "name": "disableTextInputCheckbox",
+                "selector": {
+                    "css": "lightning-input[type='checkbox']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents the checkbox to enable or disable free text input."
+            },
+            {
+                "name": "promptsTextArea",
+                "selector": {
+                    "css": "lightning-textarea.slds-var-m-top_medium"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents the text area for inputting prompts when free text input is disabled.",
+                "nullable": true
+            },
+            {
+                "name": "addPromptsButton",
+                "selector": {
+                    "css": "lightning-button.slds-var-m-top_medium"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button for adding prompts.",
+                "nullable": true
+            },
+            {
+                "name": "uploadCsvButton",
+                "selector": {
+                    "css": "lightning-button[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to upload a CSV file.",
+                "nullable": true
+            },
+            {
+                "name": "fileUploaderInput",
+                "selector": {
+                    "css": "input.file-uploader"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents the hidden file input for uploading CSV files."
+            },
+            {
+                "name": "deleteSelectedPromptsButton",
+                "selector": {
+                    "css": "lightning-button.slds-var-m-top_medium"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to delete selected prompts.",
+                "nullable": true
+            },
+            {
+                "name": "dataTable",
+                "selector": {
+                    "css": "lightning-datatable"
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents the data table for displaying prompts.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the spinner indicating a loading state.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the cancel button in the modal footer."
+            },
+            {
+                "name": "saveButton",
+                "selector": {
+                    "css": "lightning-button[label='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the save button in the modal footer."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleDisableTextInput",
+            "description": {
+                "text": [
+                    "Toggle the disable free text input checkbox"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "disableTextInputCheckbox",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isDisableTextInputChecked",
+            "description": {
+                "text": [
+                    "Check if the disable free text input checkbox is checked"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "disableTextInputCheckbox",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "typeInPromptsTextArea",
+            "description": {
+                "text": [
+                    "Enter text into the prompts text area"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "promptsTextArea",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getPromptsTextAreaValue",
+            "description": {
+                "text": [
+                    "Get the current value of the prompts text area"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "promptsTextArea",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "clickAddPromptsButton",
+            "description": {
+                "text": [
+                    "Click the add prompts button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "addPromptsButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickUploadCsvButton",
+            "description": {
+                "text": [
+                    "Click the upload CSV button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "uploadCsvButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "uploadCsvFile",
+            "description": {
+                "text": [
+                    "Trigger the file upload process"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "fileUploaderInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickDeleteSelectedPromptsButton",
+            "description": {
+                "text": [
+                    "Click the delete selected prompts button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "deleteSelectedPromptsButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isCancelButtonDisabled",
+            "description": {
+                "text": [
+                    "Check if the cancel button is disabled"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isSaveButtonDisabled",
+            "description": {
+                "text": [
+                    "Check if the save button is disabled"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Click the cancel button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSaveButton",
+            "description": {
+                "text": [
+                    "Click the save button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "verifyPromptsTextAreaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"promptsTextArea\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "promptsTextArea",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyAddPromptsButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"addPromptsButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addPromptsButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyUploadCsvButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"uploadCsvButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "uploadCsvButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyDeleteSelectedPromptsButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"deleteSelectedPromptsButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "deleteSelectedPromptsButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the button element in the CMS builder runtime"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getButtonText",
+            "description": "returns the text of the button",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "clicks the button",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "button",
+            "type": "clickable",
+            "selector": {
+                "css": ".slds-button"
+            }
+        }
+    ]
+}

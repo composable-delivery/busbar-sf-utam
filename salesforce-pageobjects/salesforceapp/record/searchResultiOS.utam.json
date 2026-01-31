@@ -1,0 +1,146 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeCollectionView[$name == 'search.scoped.results.mru'$].",
+            "Represents the iOS search result collection view.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/searchResult",
+    "platform": "native",
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeCollectionView[$name == 'search.scoped.results.mru'$]"
+    },
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "visibleRecordCards",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeAny[`name BEGINSWITH 'searchCell.recentDetail' AND visible == true`]",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "visibleRecordWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeAny[`visible == true AND name BEGINSWITH 'searchCell.recentDetail' AND label CONTAINS '%s'`]",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "syncPendingBanner",
+            "selector": {
+                "classchain": "**/XCUIElementTypeImage[`label == 'Sync Pending'`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickRecordMatchingTitle",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "classchain": "**/XCUIElementTypeImage[`label == 'Sync Pending'`]"
+                                            }
+                                        }
+                                    ],
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/record/searchResultiOSUtils",
+                        "invoke": "clickRecord",
+                        "args": [
+                            {
+                                "name": "title",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasRecord",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/record/searchResultiOSUtils",
+                        "invoke": "hasRecord",
+                        "args": [
+                            {
+                                "name": "title",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

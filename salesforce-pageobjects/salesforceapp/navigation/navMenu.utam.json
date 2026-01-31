@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the menu fragment.",
+            "Load the app launcher, load the all items list, or interact with the existing list of items."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "getAppName",
+            "returnType": "string"
+        },
+        {
+            "name": "getNavItemsList",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/navItemsList"
+        },
+        {
+            "name": "openAllItems"
+        },
+        {
+            "name": "openAppLauncher"
+        }
+    ]
+}

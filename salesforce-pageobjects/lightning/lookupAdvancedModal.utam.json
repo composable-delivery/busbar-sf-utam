@@ -1,0 +1,198 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal",
+            "Represents the container for lightning-lookup-advanced-modal Lightning web component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "body lightning-overlay-container"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseModal",
+                "public": false,
+                "selector": {
+                    "css": "lightning-modal-base"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "modal",
+                            "public": false,
+                            "selector": {
+                                "css": "lightning-modal:has(.lightning-lookup-advanced-modal__body)"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "recordPickerAdvanced",
+                                        "public": false,
+                                        "type": "utam-lightning/pageObjects/recordPickerAdvanced",
+                                        "selector": {
+                                            "css": "lightning-record-picker-advanced"
+                                        }
+                                    },
+                                    {
+                                        "name": "selectButton",
+                                        "type": "utam-lightning/pageObjects/button",
+                                        "selector": {
+                                            "css": "lightning-button[data-label='Select']"
+                                        },
+                                        "public": false
+                                    },
+                                    {
+                                        "name": "cancelButton",
+                                        "type": "utam-lightning/pageObjects/button",
+                                        "selector": {
+                                            "css": "lightning-button[data-label='Cancel']"
+                                        },
+                                        "public": false
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "close",
+            "description": {
+                "text": [
+                    "Close the modal"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "confirm",
+            "description": {
+                "text": [
+                    "Confirm the selection"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "selectButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "countRecords",
+            "description": {
+                "text": [
+                    "How many records are displayed"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerAdvanced"
+                },
+                {
+                    "chain": true,
+                    "returnType": "number",
+                    "apply": "countRecords"
+                }
+            ]
+        },
+        {
+            "name": "pressSearchButton",
+            "description": {
+                "text": [
+                    "Raise a search"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerAdvanced",
+                    "apply": "pressSearchButton"
+                }
+            ]
+        },
+        {
+            "name": "selectRecord",
+            "description": {
+                "text": [
+                    "Select the record with the provided index"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerAdvanced",
+                    "apply": "selectRecord",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "type",
+            "description": {
+                "text": [
+                    "Type some search terms in the search input"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerAdvanced"
+                },
+                {
+                    "chain": true,
+                    "apply": "type",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Waits for the lookup advanced to be ready (metadata fetched)"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerAdvanced",
+                    "apply": "waitUntilReady"
+                }
+            ]
+        },
+        {
+            "name": "waitForRecords",
+            "description": {
+                "text": [
+                    "Waits to see some records"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerAdvanced",
+                    "apply": "waitForRecords"
+                }
+            ]
+        }
+    ]
+}

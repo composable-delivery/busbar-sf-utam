@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an avatar for a user, which can be either inbound or outbound. The avatar is represented differently based on the direction of the message. It shows an Einstein icon for inbound messages and a photo URL for outbound messages. The component also sets a background color for the avatar.",
+            "Selector: src-user-avatar"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "avatarContainer",
+                "selector": {
+                    "css": ".inbound-wrapper, .outbound-wrapper"
+                },
+                "description": "Represents the container for the avatar.",
+                "elements": [
+                    {
+                        "name": "userAvatar",
+                        "selector": {
+                            "css": "feeds_chat-base-avatar"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseAvatar",
+                        "description": "Represents the avatar component that may display an image or icon.",
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isAvatarContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the avatar container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "avatarContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getAvatarContainerClass",
+            "description": {
+                "text": [
+                    "Get the class attribute of the avatar container"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "avatarContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

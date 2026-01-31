@@ -1,0 +1,91 @@
+{
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "description": {
+        "text": [
+            "Selector: one-app-nav-bar-item-root.",
+            "Represents the one-app-nav-bar-item-root Lightning web component.",
+            "Access the item text, the item link, or the dropdown. Click the item and wait for a specific URL match."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Gets the item text, the item link, or the dropdown"
+                ],
+                "return": "the item text, the item link, or the dropdown"
+            },
+            "name": "getItemText",
+            "compose": [
+                {
+                    "element": "itemLink",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Clicks the item and waits for a specific URL match"
+                ],
+                "return": "none"
+            },
+            "name": "clickAndWaitForUrl",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "document",
+                                    "apply": "getUrl",
+                                    "matcher": {
+                                        "type": "stringContains",
+                                        "args": [
+                                            {
+                                                "type": "string",
+                                                "name": "url"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "itemLink",
+                "public": true,
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "name": "dropdown",
+                "type": "utam-global/pageObjects/appNavBarItemDropdown",
+                "public": true,
+                "selector": {
+                    "css": "one-app-nav-bar-item-dropdown"
+                }
+            }
+        ]
+    }
+}

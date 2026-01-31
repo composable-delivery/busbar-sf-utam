@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: screenPropertiesEditorContainer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "propertySheetUiContainer",
+                "type": "utam-builder-framework/pageObjects/propertySheetUiContainer",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui-container"
+                }
+            }
+        ]
+    }
+}

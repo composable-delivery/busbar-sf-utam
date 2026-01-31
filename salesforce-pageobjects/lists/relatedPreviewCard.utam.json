@@ -1,0 +1,63 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-preview-card.",
+            "Represents the related preview card Lightning web component.",
+            "Access the fields, lookups, and labels."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "fieldLabels",
+                "public": true,
+                "selector": {
+                    "css": "dl dt",
+                    "returnAll": true
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/templateListField",
+                "name": "fields",
+                "public": true,
+                "selector": {
+                    "css": "dl dd lst-template-list-field",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "title",
+                "public": true,
+                "selector": {
+                    "css": ".slds-tile__title"
+                }
+            },
+            {
+                "type": "utam-force/pageObjects/lookup",
+                "name": "titleLookup",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "force-lookup"
+                }
+            },
+            {
+                "name": "cardHeader",
+                "selector": {
+                    "css": "h3"
+                },
+                "elements": [
+                    {
+                        "type": "utam-lists/pageObjects/templateListField",
+                        "name": "titleTemplateField",
+                        "public": true,
+                        "selector": {
+                            "css": "lst-template-list-field"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

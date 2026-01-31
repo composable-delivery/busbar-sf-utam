@@ -1,0 +1,170 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-constraints-list-item",
+            "Constraint Builder Business UI Constraint List Item"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItem",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li"
+                        },
+                        "elements": [
+                            {
+                                "name": "section",
+                                "type": [],
+                                "selector": {
+                                    "css": "section"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "button",
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "selector": {
+                                            "css": "button"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "icon",
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "selector": {
+                                                    "css": "lightning-icon"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "icon1",
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "selector": {
+                                                    "css": "lightning-icon:nth-of-type(2)"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "divContent",
+                                                "type": [],
+                                                "selector": {
+                                                    "css": "div"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "divContent1",
+                                                "type": [],
+                                                "selector": {
+                                                    "css": "div:nth-of-type(2)"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "spanContent",
+                                                "type": [],
+                                                "selector": {
+                                                    "css": "span"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "badge",
+                                                "type": "utam-lightning/pageObjects/badge",
+                                                "selector": {
+                                                    "css": "lightning-badge"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "buttonMenu",
+                                        "type": "utam-lightning/pageObjects/buttonMenu",
+                                        "selector": {
+                                            "css": "lightning-button-menu"
+                                        }
+                                    },
+                                    {
+                                        "name": "div",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "div"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "buiBasicConstraint",
+                                                "type": "utam-builder_industries_constraints/pageObjects/buiBasicConstraint",
+                                                "selector": {
+                                                    "css": "builder_industries_constraints-bui-basic-constraint"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "buiMessageConstraint",
+                                                "type": "utam-builder_industries_constraints/pageObjects/buiMessageConstraint",
+                                                "selector": {
+                                                    "css": "builder_industries_constraints-bui-message-constraint"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "buiConditionalConstraint",
+                                                "type": "utam-builder_industries_constraints/pageObjects/buiConditionalConstraint",
+                                                "selector": {
+                                                    "css": "builder_industries_constraints-bui-conditional-constraint"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "buiRequireRule",
+                                                "type": "utam-builder_industries_constraints/pageObjects/buiRequireRule",
+                                                "selector": {
+                                                    "css": "builder_industries_constraints-bui-require-rule"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "buiExcludeRule",
+                                                "type": "utam-builder_industries_constraints/pageObjects/buiExcludeRule",
+                                                "selector": {
+                                                    "css": "builder_industries_constraints-bui-exclude-rule"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "buiUnsupportedConstraint",
+                                                "type": "utam-builder_industries_constraints/pageObjects/buiUnsupportedConstraint",
+                                                "selector": {
+                                                    "css": "builder_industries_constraints-bui-unsupported-constraint"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

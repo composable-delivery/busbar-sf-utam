@@ -1,0 +1,124 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: table.appList.",
+            "Represents the iOS list of apps in 'App Launcher'.",
+            "Look for an app by title and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/appItemsList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "visibleAppItems",
+            "type": [
+                "clickable",
+                "touchable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`name == 'label.appName' AND visible == true`]",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "appItemTitles",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeCell/XCUIElementTypeStaticText[`name == 'label.appName'`]",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "appItemDescs",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeCell/XCUIElementTypeStaticText[`name == 'label.appDesc'`]",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "appItemByLabel",
+            "nullable": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`name == 'label.appName' AND label == '%s'`]",
+                "args": [
+                    {
+                        "name": "item",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "visibleAppItemByTitle",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`visible == true AND name == 'label.appName' AND label == '%s'`]",
+                "args": [
+                    {
+                        "name": "item",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasAppItemWithTitle",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "appItemByLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickAppItemWithTitle",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/navigation/appItemiOSUtils",
+                        "invoke": "clickAppItem",
+                        "args": [
+                            {
+                                "name": "appTitle",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

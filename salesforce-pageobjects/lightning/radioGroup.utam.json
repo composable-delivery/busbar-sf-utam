@@ -1,0 +1,197 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-radio-group",
+            "Represents the lightning-radio-group Lightning web component.",
+            "Select a radio button by value or get the selected radio button value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Is the radio group required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "required",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isDisabled",
+            "description": {
+                "text": [
+                    "Check is the radio group disabled if the first radio option is disabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "getAttribute",
+                    "element": "firstRadioOption",
+                    "args": [
+                        {
+                            "value": "disabled"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getRadioGroupLabel",
+            "description": {
+                "text": [
+                    "Get the radio group label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "radioGroupLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getRadioOptionLabel",
+            "description": {
+                "text": [
+                    "Get a radio option label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "radioLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSelectedRadioValue",
+            "description": {
+                "text": [
+                    "Get selected/checked radio option value"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "selectedRadio",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "value"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "selectRadioWithValue",
+            "description": "Click to select a radio option with matching value",
+            "compose": [
+                {
+                    "element": "radioLabel",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroupLabel",
+                "selector": {
+                    "css": ".slds-form-element__legend.slds-form-element__label"
+                },
+                "elements": [
+                    {
+                        "name": "required",
+                        "selector": {
+                            "css": ".slds-required"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "error",
+                "selector": {
+                    "css": "[id*='help-message']"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "selectedRadio",
+                "selector": {
+                    "css": "input[type='radio']:checked"
+                },
+                "nullable": true
+            },
+            {
+                "name": "radioWithValue",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "input[type='radio'][value='%s']",
+                    "args": [
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "radioLabel",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "input[type='radio'][value='%s'] + label",
+                    "args": [
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "radioOptions",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "input[type='radio']",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "firstRadioOption",
+                "type": "clickable",
+                "selector": {
+                    "css": "input[type='radio']:nth-child(1)"
+                }
+            }
+        ]
+    }
+}

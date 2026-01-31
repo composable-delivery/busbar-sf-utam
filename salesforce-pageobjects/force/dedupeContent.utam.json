@@ -1,0 +1,60 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceDedupeContent.",
+            "Represents the force:dedupeContent Lightning web component.",
+            "Get the dedupe message. Click the view duplicates link."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewDuplicatesLink",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "name": "dedupeMessage",
+                "selector": {
+                    "css": "div.slds-p-around_small"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickViewDuplicates",
+            "description": {
+                "text": [
+                    "Clicks the view duplicates link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "viewDuplicatesLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getDedupeMessage",
+            "description": {
+                "text": [
+                    "Gets a the text of the deduplication message"
+                ],
+                "return": "the text of the deduplication message"
+            },
+            "compose": [
+                {
+                    "element": "dedupeMessage",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

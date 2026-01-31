@@ -1,0 +1,292 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a progress bar with dynamic size (large or small), showing percentage completion and step completion details.",
+            "Selector: src-assistant-progress-bar"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "progressBarContainer",
+                "selector": {
+                    "css": ".assistant-progress-bar_'%s'",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the container element for the progress bar, dynamically styled based on size."
+            },
+            {
+                "name": "largeProgressBar",
+                "selector": {
+                    "css": "#assistant-progress-bar-large"
+                },
+                "description": "Represents the large version of the progress bar, displayed when size is \"large\".",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "progressLabel",
+                        "selector": {
+                            "css": ".progress-label"
+                        },
+                        "description": "Represents the label displayed above the large progress bar."
+                    },
+                    {
+                        "name": "completionLabelLarge",
+                        "selector": {
+                            "css": ".completion-label"
+                        },
+                        "description": "Represents the completion label for the large progress bar."
+                    }
+                ]
+            },
+            {
+                "name": "circularProgressBar",
+                "selector": {
+                    "css": ".slds-progress-bar_circular"
+                },
+                "description": "Represents the circular progress bar element.",
+                "elements": [
+                    {
+                        "name": "progressValue",
+                        "selector": {
+                            "css": ".slds-progress-bar__value_success"
+                        },
+                        "description": "Represents the filled portion of the progress bar indicating completion percentage.",
+                        "elements": [
+                            {
+                                "name": "assistiveText",
+                                "selector": {
+                                    "css": ".slds-assistive-text"
+                                },
+                                "description": "Represents the assistive text for accessibility within the progress bar."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "smallProgressBar",
+                "selector": {
+                    "css": "#assistant-progress-bar-small"
+                },
+                "description": "Represents the small version of the progress bar, displayed when size is \"small\".",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "percentComplete",
+                        "selector": {
+                            "css": ".percent-complete"
+                        },
+                        "description": "Represents the percentage completion text for the small progress bar."
+                    },
+                    {
+                        "name": "stepsComplete",
+                        "selector": {
+                            "css": ".steps-complete"
+                        },
+                        "description": "Represents the step completion text for the small progress bar."
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isProgressBarVisible",
+            "description": {
+                "text": [
+                    "Check if the progress bar container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "progressBarContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLargeProgressBarVisible",
+            "description": {
+                "text": [
+                    "Check if the large progress bar is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "largeProgressBar",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getProgressLabelText",
+            "description": {
+                "text": [
+                    "Get the text of the progress label for the large progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "progressLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCompletionLabelText",
+            "description": {
+                "text": [
+                    "Get the text of the completion label for the large progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "completionLabelLarge",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isCircularProgressBarVisible",
+            "description": {
+                "text": [
+                    "Check if the circular progress bar is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "circularProgressBar",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getProgressValueWidth",
+            "description": {
+                "text": [
+                    "Get the width style of the progress bar filled portion"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "progressValue",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Get the assistive text for the progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isSmallProgressBarVisible",
+            "description": {
+                "text": [
+                    "Check if the small progress bar is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "smallProgressBar",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPercentCompleteText",
+            "description": {
+                "text": [
+                    "Get the percentage completion text for the small progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "percentComplete",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getStepsCompleteText",
+            "description": {
+                "text": [
+                    "Get the step completion text for the small progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stepsComplete",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyLargeProgressBarPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"largeProgressBar\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "largeProgressBar",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifySmallProgressBarPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"smallProgressBar\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "smallProgressBar",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

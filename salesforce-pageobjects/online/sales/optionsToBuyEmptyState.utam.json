@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Options To Buy Empty State Page Object"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "handRaiseText",
+                "selector": {
+                    "css": ".text-container"
+                }
+            },
+            {
+                "public": true,
+                "name": "handRaiseButton",
+                "selector": {
+                    "css": ".contact-sales-button"
+                }
+            }
+        ]
+    }
+}

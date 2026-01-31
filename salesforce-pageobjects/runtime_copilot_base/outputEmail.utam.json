@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a generated email preview with fields for the recipient's name and email address, subject, and body content.",
+            "Selector: src-output-email"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "emailContainer",
+                "selector": {
+                    "css": ".generatedEmail"
+                },
+                "description": "Represents the container of the generated email preview",
+                "elements": [
+                    {
+                        "name": "toFieldContent",
+                        "selector": {
+                            "css": ".generatedEmailToField"
+                        },
+                        "description": "Represents the content of the recipient's name and email address"
+                    },
+                    {
+                        "name": "subjectContent",
+                        "selector": {
+                            "css": ".generatedEmailSubject"
+                        },
+                        "description": "Represents the content of the email subject"
+                    },
+                    {
+                        "name": "bodyContent",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the rich text formatted body of the email",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getEmailContainerVisibility",
+            "description": {
+                "text": [
+                    "Checks if the email container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emailContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getToFieldText",
+            "description": {
+                "text": [
+                    "Returns the text content of the recipient's name and email address field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "toFieldContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSubjectText",
+            "description": {
+                "text": [
+                    "Returns the text content of the email subject field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "subjectContent",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

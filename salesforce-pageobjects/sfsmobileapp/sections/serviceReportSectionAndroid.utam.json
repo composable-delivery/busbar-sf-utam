@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Service Report section of a Work Order."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/sections/serviceReportSection",
+    "platform": "native",
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "serviceReportLocator",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/service_report_complete_wrapper\")"
+            }
+        },
+        {
+            "name": "viewController",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/file_pdf_view\")"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "openServiceReport",
+            "compose": [
+                {
+                    "element": "serviceReportLocator",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

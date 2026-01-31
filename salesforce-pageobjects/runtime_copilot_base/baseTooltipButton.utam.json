@@ -1,0 +1,124 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A custom Salesforce Design System (SDS) based tooltip button component that can display a tooltip or a popover with content when interacted with. It can be configured with different placements, symbols, labels, sizes, and variants.",
+            "Selector: src-base-tooltip-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "tooltipWrapper",
+                "selector": {
+                    "css": ".feedback-button.feedback-show"
+                },
+                "description": "Represents the tooltip wrapper when the popoverType is 'tooltip'."
+            },
+            {
+                "name": "popoverWrapper",
+                "selector": {
+                    "css": ".feedback-button.feedback-show"
+                },
+                "description": "Represents the popover wrapper when the popoverType is 'popover'."
+            },
+            {
+                "name": "buttonIcon",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button-icon"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseButtonIcon",
+                "description": "Represents the button icon that triggers the tooltip or popover.",
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "tooltipContent",
+            "selector": {
+                "css": "[slot='tooltip']"
+            },
+            "type": "container",
+            "description": "Represents the content of the tooltip.",
+            "public": true
+        },
+        {
+            "name": "popoverHeaderStartContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the start slot for the popover header.",
+            "public": true
+        },
+        {
+            "name": "popoverHeaderContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the main slot for the popover header.",
+            "public": true
+        },
+        {
+            "name": "popoverHeaderEndContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the end slot for the popover header.",
+            "public": true
+        },
+        {
+            "name": "popoverBodyContent",
+            "selector": {
+                "css": "[slot='popover']"
+            },
+            "type": "container",
+            "description": "Represents the main content slot for the popover.",
+            "public": true
+        },
+        {
+            "name": "popoverFooterContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the footer slot for the popover.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isTooltipVisible",
+            "description": {
+                "text": [
+                    "Checks if the tooltip is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "tooltipWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isPopoverVisible",
+            "description": {
+                "text": [
+                    "Checks if the popover is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "popoverWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

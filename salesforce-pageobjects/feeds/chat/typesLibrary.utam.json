@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The component is designed to handle the computation and configuration of types for an AI function in a Salesforce Lightning Web Component. It manipulates configurations for inputs and outputs based on the provided esTypes object. The component does not directly interact with a UI, as it primarily serves as a library for type handling and configuration patching.",
+            "Selector: src-types-library"
+        ]
+    }
+}

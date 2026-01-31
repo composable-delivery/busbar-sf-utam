@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that acts as a broker for the EinsteinAssistant, handling the dynamic loading of desktop and mobile versions of the assistant, managing the panel header, and processing actions, statuses, and errors related to the assistant's operations.",
+            "Selector: src-einstein-assistant-broker"
+        ]
+    },
+    "elements": [
+        {
+            "name": "dynamicEinsteinAssistant",
+            "selector": {
+                "css": "[data-view-component]"
+            },
+            "type": "container",
+            "description": "Represents the dynamic EinsteinAssistant component that is loaded based on the desktop or mobile context.",
+            "wait": true,
+            "public": true,
+            "elements": [
+                {
+                    "name": "headerSlot",
+                    "selector": {
+                        "css": "[slot='header']"
+                    },
+                    "type": "container",
+                    "description": "Represents the slot for the header of the assistant panel.",
+                    "public": true,
+                    "wait": true
+                },
+                {
+                    "name": "chatHeader",
+                    "selector": {
+                        "css": "feeds_chat-header"
+                    },
+                    "type": "utam-feeds-chat/pageObjects/header",
+                    "description": "Represents the chat header component which may contain the title and description, and handles the close event.",
+                    "nullable": true,
+                    "public": true,
+                    "wait": true
+                }
+            ]
+        }
+    ]
+}

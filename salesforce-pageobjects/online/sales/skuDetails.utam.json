@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: skuDetails"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "skuDetailsPageTop",
+                "type": "utam-online-sales/pageObjects/skuDetailsPageTop",
+                "selector": {
+                    "css": "runtime_online_sales-sku-details-page-top"
+                }
+            },
+            {
+                "public": true,
+                "name": "handRaiseBtn",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='handRaiseBtn']"
+                }
+            },
+            {
+                "public": true,
+                "name": "cartIcon",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='cartIcon']"
+                }
+            }
+        ]
+    }
+}

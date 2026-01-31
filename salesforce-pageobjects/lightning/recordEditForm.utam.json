@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-edit-form",
+            "Represents the lightning-record-edit-form Lightning web component.",
+            "Get the input fields, buttons and wait for edit form to load"
+        ]
+    },
+    "elements": [
+        {
+            "name": "spinner",
+            "type": "utam-lightning/pageObjects/spinner",
+            "nullable": true,
+            "selector": {
+                "css": "lightning-spinner"
+            }
+        },
+        {
+            "name": "inputFields",
+            "type": "utam-lightning/pageObjects/inputField",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "css": "lightning-input-field",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "buttons",
+            "type": "utam-lightning/pageObjects/button",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "css": "lightning-button",
+                "returnAll": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "waitUntilReady",
+            "description": "Wait for edit form to load",
+            "compose": [
+                {
+                    "element": "spinner",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        }
+    ]
+}

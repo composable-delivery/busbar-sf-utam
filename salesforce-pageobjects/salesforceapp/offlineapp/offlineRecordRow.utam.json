@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the row inside of List.",
+            "Verify the row and its fields."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getTime",
+            "returnType": "string"
+        },
+        {
+            "name": "getTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "getText",
+            "returnType": "string"
+        },
+        {
+            "name": "getSubText",
+            "returnType": "string"
+        },
+        {
+            "name": "getIcon",
+            "returnType": [
+                "actionable"
+            ]
+        },
+        {
+            "name": "clickRow"
+        }
+    ]
+}

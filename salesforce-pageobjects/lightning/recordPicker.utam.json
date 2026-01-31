@@ -1,0 +1,129 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-picker",
+            "Represents the lightning-record-picker Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordPickerBase",
+                "public": false,
+                "type": "utam-lightning/pageObjects/recordPickerBase",
+                "selector": {
+                    "css": "lightning-record-picker-base"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "typeText",
+            "description": {
+                "text": [
+                    "Type a text into the combobox input"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBase"
+                },
+                {
+                    "chain": true,
+                    "apply": "typeText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputText",
+            "description": {
+                "text": [
+                    "Gets the input text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBase",
+                    "returnType": "utam-lightning/pageObjects/recordPickerBase"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "pickSuggestionItemByLabel",
+            "description": {
+                "text": [
+                    "Performs click action on the suggestion item based on the record label. If the record has a secondary field, ",
+                    "it must be included in the label after the primary field (record's name) separated ",
+                    "with a `\\n` character (e.g. MyRecordName\\nMyRecordSecondaryField)"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBase"
+                },
+                {
+                    "chain": true,
+                    "apply": "pickSuggestionItemByLabel",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getSelectionAsText",
+            "description": {
+                "text": [
+                    "Gets the label of the item selected in the input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBase"
+                },
+                {
+                    "chain": true,
+                    "apply": "getSelectionAsText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Waits for the record picker to be ready (metadata fetched)"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBase"
+                },
+                {
+                    "chain": true,
+                    "apply": "waitUntilReady"
+                }
+            ]
+        }
+    ]
+}

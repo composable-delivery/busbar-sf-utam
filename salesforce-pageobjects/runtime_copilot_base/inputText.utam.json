@@ -1,0 +1,213 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a text input field with label, required indicator, help text, and error message support.",
+            "Selector: runtime_copilot_base-input-text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "primitiveTextInput",
+                "selector": {
+                    "css": "lightning-primitive-input-text"
+                },
+                "description": "Represents the main text input component.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "requiredIndicator",
+                        "selector": {
+                            "css": "abbr.slds-required"
+                        },
+                        "description": "Represents the required field indicator which may be conditionally shown.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "labelText",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the label for the input field."
+                    },
+                    {
+                        "name": "helptextComponent",
+                        "selector": {
+                            "css": "lightning-helptext"
+                        },
+                        "type": "utam-lightning/pageObjects/helptext",
+                        "description": "Represents the help text component which may be conditionally shown.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "helpTextMessage",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the help text or error message which may be conditionally shown.",
+                        "nullable": true
+                    }
+                ],
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "primitveInputText",
+                            "selector": {
+                                "css": "input"
+                            },
+                            "type": [
+                                "editable"
+                            ],
+                            "nullable": true,
+                            "public": true,
+                            "wait": true
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isLabelTextVisible",
+            "description": {
+                "text": [
+                    "Check if the label text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "labelText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHelpTextMessagePresent",
+            "description": {
+                "text": [
+                    "Check if the help text message is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "helpTextMessage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isHelpTextMessageVisible",
+            "description": {
+                "text": [
+                    "Check if the help text message is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "helpTextMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHelpTextMessageFocused",
+            "description": {
+                "text": [
+                    "Check if the help text message is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "helpTextMessage",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "getHelpTextMessageText",
+            "description": {
+                "text": [
+                    "Get text content of the help text message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "helpTextMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRequiredIndicatorPresent",
+            "description": {
+                "text": [
+                    "Check if the required indicator is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredIndicator",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isRequiredIndicatorVisible",
+            "description": {
+                "text": [
+                    "Check if the required indicator is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredIndicator",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRequiredIndicatorPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"requiredIndicator\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredIndicator",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyHelpTextMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"helpTextMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "helpTextMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

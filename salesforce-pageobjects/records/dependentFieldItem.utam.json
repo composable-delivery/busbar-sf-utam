@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-dependent-field-item",
+            "Represents the records-dependent-field-item Lightning web component.",
+            "Get lightning-input-field component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputField",
+                "type": "utam-lightning/pageObjects/inputField",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input-field"
+                }
+            }
+        ]
+    }
+}

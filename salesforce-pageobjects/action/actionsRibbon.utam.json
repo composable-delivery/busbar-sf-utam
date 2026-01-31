@@ -1,0 +1,107 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_platform_actions-actions-ribbon",
+            "Represents the runtime_platform_actions-actions-ribbon Lightning web component.",
+            "Get the dropdown button or the action renderer by title."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "dropdownButton",
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            },
+            {
+                "public": true,
+                "type": [
+                    "clickable"
+                ],
+                "name": "dropdownMenuText",
+                "selector": {
+                    "css": "div[role='menu'] > slot > runtime_platform_actions-action-renderer span",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "viewStageRecommendationButton",
+                "selector": {
+                    "css": "slot > lightning-menu-item[data-target-selection-name='sfdc:StandardButton.Opportunity.AutomatedDealTrackingReviewModal']"
+                },
+                "type": [
+                    "clickable"
+                ]
+            },
+            {
+                "name": "actionRendererWithTitle",
+                "type": "utam-action/pageObjects/actionRenderer",
+                "nullable": true,
+                "selector": {
+                    "css": "runtime_platform_actions-action-renderer[title='%s']",
+                    "args": [
+                        {
+                            "name": "titleString",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the dropdown button associated with the actions ribbon"
+                ],
+                "return": "utam-lightning/pageObjects/buttonMenu"
+            },
+            "name": "getDropdownButton",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "dropdownButton"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the action renderer associated with the display label of the action"
+                ],
+                "return": "utam-action/pageObjects/actionRenderer"
+            },
+            "name": "getActionRendererWithTitle",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "actionRendererWithTitle"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

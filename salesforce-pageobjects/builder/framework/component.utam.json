@@ -1,0 +1,179 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_framework-component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "shadowContainer",
+                "type": "container",
+                "selector": {
+                    "css": "*"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "divContainerByIndex",
+            "selector": {
+                "css": "div:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "elements": [
+                {
+                    "public": true,
+                    "name": "indexedDivContainer",
+                    "type": "container",
+                    "selector": {
+                        "css": "*"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "div",
+            "selector": {
+                "css": "div"
+            },
+            "elements": [
+                {
+                    "public": true,
+                    "name": "divContainer",
+                    "type": "container",
+                    "selector": {
+                        "css": "*"
+                    }
+                }
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "isPropertyEditorComponent",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "builder_framework-property-editor-component"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isPropertyEditorUiContainer",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "builder_framework-property-editor-ui-container"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getPropertyEditorComponent",
+            "compose": [
+                {
+                    "element": "shadowContainer",
+                    "returnType": "utam-builder-framework/pageObjects/propertyEditorComponent",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-builder-framework/pageObjects/propertyEditorComponent"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getPropertyEditorUiContainer",
+            "compose": [
+                {
+                    "element": "shadowContainer",
+                    "returnType": "utam-builder-framework/pageObjects/propertyEditorUiContainer",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-builder-framework/pageObjects/propertyEditorUiContainer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForPropertyEditorComponent",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isPropertyEditorComponent",
+                                    "returnType": "boolean"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "getPropertyEditorComponent",
+                    "returnType": "utam-builder-framework/pageObjects/propertyEditorComponent"
+                }
+            ]
+        },
+        {
+            "name": "waitForPropertyEditorUiContainer",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isPropertyEditorUiContainer",
+                                    "returnType": "boolean"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "getPropertyEditorUiContainer",
+                    "returnType": "utam-builder-framework/pageObjects/propertyEditorUiContainer"
+                }
+            ]
+        }
+    ]
+}

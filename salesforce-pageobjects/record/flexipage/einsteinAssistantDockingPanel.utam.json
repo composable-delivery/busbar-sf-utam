@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that acts as a docking panel for the Einstein Assistant, which executes prompt templates, handles user input, and performs actions based on user interaction.",
+            "Selector: src-einstein-assistant-docking-panel"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "record_flexipage-einstein-assistant-docking-panel"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "einsteinAssistantBroker",
+                "selector": {
+                    "css": "feeds_assistant-einstein-assistant-broker"
+                },
+                "type": "utam-feeds-assistant/pageObjects/einsteinAssistantBroker",
+                "description": "Represents the Einstein Assistant broker component which handles AI actions and readiness.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

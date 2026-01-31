@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the fragment for the Einstein analytics dashboard.",
+            "Verify the dashboard and text widget label are loaded, and verify link action navigation."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "switchTab"
+        },
+        {
+            "name": "hasBrokenWidgets",
+            "returnType": "boolean"
+        },
+        {
+            "name": "getDashboardTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "hasTextWidgetWithLabel",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "clickTable"
+        },
+        {
+            "name": "clickTableCellWithLabel",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "clickLinkWidgetWithLabel",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

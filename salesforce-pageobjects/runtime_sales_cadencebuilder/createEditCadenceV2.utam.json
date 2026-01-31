@@ -1,0 +1,25 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_sales_cadencebuilder-create-edit-cadence-v2",
+            "Represents the Create Edit Cadence V2 component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_sales_cadencebuilder-create-edit-cadence-v2"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "editor",
+                "type": "utam-es_block_builder/pageObjects/editor",
+                "selector": {
+                    "css": "es_block_builder-editor"
+                }
+            }
+        ]
+    }
+}

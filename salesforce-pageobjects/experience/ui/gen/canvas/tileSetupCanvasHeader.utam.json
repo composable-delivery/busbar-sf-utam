@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that display title, description and category for setup canvas header",
+            "Selector: experience_ui_gen_canvas-tile-setup-canvas-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "titleHeading",
+                "selector": {
+                    "css": "h1.title"
+                },
+                "description": "Represents the title of the metrics summary"
+            },
+            {
+                "name": "descriptionContent",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "description": "Represents the description or additional information about the metrics",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the title heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitleVisibility",
+            "description": {
+                "text": [
+                    "Checks if the title heading is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

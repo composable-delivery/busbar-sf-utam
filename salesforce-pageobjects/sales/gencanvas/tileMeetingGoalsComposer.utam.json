@@ -1,0 +1,148 @@
+{
+    "description": {
+        "text": [
+            "Meeting Goals Composer tile component in the generative canvas",
+            "Used for composing meeting goals"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "meetingGoalsItems",
+                "public": true,
+                "description": "All Meeting Goals Composer elements",
+                "selector": {
+                    "css": ".slds-col.slds-size_5-of-6 div",
+                    "returnAll": true
+                },
+                "wait": true,
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            },
+            {
+                "name": "addMeetingGoalButton",
+                "public": true,
+                "description": "The lightning-button element in the meeting goals composer",
+                "selector": {
+                    "css": "lightning-button"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "wait": true
+            },
+            {
+                "name": "meetingGoalsSuggestions",
+                "public": true,
+                "description": "Text span elements with specific styling in the meeting goals composer",
+                "selector": {
+                    "css": "div[class='goal-bubble'] span",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "textContentIsAIGenerated",
+                "public": true,
+                "description": "Footer component of the Meeting Goals Composer tile",
+                "selector": {
+                    "css": "sales_gencanvas-tile-footer"
+                },
+                "type": "utam-sales-gencanvas/pageObjects/tileFooter"
+            },
+            {
+                "name": "lightningIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-icon",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "wait": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "icon",
+                            "type": "utam-lightning/pageObjects/primitiveIcon",
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-primitive-icon"
+                            },
+                            "wait": true,
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "editIcon",
+                                        "type": [
+                                            "clickable",
+                                            "actionable"
+                                        ],
+                                        "public": true,
+                                        "selector": {
+                                            "css": "svg[data-key='edit']"
+                                        }
+                                    },
+                                    {
+                                        "name": "deleteIcon",
+                                        "type": [
+                                            "clickable",
+                                            "actionable"
+                                        ],
+                                        "public": true,
+                                        "selector": {
+                                            "css": "svg[data-key='delete']"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "crossButtonIcon",
+                "selector": {
+                    "css": "lightning-button-icon",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the cross icon of the header",
+                "public": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "crossIcon",
+                            "type": "utam-lightning/pageObjects/primitiveIcon",
+                            "selector": {
+                                "css": "lightning-primitive-icon"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "wait": true
+            },
+            {
+                "public": true,
+                "name": "inputGoal",
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "input[class*='slds-input']"
+                },
+                "wait": true
+            }
+        ]
+    }
+}

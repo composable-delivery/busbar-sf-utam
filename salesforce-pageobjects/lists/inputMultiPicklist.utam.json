@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-input-multi-picklist.",
+            "Represents the lists input multi picklist Lightning web component.",
+            "Access the inner groupedCombobox component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "name": "groupedCombobox",
+                "public": true,
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            }
+        ]
+    }
+}

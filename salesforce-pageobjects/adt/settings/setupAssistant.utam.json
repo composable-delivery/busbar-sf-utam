@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_sales_adt-setup-assistant",
+            "Represents setup_sales_adt-setup-assistant Lightning Web Component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "processRing",
+                "public": true,
+                "selector": {
+                    "css": "setup_sales_adt-progress-ring"
+                },
+                "type": "utam-adt-settings/pageObjects/progressRing"
+            },
+            {
+                "name": "opptyStageDescriptionForm",
+                "public": true,
+                "selector": {
+                    "css": "setup_sales_adt-oppty-stage-description-form"
+                },
+                "type": "utam-adt-settings/pageObjects/opptyStageDescriptionForm"
+            },
+            {
+                "name": "linkToNewPage",
+                "public": true,
+                "selector": {
+                    "css": "setup_sales_adt-link-to-new-page"
+                },
+                "type": "utam-adt-settings/pageObjects/linkToNewPage"
+            },
+            {
+                "name": "adtCheckedAttribute",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input.turn-on-adt.slds-form-element"
+                },
+                "type": "utam-lightning/pageObjects/input"
+            },
+            {
+                "name": "editDescriptionButton",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button"
+                },
+                "type": "utam-lightning/pageObjects/button"
+            },
+            {
+                "name": "automatedDealTrackingToggleBtn",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input"
+            }
+        ]
+    }
+}

@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-breadcrumb.",
+            "Represents the lightning-breadcrumb Lightning web component.",
+            "Retrieve the text or href of a breadcrumb or click on it."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "description": {
+                "text": [
+                    "Clicks the breadcrumb link"
+                ],
+                "return": "void"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "description": {
+                "text": [
+                    "Gets the text of the breadcrumb link"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getLinkHref",
+            "description": {
+                "text": [
+                    "Gets the destination URL of the breadcrumb link"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

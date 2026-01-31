@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a panel header with an optional back button and an icon, used for navigating back and displaying a title with an icon.",
+            "Selector: src-panel-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "backButton",
+                "selector": {
+                    "css": "lightning-button-icon.back-button"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the optional back button for navigation",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "headerTitle",
+                "selector": {
+                    "css": "h2.header-title"
+                },
+                "description": "Represents the header title text"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getHeaderTitleText",
+            "description": {
+                "text": [
+                    "Gets the text of the header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isHeaderTitleVisible",
+            "description": {
+                "text": [
+                    "Checks if the header title is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

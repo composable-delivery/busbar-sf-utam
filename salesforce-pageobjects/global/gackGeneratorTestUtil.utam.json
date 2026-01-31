@@ -1,0 +1,57 @@
+{
+    "selector": {
+        "css": ".gackGenerator"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: ",
+            "Represents the one:gackGenerator Aura component"
+        ]
+    },
+    "elements": [
+        {
+            "name": "severitySelect",
+            "public": true,
+            "type": "utam-lightning/pageObjects/combobox",
+            "selector": {
+                "css": ".severitySelect"
+            }
+        },
+        {
+            "name": "scenarioSelect",
+            "public": true,
+            "type": "utam-lightning/pageObjects/combobox",
+            "selector": {
+                "css": ".scenarioSelect"
+            }
+        },
+        {
+            "name": "throwButton",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".throwButton"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "throwError",
+            "description": {
+                "text": [
+                    "Clicks the button that simulates throwing an error"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "throwButton"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,89 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: paletteSection"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "paletteItemsContainingLabelText",
+                        "type": "utam-builder-framework/pageObjects/paletteItem",
+                        "selector": {
+                            "css": "builder_framework-palette-item",
+                            "returnAll": true
+                        },
+                        "filter": {
+                            "apply": "getLabelText",
+                            "matcher": {
+                                "type": "stringContains",
+                                "args": [
+                                    {
+                                        "name": "labelText",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "paletteItem",
+                                "type": "utam-builder-framework/pageObjects/paletteItem",
+                                "selector": {
+                                    "css": "builder_framework-palette-item"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,189 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a container for a metadata explorer, displaying a header and a grid view with metadata items. It allows for searching metadata, viewing relationships, and performing actions on metadata items.",
+            "Selector: dev_workspace-explorer-container"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinnerOverlay",
+                "selector": {
+                    "css": ".spinner-overlay"
+                },
+                "description": "Represents the spinner overlay shown when data is loading.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "headerSection",
+                "selector": {
+                    "css": ".explorer-header"
+                },
+                "description": "Represents the header section of the explorer containing the header component and slots for buttons.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "explorerHeader",
+                        "selector": {
+                            "css": "dev_workspace-explorer-header"
+                        },
+                        "type": "utam-dev-workspace/pageObjects/explorerHeader",
+                        "description": "Represents the explorer header component that emits the metadata search event.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "headerRightButtonsContent",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the slot for additional buttons on the right side of the header.",
+                                "public": true
+                            },
+                            {
+                                "name": "bulkActionsButtonsContent",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the slot for bulk action buttons.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "explorerBody",
+                "selector": {
+                    "css": ".explorer-body"
+                },
+                "description": "Represents the main body section of the explorer containing the grid view.",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "explorerBodyComponent",
+                        "selector": {
+                            "css": "dev_workspace-explorer-body"
+                        },
+                        "type": "utam-dev-workspace/pageObjects/explorerBody",
+                        "description": "Represents the explorer body component that emits an event to open the relationship view.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "relationshipViewContainer",
+                "selector": {
+                    "css": "dev_workspace-relationship-view-container"
+                },
+                "type": "utam-dev-workspace/pageObjects/relationshipViewContainer",
+                "description": "Represents the relationship view container that can be opened or closed.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSpinnerOverlayVisible",
+            "description": {
+                "text": [
+                    "Check if the spinner overlay is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHeaderSectionVisible",
+            "description": {
+                "text": [
+                    "Check if the header section is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerSection",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isExplorerBodyVisible",
+            "description": {
+                "text": [
+                    "Check if the explorer body is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "explorerBody",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifySpinnerOverlayPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"spinnerOverlay\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyHeaderSectionPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"headerSection\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerSection",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyExplorerBodyPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"explorerBody\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "explorerBody",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

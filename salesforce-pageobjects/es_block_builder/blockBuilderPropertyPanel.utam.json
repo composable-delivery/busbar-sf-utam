@@ -1,0 +1,115 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-block-builder-property-panel",
+            "Represents the block builder property panel component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_block_builder-block-builder-property-panel"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "builder_framework-property-sheet-ui-container"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "heading",
+                "public": true,
+                "selector": {
+                    "css": "h2"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertySheetUiContainer",
+                "type": "utam-builder-framework/pageObjects/propertySheetUiContainer",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui-container"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForPropertyPanel",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "propertySheetUiContainer"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getHeadingText",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "heading",
+                                    "apply": "getText",
+                                    "matcher": {
+                                        "type": "stringEquals",
+                                        "args": [
+                                            {
+                                                "name": "expectedText",
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

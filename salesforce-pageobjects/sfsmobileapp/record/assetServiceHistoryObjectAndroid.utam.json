@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Asset Service History section of a Work Order."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/record/assetServiceHistoryObject",
+    "root": true,
+    "platform": "native",
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "ASSET"
+    },
+    "elements": [
+        {
+            "name": "fieldText",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "className(\"android.widget.TextView\").textContains(\"%s\")",
+                "args": [
+                    {
+                        "name": "fieldText",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getFieldByText",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "fieldText",
+                                    "apply": "getText"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

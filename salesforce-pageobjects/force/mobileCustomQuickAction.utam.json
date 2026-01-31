@@ -1,0 +1,50 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the custom quick actions panel in Mobile"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiPanel.open.active"
+    },
+    "elements": [
+        {
+            "name": "button",
+            "type": "clickable",
+            "selector": {
+                "css": ".slds-button"
+            },
+            "public": true
+        },
+        {
+            "name": "recordLayout",
+            "type": "utam-force/pageObjects/recordLayout",
+            "public": true,
+            "selector": {
+                "css": ".forceRecordLayout"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "waitForRecordLayout",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordLayout"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

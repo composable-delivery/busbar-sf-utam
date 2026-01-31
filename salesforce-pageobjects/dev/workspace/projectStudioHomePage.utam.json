@@ -1,0 +1,93 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a layout for a Salesforce Studio page, including a workspace icon, a button in the header, an onboarding banner, and a list of home page items.",
+            "Selector: dev_workspace-project-studio-home-page"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-project-studio-home-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "headerIcon",
+                "selector": {
+                    "css": "lightning-icon.workspace-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the icon in the page header.",
+                "public": true
+            },
+            {
+                "name": "headerButton",
+                "selector": {
+                    "css": "lightning-button[data-id=\"dataNameField\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the clickable button in the page header."
+            },
+            {
+                "name": "pageContentList",
+                "selector": {
+                    "css": "dev_workspace-project-home-page-list"
+                },
+                "type": "utam-dev-workspace/pageObjects/projectHomePageList",
+                "description": "Represents the list of home page items.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickHeaderButton",
+            "description": {
+                "text": [
+                    "Simulates a click on the header button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "headerButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "headerButtonIsVisible",
+            "description": {
+                "text": [
+                    "Checks if the header button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "headerButtonIsEnabled",
+            "description": {
+                "text": [
+                    "Checks if the header button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        }
+    ]
+}

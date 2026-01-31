@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: title.",
+            "Represents the Opportunity team member card web component.",
+            "Use the title string selector to get the card"
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Click the title of the card"
+                ],
+                "return": "none"
+            },
+            "name": "clickTitle",
+            "compose": [
+                {
+                    "element": "testTitle",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": [
+                    "clickable"
+                ],
+                "name": "testTitle",
+                "selector": {
+                    "css": "[title='%s:']",
+                    "args": [
+                        {
+                            "name": "titleString",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

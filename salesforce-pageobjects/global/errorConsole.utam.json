@@ -1,0 +1,313 @@
+{
+    "selector": {
+        "css": ".error-console-panel"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .error-console-panel",
+            "Represents the Error Console docking panel"
+        ]
+    },
+    "elements": [
+        {
+            "name": "minimizeButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button.minButton"
+            }
+        },
+        {
+            "name": "closeButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button.closeButton"
+            }
+        },
+        {
+            "name": "content",
+            "public": true,
+            "selector": {
+                "css": "one-error-console-content .content"
+            }
+        },
+        {
+            "name": "panelTitle",
+            "selector": {
+                "css": ".panelTitle"
+            }
+        },
+        {
+            "name": "errorEntries",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "css": "one-error-console-entry",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "overflowTitle",
+            "selector": {
+                "css": ".title"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickMinimizeButton",
+            "description": {
+                "text": [
+                    "Clicks the minimize button"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "minimizeButton"
+                }
+            ]
+        },
+        {
+            "name": "clickCloseButton",
+            "description": {
+                "text": [
+                    "Clicks the close button"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "closeButton"
+                }
+            ]
+        },
+        {
+            "name": "getPanelTitleText",
+            "description": {
+                "text": [
+                    "Gets the text of the title for the error panel"
+                ],
+                "return": "the text of the title for the error panel"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "panelTitle"
+                }
+            ]
+        },
+        {
+            "name": "getOverflowTitleText",
+            "description": {
+                "text": [
+                    "Gets the text of the overflow title for the error panel"
+                ],
+                "return": "the text of the overflow title for the error panel"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "overflowTitle"
+                }
+            ]
+        },
+        {
+            "name": "isMinimized",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the error panel is minimized"
+                ],
+                "return": "true if the error panel is minimized; otherwise, false"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "MINIMIZED"
+                            }
+                        ]
+                    },
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "isDocked",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the error panel is docked"
+                ],
+                "return": "true if the error panel is docked; otherwise, false"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "DOCKED"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isOverflowed",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the error panel is in the overflow state"
+                ],
+                "return": "true if the error panel is in the overflow state; otherwise, false"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "OVERFLOWED"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isTransitioning",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the error panel is transitioning"
+                ],
+                "return": "true if the error panel is transitioning; otherwise, false"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "transitioning"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "waitForTransitionEnd",
+            "description": {
+                "text": [
+                    "Waits for the error panel to end its transition"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isTransitioning",
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForMinimized",
+            "description": {
+                "text": [
+                    "Waits for the error panel to be minimized"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitForTransitionEnd"
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isMinimized",
+                                    "matcher": {
+                                        "type": "isTrue"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForDocked",
+            "description": {
+                "text": [
+                    "Waits for the error panel to be docked"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitForTransitionEnd"
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isDocked",
+                                    "matcher": {
+                                        "type": "isTrue"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getErrorCount",
+            "description": {
+                "text": [
+                    "Gets the count of the number of errors in the error panel"
+                ],
+                "return": "the count of the number of errors in the error panel"
+            },
+            "compose": [
+                {
+                    "element": "errorEntries",
+                    "apply": "size"
+                }
+            ]
+        }
+    ]
+}

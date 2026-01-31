@@ -1,0 +1,254 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a text input with additional action icons and handles user interactions.",
+            "Selector: src-pill-input-with-action"
+        ]
+    },
+    "elements": [
+        {
+            "name": "lightningAiFormControl",
+            "selector": {
+                "css": "lightning-ai-form-control"
+            },
+            "type": "utam-lightning/pageObjects/aiFormControl",
+            "description": "Represents the main form control container",
+            "public": true,
+            "elements": [
+                {
+                    "name": "inputText",
+                    "selector": {
+                        "css": "div[part='input-text']"
+                    },
+                    "description": "Represents the input text container",
+                    "elements": [
+                        {
+                            "name": "label",
+                            "selector": {
+                                "css": "label.slds-form-element__label"
+                            },
+                            "description": "Represents the label for the input field",
+                            "elements": [
+                                {
+                                    "name": "abbr",
+                                    "selector": {
+                                        "css": "abbr.slds-required"
+                                    },
+                                    "description": "Represents the required indicator",
+                                    "nullable": true
+                                },
+                                {
+                                    "name": "lightningFormattedText",
+                                    "selector": {
+                                        "css": "lightning-formatted-text"
+                                    },
+                                    "type": "utam-lightning/pageObjects/formattedText",
+                                    "description": "Represents the formatted text for the label",
+                                    "public": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "lightningHelptext",
+                            "selector": {
+                                "css": "lightning-helptext"
+                            },
+                            "type": "utam-lightning/pageObjects/helptext",
+                            "description": "Represents the help text for the input field",
+                            "nullable": true,
+                            "public": true
+                        },
+                        {
+                            "name": "contentContainer",
+                            "selector": {
+                                "css": "div.content-container"
+                            },
+                            "type": [
+                                "actionable",
+                                "editable"
+                            ],
+                            "description": "Represents the editable content container"
+                        }
+                    ]
+                },
+                {
+                    "name": "esPropertyEditorsActionIcon",
+                    "selector": {
+                        "css": "es_property_editors-action-icon"
+                    },
+                    "type": "utam-es_property_editors/pageObjects/actionIcon",
+                    "description": "Represents the action icon component",
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "validationMessage",
+            "selector": {
+                "css": "div.validation-message"
+            },
+            "description": "Represents the validation message",
+            "nullable": true
+        },
+        {
+            "name": "esPropertyEditorsMergeFieldButton",
+            "selector": {
+                "css": "es_property_editors-merge-field-button"
+            },
+            "type": "utam-es_property_editors/pageObjects/mergeFieldButton",
+            "description": "Represents the merge field button component",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isInputTextVisible",
+            "description": {
+                "text": [
+                    "Check that input text container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLabelVisible",
+            "description": {
+                "text": [
+                    "Check that label is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRequiredIndicatorPresent",
+            "description": {
+                "text": [
+                    "Check that required indicator is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "abbr",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isContentContainerEnabled",
+            "description": {
+                "text": [
+                    "Check if content container is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "contentContainer",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "enterTextInContentContainer",
+            "description": {
+                "text": [
+                    "Clear content container and enter text"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "contentContainer",
+                    "apply": "clear"
+                },
+                {
+                    "element": "contentContainer",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTextFromContentContainer",
+            "description": {
+                "text": [
+                    "Get text from content container"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "contentContainer",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isValidationMessageVisible",
+            "description": {
+                "text": [
+                    "Check that validation message is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "validationMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyValidationMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"validationMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "validationMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyAbbrPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"abbr\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "abbr",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

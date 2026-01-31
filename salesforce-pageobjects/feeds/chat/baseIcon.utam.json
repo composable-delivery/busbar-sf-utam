@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that represents an icon with different sizes and variants, which can be dynamically rendered with SVG content based on the provided symbol.",
+            "Selector: src-base-icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "iconWrapper",
+                "selector": {
+                    "css": "[part='icon']"
+                },
+                "description": "Represents the container for the icon SVG.",
+                "elements": [
+                    {
+                        "name": "dynamicSvg",
+                        "selector": {
+                            "css": "svg"
+                        },
+                        "type": "container",
+                        "description": "Represents the dynamically loaded SVG for the icon.",
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isIconWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that icon wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

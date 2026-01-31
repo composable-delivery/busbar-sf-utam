@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-record-home-template-desktop2.",
+            "Represents the flexipage-record-home-template-desktop2 Lightning web component.",
+            "Get the flexipage-component2 by ID. Get the lwcHighlightsPanel or tabset2 components."
+        ]
+    },
+    "elements": [
+        {
+            "name": "component2",
+            "type": "utam-flexipage/pageObjects/component2",
+            "selector": {
+                "css": "flexipage-component2[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "componentId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "tabset2",
+            "selector": {
+                "css": "flexipage-tabset2"
+            },
+            "type": "utam-flexipage/pageObjects/tabset2",
+            "public": true
+        },
+        {
+            "name": "sidebarTabset2",
+            "selector": {
+                "css": "flexipage-tabset2:nth-of-type(1)"
+            },
+            "type": "utam-flexipage/pageObjects/tabset2",
+            "public": true
+        },
+        {
+            "name": "highlights",
+            "selector": {
+                "css": "records-lwc-highlights-panel"
+            },
+            "type": "utam-records/pageObjects/lwcHighlightsPanel",
+            "public": true
+        },
+        {
+            "name": "cardPage",
+            "selector": {
+                "css": ".forcegenerated-flexipage-module[data-page-type='CardPage']"
+            },
+            "description": "This specific Page Object (PO) built for the feature is currently in development and will not be available to customers until Summer '24",
+            "type": "utam-flexipage/pageObjects/cardPage",
+            "public": true
+        }
+    ]
+}

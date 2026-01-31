@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_sales_easy-easy-palette-section",
+            "Represents the block builder palette section component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_sales_easy-easy-palette-section"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "paletteItemByText",
+                "public": true,
+                "nullable": true,
+                "type": [
+                    "clickable",
+                    "draggable"
+                ],
+                "selector": {
+                    "css": "builder_framework-palette-item",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getText",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "paletteItem",
+                "public": true,
+                "type": [
+                    "clickable",
+                    "draggable"
+                ],
+                "selector": {
+                    "css": "builder_framework-palette-item",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

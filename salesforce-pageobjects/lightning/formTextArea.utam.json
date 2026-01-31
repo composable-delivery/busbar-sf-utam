@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-text-area.",
+            "Represents the lightning-form-text-area Lightning web component.",
+            "Access the text area."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "textArea",
+                "selector": {
+                    "css": "lightning-textarea"
+                },
+                "type": "utam-lightning/pageObjects/textarea",
+                "public": true
+            }
+        ]
+    }
+}

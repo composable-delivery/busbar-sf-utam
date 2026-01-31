@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the section element in the CMS builder runtime"
+        ]
+    },
+    "elements": [
+        {
+            "type": "container",
+            "name": "sectionBody",
+            "selector": {
+                "css": "es_base_components-section > *",
+                "returnAll": true
+            }
+        },
+        {
+            "public": true,
+            "type": "clickable",
+            "name": "sectionDiv",
+            "selector": {
+                "css": "div"
+            }
+        },
+        {
+            "public": true,
+            "name": "columns",
+            "type": "utam-es_base_components/pageObjects/column",
+            "selector": {
+                "css": "es_base_components-column",
+                "returnAll": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "description": {
+        "text": [
+            "Selector: community_layout-slds-flexible-layout",
+            "Represents the SLDS flexible layout Lightning web component of the community_layout namespace."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "layoutContent",
+            "type": "container",
+            "selector": {
+                "css": ".content-container"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

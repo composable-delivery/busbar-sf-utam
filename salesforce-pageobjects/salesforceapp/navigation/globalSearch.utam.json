@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the global search fragment.",
+            "Start a global search or interact with the existing list of recent items."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "getSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/searchBar"
+        },
+        {
+            "name": "getSearchResults",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/navItemsList"
+        }
+    ]
+}

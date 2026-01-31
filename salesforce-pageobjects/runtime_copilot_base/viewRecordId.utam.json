@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a read-only form with record information once the data is ready.",
+            "Selector: runtime_copilot_base-view-record-id"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewRecordForm",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-form"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordForm",
+                "description": "Represents the custom component that displays the record information.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

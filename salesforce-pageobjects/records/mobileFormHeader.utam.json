@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-mobile-form-header",
+            "Represents the records-mobile-form-header Lightning web component.",
+            "Get the save and cancel buttons."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "saveButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.save-button"
+                }
+            },
+            {
+                "name": "cancelButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.cancel-button"
+                }
+            },
+            {
+                "name": "formError",
+                "type": "utam-records/pageObjects/mobileFormError",
+                "public": true,
+                "selector": {
+                    "css": "records-mobile-form-error"
+                }
+            }
+        ]
+    }
+}

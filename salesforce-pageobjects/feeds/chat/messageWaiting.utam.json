@@ -1,0 +1,205 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that visually represents a typing message with stars and an optional action region where actions can be executed.",
+            "Selector: src-message-waiting"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "welcomeContainer",
+                "selector": {
+                    "css": ".welcome-container"
+                },
+                "description": "Represents the main container with a title and typing text.",
+                "elements": [
+                    {
+                        "name": "typingText",
+                        "selector": {
+                            "css": ".text"
+                        },
+                        "description": "Represents the text element that displays the typing message."
+                    },
+                    {
+                        "name": "star1",
+                        "selector": {
+                            "css": ".star1"
+                        },
+                        "description": "Represents the first star SVG in the star container."
+                    },
+                    {
+                        "name": "star2",
+                        "selector": {
+                            "css": ".star2"
+                        },
+                        "description": "Represents the second star SVG in the star container."
+                    },
+                    {
+                        "name": "star3",
+                        "selector": {
+                            "css": ".star3"
+                        },
+                        "description": "Represents the third star SVG in the star container."
+                    },
+                    {
+                        "name": "assistiveText",
+                        "selector": {
+                            "css": ".slds-assistive-text"
+                        },
+                        "description": "Represents the assistive text element for accessibility, which may or may not be present.",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "statusTypingFooter",
+                "selector": {
+                    "css": ".status-typing_footer"
+                },
+                "description": "Represents the footer area that may contain actions.",
+                "elements": [
+                    {
+                        "name": "chatViewComponent",
+                        "selector": {
+                            "css": "feeds_chat-view-component"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/viewComponent",
+                        "description": "Represents the chat view component that handles action clicks.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getWelcomeContainerTitle",
+            "description": {
+                "text": [
+                    "Get the title attribute from the welcome container"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "welcomeContainer",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getTypingText",
+            "description": {
+                "text": [
+                    "Get the text content from the typing text element"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "typingText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isAssistiveTextVisible",
+            "description": {
+                "text": [
+                    "Check if the assistive text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "assistiveText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isStatusTypingFooterVisible",
+            "description": {
+                "text": [
+                    "Check if the status typing footer is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusTypingFooter",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyStar1Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"star1\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "star1",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyStar2Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"star2\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "star2",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyStar3Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"star3\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "star3",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyAssistiveTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"assistiveText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

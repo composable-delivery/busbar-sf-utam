@@ -1,0 +1,100 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .modal-container",
+            "Represents the multi add page that contains listViewManager and multiAddSearch",
+            "You can retrieve the listViewManager, search component, description and footer buttons."
+        ]
+    },
+    "selector": {
+        "css": ".modal-container"
+    },
+    "root": true,
+    "elements": [
+        {
+            "name": "listViewManager",
+            "type": "utam-force/pageObjects/listViewManager",
+            "selector": {
+                "css": ".forceListViewManager"
+            },
+            "public": true
+        },
+        {
+            "name": "multiAddSearch",
+            "type": "utam-force/pageObjects/multiAddSearch",
+            "selector": {
+                "css": ".forceMultiAddSearch"
+            },
+            "public": true
+        },
+        {
+            "name": "description",
+            "selector": {
+                "css": ".description.forceMultiAddMultiEditHeader"
+            }
+        },
+        {
+            "name": "title",
+            "selector": {
+                "css": ".title.forceMultiAddMultiEditHeader"
+            }
+        },
+        {
+            "name": "nextButton",
+            "type": "utam-force/pageObjects/actionButton",
+            "selector": {
+                "css": ".forceActionButton[title='%s']",
+                "args": [
+                    {
+                        "name": "titleString",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "closeButton",
+            "selector": {
+                "css": ".slds-modal__close"
+            },
+            "type": [
+                "clickable"
+            ],
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "getPricebookNameInHeader",
+            "description": {
+                "text": [
+                    "Gets the price book name in the header"
+                ],
+                "return": "the price book name in the header"
+            },
+            "compose": [
+                {
+                    "element": "description",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitleInHeader",
+            "description": {
+                "text": [
+                    "Gets the title in the header"
+                ],
+                "return": "the title in the header"
+            },
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

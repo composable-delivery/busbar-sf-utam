@@ -1,0 +1,109 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-input-address",
+            "Represents the lightning-input-address Lightning web component.",
+            "Get the label, street, city, state, postal code and country input components. Get the state and country picklist components."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Get input address label display value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "legend",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "legend",
+                "selector": {
+                    "css": "legend"
+                }
+            },
+            {
+                "name": "helpText",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "public": true
+            },
+            {
+                "name": "addressLookup",
+                "type": "utam-lightning/pageObjects/lookupAddress",
+                "selector": {
+                    "css": "lightning-lookup-address"
+                },
+                "public": true
+            },
+            {
+                "name": "streetInput",
+                "type": "utam-lightning/pageObjects/textarea",
+                "selector": {
+                    "css": "lightning-textarea[data-field='street']"
+                },
+                "public": true
+            },
+            {
+                "name": "cityInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='city']"
+                },
+                "public": true
+            },
+            {
+                "name": "stateInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='province']"
+                },
+                "public": true
+            },
+            {
+                "name": "statePicklist",
+                "type": "utam-lightning/pageObjects/picklist",
+                "selector": {
+                    "css": "lightning-picklist[data-field='province']"
+                },
+                "public": true
+            },
+            {
+                "name": "postalCodeInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='postalCode']"
+                },
+                "public": true
+            },
+            {
+                "name": "countryInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='country']"
+                },
+                "public": true
+            },
+            {
+                "name": "countryPicklist",
+                "type": "utam-lightning/pageObjects/picklist",
+                "selector": {
+                    "css": "lightning-picklist[data-field='country']"
+                },
+                "public": true
+            }
+        ]
+    }
+}

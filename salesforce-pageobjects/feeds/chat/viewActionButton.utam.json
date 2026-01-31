@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A button component that can display different states such as disabled, completed, or loading. It can be used to trigger actions in a chat interface and has the ability to be repeatable.",
+            "Selector: src-view-action-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "actionButton",
+                "selector": {
+                    "css": "feeds_chat-base-button-complete"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseButtonComplete",
+                "description": "Represents the main action button with dynamic states based on user interaction.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "loadingIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the loading icon that appears within the action button.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

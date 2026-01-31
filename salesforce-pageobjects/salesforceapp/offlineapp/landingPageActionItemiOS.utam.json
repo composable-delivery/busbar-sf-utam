@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeOther[`name == 'action_item'`].",
+            "Represents the iOS Action item inside of Action Row.",
+            "Verify the action and its name."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "action",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton"
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "getActionName",
+            "compose": [
+                {
+                    "element": "action",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

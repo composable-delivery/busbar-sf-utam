@@ -1,0 +1,100 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to select a single integer or number from a group of options displayed as radio buttons. It also supports keyboard navigation for accessibility.",
+            "Selector: runtime_copilot_base-select-single-integer-and-number"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroup",
+                "selector": {
+                    "css": "div[role='radiogroup']"
+                },
+                "description": "Represents the container for the radio button group.",
+                "elements": [
+                    {
+                        "name": "radioButtons",
+                        "selector": {
+                            "css": "runtime_copilot_base-primitive-type-picklist",
+                            "returnAll": true
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/primitiveTypePicklist",
+                        "description": "Represents all radio button options within the radio group.",
+                        "public": true
+                    },
+                    {
+                        "name": "radioButtonByIndex",
+                        "selector": {
+                            "css": "runtime_copilot_base-primitive-type-picklist:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "description": "element index starting from 1"
+                                }
+                            ]
+                        },
+                        "description": "Represents all radio button options within the radio group.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "radioButtonLabels",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "description": "Represents the label for each radio button option.",
+                                "elements": [
+                                    {
+                                        "name": "formattedNumber",
+                                        "selector": {
+                                            "css": "lightning-formatted-number"
+                                        },
+                                        "type": "utam-lightning/pageObjects/formattedNumber",
+                                        "description": "Represents the formatted number displayed when there is no custom label for the option.",
+                                        "nullable": true,
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupVisible",
+            "description": {
+                "text": [
+                    "Checks if the radio group is visible to the user"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRadioButtonLabel",
+            "description": {
+                "text": [
+                    "Retrieves the text label of a radio button"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "radioButtonLabels",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

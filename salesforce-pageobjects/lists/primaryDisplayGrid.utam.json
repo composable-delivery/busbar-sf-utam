@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-primary-display-grid.",
+            "Represents the list primary display grid Lightning web component.",
+            "Access the datatable component."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "lightning-datatable"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/datatable",
+                "name": "datatable",
+                "public": true,
+                "selector": {
+                    "css": "*"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/stencilTable",
+                "name": "stencilTable",
+                "public": true,
+                "selector": {
+                    "css": "lst-stencil-table"
+                }
+            }
+        ]
+    }
+}

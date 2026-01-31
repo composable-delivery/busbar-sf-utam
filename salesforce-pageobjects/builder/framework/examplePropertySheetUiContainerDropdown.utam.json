@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: examplePropertySheetUiContainerDropdown"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "h2Content",
+                "type": [],
+                "selector": {
+                    "css": "h2"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonMenu",
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            }
+        ]
+    }
+}

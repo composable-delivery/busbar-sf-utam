@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-content-Ref-List",
+            "Provides access to lightning input component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "manualCollectionItems",
+                "type": "utam-es_property_editors/pageObjects/manualCollectionItems",
+                "selector": {
+                    "css": "es_property_editors-manual-collection-items",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

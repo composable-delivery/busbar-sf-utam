@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRelatedListCard.",
+            "Represents the related list card Aura component.",
+            "Access a card's header, title, or contents."
+        ]
+    },
+    "type": [
+        "clickable"
+    ],
+    "elements": [
+        {
+            "name": "header",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "header h2"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getCardTitle",
+            "description": {
+                "text": [
+                    "Gets the title of the card"
+                ],
+                "return": "the title of the card"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "selectCard",
+            "description": {
+                "text": [
+                    "Selects the card"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

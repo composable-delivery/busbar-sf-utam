@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-constraint-models-list",
+            "Constraint Models Combobox Component"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "builder_industries_constraints-bui-constraint-models-list"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "combobox",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "div#custom-combobox"
+                }
+            },
+            {
+                "public": true,
+                "name": "listItems",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "li",
+                    "returnAll": true
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "openDropdown",
+            "compose": [
+                {
+                    "element": "combobox",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

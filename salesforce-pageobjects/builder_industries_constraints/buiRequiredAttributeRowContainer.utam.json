@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-required-attribute-row-container",
+            "Constraint Builder Business UI Required Attribute Row Container"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buiRequiredAttribute",
+                "type": "utam-builder_industries_constraints/pageObjects/buiRequiredAttribute",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-required-attribute"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .globalCreateContainer.",
+            "Represents the one:globalCreate Aura component.",
+            "Click the global actions."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "div[class*='globalCreateContainer']"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "a"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickGlobalActions",
+            "description": {
+                "text": [
+                    "Creates a new global action by clicking the link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "globalCreateButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "globalCreateButton",
+            "selector": {
+                "css": "a"
+            }
+        },
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "globalCreateMenuItem",
+            "public": true,
+            "selector": {
+                "css": "[class*=oneGlobalCreateItem] a[title='%s']",
+                "args": [
+                    {
+                        "name": "titleString",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

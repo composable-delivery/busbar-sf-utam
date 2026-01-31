@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: dataProviderConfigurationEmptyScreenUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "h4Content",
+                "type": [],
+                "selector": {
+                    "css": "h4"
+                }
+            },
+            {
+                "public": true,
+                "name": "h3Content",
+                "type": [],
+                "selector": {
+                    "css": "h3"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

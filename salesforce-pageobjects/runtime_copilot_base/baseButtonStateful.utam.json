@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A toggleable button component that visually indicates its pressed state and allows users to interact with it to change its state.",
+            "Selector: src-base-button-stateful"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statefulButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the main button that can be clicked to toggle its state.",
+                "elements": [
+                    {
+                        "name": "pressedIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon shown when the button is pressed.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "unpressedIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon shown when the button is not pressed.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleButton",
+            "description": {
+                "text": [
+                    "Simulate a click on the stateful button to change its state"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "statefulButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isButtonPressed",
+            "description": {
+                "text": [
+                    "Check if the button is in the pressed state"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "statefulButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isButtonDisabled",
+            "description": {
+                "text": [
+                    "Check if the button is disabled"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "statefulButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

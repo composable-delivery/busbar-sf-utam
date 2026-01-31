@@ -1,0 +1,136 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages a list view with dynamic state management and renders a card containing a child list component.",
+            "Selector: src-agentic-list-view-manager"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "cardContainer",
+                "selector": {
+                    "css": "article.slds-card.slds-card_boundary"
+                },
+                "description": "Represents the root card container for the list view",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "cardHeader",
+                        "selector": {
+                            "css": "div.slds-card__header.slds-grid"
+                        },
+                        "description": "Represents the header section of the card",
+                        "elements": [
+                            {
+                                "name": "cardTitle",
+                                "selector": {
+                                    "css": "h2.slds-card__header-title.slds-truncate"
+                                },
+                                "description": "Represents the title of the card displaying the list view title"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "listContainer",
+                        "selector": {
+                            "css": "div.slds-p-bottom_small.slds-p-horizontal_small"
+                        },
+                        "description": "Represents the container for the child list component",
+                        "elements": [
+                            {
+                                "name": "statefulList",
+                                "selector": {
+                                    "css": "lst-stateful-common-list"
+                                },
+                                "type": "utam-lists/pageObjects/statefulCommonList",
+                                "description": "Represents the child list component that dynamically manages state and renders the list view",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isCardContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the card container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCardHeaderVisible",
+            "description": {
+                "text": [
+                    "Check that the card header is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardHeader",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getCardTitle",
+            "description": {
+                "text": [
+                    "Get the text content of the card title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cardTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isListContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the list container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "listContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyCardContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"cardContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,325 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to view and edit a SOQL query within an accordion section if they have admin privileges. The query can be edited and saved or canceled.",
+            "Selector: src-experience_ui_gen_canvas-/query-accordion"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "adminAccordion",
+                "selector": {
+                    "css": "lightning-accordion"
+                },
+                "type": "utam-lightning/pageObjects/accordion",
+                "description": "Represents the accordion that is only visible to admins",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "queryCode",
+                        "selector": {
+                            "css": ".query-source-container code"
+                        },
+                        "description": "Represents the display of the query when not in edit mode",
+                        "nullable": true
+                    },
+                    {
+                        "name": "editQueryButton",
+                        "selector": {
+                            "css": "lightning-button.slds-var-m-top_x-small"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the button to enter edit mode for the query",
+                        "nullable": true
+                    },
+                    {
+                        "name": "queryTextArea",
+                        "selector": {
+                            "css": "lightning-textarea"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents the text area for editing the query content",
+                        "nullable": true
+                    },
+                    {
+                        "name": "cancelButton",
+                        "selector": {
+                            "css": "lightning-button.slds-var-m-right_x-small"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the cancel button to discard changes and exit edit mode",
+                        "nullable": true
+                    },
+                    {
+                        "name": "saveQueryButton",
+                        "selector": {
+                            "css": "lightning-button:not(.slds-var-m-right_x-small)"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the save button to save changes and exit edit mode",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickEditQuery",
+            "description": {
+                "text": [
+                    "Click the edit query button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "editQueryButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "typeInQuery",
+            "description": {
+                "text": [
+                    "Enter text into the query text area"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "queryTextArea",
+                    "apply": "clear"
+                },
+                {
+                    "element": "queryTextArea",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickSaveQuery",
+            "description": {
+                "text": [
+                    "Click the save query button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "saveQueryButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickCancelEdit",
+            "description": {
+                "text": [
+                    "Click the cancel button to stop editing"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getQueryText",
+            "description": {
+                "text": [
+                    "Get the text of the query when not in edit mode"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "queryCode",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isQueryCodeVisible",
+            "description": {
+                "text": [
+                    "Check if the query code element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "queryCode",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isEditQueryButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the edit query button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "editQueryButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isQueryTextAreaVisible",
+            "description": {
+                "text": [
+                    "Check if the query text area is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "queryTextArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCancelButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the cancel button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSaveQueryButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the save query button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "saveQueryButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyQueryCodePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"queryCode\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "queryCode",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyEditQueryButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"editQueryButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "editQueryButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyQueryTextAreaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"queryTextArea\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "queryTextArea",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyCancelButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"cancelButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifySaveQueryButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"saveQueryButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "saveQueryButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-dependent-field-tree",
+            "Represents the records-dependent-field-tree Lightning web component.",
+            "Get records-dependent-field-tree and records-dependent-field-item components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "fieldItems",
+                "public": true,
+                "type": "utam-records/pageObjects/dependentFieldItem",
+                "selector": {
+                    "css": "records-dependent-field-item",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "fieldTree",
+                "public": true,
+                "type": "utam-records/pageObjects/dependentFieldTree",
+                "selector": {
+                    "css": "records-dependent-field-tree"
+                }
+            }
+        ]
+    }
+}

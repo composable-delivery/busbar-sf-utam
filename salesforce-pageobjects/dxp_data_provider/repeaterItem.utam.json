@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: dxp_data_provider-repeater-item",
+            "Represents the dxp_data_provider/repeaterItem component.",
+            "Get a list of dxp_base-text-blocks."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "dxp_data_provider-repeater-item"
+    },
+    "elements": [
+        {
+            "name": "textBlockItems",
+            "selector": {
+                "css": "dxp_base-text-block",
+                "returnAll": true
+            },
+            "public": true,
+            "nullable": true,
+            "type": "utam-dxp_base/pageObjects/textBlock"
+        }
+    ]
+}

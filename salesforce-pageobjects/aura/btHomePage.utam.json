@@ -1,0 +1,31 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "instances",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "div.app[id*='%s']",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

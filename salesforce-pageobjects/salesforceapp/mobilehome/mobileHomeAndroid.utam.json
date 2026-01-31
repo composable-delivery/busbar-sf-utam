@@ -1,0 +1,132 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/common_toolbar\").",
+            "Represents the Android mobile home fragment.",
+            "Edit or access mobile home card list."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/mobilehome/mobileHome",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/common_toolbar\")"
+    },
+    "methods": [
+        {
+            "name": "editHome",
+            "compose": [
+                {
+                    "element": "editButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickContinue",
+            "compose": [
+                {
+                    "element": "continueButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasContinueButton",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "continueButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "waitForCardListToLoad",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "uiautomator": "resourceId(\"com.salesforce.chatter:id/main_home_list\")"
+                                            }
+                                        }
+                                    ],
+                                    "matcher": {
+                                        "type": "isTrue"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "editButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/edit_button_view\")"
+            }
+        },
+        {
+            "name": "homeCardList",
+            "type": "utam-salesforceapp/pageObjects/mobilehome/homeCardList",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/main_home_list\")"
+            },
+            "public": true
+        },
+        {
+            "name": "continueButton",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/welcome_continue\")"
+            }
+        }
+    ]
+}

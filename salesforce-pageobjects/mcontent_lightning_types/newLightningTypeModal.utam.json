@@ -1,0 +1,71 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: newLightningTypeModal",
+            "Selector: mcontent-lightning-types-new-lightning-type-modal"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent-lightning-types-new-lightning-type-modal"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "dialog",
+                "type": "container",
+                "selector": {
+                    "css": "lightning-dialog"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "cancelButton",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.btn-cancel"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "nextButton",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.btn-next"
+                        },
+                        "nullable": true
+                    },
+                    {
+                        "public": true,
+                        "name": "finishButton",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.btn-finish"
+                        },
+                        "nullable": true
+                    },
+                    {
+                        "public": true,
+                        "name": "backButton",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "button.btn-back"
+                        },
+                        "nullable": true
+                    },
+                    {
+                        "public": true,
+                        "name": "errorPopover",
+                        "type": "utam-mcontent_lightning_types/pageObjects/errorPopover",
+                        "selector": {
+                            "css": "mcontent_lightning_types-error-popover"
+                        },
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    }
+}

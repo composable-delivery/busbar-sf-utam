@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputCheckbox",
+            "Represents the ui:inputCheckbox  Aura component.",
+            "Toggle the checkbox. Get the label and input elements."
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleCheckbox",
+            "description": "Toggle the checkbox",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": "utam-aura/pageObjects/label",
+            "name": "label",
+            "public": true,
+            "selector": {
+                "css": "label"
+            }
+        },
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "input",
+            "selector": {
+                "css": "input"
+            }
+        }
+    ]
+}

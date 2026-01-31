@@ -1,0 +1,146 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the sheet for the activity timeline.",
+            "Selector: Open Recent Activity Overlay"
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/embeddedHalfSheet",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$name CONTAINS 'view.ActivityTimeline'$]"
+    },
+    "elements": [
+        {
+            "name": "closeButton",
+            "description": "This button closes the recent activity overlay if the close button exists.",
+            "selector": {
+                "accessid": "activityTimeline.modal.close"
+            },
+            "type": [
+                "clickable",
+                "touchable"
+            ]
+        },
+        {
+            "name": "recentActivityButton",
+            "description": "This button opens the recent activity overlay.",
+            "selector": {
+                "accessid": "Open Recent Activity Overlay"
+            },
+            "type": [
+                "clickable",
+                "touchable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "close",
+            "description": {
+                "text": [
+                    "Close the recent activity overlay"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "expand",
+            "description": {
+                "text": [
+                    "Open the recent activity overlay"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recentActivityButton",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "recentActivityButton",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": -400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "collapse",
+            "description": {
+                "text": [
+                    "Collapse the recent activity overlay"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recentActivityButton",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "recentActivityButton",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForRecentActivityContainer",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "classchain": "**/XCUIElementTypeOther[$name CONTAINS 'view.ActivityTimeline'$]"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

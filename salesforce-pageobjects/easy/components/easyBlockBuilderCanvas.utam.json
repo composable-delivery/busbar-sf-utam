@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_sales_easy-easy-block-builder-canvas",
+            "Represents the block builder canvas component with iframe and spinner elements."
+        ]
+    },
+    "methods": [
+        {
+            "name": "composeEnterFrame",
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "utam-easy-components/pageObjects/canvasIframe",
+                    "apply": "enterFrameAndLoad",
+                    "args": [
+                        {
+                            "type": "elementReference",
+                            "value": "canvasIframe"
+                        },
+                        {
+                            "type": "rootPageObject",
+                            "value": "utam-easy-components/pageObjects/canvasIframe"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "canvasIframe",
+                "type": "frame",
+                "public": true,
+                "selector": {
+                    "css": "iframe.surfaceFrame"
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

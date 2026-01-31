@@ -1,0 +1,227 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a toggle switch for enabling or disabling the Generative Canvas preference within an organization. It displays information about the feature and links to relevant resources.",
+            "Selector: src-experience_ui_gen_canvas-/setup-gen-canvas"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "html"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "boxContainer",
+                "selector": {
+                    "css": ".slds-box, .no-box"
+                },
+                "description": "Represents the container of the component that may or may not be displayed as a box depending on activation status."
+            },
+            {
+                "name": "toggleSwitch",
+                "selector": {
+                    "css": "lightning-input[type='toggle']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the toggle switch for enabling or disabling the Generative Canvas preference.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "toggleLabel",
+                        "selector": {
+                            "css": "lightning-input[type='toggle'] .label"
+                        },
+                        "description": "Represents the label of the toggle switch."
+                    }
+                ]
+            },
+            {
+                "name": "informationSection",
+                "selector": {
+                    "css": "lightning-layout-item.flexibility"
+                },
+                "description": "Represents the section containing information about the Generative Canvas.",
+                "elements": [
+                    {
+                        "name": "sectionTitle",
+                        "selector": {
+                            "css": "h2.slds-text-heading_small.slds-text-title_bold"
+                        },
+                        "description": "Represents the title of the information section."
+                    },
+                    {
+                        "name": "sectionDescription",
+                        "selector": {
+                            "css": "p",
+                            "returnAll": true
+                        },
+                        "description": "Represents the paragraphs in the information section.",
+                        "elements": [
+                            {
+                                "name": "legalLink",
+                                "selector": {
+                                    "css": "a[href*='customer-agreements']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the legal link in the information section."
+                            },
+                            {
+                                "name": "salesforceLink",
+                                "selector": {
+                                    "css": "a[href*='salesforce.com']:nth-of-type(2)"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the Salesforce link in the information section."
+                            },
+                            {
+                                "name": "ptdLink",
+                                "selector": {
+                                    "css": "a[href*='ptd.salesforce.com']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the PTD link in the information section."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "enableGenCanvas",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "type": [
+                                "clickable",
+                                "actionable"
+                            ],
+                            "name": "lightningPrimitiveToggle",
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-primitive-input-toggle"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isBoxContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the box container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "boxContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickLegalLink",
+            "description": {
+                "text": [
+                    "Click on the legal link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "legalLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSalesforceLink",
+            "description": {
+                "text": [
+                    "Click on the Salesforce link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "salesforceLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickPtdLink",
+            "description": {
+                "text": [
+                    "Click on the PTD link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "ptdLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getSectionTitleText",
+            "description": {
+                "text": [
+                    "Get the text of the section title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sectionTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSectionDescriptionTexts",
+            "description": {
+                "text": [
+                    "Get the texts of all paragraphs in the section description"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "sectionDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getToggleLabelText",
+            "description": {
+                "text": [
+                    "Get the text of the toggle label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "toggleLabel",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

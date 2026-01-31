@@ -1,0 +1,72 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A simple pin button component that allows users to pin a list view. It changes the icon and tooltip based on whether the list is pinned or not, and it dispatches an event when the button is clicked.",
+            "Selector: src-list-view-manager-pin-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "pinButtonWrapper",
+                "selector": {
+                    "css": ".id-wrapper"
+                },
+                "description": "Represents the wrapper for the pin button",
+                "elements": [
+                    {
+                        "name": "pinButton",
+                        "selector": {
+                            "css": "lightning-button-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the pin button that can be clicked to pin or unpin a list",
+                        "public": true
+                    },
+                    {
+                        "name": "pinned",
+                        "selector": {
+                            "css": "lightning-button-icon.lvmPinned"
+                        },
+                        "description": "Represents the pinned",
+                        "public": true,
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPinButtonWrapperVisible",
+            "description": {
+                "text": [
+                    "Check if the pin button wrapper is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pinButtonWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isPinned",
+            "description": {
+                "text": [
+                    "Check if the pin button is pinned"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pinned",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

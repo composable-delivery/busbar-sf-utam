@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the mobile home Select card list activity.",
+            "Select a card from 'Add' list."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "selectCardWithName",
+            "args": [
+                {
+                    "name": "cardName",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

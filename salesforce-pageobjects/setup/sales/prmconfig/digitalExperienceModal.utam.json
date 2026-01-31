@@ -1,0 +1,31 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-modal.",
+            "Represents the list view settings modal dialog.",
+            "Access the model body content."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "gotItButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.slds-button.blocked-reasons-modal__confirm"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttons",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

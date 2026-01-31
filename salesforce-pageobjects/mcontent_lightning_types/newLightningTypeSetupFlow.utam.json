@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: newLightningTypeSetupFlow",
+            "Root setup flow component for creating new Lightning Types",
+            "Contains the modal and manages the multi-step workflow"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent_lightning_types-new-lightning-type-setup-flow"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modal",
+                "type": "utam-mcontent_lightning_types/pageObjects/newLightningTypeModal",
+                "selector": {
+                    "css": "mcontent_lightning_types-new-lightning-type-modal"
+                }
+            },
+            {
+                "public": true,
+                "name": "createForm",
+                "type": "utam-mcontent_lightning_types/pageObjects/createLightningTypeForm",
+                "selector": {
+                    "css": "mcontent_lightning_types-create-lightning-type-form"
+                }
+            },
+            {
+                "public": true,
+                "name": "typeSelector",
+                "type": "utam-mcontent_lightning_types/pageObjects/typeSelector",
+                "selector": {
+                    "css": "mcontent_lightning_types-type-selector"
+                }
+            }
+        ]
+    }
+}

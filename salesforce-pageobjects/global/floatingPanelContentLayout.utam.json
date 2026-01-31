@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: one-floating-panel-content-layout.",
+            "Represents the floating panel content layout component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "guidancePromptName",
+                "public": true,
+                "selector": {
+                    "css": "h2.slds-popover_prompt__heading.slds-m-bottom_x-small.title"
+                }
+            },
+            {
+                "name": "guidancePromptStep",
+                "public": true,
+                "selector": {
+                    "css": "div.progress-indicator.slds-m-vertical_medium.slds-text-body_regular"
+                }
+            },
+            {
+                "name": "formattedRichText",
+                "public": true,
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                }
+            }
+        ]
+    }
+}

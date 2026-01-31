@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a list view header that has selected items"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getSelectionCountString",
+            "description": {
+                "text": [
+                    "Gets the string of the selected item count"
+                ],
+                "return": "the string of the selected item count"
+            },
+            "compose": [
+                {
+                    "element": "selectedCount",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "selectedCount",
+            "selector": {
+                "css": ".selectionCountString"
+            },
+            "elements": [
+                {
+                    "type": [
+                        "clickable"
+                    ],
+                    "public": true,
+                    "name": "showSelectedLink",
+                    "selector": {
+                        "css": "button"
+                    }
+                }
+            ]
+        }
+    ]
+}

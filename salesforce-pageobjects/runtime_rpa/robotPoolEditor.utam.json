@@ -1,0 +1,111 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "robotPoolDetailEditor",
+                        "type": "utam-runtime_rpa/pageObjects/robotPoolDetailEditor",
+                        "selector": {
+                            "css": "runtime_rpa-robot-pool-detail-editor"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "spinner",
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "progressSteps",
+                        "type": "utam-lightning/pageObjects/progressStep",
+                        "selector": {
+                            "css": "lightning-progress-step",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "progressStepByIndex",
+                        "type": "utam-lightning/pageObjects/progressStep",
+                        "selector": {
+                            "css": "lightning-progress-step:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "wait": true,
+                        "public": true,
+                        "name": "robotPoolAssignedRobotEditor",
+                        "type": "utam-runtime_rpa/pageObjects/robotPoolAssignedRobotEditor",
+                        "selector": {
+                            "css": "runtime_rpa-robot-pool-assigned-robot-editor"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "buttons",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "buttonByIndex",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_rpa-base-list-actions-with-tooltip",
+            "Component to view the actions available on the given row."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonMenu",
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "selector": {
+                    "css": "lightning-button-menu"
+                },
+                "public": true
+            },
+            {
+                "name": "menuItems",
+                "type": "utam-lightning/pageObjects/menuItem",
+                "selector": {
+                    "css": "lightning-menu-item",
+                    "returnAll": true
+                },
+                "public": true
+            }
+        ]
+    }
+}

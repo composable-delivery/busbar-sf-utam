@@ -1,0 +1,156 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-accordion-section.",
+            "Represents the lightning-accordion-section Lightning web component.",
+            "Check if a section is active, toggle it to expand or close, or retrieve a section's contents."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": "actionable",
+    "methods": [
+        {
+            "name": "isActive",
+            "description": {
+                "text": [
+                    "Checks if accordion section is active/open"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "section",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-open"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Get section summary button label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sectionSummaryButtonLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasFocus",
+            "description": {
+                "text": [
+                    "Checks if lightning-accordion-section has focus at the moment"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "toggle",
+            "description": "Click section summary button to toggle accordion section",
+            "compose": [
+                {
+                    "element": "sectionSummaryButton",
+                    "apply": "focus"
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "sectionSummaryButton"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "click",
+                    "element": "sectionSummaryButton"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": "container",
+            "name": "sectionContents",
+            "public": true,
+            "selector": {
+                "css": ":first-child *",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "basicHTML",
+            "public": true,
+            "selector": {
+                "css": "%s",
+                "args": [
+                    {
+                        "type": "string",
+                        "name": "cssSelectorString"
+                    }
+                ]
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "section",
+                "selector": {
+                    "css": "section.slds-accordion__section"
+                },
+                "elements": [
+                    {
+                        "name": "sectionSummary",
+                        "selector": {
+                            "css": "div.slds-accordion__summary"
+                        },
+                        "elements": [
+                            {
+                                "name": "sectionSummaryButton",
+                                "type": [
+                                    "clickable",
+                                    "actionable"
+                                ],
+                                "selector": {
+                                    "css": "button"
+                                },
+                                "elements": [
+                                    {
+                                        "name": "sectionSummaryButtonLabel",
+                                        "selector": {
+                                            "css": ".slds-accordion__summary-content"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
