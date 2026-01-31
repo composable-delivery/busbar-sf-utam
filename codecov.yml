@@ -19,5 +19,8 @@ comment:
   behavior: default
   require_changes: false
 
+fixes:
+  - "/home/runner/work/busbar-sf-utam/busbar-sf-utam/::"
+
 ignore:
   - "utam-cli/src/main.rs"
