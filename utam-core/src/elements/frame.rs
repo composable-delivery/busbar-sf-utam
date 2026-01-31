@@ -136,17 +136,20 @@ impl Drop for FrameContext {
     fn drop(&mut self) {
         // Only run drop cleanup if exit() was not called
         if !self.exited {
-            // Note: Can't await in drop, so we spawn a task
-            // 
+            // Note: Can't await in drop, so we spawn a task when a Tokio runtime
+            // is available.
+            //
             // WARNING: The spawned task may not complete before the program exits,
             // potentially leaving the WebDriver in the wrong frame context.
             // This is a best-effort cleanup mechanism.
-            // 
+            //
             // For reliable cleanup, always prefer calling exit() explicitly.
-            let driver = self.driver.clone();
-            tokio::spawn(async move {
-                let _ = driver.enter_parent_frame().await;
-            });
+            if let Ok(handle) = tokio::runtime::Handle::try_current() {
+                let driver = self.driver.clone();
+                handle.spawn(async move {
+                    let _ = driver.enter_parent_frame().await;
+                });
+            }
         }
     }
 }
