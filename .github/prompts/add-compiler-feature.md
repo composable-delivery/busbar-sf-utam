@@ -124,15 +124,15 @@ fn validate_selector(selector: &SelectorAst) -> Result<(), UtamError> {
 
 #### Update Code Generation
 ```rust
-fn generate_by_selector(selector: &SelectorAst) -> TokenStream {
+fn generate_by_selector(selector: &SelectorAst) -> UtamResult<TokenStream> {
     if let Some(css) = &selector.css {
-        quote!(By::Css(#css))
+        Ok(quote!(By::Css(#css)))
     } else if let Some(xpath) = &selector.xpath {
-        quote!(By::XPath(#xpath))
+        Ok(quote!(By::XPath(#xpath)))
     } else if let Some(id) = &selector.id {
-        quote!(By::Id(#id))
+        Ok(quote!(By::Id(#id)))
     } else {
-        panic!("No selector provided")
+        Err(UtamError::MissingSelector)
     }
 }
 ```
