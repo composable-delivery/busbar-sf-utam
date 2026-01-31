@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "robotPoolEditor",
+                "type": "utam-runtime_rpa/pageObjects/robotPoolEditor",
+                "selector": {
+                    "css": "runtime_rpa-robot-pool-editor"
+                }
+            }
+        ]
+    }
+}

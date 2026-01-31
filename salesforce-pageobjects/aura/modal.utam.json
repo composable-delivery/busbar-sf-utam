@@ -1,0 +1,168 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiModal.",
+            "Represents the ui:modal Aura component.",
+            "Close the modal, get the modal header, or the body or footer elements.."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiModal.active"
+    },
+    "elements": [
+        {
+            "name": "modalHeader",
+            "public": true,
+            "selector": {
+                "css": ".modal-header"
+            },
+            "elements": [
+                {
+                    "name": "headerContent",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope > *:first-child:not(h2)"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "heading",
+                    "selector": {
+                        "css": "h2"
+                    }
+                },
+                {
+                    "name": "description",
+                    "selector": {
+                        "css": ".description"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "modalBody",
+            "selector": {
+                "css": ".modal-body"
+            },
+            "elements": [
+                {
+                    "name": "bodyContent",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope *"
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "modalFooter",
+            "selector": {
+                "css": ".modal-footer"
+            },
+            "elements": [
+                {
+                    "name": "footerContent",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope > *:first-child"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "modalActionButton",
+                    "type": [
+                        "clickable"
+                    ],
+                    "public": true,
+                    "selector": {
+                        "css": "button",
+                        "returnAll": true
+                    },
+                    "filter": {
+                        "apply": "getText",
+                        "matcher": {
+                            "type": "stringContains",
+                            "args": [
+                                {
+                                    "name": "buttonText",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "findFirst": true
+                    }
+                },
+                {
+                    "name": "actionButtonByIndex",
+                    "type": [
+                        "clickable"
+                    ],
+                    "selector": {
+                        "css": "button:nth-of-type(%d)",
+                        "args": [
+                            {
+                                "name": "index",
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "closeButton",
+            "selector": {
+                "css": ".slds-modal__close"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "getHeaderText",
+            "description": {
+                "text": [
+                    "Get modal container header text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "heading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "close",
+            "description": "Close the modal",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getDescription",
+            "description": {
+                "text": [
+                    "Get modal container description text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "description",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .fieldLevelErrors .errorsList.",
+            "Represents the force:inputPicklist Aura component.",
+            "Click the error link and get the error text."
+        ]
+    },
+    "elements": [
+        {
+            "name": "errorElement",
+            "selector": {
+                "css": "li"
+            }
+        },
+        {
+            "name": "anchorLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "li a"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "click",
+            "description": {
+                "text": [
+                    "Clicks the anchor link for the error."
+                ]
+            },
+            "compose": [
+                {
+                    "element": "anchorLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getErrorText",
+            "description": {
+                "text": [
+                    "Gets the text of the error"
+                ],
+                "return": "the text of the error"
+            },
+            "compose": [
+                {
+                    "element": "errorElement",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

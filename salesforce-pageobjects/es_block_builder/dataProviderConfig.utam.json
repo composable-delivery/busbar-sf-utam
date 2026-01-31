@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-data-provider-config",
+            "Represents the block builder data provider config component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "editButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "deleteButtonIcon",
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isDeleteIconPresent",
+            "compose": [
+                {
+                    "element": "deleteButtonIcon",
+                    "returnType": "boolean",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-type-detail",
+            "Constraint Builder type detail component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "tabset",
+                "type": "utam-lightning/pageObjects/tabset",
+                "selector": {
+                    "css": "lightning-tabset"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickTab",
+            "args": [
+                {
+                    "name": "tabName",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "tabset",
+                    "apply": "getTabBar",
+                    "returnType": "utam-lightning/pageObjects/tabBar"
+                },
+                {
+                    "chain": true,
+                    "args": [
+                        {
+                            "name": "tabName",
+                            "type": "argumentReference"
+                        }
+                    ],
+                    "apply": "clickTab"
+                }
+            ]
+        }
+    ]
+}

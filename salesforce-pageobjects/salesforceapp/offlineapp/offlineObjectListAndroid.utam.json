@@ -1,0 +1,68 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"briefcase_objectsList\").",
+            "Represents the Android Briefcase Object List view.",
+            "Verify the downloaded objects."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "objectRows",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectRow",
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"briefcase_object_row\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "objectRowWithTitle",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectRow",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"briefcase_object_row\")",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getTitle",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "title",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasObjectRowWithTitle",
+            "compose": [
+                {
+                    "element": "objectRowWithTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    },
+                    "returnType": "boolean"
+                }
+            ]
+        }
+    ]
+}

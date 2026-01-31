@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: search_filters-text",
+            "Represents a text filter"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getSingleSelectLabelText",
+            "description": {
+                "text": [
+                    "Get label text for single select filter"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "singleSelect",
+                    "apply": "getLabelText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getMultiSelectLabelText",
+            "description": {
+                "text": [
+                    "Get label text for multi select filter"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "multiSelectCombobox",
+                    "apply": "getLabelText",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "singleSelect",
+                "type": "utam-lightning/pageObjects/combobox",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-combobox"
+                }
+            },
+            {
+                "name": "multiSelect",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "search_filters-multiselect"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "multiSelectCombobox",
+                            "type": "utam-lightning/pageObjects/combobox",
+                            "selector": {
+                                "css": "lightning-combobox"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

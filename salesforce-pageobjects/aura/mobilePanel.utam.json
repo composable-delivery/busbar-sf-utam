@@ -1,0 +1,103 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiPanel.",
+            "Represents the ui:Panel Aura component.",
+            "Get the title or check if a button is present by label. Click a button with a specific label."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiPanel.open.active"
+    },
+    "elements": [
+        {
+            "name": "title",
+            "selector": {
+                "css": ".panel-header .title"
+            }
+        },
+        {
+            "name": "headerBtns",
+            "selector": {
+                "css": ".panel-header button",
+                "returnAll": true
+            },
+            "type": [
+                "clickable"
+            ],
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "label",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "panelBody",
+            "selector": {
+                "css": ".panel-content"
+            },
+            "elements": [
+                {
+                    "name": "bodyContent",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope > *:first-child"
+                    },
+                    "public": true
+                }
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "getTitle",
+            "description": {
+                "text": [
+                    "Get panel header title text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasButtonWithLabel",
+            "description": {
+                "text": [
+                    "Check if a button is present by label"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "headerBtns",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "clickButtonWithLabel",
+            "description": "Click header buttons with a specific label",
+            "compose": [
+                {
+                    "element": "headerBtns",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .listTitleContainer.",
+            "Represents the title container component.",
+            "Access the title, sort, and count information."
+        ]
+    },
+    "elements": [
+        {
+            "name": "title",
+            "public": true,
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".listTitle"
+            }
+        },
+        {
+            "name": "countSortLabel",
+            "public": true,
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".listTitle .sortLabel"
+            }
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This LWC component dynamically renders a list of child components based on the provided component definition. It is designed to handle value change events and can be configured to be disabled or read-only.",
+            "Selector: feed_chat-view-component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dynamicComponentContainer",
+                "selector": {
+                    "css": "[data-view-component]"
+                },
+                "type": "container",
+                "description": "Container for the dynamic component that handles value change events.",
+                "public": true
+            },
+            {
+                "name": "selectSingleRecordId",
+                "selector": {
+                    "css": "feeds_chat-select-single-record-id"
+                },
+                "type": "utam-feeds-chat/pageObjects/selectSingleRecordId",
+                "public": true
+            },
+            {
+                "name": "viewRecordList",
+                "selector": {
+                    "css": "feeds_chat-view-record-list"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewRecordList",
+                "public": true
+            },
+            {
+                "name": "messageActionable",
+                "selector": {
+                    "css": "feeds_chat-message-actionable"
+                },
+                "wait": true,
+                "type": "utam-feeds-chat/pageObjects/messageActionable",
+                "public": true
+            },
+            {
+                "name": "viewActionLayout",
+                "selector": {
+                    "css": "feeds_chat-view-action-layout"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "viewComponentInActionLayout",
+                            "selector": {
+                                "css": "feeds_chat-view-component"
+                            },
+                            "type": "utam-feeds-chat/pageObjects/viewComponent",
+                            "nullable": true,
+                            "description": "Recursive reference to same component inside dynamic component",
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "viewActionButton",
+                "selector": {
+                    "css": "feeds_chat-view-action-button"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "baseButtonCompleteInActionButton",
+                            "selector": {
+                                "css": "feeds_chat-base-button-complete"
+                            },
+                            "public": true,
+                            "type": "utam-feeds-chat/pageObjects/baseButtonComplete"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "baseButtonComplete",
+                "selector": {
+                    "css": "feeds_chat-base-button-complete"
+                },
+                "public": true,
+                "type": "utam-feeds-chat/pageObjects/baseButtonComplete"
+            },
+            {
+                "name": "dynamicComponent",
+                "selector": {
+                    "css": "[data-view-component]"
+                },
+                "description": {
+                    "text": [
+                        "This is workaround to access content inside container that is currently not supported"
+                    ]
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "viewComponents",
+                            "selector": {
+                                "css": "feeds_chat-view-component",
+                                "returnAll": true
+                            },
+                            "type": "utam-feeds-chat/pageObjects/viewComponent",
+                            "description": "Recursive reference to same component inside dynamic component",
+                            "public": true
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,130 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an input counter with increment and decrement buttons, and handles value changes.",
+            "Selector: src-input-counter"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputLabel",
+                "selector": {
+                    "css": "label.slds-form-element__label"
+                },
+                "description": "Represents the label for the input counter"
+            },
+            {
+                "name": "helpTextIcon",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "type": "utam-lightning/pageObjects/helptext",
+                "description": "Represents the help text icon",
+                "public": true
+            },
+            {
+                "name": "decrementButton",
+                "selector": {
+                    "css": "lightning-button-icon.slds-input__button_decrement"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the decrement button",
+                "public": true
+            },
+            {
+                "name": "inputField",
+                "selector": {
+                    "css": "input.slds-input_counter"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents the input field for the counter value"
+            },
+            {
+                "name": "incrementButton",
+                "selector": {
+                    "css": "lightning-button-icon.slds-input__button_increment"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the increment button",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isInputLabelVisible",
+            "description": {
+                "text": [
+                    "Check that input label is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getInputLabelText",
+            "description": {
+                "text": [
+                    "Get text from input label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "inputLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clearAndSetInputField",
+            "description": {
+                "text": [
+                    "Clear the input field and enter a new value"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "clear"
+                },
+                {
+                    "element": "inputField",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputFieldValue",
+            "description": {
+                "text": [
+                    "Get value from the input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "getValue"
+                }
+            ]
+        }
+    ]
+}

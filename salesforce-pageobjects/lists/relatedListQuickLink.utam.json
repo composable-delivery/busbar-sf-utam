@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-quick-link.",
+            "Represents the related list quick link Lightning web component.",
+            "Access the hoverable link."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-records/pageObjects/hoverableLink",
+                "name": "hoverableLink",
+                "public": true,
+                "selector": {
+                    "css": "records-hoverable-link"
+                }
+            }
+        ]
+    }
+}

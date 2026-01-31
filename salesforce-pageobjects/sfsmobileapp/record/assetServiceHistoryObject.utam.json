@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Asset Service History section of a Work Order."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "getFieldByText",
+            "args": [
+                {
+                    "name": "fieldText",
+                    "type": "string"
+                }
+            ],
+            "returnType": "string"
+        }
+    ]
+}

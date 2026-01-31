@@ -1,0 +1,207 @@
+{
+    "selector": {
+        "css": ".recordHomeFlexipage2"
+    },
+    "root": true,
+    "description": {
+        "text": [
+            "Represents the Incident Record Home."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "isBroadcastEmailModalOpen",
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "boolean",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": ".uiModal.active"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isToastVisible",
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "boolean",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": ".forceToastMessage"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForAnyPanelContent",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "relatedListBRC",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ":scope > *:first-child"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isEmailModalOpen",
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "boolean",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": ".uiModal--large.active"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickOnRelatedTab",
+            "compose": [
+                {
+                    "element": "relatedTab",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickOnButton",
+            "compose": [
+                {
+                    "element": "activeButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "relatedTab",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a[title='%s']",
+                "args": [
+                    {
+                        "name": "relatedTabName",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "activeButton",
+            "nullable": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a[title='%s']",
+                "args": [
+                    {
+                        "name": "activeButtonName",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "relatedListBRC",
+            "type": [
+                "actionable",
+                "clickable"
+            ],
+            "selector": {
+                "css": ".forceRelatedListSingleContainer:nth-last-of-type(1)"
+            },
+            "public": true
+        },
+        {
+            "name": "broadcastEmailModal",
+            "selector": {
+                "css": ".slds-modal_medium.uiModal"
+            },
+            "public": true
+        },
+        {
+            "name": "emailModal",
+            "selector": {
+                "css": ".uiModal--large"
+            },
+            "public": true
+        },
+        {
+            "name": "newBroadcastEmailButton",
+            "nullable": true,
+            "type": [
+                "actionable",
+                "clickable"
+            ],
+            "selector": {
+                "css": "a[title='New Broadcast Email']"
+            },
+            "public": true
+        },
+        {
+            "name": "sendModal",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".uiModal--large"
+            },
+            "public": true
+        },
+        {
+            "name": "relatedLists",
+            "type": [
+                "actionable",
+                "clickable"
+            ],
+            "selector": {
+                "returnAll": true,
+                "css": ".forceRelatedListSingleContainer"
+            },
+            "public": true
+        }
+    ]
+}

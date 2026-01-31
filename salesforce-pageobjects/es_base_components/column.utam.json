@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the column element in the CMS builder runtime"
+        ]
+    },
+    "elements": [
+        {
+            "type": "container",
+            "name": "columnBody",
+            "public": true,
+            "selector": {
+                "css": "es_base_components-column > *",
+                "returnAll": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getWidth",
+            "description": "returns the column width",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "columnWidth"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

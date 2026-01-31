@@ -1,0 +1,95 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".uiModal.active"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "public": true,
+            "name": "closeButton",
+            "selector": {
+                "css": ".modal-container.slds-modal__container"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "public": true,
+            "name": "cancelButton",
+            "selector": {
+                "css": ".fixedFooter.modal-footer.slds-modal__footer button:nth-child(1)"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "public": true,
+            "name": "saveButton",
+            "selector": {
+                "css": ".fixedFooter.modal-footer.slds-modal__footer button:nth-child(2)"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "inputUser",
+            "public": true,
+            "selector": {
+                "css": "input[role='combobox']"
+            },
+            "type": "utam-aura/pageObjects/inputText"
+        },
+        {
+            "type": "utam-aura/pageObjects/inputTextForAutocomplete",
+            "name": "inputTextForAutocomplete",
+            "selector": {
+                "css": ".uiInputTextForAutocomplete"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getInputTextForAutocomplete",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "inputTextForAutocomplete"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

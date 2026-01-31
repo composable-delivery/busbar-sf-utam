@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a container for dynamically loaded sub-components that can be interacted with, including a view component and a list of left-rail view components. It supports actions such as navigating back and opening subviews.",
+            "Selector: src-left-rail-view-component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "railPanelTopicSuite",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-rail-panel-topics-suite",
+                    "returnAll": true
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/railPanelTopicsSuite",
+                "description": "Represents the list of left-rail view topic suite that are conditionally rendered.",
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "dynamicViewComponent",
+            "selector": {
+                "css": "[data-view-component]"
+            },
+            "type": "container",
+            "description": "Represents the dynamic view component that is loaded based on certain conditions.",
+            "wait": true,
+            "public": true
+        }
+    ]
+}

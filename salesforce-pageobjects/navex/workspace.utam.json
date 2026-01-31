@@ -1,0 +1,32 @@
+{
+    "description": {
+        "text": [
+            "Selector: .navexWorkspace",
+            "Represents the navex:Workspace  aura component.",
+            "Get force:ListViewManager component."
+        ],
+        "author": "Salesforce"
+    },
+    "selector": {
+        "css": ".navexWorkspace"
+    },
+    "root": true,
+    "elements": [
+        {
+            "name": "listView",
+            "type": "utam-force/pageObjects/listViewManager",
+            "selector": {
+                "css": ".forceListViewManager"
+            },
+            "public": true
+        },
+        {
+            "name": "agenticSetupHome",
+            "type": "utam-setup/pageObjects/agenticSetupHome",
+            "selector": {
+                "css": "setup-agentic-setup-home"
+            },
+            "public": true
+        }
+    ]
+}

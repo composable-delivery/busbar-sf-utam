@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-record-form-agent-detail",
+            "The Details tab in Agent for Setup"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-record-form-agent-detail"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "titleContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='title']"
+            }
+        },
+        {
+            "public": true,
+            "name": "notificationContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='notification']"
+            }
+        }
+    ]
+}

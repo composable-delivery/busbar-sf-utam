@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a flexipage on a record home screen"
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "getHighlights",
+            "description": {
+                "text": [
+                    "Gets the highlights panel for the flexipage"
+                ],
+                "return": "the highlights panel for the flexipage (utam-records/pageObjects/lwcHighlightsPanel)"
+            },
+            "returnType": "utam-records/pageObjects/lwcHighlightsPanel"
+        },
+        {
+            "name": "getTabset",
+            "description": {
+                "text": [
+                    "Gets the tab set for the flexipage"
+                ],
+                "return": "the tab set for the flexipage (utam-lightning/pageObjects/tabset)"
+            },
+            "returnType": "utam-lightning/pageObjects/tabset"
+        },
+        {
+            "name": "getDecorator",
+            "description": {
+                "text": [
+                    "Gets the record page decorator for the flexipage"
+                ],
+                "return": "the record page decorator for the flexipage (utam-record-flexipage/pageObjects/desktopRecordPageDecorator)"
+            },
+            "returnType": "utam-record-flexipage/pageObjects/desktopRecordPageDecorator"
+        }
+    ]
+}

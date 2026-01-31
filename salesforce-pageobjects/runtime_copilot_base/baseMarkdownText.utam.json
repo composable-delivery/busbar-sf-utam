@@ -1,0 +1,194 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays markdown content and allows interaction with rendered elements.",
+            "Selector: src-base-markdown-text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "markdownWrapperContainer",
+                "type": "container",
+                "selector": {
+                    "css": "div.markdown-wrapper"
+                },
+                "description": "Represents the container for the markdown content",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "markdownWrapper",
+                "selector": {
+                    "css": ".markdown-wrapper"
+                },
+                "description": "Represents the container for the markdown content",
+                "elements": [
+                    {
+                        "name": "paragraphContent",
+                        "selector": {
+                            "css": "p",
+                            "returnAll": true
+                        },
+                        "description": "Represents paragraph elements within the markdown content",
+                        "public": true,
+                        "nullable": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "listItems",
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents list item elements within the markdown content"
+                    },
+                    {
+                        "name": "blockCodeContent",
+                        "selector": {
+                            "css": "pre code",
+                            "returnAll": true
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents code blocks within the markdown content"
+                    },
+                    {
+                        "name": "headingElements",
+                        "selector": {
+                            "css": "h1, h2, h3, h4, h5, h6",
+                            "returnAll": true
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents heading elements within the markdown content"
+                    },
+                    {
+                        "name": "linkElements",
+                        "selector": {
+                            "css": "a",
+                            "returnAll": true
+                        },
+                        "type": "actionable",
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents anchor elements within the markdown content"
+                    },
+                    {
+                        "name": "imageElements",
+                        "selector": {
+                            "css": "img",
+                            "returnAll": true
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "Represents image elements within the markdown content"
+                    }
+                ],
+                "public": true,
+                "nullable": true,
+                "wait": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getParagraphTexts",
+            "description": {
+                "text": [
+                    "Get text from all paragraph elements"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "paragraphContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyListItemsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"listItems\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "listItems",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyBlockCodeContentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"blockCodeContent\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "blockCodeContent",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyHeadingElementsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"headingElements\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "headingElements",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyLinkElementsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"linkElements\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "linkElements",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyImageElementsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"imageElements\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "imageElements",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

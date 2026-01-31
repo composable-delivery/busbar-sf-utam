@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: draft_list.",
+            "Represents the Android draft list used in the Offline App.",
+            "Verify the draft list and its rows."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/draftList",
+    "platform": "native",
+    "exposeRootElement": true,
+    "root": true,
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable",
+        "touchable"
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"draft_list\")"
+    },
+    "elements": [
+        {
+            "name": "draftRows",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/draftRow",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"draft_row\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "draftRowAtIndex",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/draftRow",
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"draft_row\").index(%d))",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

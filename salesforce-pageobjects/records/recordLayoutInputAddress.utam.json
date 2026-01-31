@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-input-address.",
+            "Represents the records-record-layout-input-address Lightning web component.",
+            "Access the input address."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputAddress",
+                "type": "utam-lightning/pageObjects/inputAddress",
+                "selector": {
+                    "css": "lightning-input-address"
+                },
+                "public": true
+            }
+        ]
+    }
+}

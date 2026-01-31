@@ -1,0 +1,558 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-lookup-desktop",
+            "Represents the lightning-lookup-desktop Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "groupedCombobox",
+                "public": true,
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                },
+                "description": {
+                    "text": [
+                        "DO NOT USE - use provided methods instead"
+                    ],
+                    "deprecated": "Accessing a child component breaks the abstraction provided by the Page Object model. This selector will no longer be accessible in near future, please use the component's public methods instead."
+                }
+            },
+            {
+                "name": "pillContainer",
+                "public": true,
+                "description": {
+                    "text": [
+                        "DO NOT USE - use provided methods instead"
+                    ],
+                    "deprecated": "Accessing a child component breaks the abstraction provided by the Page Object model. This selector will no longer be accessible in near future, please use the component's public methods instead."
+                },
+                "type": "utam-lightning/pageObjects/pillContainer",
+                "selector": {
+                    "css": "lightning-pill-container"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "deletePill",
+            "description": {
+                "text": [
+                    "Delete pill by index. Should only be used in a multi-value lookup use-case (starts at 1)."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "deletePill",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "deleteAllPills",
+            "description": {
+                "text": [
+                    "Delete all the selected records from the pill container. Should only be used in a multi-value lookup use-case."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "deleteAllPills"
+                }
+            ]
+        },
+        {
+            "name": "getAllPills",
+            "description": {
+                "text": [
+                    "Get all the selected records label from the pill container. Should only be used in a multi-value lookup use-case."
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "getAllPillLabels",
+                    "returnAll": true,
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "type",
+            "description": {
+                "text": [
+                    "Type a text into the combobox input."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "apply": "focusInput"
+                },
+                {
+                    "element": "groupedCombobox",
+                    "apply": "typeText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputText",
+            "description": {
+                "text": [
+                    "Gets the input text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "getInputText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "clearInput",
+            "description": {
+                "text": [
+                    "Clear the input text into the combobox input."
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "clear"
+                }
+            ]
+        },
+        {
+            "name": "selectRecordSuggestionByLabel",
+            "description": {
+                "text": [
+                    "Select a record in the combobox by label."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "pickItemByLabel",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getSelectedRecordLabel",
+            "description": {
+                "text": [
+                    "Gets the label of the selected record."
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "getInputPillLabel",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "isSelectedRecordLabelEmpty",
+            "description": {
+                "text": [
+                    "Did we select a record?"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "getSelectedRecordLabel",
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": ""
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasSelectedRecord",
+            "description": {
+                "text": [
+                    "Did we select a record?"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "isSelectedRecordLabelEmpty",
+                    "matcher": {
+                        "type": "isFalse"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clearSelectedRecord",
+            "description": {
+                "text": [
+                    "Clears the selected record. Should only be used in a single-value lookup use-case."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "clearSelection"
+                }
+            ]
+        },
+        {
+            "name": "getSelectedEntity",
+            "description": {
+                "text": [
+                    "Returns the selected entity of the entity selector"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "expandFilterCombobox"
+                },
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "filteredCombo",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputAttribute",
+                    "args": [
+                        {
+                            "value": "data-value"
+                        }
+                    ],
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "selectEntityInEntitySelector",
+            "description": {
+                "text": [
+                    "Select an item in the entity selector's combobox by value (objectApiName). Should only be used in a multi-object lookup use-case."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "expandFilterCombobox"
+                },
+                {
+                    "element": "groupedCombobox",
+                    "apply": "selectItemInFilterComboboxByValue",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isEntitySelectorPresent",
+            "description": {
+                "text": [
+                    "Determine if the entity selector is present in the DOM or not."
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "isFilteredComboboxPresent",
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "selectAdvancedLookupOption",
+            "description": {
+                "text": [
+                    "Show the advanced modal for further search"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "selectItemByValue",
+                    "args": [
+                        {
+                            "value": "actionAdvancedSearch"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "selectCreateNewAction",
+            "description": {
+                "text": [
+                    "Request the creation of a new record"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "selectItemByValue",
+                    "args": [
+                        {
+                            "value": "actionCreateNew"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isCreateNewActionPresent",
+            "description": {
+                "text": [
+                    "Ensure the create new action is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "hasItemByValue",
+                    "args": [
+                        {
+                            "value": "actionCreateNew"
+                        }
+                    ],
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessage",
+            "description": {
+                "text": [
+                    "Get the error message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "getHelpMessageText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "focusInput",
+            "description": {
+                "text": [
+                    "Focus into the combobox input."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "waitForSuggestions",
+            "description": {
+                "text": [
+                    "Wait until suggestions are loaded"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "waitForItemsToLoad"
+                }
+            ]
+        },
+        {
+            "name": "isDisabled",
+            "description": {
+                "text": [
+                    "Determine if the component is disabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "isDisabled",
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Determine if the component is required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "apply": "isRequired",
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "isEnabled",
+            "description": {
+                "text": [
+                    "Determine if the component is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "isDisabled",
+                    "matcher": {
+                        "type": "isFalse"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Waits for the grouped combobox component to be ready"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "groupedCombobox",
+                                    "apply": "isDisabled",
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

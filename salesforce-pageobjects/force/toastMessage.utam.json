@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceToastMessage.",
+            "Represents the force:toastMessage Aura component.",
+            "Get the message text or close the toast message.."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceToastMessage"
+    },
+    "methods": [
+        {
+            "name": "toastClose",
+            "description": {
+                "text": [
+                    "Closes the toast message"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "buttonClose",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Gets the text of the toast message"
+                ],
+                "return": "the text of the toast message"
+            },
+            "compose": [
+                {
+                    "element": "toastMessageText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "buttonClose",
+            "selector": {
+                "css": "button.toastClose"
+            }
+        },
+        {
+            "name": "toastMessageText",
+            "selector": {
+                "css": "span.toastMessage"
+            }
+        }
+    ]
+}

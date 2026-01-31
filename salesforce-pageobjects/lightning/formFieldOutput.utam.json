@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-field-output",
+            "Represents lightning-form-field-output Lightning web component.",
+            "Get formatted text, formatted address"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedText",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedText"
+            },
+            {
+                "name": "formattedAddress",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-formatted-address"
+                },
+                "type": "utam-lightning/pageObjects/formFormattedAddress"
+            },
+            {
+                "name": "formFormattedPicklist",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-formatted-picklist"
+                },
+                "type": "utam-lightning/pageObjects/formFormattedPicklist"
+            }
+        ]
+    }
+}

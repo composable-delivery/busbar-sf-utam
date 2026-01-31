@@ -1,0 +1,32 @@
+{
+    "description": {
+        "text": [
+            "Selector: .navexWorkspaceManager",
+            "Represents the navex:WorkspaceManager  aura component.",
+            "Get navex:Workspace and one:ConsoleTabset components."
+        ],
+        "author": "Salesforce"
+    },
+    "selector": {
+        "css": ".navexWorkspaceManager"
+    },
+    "root": true,
+    "elements": [
+        {
+            "name": "activeWorkspace",
+            "type": "utam-navex/pageObjects/workspace",
+            "selector": {
+                "css": ".navexWorkspace.active"
+            },
+            "public": true
+        },
+        {
+            "name": "tabset",
+            "type": "utam-navex/pageObjects/consoleTabset",
+            "selector": {
+                "css": ".oneConsoleTabset"
+            },
+            "public": true
+        }
+    ]
+}

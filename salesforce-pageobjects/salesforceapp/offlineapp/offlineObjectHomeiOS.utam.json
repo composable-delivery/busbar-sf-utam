@@ -1,0 +1,76 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: briefcase_recordsList",
+            "Represents the iOS Offline object home window.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectHome",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "selector": {
+        "accessid": "briefcase_recordsList"
+    },
+    "elements": [
+        {
+            "name": "recordList",
+            "public": true,
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList",
+            "selector": {
+                "accessid": "briefcase_recordsList"
+            }
+        },
+        {
+            "name": "searchField",
+            "selector": {
+                "accessid": "search_field"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "pullToRefresh",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickSearch",
+            "compose": [
+                {
+                    "element": "searchField",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

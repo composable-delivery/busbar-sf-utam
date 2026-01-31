@@ -1,0 +1,81 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a requirements document with executive summary, use cases, custom sections, and navigation arrows for scrolling.",
+            "Selector: app_dev_agent-prd-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "upArrowButton",
+                "selector": {
+                    "css": "app_dev_agent-custom-button-icon[icon-name=\"utility:arrowup\"]"
+                },
+                "type": "utam/app_dev_agent/pageObjects/customButtonIcon",
+                "description": "Represents the upward navigation arrow button",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "requirementsDocument",
+                "selector": {
+                    "css": "app_dev_agent-requirements-document"
+                },
+                "type": "utam/app_dev_agent/pageObjects/requirementsDocument",
+                "description": "Represents the requirements document component displaying executive summary, use cases, and custom sections",
+                "public": true
+            },
+            {
+                "name": "bottomIntersection",
+                "selector": {
+                    "css": ".bottom-intersection"
+                },
+                "description": "Represents the bottom intersection element used for scroll detection"
+            },
+            {
+                "name": "downArrowButton",
+                "selector": {
+                    "css": "app_dev_agent-custom-button-icon[icon-name=\"utility:arrowdown\"]"
+                },
+                "type": "utam/app_dev_agent/pageObjects/customButtonIcon",
+                "description": "Represents the downward navigation arrow button",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isBottomIntersectionVisible",
+            "description": {
+                "text": [
+                    "Check if the bottom intersection element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bottomIntersection",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isBottomIntersectionPresent",
+            "description": {
+                "text": [
+                    "Check if the bottom intersection element is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bottomIntersection",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

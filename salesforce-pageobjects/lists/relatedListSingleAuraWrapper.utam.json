@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-single-aura-wrapper.",
+            "Represents the related list single Aura wrapper Lightning web component.",
+            "Access the Aura related list single container."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "type": "container",
+                "name": "auraShadowWrapper"
+            },
+            {
+                "type": "container",
+                "name": "auraShadowRelatedListSingleContainer",
+                "public": true,
+                "selector": {
+                    "css": ".forceRelatedListSingleContainer"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "type": "container",
+            "name": "auraWrapper"
+        },
+        {
+            "type": "utam-lists/pageObjects/auraRelatedListSingleContainer",
+            "name": "auraRelatedListSingleContainer",
+            "public": true,
+            "selector": {
+                "css": ".forceRelatedListSingleContainer"
+            }
+        }
+    ]
+}

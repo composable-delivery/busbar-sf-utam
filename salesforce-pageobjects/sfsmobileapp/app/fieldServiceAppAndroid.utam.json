@@ -1,0 +1,117 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Field Service app and is used for global actions such as checking toasts on the page."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/app/fieldServiceApp",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/action_bar_root\")"
+    },
+    "type": [
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "alertLabel",
+            "public": false,
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/alert_bar_container\")"
+            },
+            "nullable": true
+        },
+        {
+            "name": "syncLabel",
+            "public": false,
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "className(\"android.widget.TextView\").textContains(\"IN PROGRESS\")"
+            },
+            "nullable": true
+        },
+        {
+            "name": "alertErrorLabel",
+            "public": false,
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "accessid": "Data Sync Error"
+            },
+            "nullable": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "waitForSyncToComplete",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isSyncInProgress",
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "areSyncErrorsPresent",
+            "compose": [
+                {
+                    "element": "alertErrorLabel",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isSyncInProgress",
+            "compose": [
+                {
+                    "element": "syncLabel",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "pullToRefresh",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 550
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

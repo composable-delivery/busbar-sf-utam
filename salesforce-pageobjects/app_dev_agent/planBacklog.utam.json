@@ -1,0 +1,215 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays and manages a backlog of tasks, including filtering, rendering dynamic task items, and displaying empty states or skeleton loaders when appropriate.",
+            "Selector: app_dev_agent-plan-backlog"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "taskHeader",
+                "selector": {
+                    "css": ".tasks-header"
+                },
+                "description": "Represents the header section of the tasks which includes the title and helper text.",
+                "elements": [
+                    {
+                        "name": "taskCount",
+                        "selector": {
+                            "css": ".agent-task-title span"
+                        },
+                        "description": "Represents the task count displayed next to the task title."
+                    },
+                    {
+                        "name": "helperText",
+                        "selector": {
+                            "css": "lightning-helptext"
+                        },
+                        "type": "utam-lightning/pageObjects/helptext",
+                        "description": "Represents the helper text with additional information.",
+                        "public": true
+                    },
+                    {
+                        "name": "specAuthoringInfo",
+                        "selector": {
+                            "css": "div.slds-m-vertical_x-small"
+                        },
+                        "description": "Represents the additional info displayed when isSpecAuthoring is true.",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "workItems",
+                "selector": {
+                    "css": "app_dev_agent-backlog-work-item",
+                    "returnAll": true
+                },
+                "type": "utam/app_dev_agent/pageObjects/backlogWorkItem",
+                "description": "Represents the individual backlog work items rendered dynamically.",
+                "public": true
+            },
+            {
+                "name": "emptyState",
+                "selector": {
+                    "css": "app_dev_agent-empty-state"
+                },
+                "type": "utam/app_dev_agent/pageObjects/emptyState",
+                "description": "Represents the component for displaying an empty state when no work items are available.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "skeletonItems",
+                "selector": {
+                    "css": ".skeleton-item",
+                    "returnAll": true
+                },
+                "description": "Represents the skeleton loaders displayed when work items are loading.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "skeletonCircle",
+                        "selector": {
+                            "css": "app_dev_agent-skeleton[type='circle']"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/skeleton",
+                        "description": "Represents the circular skeleton loader inside a skeleton item.",
+                        "public": true
+                    },
+                    {
+                        "name": "skeletonTitle",
+                        "selector": {
+                            "css": "app_dev_agent-skeleton.title-skeleton"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/skeleton",
+                        "description": "Represents the title skeleton loader inside a skeleton item.",
+                        "public": true
+                    },
+                    {
+                        "name": "skeletonStatus",
+                        "selector": {
+                            "css": "app_dev_agent-skeleton.status-skeleton"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/skeleton",
+                        "description": "Represents the status skeleton loader inside a skeleton item.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTaskHeaderVisible",
+            "description": {
+                "text": [
+                    "Check that task header is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "taskHeader",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTaskCount",
+            "description": {
+                "text": [
+                    "Get the text of the task count"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "taskCount",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isSpecAuthoringInfoVisible",
+            "description": {
+                "text": [
+                    "Check if spec authoring info is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "specAuthoringInfo",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSkeletonItemVisible",
+            "description": {
+                "text": [
+                    "Check if skeleton items are visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "skeletonItems",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "areSkeletonItemsPresent",
+            "description": {
+                "text": [
+                    "Check if skeleton items are present"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "skeletonItems",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifySkeletonItemsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"skeletonItems\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "skeletonItems",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifySpecAuthoringInfoPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"specAuthoringInfo\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "specAuthoringInfo",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

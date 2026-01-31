@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-url-name-input",
+            "Represents the block builder URL name input for the dynamic authoring form component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input"
+            },
+            {
+                "public": true,
+                "name": "button",
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon"
+            }
+        ]
+    }
+}

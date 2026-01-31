@@ -1,0 +1,216 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a customizable combobox with an object switcher, dropdown list, and associated icons. It allows users to select an option from a dropdown and indicates the selection with icons.",
+            "Selector: src-empty"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "mainLabel",
+                "selector": {
+                    "css": "[data-main-label]"
+                },
+                "description": "Represents the main label for the combobox.",
+                "elements": [
+                    {
+                        "name": "requiredIndicator",
+                        "selector": {
+                            "css": ".slds-required"
+                        },
+                        "description": "Represents an indicator for required fields, nested within the main label.",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "objectSwitcher",
+                "selector": {
+                    "css": "[data-id=\"objectSwitcherInput\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the object switcher combobox which opens the dropdown.",
+                "elements": [
+                    {
+                        "name": "objectSwitcherIcon",
+                        "selector": {
+                            "css": "lightning-icon[data-id=\"objectSwitcherValueIcon\"]"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the icon within the object switcher.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "optionsList",
+                "selector": {
+                    "css": "ul"
+                },
+                "public": true,
+                "elements": [
+                    {
+                        "name": "valueOptions",
+                        "type": [
+                            "clickable"
+                        ],
+                        "public": true,
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "dropdownElement",
+                "type": [],
+                "selector": {
+                    "css": "div#dropdown-element"
+                },
+                "public": true,
+                "elements": [
+                    {
+                        "name": "list",
+                        "type": [],
+                        "selector": {
+                            "css": "ul"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "listItems",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li",
+                                    "returnAll": true
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "listItemByIndex",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "div",
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "selector": {
+                                            "css": "div"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "icon",
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "selector": {
+                                                    "css": "lightning-icon"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "spanContent",
+                                                "type": [],
+                                                "selector": {
+                                                    "css": "span"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickObjectSwitcher",
+            "description": {
+                "text": [
+                    "Click the object switcher to open the dropdown"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "objectSwitcher",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isDropdownElementVisible",
+            "description": {
+                "text": [
+                    "Check if the dropdown element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownElement",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyDropdownElementPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"dropdownElement\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownElement",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRequiredIndicatorPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"requiredIndicator\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredIndicator",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

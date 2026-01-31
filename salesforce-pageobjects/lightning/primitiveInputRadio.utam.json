@@ -1,0 +1,138 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component representing a radio button input with optional help message, allowing for selection and triggering of associated events.",
+            "Selector: lightning-primitive-input-radio"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioInput",
+                "selector": {
+                    "css": "input[type=\"radio\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the radio button input for selection.",
+                "public": true
+            },
+            {
+                "name": "helpText",
+                "selector": {
+                    "css": "div[data-help-message]"
+                },
+                "description": "Represents the help message associated with the radio button.",
+                "public": true
+            },
+            {
+                "name": "radioLabel",
+                "selector": {
+                    "css": "label.slds-radio__label"
+                },
+                "description": "Represents the label for the radio button.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "selectRadio",
+            "description": {
+                "text": [
+                    "Selects or deselects the radio button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "radioInput",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "checkRadioSelection",
+            "description": {
+                "text": [
+                    "Returns whether the radio input is checked"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioInput",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "\"checked\""
+                        }
+                    ],
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "focusOnRadio",
+            "description": {
+                "text": [
+                    "Focuses on the radio button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "radioInput",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "blurRadio",
+            "description": {
+                "text": [
+                    "Removes focus from the radio button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "radioInput",
+                    "apply": "blur"
+                }
+            ]
+        },
+        {
+            "name": "verifyHelpText",
+            "description": {
+                "text": [
+                    "Returns the help message text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "helpText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRadioFocused",
+            "description": {
+                "text": [
+                    "Checks if the radio button is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioInput",
+                    "apply": "isFocused"
+                }
+            ]
+        }
+    ]
+}

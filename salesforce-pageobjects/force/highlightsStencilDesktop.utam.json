@@ -1,0 +1,50 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceHighlightsStencilDesktop",
+            "Represents the force:highlightsStencilDesktop Aura component.",
+            "Get the primary field and secondary field by index. Wait for the expected primary field to be displayed."
+        ]
+    },
+    "selector": {
+        "css": ".forceHighlightsStencilDesktop"
+    },
+    "root": true,
+    "elements": [
+        {
+            "name": "primaryField",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".forceHighlightsDesktopListRecordItem a"
+            }
+        },
+        {
+            "name": "actionsContainer",
+            "public": true,
+            "type": "utam-force/pageObjects/actionsContainer",
+            "selector": {
+                "css": ".forceActionsContainer"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getPrimaryField",
+            "description": {
+                "text": [
+                    "Gets the text of the primary field for the highlights panel"
+                ],
+                "return": "the text of the primary field for the highlights panel"
+            },
+            "compose": [
+                {
+                    "element": "primaryField",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

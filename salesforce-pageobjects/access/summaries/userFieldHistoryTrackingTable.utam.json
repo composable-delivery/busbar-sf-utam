@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_access_summaries-user-field-history-tracking-table.",
+            "Represents the setupAccessSummaries:userFieldHistoryTrackingTable Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "listPanel",
+                "type": "utam-setup/pageObjects/listPanel",
+                "selector": {
+                    "css": "setup-list-panel"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getUserFhtTable",
+            "compose": [
+                {
+                    "element": "listPanel",
+                    "apply": "waitForCommonList",
+                    "returnType": "utam-lists/pageObjects/commonList"
+                }
+            ]
+        }
+    ]
+}

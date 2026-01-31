@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays the copilot action, e.g. a tile on the canvas."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewComponent",
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the runtime_copilot_base-view-component Lightning web component.",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component"
+                },
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

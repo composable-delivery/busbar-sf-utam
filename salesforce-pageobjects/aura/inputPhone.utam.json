@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputPhone",
+            "Represents the ui:inputPhone Aura component",
+            "Get the label and input elements. Clear and enter a value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clearAndEnterPhone",
+            "description": "Clear input and enter a phone number value passed as param",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "clear"
+                },
+                {
+                    "element": "input",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "phoneNumber",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "input",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input"
+            }
+        }
+    ]
+}

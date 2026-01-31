@@ -1,0 +1,130 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that extends a base chat input functionality to include an expandable text area and an AI disclaimer for a panel message input.",
+            "Selector: app_dev_agent-panel-message-input"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseChatInput",
+                "selector": {
+                    "css": "app_dev_agent_base-baseChatInput"
+                },
+                "description": "Represents the base chat input functionality that this component extends.",
+                "elements": [
+                    {
+                        "name": "expandableTextArea",
+                        "selector": {
+                            "css": "textarea.expandable"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents the text area that can be expanded within the chat input."
+                    },
+                    {
+                        "name": "aiDisclaimer",
+                        "selector": {
+                            "css": "div.ai-disclaimer"
+                        },
+                        "description": "Represents the AI disclaimer text that is shown conditionally in the panel input.",
+                        "nullable": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickExpandableTextArea",
+            "description": {
+                "text": [
+                    "Simulate a click on the expandable text area"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "expandableTextArea",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "enterTextInExpandableTextArea",
+            "description": {
+                "text": [
+                    "Clear the text area and type new text"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "expandableTextArea",
+                    "apply": "clear"
+                },
+                {
+                    "element": "expandableTextArea",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTextFromExpandableTextArea",
+            "description": {
+                "text": [
+                    "Get the current text from the expandable text area"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "expandableTextArea",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isAIDisclaimerVisible",
+            "description": {
+                "text": [
+                    "Check if the AI disclaimer is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "aiDisclaimer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyAiDisclaimerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"aiDisclaimer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "aiDisclaimer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

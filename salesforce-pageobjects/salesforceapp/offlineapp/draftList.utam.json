@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the draft list used in the Offline App.",
+            "Verify the draft list and its rows."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "root": true,
+    "type": [
+        "clickable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "getDraftRows",
+            "returnAll": true,
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/draftRow"
+        },
+        {
+            "name": "getDraftRowAtIndex",
+            "args": [
+                {
+                    "name": "index",
+                    "type": "number"
+                }
+            ],
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/draftRow"
+        }
+    ]
+}

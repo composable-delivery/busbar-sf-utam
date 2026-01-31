@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages message actions and states, including success and error handling, within a chat interface. It allows for the creation of messages, execution of actions, and normalization of message formats based on predefined schemas and types.",
+            "Selector: src-message-library"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageActionEvent",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the event that is dispatched when a message action occurs."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickMessageActionEvent",
+            "description": {
+                "text": [
+                    "Simulate a click on the message action event"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "messageActionEvent",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isMessageActionEventVisible",
+            "description": {
+                "text": [
+                    "Check if the message action event is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageActionEvent",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

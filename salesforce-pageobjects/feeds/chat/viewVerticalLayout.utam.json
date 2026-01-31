@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The component serves as a feeds_chat-view-vertical-layout",
+            "Selector: feeds_chat-view-vertical-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewComponent",
+                "selector": {
+                    "css": "feeds_chat-view-component"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewComponent",
+                "description": "Represents the chat view component resolved dynamically based on message content.",
+                "public": true
+            }
+        ]
+    }
+}

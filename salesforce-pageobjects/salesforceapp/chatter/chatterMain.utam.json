@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the scrollview that contains the search bar and posts.",
+            "Load the Chatter post search, scroll, and interact with individual Chatter posts."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "getSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/searchBar"
+        },
+        {
+            "name": "getPostDetailsList",
+            "returnType": "utam-salesforceapp/pageObjects/chatter/chatterPostCell",
+            "returnAll": true
+        }
+    ]
+}

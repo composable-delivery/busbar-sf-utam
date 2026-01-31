@@ -1,0 +1,56 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the page a user sees when opening a WorkOrder.",
+            "Exposes methods for accessing related lists and details on a WorkOrder."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "getAssetServiceHistorySection",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getAssetCard"
+        },
+        {
+            "name": "hasContactCardVisible",
+            "returnType": "boolean"
+        },
+        {
+            "name": "getWorkOrderObjectOverview",
+            "returnType": "utam-sfsmobileapp/pageObjects/record/workOrderObjectOverview"
+        },
+        {
+            "name": "getVisibleCards",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "hasCardVisible",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        }
+    ]
+}

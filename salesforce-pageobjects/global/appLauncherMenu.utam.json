@@ -1,0 +1,43 @@
+{
+    "root": true,
+    "selector": {
+        "css": "one-app-launcher-menu"
+    },
+    "description": {
+        "text": [
+            "Selector: one-app-launcher-menu.",
+            "Represents the one-app-launcher-menu Lightning web component.",
+            "Access the menu items, search bar, or the button."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "items",
+                "public": true,
+                "type": "utam-global/pageObjects/appLauncherMenuItem",
+                "selector": {
+                    "css": "one-app-launcher-menu-item",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "searchBar",
+                "public": true,
+                "type": "utam-global/pageObjects/appLauncherSearchBar",
+                "selector": {
+                    "css": "one-app-launcher-search-bar"
+                }
+            },
+            {
+                "name": "lwcButton",
+                "public": true,
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

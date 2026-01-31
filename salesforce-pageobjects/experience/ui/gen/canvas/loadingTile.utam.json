@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a message inside a box, which could be a loading message or a custom message passed to the component. The box gains focus after a short delay.",
+            "Selector: src-experience_ui_gen_canvas-/loading-tile"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "boxContainer",
+                "selector": {
+                    "css": ".box"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the container that can receive focus and potentially be clicked.",
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "shadowDiv",
+                        "selector": {
+                            "css": ".shadow"
+                        },
+                        "description": "Represents the visual shadow element within the container.",
+                        "wait": true
+                    },
+                    {
+                        "name": "messageText",
+                        "selector": {
+                            "css": ".text"
+                        },
+                        "description": "Represents the text element that displays the loading or custom message.",
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "focusOnBox",
+            "description": {
+                "text": [
+                    "Focus on the box container"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "boxContainer",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "isBoxContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the box container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "boxContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isShadowDivPresent",
+            "description": {
+                "text": [
+                    "Check if the shadow div is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "shadowDiv",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Get the text from the message element"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,80 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/action_bar_overflow_list\").",
+            "Represents the Android fragment of all the record actions.",
+            "Find an action and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/actionBarOverflow",
+    "root": true,
+    "platform": "native",
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/action_bar_overflow_list\")"
+    },
+    "methods": [
+        {
+            "name": "clickActionWithLabel",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/record/actionBarOverflowUtils",
+                        "invoke": "clickAction",
+                        "args": [
+                            {
+                                "name": "label",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "visibleActions",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/actionbar_overflow_action_name\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "actionWithLabel",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/actionbar_overflow_action_name\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

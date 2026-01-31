@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-rich-text",
+            "Provides access to rich-text editor component"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "label",
+            "selector": {
+                "css": ".slds-form-element__label"
+            }
+        },
+        {
+            "name": "editorControl",
+            "selector": {
+                "css": ".slds-rich-text-editor.ql-slds"
+            },
+            "elements": [
+                {
+                    "public": true,
+                    "name": "toolbar",
+                    "selector": {
+                        "css": ".toolbar"
+                    }
+                },
+                {
+                    "public": true,
+                    "name": "editor",
+                    "type": [
+                        "clickable",
+                        "editable"
+                    ],
+                    "selector": {
+                        "css": "div.editor div.ql-editor"
+                    }
+                }
+            ]
+        }
+    ]
+}

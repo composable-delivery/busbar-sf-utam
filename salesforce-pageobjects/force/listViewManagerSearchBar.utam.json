@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-list-view-manager-search-bar.",
+            "Represents the list view manager search bar Lightning web component.",
+            "Access the search bar and popover."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "name": "tooltip",
+                "selector": {
+                    "css": ".slds-popover_tooltip"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "tooltipBody",
+                        "selector": {
+                            "css": "div.slds-popover__body"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

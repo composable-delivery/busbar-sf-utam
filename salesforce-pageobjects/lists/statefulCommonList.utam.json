@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a common list view with various configurations, supports pagination, sorting, filtering, and user preferences, and provides event handlers for interaction.",
+            "Selector: src-stateful-common-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "commonList",
+                "selector": {
+                    "css": "lst-common-list"
+                },
+                "type": "utam-lists/pageObjects/commonList",
+                "description": "Represents the main common list component with multiple configurations and event handlers",
+                "public": true
+            }
+        ]
+    }
+}

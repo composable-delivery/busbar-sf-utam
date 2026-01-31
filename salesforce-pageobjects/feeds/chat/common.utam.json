@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The provided source code represents a collection of utility functions for a Lightning Web Component (LWC). These utilities cover a range of functionalities such as array manipulation, asynchronous operations, condition checks, object manipulation, event handling, string and number operations, and more. These utility functions are designed to be imported and used within LWCs to perform common tasks and handle complex operations more efficiently.",
+            "Selector: src-common"
+        ]
+    }
+}

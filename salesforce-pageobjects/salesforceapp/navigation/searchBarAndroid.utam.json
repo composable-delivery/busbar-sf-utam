@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/all_lists_ptr\"), resourceId(\"com.salesforce.chatter:id/app_launcher_search_bar\"), resourceId(\"com.salesforce.chatter:id/container\"), resourceId(\"com.salesforce.chatter:id/feedsdk_search_bar_view\"), or resourceIdMatches(\"^.*/(all_items_search_Bar|search_bar_container)\").",
+            "Represents the Android generic search bar.",
+            "Do a search or clear the search bar."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/searchBar",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "className(\"android.widget.EditText\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clear"
+                }
+            ]
+        }
+    ]
+}

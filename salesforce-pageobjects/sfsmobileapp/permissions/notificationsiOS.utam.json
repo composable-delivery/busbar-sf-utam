@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for enabling notifications when logging into the app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/permissions/notifications",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeButton' AND name == 'Go to next slide'$]"
+    },
+    "elements": [
+        {
+            "name": "notificationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Turn on Notifications\"`]"
+            }
+        },
+        {
+            "name": "skipBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Skip for now\"`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickTurnOnNotifications",
+            "compose": [
+                {
+                    "element": "notificationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSkip",
+            "compose": [
+                {
+                    "element": "skipBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

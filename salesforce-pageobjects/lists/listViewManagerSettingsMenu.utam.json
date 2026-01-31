@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-list-view-manager-settings-menu.",
+            "Represents the list view manager settings menu Lightning web component.",
+            "Access the options in the dropdown menu."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "dropdownButton",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            },
+            {
+                "name": "menuItemByText",
+                "type": "utam-lightning/pageObjects/menuItem",
+                "selector": {
+                    "css": "lightning-menu-item",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getItemText",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "findFirst": true
+                },
+                "public": true,
+                "nullable": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,201 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component representing the Copilot Builder Studio, which provides a UI for configuring and managing a digital agent. It includes a loading spinner, dynamic components for banners, an app header with settings, a toolbar with buttons for viewing checklists and managing agent status, a left rail for navigation, and a main content area for various views.",
+            "Selector: src-copilot-studio-container"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-copilot-studio-container"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "studioLoadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner indicating studio is loading data",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "toolbar",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-app-toolbar"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/appToolbar",
+                "description": "Represents the app toolbar with action buttons",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "checklistButton",
+                        "selector": {
+                            "css": "lightning-button[data-id=\"agent-setup-checklist-button\"]"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the button to view the checklist, if available",
+                        "nullable": true
+                    },
+                    {
+                        "name": "statusButton",
+                        "selector": {
+                            "css": "lightning-button[data-id=\"statusBtn\"]"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the button to toggle the agent's status"
+                    }
+                ]
+            },
+            {
+                "name": "leftRail",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-left-rail"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/leftRail",
+                "description": "Represents the left navigation rail",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "leftRailItems",
+                        "selector": {
+                            "css": "gen_ai_agentbuilder-left-rail-item",
+                            "returnAll": true
+                        },
+                        "type": "utam-ui-chatbots-components/pageObjects/leftRailItem",
+                        "description": "Represents the items in the left rail navigation",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "leftRailViewComponent",
+                                "selector": {
+                                    "css": "gen_ai_agentbuilder-left-rail-view-component"
+                                },
+                                "type": "utam-ui-chatbots-components/pageObjects/leftRailViewComponent",
+                                "description": "Represents the view component nested within each left rail item",
+                                "public": true
+                            }
+                        ]
+                    }
+                ],
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "tabItemButtons",
+                            "description": "Collection of all navigation tab buttons in the left rail",
+                            "type": "clickable",
+                            "public": true,
+                            "selector": {
+                                "css": "gen_ai_agentbuilder-left-rail-tab-item-button",
+                                "returnAll": true
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickChecklistButton",
+            "description": {
+                "text": [
+                    "Click on the checklist button if it is available"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "checklistButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isChecklistButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the checklist button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checklistButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickStatusButton",
+            "description": {
+                "text": [
+                    "Click on the status button to toggle the agent's status"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "statusButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isStatusButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the status button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isStatusButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the status button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "verifyChecklistButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"checklistButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checklistButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

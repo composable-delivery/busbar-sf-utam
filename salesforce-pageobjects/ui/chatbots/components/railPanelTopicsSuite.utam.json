@@ -1,0 +1,132 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a suite for managing topics in a rail panel, with the ability to view and edit topic details and actions.",
+            "Selector: src-rail-panel-topics-suite"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseViewDrillin",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-base-view-drillin"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/baseViewDrillin",
+                "public": true,
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "homeViewButton",
+                "selector": {
+                    "css": "button[data-id='home-view']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to navigate to the home view of the topics suite."
+            },
+            {
+                "name": "detailViewButton",
+                "selector": {
+                    "css": "button[data-id='detail-view']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to navigate to the detail view of a specific topic."
+            },
+            {
+                "name": "actionDetailViewButton",
+                "selector": {
+                    "css": "button[data-id='action-detail-view']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to navigate to the action detail view of a specific topic."
+            },
+            {
+                "name": "topicRow",
+                "selector": {
+                    "css": "lightning-datatable[data-id='topic-row']"
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents the data table with topics.",
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "editActionButton",
+                        "selector": {
+                            "css": "lightning-button[data-id='edit-action']"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the button to edit an action within a topic row.",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "viewActionButton",
+                        "selector": {
+                            "css": "lightning-button[data-id='view-action']"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the button to view an action within a topic row.",
+                        "public": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickHomeViewButton",
+            "description": {
+                "text": [
+                    "Click on the home view button to navigate to the home view"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "homeViewButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDetailViewButton",
+            "description": {
+                "text": [
+                    "Click on the detail view button to navigate to the detail view"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "detailViewButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickActionDetailViewButton",
+            "description": {
+                "text": [
+                    "Click on the action detail view button to navigate to the action detail view"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "actionDetailViewButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

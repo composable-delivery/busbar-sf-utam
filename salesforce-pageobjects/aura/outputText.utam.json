@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiOutputText.",
+            "Represents the ui:outputText Aura component.",
+            "Get the output text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getOutputText",
+            "description": {
+                "text": [
+                    "Get the output text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "selector": {
+                "css": ".uiLabel"
+            },
+            "public": true
+        }
+    ]
+}

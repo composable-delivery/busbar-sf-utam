@@ -1,0 +1,153 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-card",
+            "Represents the lightning-card Lightning web component.",
+            "Get footer text, body text, title text or check if it's a narrow card."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getFooterText",
+            "description": {
+                "text": [
+                    "Get card footer text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "footer",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getBodyText",
+            "description": {
+                "text": [
+                    "Get card body content text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cardBody",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Get card title text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleContainer",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isNarrow",
+            "description": {
+                "text": [
+                    "Checks if the card variant is narrow"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "narrow",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "narrow",
+                "selector": {
+                    "css": "article[class*='slds-card_narrow']"
+                }
+            },
+            {
+                "name": "header",
+                "selector": {
+                    "css": "header"
+                },
+                "elements": [
+                    {
+                        "name": "icon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "titleContainer",
+                        "selector": {
+                            "css": "span[class='slds-truncate']"
+                        }
+                    },
+                    {
+                        "name": "buttonIcon",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "button",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button"
+                        },
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "cardBody",
+                "selector": {
+                    "css": ".slds-card__body"
+                }
+            },
+            {
+                "name": "footer",
+                "selector": {
+                    "css": ".slds-card__footer"
+                },
+                "elements": [
+                    {
+                        "name": "badges",
+                        "type": "utam-lightning/pageObjects/badge",
+                        "selector": {
+                            "css": "lightning-badge",
+                            "returnAll": true
+                        },
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "bodyContent",
+            "type": "container",
+            "selector": {
+                "css": ".slds-card__body> slot > *"
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,109 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-component2.",
+            "Represents the flexipage-component2 Lightning web component.",
+            "Get lwcHighlightsPanel, dynamicHighlights2, lwcDetailPanel, lwcRelatedRecord, tabset2, relatedListContainer, relatedListSingleContainer components",
+            "Get secondDegreeRelatedListSingleContainer and relatedListQuickLinksContainer components."
+        ]
+    },
+    "elements": [
+        {
+            "name": "content",
+            "type": "container",
+            "selector": {
+                "css": ":scope *"
+            },
+            "public": true
+        },
+        {
+            "name": "highlights",
+            "public": true,
+            "type": "utam-records/pageObjects/lwcHighlightsPanel",
+            "selector": {
+                "css": "records-lwc-highlights-panel"
+            }
+        },
+        {
+            "name": "details",
+            "public": true,
+            "type": "utam-records/pageObjects/lwcDetailPanel",
+            "selector": {
+                "css": "records-lwc-detail-panel"
+            }
+        },
+        {
+            "name": "tabset2",
+            "selector": {
+                "css": "flexipage-tabset2"
+            },
+            "public": true,
+            "type": "utam-flexipage/pageObjects/tabset2"
+        },
+        {
+            "type": "utam-lists/pageObjects/relatedListContainer",
+            "name": "relatedListContainer",
+            "public": true,
+            "selector": {
+                "css": "lst-related-list-container"
+            }
+        },
+        {
+            "type": "utam-lists/pageObjects/relatedListSingleContainer",
+            "name": "relatedListSingleContainer",
+            "public": true,
+            "selector": {
+                "css": "lst-related-list-single-container"
+            }
+        },
+        {
+            "type": "utam-lists/pageObjects/dynamicRelatedList",
+            "name": "dynamicRelatedList",
+            "public": true,
+            "selector": {
+                "css": "lst-dynamic-related-list"
+            }
+        },
+        {
+            "type": "utam-lists/pageObjects/dynamicRelatedListPreviewMobile",
+            "name": "dynamicRelatedListPreviewMobile",
+            "public": true,
+            "selector": {
+                "css": "lst-dynamic-related-list-preview-mobile"
+            }
+        },
+        {
+            "type": "utam-lists/pageObjects/secondDegreeRelatedListSingleContainer",
+            "name": "secondDegreeRelatedListSingleContainer",
+            "public": true,
+            "selector": {
+                "css": "lst-second-degree-related-list-single-container"
+            }
+        },
+        {
+            "type": "utam-lists/pageObjects/relatedListQuickLinksContainer",
+            "name": "relatedListQuickLinksContainer",
+            "public": true,
+            "selector": {
+                "css": "lst-related-list-quick-links-container"
+            }
+        },
+        {
+            "type": "utam-flexipage/pageObjects/auraWrapper",
+            "name": "auraWrapper",
+            "public": true,
+            "selector": {
+                "css": "flexipage-aura-wrapper"
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/stackedTabSet2",
+            "name": "stackedTabSet2",
+            "public": true,
+            "selector": {
+                "css": "force-stacked-tabset2"
+            }
+        }
+    ]
+}

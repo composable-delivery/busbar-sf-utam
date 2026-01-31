@@ -1,0 +1,73 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "locationDisplays",
+                "type": "utam-energyutilities-euselfserveprtl/pageObjects/locationDisplay",
+                "selector": {
+                    "css": "c-location-display",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "locationDisplayByIndex",
+                "type": "utam-energyutilities-euselfserveprtl/pageObjects/locationDisplay",
+                "selector": {
+                    "css": "c-location-display:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "actionableMessageNotifier",
+                "type": "utam-energyutilities-euselfserveprtl/pageObjects/actionableMessageNotifier",
+                "selector": {
+                    "css": "eucommon-actionable-message-notifier"
+                }
+            },
+            {
+                "type": "container",
+                "name": "content",
+                "public": true,
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "cssString",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedText",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            }
+        ]
+    }
+}

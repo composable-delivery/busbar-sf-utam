@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a formatted time when provided with a valid time string in a specific format.",
+            "Selector: runtime_copilot_base-output-time"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedTime",
+                "selector": {
+                    "css": "lightning-formatted-time"
+                },
+                "description": "Represents the formatted time component which displays the time in a formatted manner",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

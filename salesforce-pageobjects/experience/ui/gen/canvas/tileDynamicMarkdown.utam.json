@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a card with formatted rich text converted from Markdown input.",
+            "Selector: experience_ui_gen_canvas-tile-dynamic-markdown"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "richCard",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the card element that wraps the rich text content",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "formattedRichText",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the rich text content that is generated from Markdown",
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

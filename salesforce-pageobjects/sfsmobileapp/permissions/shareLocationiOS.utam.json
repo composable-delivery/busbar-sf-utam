@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for sharing the user's location when logging into the app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/permissions/shareLocation",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeLink[`label == \"Turn on Location Services\"`]"
+    },
+    "elements": [
+        {
+            "name": "shareLocationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Turn on Location Services\"`]"
+            }
+        },
+        {
+            "name": "skipBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Skip for now\"`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickShareLocation",
+            "compose": [
+                {
+                    "element": "shareLocationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSkip",
+            "compose": [
+                {
+                    "element": "skipBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

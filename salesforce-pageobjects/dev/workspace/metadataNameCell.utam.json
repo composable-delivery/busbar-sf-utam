@@ -1,0 +1,200 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays metadata information with optional icons and hyperlink, and may trigger an action to open a relationship viewer.",
+            "Selector: dev_workspace-metadata-name-cell"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-metadata-name-cell"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "metadataContainer",
+                "selector": {
+                    "css": "div.slds-grid"
+                },
+                "description": "Represents the container for metadata information and icons",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "leftIcon",
+                        "selector": {
+                            "css": "lightning-icon.slds-m-right_small"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the optional left icon next to the metadata name",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "hyperlinkedText",
+                        "selector": {
+                            "css": "a.slds-text-link"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the hyperlinked metadata name when an action URL is provided",
+                        "nullable": true
+                    },
+                    {
+                        "name": "metadataText",
+                        "selector": {
+                            "css": "p.level-two"
+                        },
+                        "description": "Represents the metadata name when no action URL is provided",
+                        "nullable": true
+                    },
+                    {
+                        "name": "rightIconsContainer",
+                        "selector": {
+                            "css": "div"
+                        },
+                        "description": "Represents the container for right side icons",
+                        "elements": [
+                            {
+                                "name": "aiGeneratedIcon",
+                                "selector": {
+                                    "css": "lightning-icon.utility:sparkle"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Represents the AI-generated icon",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "relationshipViewerIcon",
+                                "selector": {
+                                    "css": "lightning-icon.utility:hierarchy"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Represents the icon to open the relationship viewer",
+                                "nullable": true,
+                                "wait": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickHyperlink",
+            "description": {
+                "text": [
+                    "Click on the hyperlinked metadata name"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "hyperlinkedText",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isMetadataContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the metadata container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "metadataContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMetadataText",
+            "description": {
+                "text": [
+                    "Get the text of the metadata name when no action URL is provided"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "metadataText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isHyperlinkPresent",
+            "description": {
+                "text": [
+                    "Check if the hyperlinked metadata name is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "hyperlinkedText",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyMetadataContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"metadataContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "metadataContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyHyperlinkedTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"hyperlinkedText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "hyperlinkedText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMetadataTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"metadataText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "metadataText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

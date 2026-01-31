@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-formatted-text.",
+            "Represents the lists formatted text Lightning web component.",
+            "Access the text content."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the inner text"
+                ],
+                "return": "String value"
+            }
+        }
+    ]
+}

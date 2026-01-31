@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .visualEditorRuleList.",
+            "Represents the visualEditor:ruleList component.",
+            "Add a filter, or get all the visualEditor:itemListRow components."
+        ]
+    },
+    "methods": [
+        {
+            "name": "addFilter",
+            "description": "Adds a filter row to the rule list",
+            "compose": [
+                {
+                    "element": "addRow",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "listItems",
+            "type": "utam-visualeditor/pageObjects/itemListRow",
+            "selector": {
+                "css": ".visualEditorItemListRow",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "addRow",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.addRow"
+            }
+        }
+    ]
+}

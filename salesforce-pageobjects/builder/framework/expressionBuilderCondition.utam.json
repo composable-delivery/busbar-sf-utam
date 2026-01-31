@@ -1,0 +1,272 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: expressionBuilderCondition"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent1",
+                "type": [],
+                "selector": {
+                    "css": "span:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "groupedCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            },
+            {
+                "public": true,
+                "name": "rhsResourceCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox[data-id='rhsResourceCombobox']"
+                }
+            },
+            {
+                "name": "objectSwitcher",
+                "selector": {
+                    "css": "builder_framework-data-provider-object-switcher"
+                },
+                "type": "utam-builder-framework/pageObjects/dataProviderObjectSwitcher",
+                "description": "Represents the custom dropdown component for object switching",
+                "public": true
+            },
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "name": "picklistValueComboBox",
+                "selector": {
+                    "css": "lightning-combobox[id='picklistValueComboBox']"
+                },
+                "type": "utam-lightning/pageObjects/combobox",
+                "description": "Represents a combobox for picklist value selection when RHS expression is enabled",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "emailTypeValue",
+                "selector": {
+                    "css": "lightning-input[id='emailTypeValue']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents an input for email type values when RHS expression is enabled",
+                "nullable": true
+            },
+            {
+                "name": "temporalTypeValue",
+                "selector": {
+                    "css": "lightning-input[id='temporalTypeValue']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents an input for temporal type values when RHS expression is enabled",
+                "nullable": true
+            },
+            {
+                "name": "otherTypeValue",
+                "selector": {
+                    "css": "lightning-input[id='otherTypeValue']"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents an input for other type values when RHS expression is enabled",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "setEmailTypeValue",
+            "description": {
+                "text": [
+                    "Clear the email input field and type a new value when rhs enabled"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "emailTypeValue",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getEmailTypeValue",
+            "description": {
+                "text": [
+                    "Get the value of the email input field when rhs enabled"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "emailTypeValue",
+                    "apply": "getValueText"
+                }
+            ]
+        },
+        {
+            "name": "setTemporalTypeValue",
+            "description": {
+                "text": [
+                    "Clear the temporal input field and type a new value"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "temporalTypeValue",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTemporalTypeValue",
+            "description": {
+                "text": [
+                    "Get the value of the temporal input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "temporalTypeValue",
+                    "apply": "getValueText"
+                }
+            ]
+        },
+        {
+            "name": "setOtherTypeValue",
+            "description": {
+                "text": [
+                    "Clear the other type input field and type a new value"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "otherTypeValue",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getOtherTypeValue",
+            "description": {
+                "text": [
+                    "Get the value of the other type input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "otherTypeValue",
+                    "apply": "getValueText"
+                }
+            ]
+        },
+        {
+            "name": "verifyEmailTypeValuePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"emailInput\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emailTypeValue",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyTemporalTypeValuePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"temporalInput\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "temporalTypeValue",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyOtherTypeValuePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"otherTypeInput\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "otherTypeValue",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

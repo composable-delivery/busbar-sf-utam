@@ -1,0 +1,152 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a recommendation card with a clickable icon and text that triggers actions when clicked or when the enter key is pressed.",
+            "Selector: src-recommendation-utterance"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recommendationCard",
+                "selector": {
+                    "css": ".recommendation-card"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the entire recommendation card that is clickable and handles keydown events.",
+                "elements": [
+                    {
+                        "name": "sendIcon",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon.recommendation-send-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the send icon within the recommendation card.",
+                        "public": true
+                    },
+                    {
+                        "name": "recommendationText",
+                        "selector": {
+                            "css": ".recommendation-text"
+                        },
+                        "description": "Represents the text area within the recommendation card.",
+                        "elements": [
+                            {
+                                "name": "richTextLink",
+                                "selector": {
+                                    "css": "a"
+                                },
+                                "type": "clickable",
+                                "description": "Represents the clickable link within the recommendation text area.",
+                                "elements": [
+                                    {
+                                        "name": "formattedRichText",
+                                        "selector": {
+                                            "css": "lightning-formatted-rich-text"
+                                        },
+                                        "type": "utam-lightning/pageObjects/formattedRichText",
+                                        "description": "Represents the formatted rich text within the link.",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRecommendationCard",
+            "description": {
+                "text": [
+                    "Simulate a click on the recommendation card"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recommendationCard",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "pressEnterOnRecommendationCard",
+            "description": {
+                "text": [
+                    "Simulate a keydown event that represents pressing Enter on the recommendation card"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recommendationCard",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "getRecommendationText",
+            "description": {
+                "text": [
+                    "Retrieve the text within the recommendation card"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recommendationText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRecommendationCardVisible",
+            "description": {
+                "text": [
+                    "Check if the recommendation card is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationCard",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRecommendationCardEnabled",
+            "description": {
+                "text": [
+                    "Check if the recommendation card is enabled for interaction"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationCard",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "clickRichTextLink",
+            "description": {
+                "text": [
+                    "Simulate a click on the rich text link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "richTextLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

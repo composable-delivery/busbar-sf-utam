@@ -1,0 +1,57 @@
+{
+    "root": true,
+    "selector": {
+        "css": "records-record-share-hierarchy"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-share-hierarchy.",
+            "Represents the records-record-share-hierarchy Lightning web component.",
+            "Get the record share hierarchy data table."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "records-record-share-hierarchy-datatable"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordShareHierarchyDatatable",
+                "type": "utam-lightning/pageObjects/datatable",
+                "public": true,
+                "selector": {
+                    "css": "records-record-share-hierarchy-datatable"
+                }
+            }
+        ]
+    }
+}

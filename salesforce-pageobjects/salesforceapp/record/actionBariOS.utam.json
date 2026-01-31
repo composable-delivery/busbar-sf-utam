@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: salesforce1:actionBar.",
+            "Represents the iOS view with the top record actions.",
+            "Find an action and navigate to it, or navigate to the overflow."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/actionBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "salesforce1:actionBar"
+    },
+    "methods": [
+        {
+            "name": "clickAction",
+            "compose": [
+                {
+                    "element": "actionItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasAction",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "classchain": "**/XCUIElementTypeButton[`name == '%s'`]",
+                                "args": [
+                                    {
+                                        "name": "item",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickMore",
+            "compose": [
+                {
+                    "element": "showMore",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "actionItem",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == '%s'`]",
+                "args": [
+                    {
+                        "name": "item",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "showMore",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "salesforce1:actionBar:More"
+            }
+        },
+        {
+            "name": "actions",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton",
+                "returnAll": true
+            }
+        }
+    ]
+}

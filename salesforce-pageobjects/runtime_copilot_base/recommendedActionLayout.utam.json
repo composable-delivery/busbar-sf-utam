@@ -1,0 +1,124 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that renders a list of items, each containing a custom component defined by the item's component definition. The list can be dynamically populated based on the provided slots, and each custom component can be in a disabled or read-only state.",
+            "Selector: src-recommended-action-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "listContainer",
+                "selector": {
+                    "css": "ul.slds-list_vertical"
+                },
+                "description": "Represents the container for the list of items.",
+                "elements": [
+                    {
+                        "name": "listItems",
+                        "selector": {
+                            "css": "li.slds-item",
+                            "returnAll": true
+                        },
+                        "description": "Represents the list items that contain custom components.",
+                        "elements": [
+                            {
+                                "name": "customViewComponents",
+                                "selector": {
+                                    "css": "runtime_copilot_base-view-component"
+                                },
+                                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                                "description": "Represents the custom view components within each list item.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "viewComponent",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the chat view component resolved dynamically based on message content.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "viewComponents",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component",
+                    "returnAll": true
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the chat view components resolved dynamically based on message content.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "viewComponentByIndex",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "public": true,
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isListContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the list container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "listContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isListItemPresent",
+            "description": {
+                "text": [
+                    "Check if list items are present"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "listItems",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isListItemVisible",
+            "description": {
+                "text": [
+                    "Check if a specific list item is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "listItems",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,83 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a list of radio buttons to select a single record, with navigation links to view details of the selected record.",
+            "Selector: feeds_chat-record-picklist"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioButtons",
+                "selector": {
+                    "css": "lightning-primitive-radio",
+                    "returnAll": true
+                },
+                "description": "Represents the radio buttons for selecting records.",
+                "public": true
+            },
+            {
+                "name": "radioButtonByIndex",
+                "selector": {
+                    "css": "lightning-primitive-radio:nth-child(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "description": "Represents the radio buttons for selecting records.",
+                "elements": [
+                    {
+                        "name": "recordLabels",
+                        "selector": {
+                            "css": ".record-label"
+                        },
+                        "description": "Represents label for the radio buttons."
+                    },
+                    {
+                        "name": "recordNavigators",
+                        "selector": {
+                            "css": "a.record-navigator"
+                        },
+                        "type": "clickable",
+                        "description": "Represents navigation link to view records."
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRecordNavigator",
+            "description": {
+                "text": [
+                    "Click on a record navigator link to navigate to the record's page"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordNavigators",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getRecordLabel",
+            "description": {
+                "text": [
+                    "Retrieve the label text of a radio button"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordLabels",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

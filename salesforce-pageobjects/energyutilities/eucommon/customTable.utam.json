@@ -1,0 +1,117 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "customdatatypesContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='customdatatypes']"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent1",
+                "type": [],
+                "selector": {
+                    "css": "span:nth-of-type(2)"
+                }
+            },
+            {
+                "name": "table",
+                "type": [],
+                "selector": {
+                    "css": "table"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "tableRowByIndex",
+                        "type": [],
+                        "selector": {
+                            "css": "tr:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "th1",
+                                "type": [],
+                                "selector": {
+                                    "css": "th"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "primitiveCellFactory",
+                                        "type": "utam-energyutilities-eucommon/pageObjects/primitiveCellFactory",
+                                        "selector": {
+                                            "css": "lightning-primitive-cell-factory"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "public": true,
+                                "name": "tableCell",
+                                "type": [],
+                                "selector": {
+                                    "css": "td"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "primitiveCellFactory1",
+                                        "type": "utam-energyutilities-eucommon/pageObjects/primitiveCellFactory",
+                                        "selector": {
+                                            "css": "lightning-primitive-cell-factory"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "public": true,
+                                "name": "tableCell1",
+                                "type": [],
+                                "selector": {
+                                    "css": "td:nth-of-type(2)"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "primitiveCellFactory2",
+                                        "type": "utam-energyutilities-eucommon/pageObjects/primitiveCellFactory",
+                                        "selector": {
+                                            "css": "lightning-primitive-cell-factory"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

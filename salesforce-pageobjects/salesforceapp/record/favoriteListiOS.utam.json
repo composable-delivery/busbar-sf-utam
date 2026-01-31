@@ -1,0 +1,105 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeStaticText[`name == 'favorites.title' AND visible == true`].",
+            "Represents the iOS table view of favorite cells.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/favoriteList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "visibleFavoriteRecords",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`name == 'favorites.title' AND visible == true`]",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "recordWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`name == 'favorites.title' AND label == '%s'`]",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "visibleFavoriteRecordWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`visible == true AND name == 'favorites.title' AND label == '%s'`]",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasRecord",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "recordWithTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickRecordWithTitle",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/record/favoriteListiOSUtils",
+                        "invoke": "clickRecord",
+                        "args": [
+                            {
+                                "name": "title",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

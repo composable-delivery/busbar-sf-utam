@@ -1,0 +1,90 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a mixin for list data providers to dispatch configuration, data, and error events to a list panel.",
+            "Selector: src-list-data-provider"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "listPanel",
+                "selector": {
+                    "css": "lightning-list-panel"
+                },
+                "type": "utam-setup/pageObjects/listPanel",
+                "description": "Represents the custom list panel component that interacts with the data provider",
+                "public": true
+            },
+            {
+                "name": "listConfigEventDispatcher",
+                "selector": {
+                    "css": "none"
+                },
+                "description": "Represents the logic for dispatching list configuration events"
+            },
+            {
+                "name": "listDataEventDispatcher",
+                "selector": {
+                    "css": "none"
+                },
+                "description": "Represents the logic for dispatching list data events"
+            },
+            {
+                "name": "listErrorEventDispatcher",
+                "selector": {
+                    "css": "none"
+                },
+                "description": "Represents the logic for dispatching list error events"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isListConfigDispatcherPresent",
+            "description": {
+                "text": [
+                    "Check if the list configuration event dispatcher is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "listConfigEventDispatcher",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isListDataDispatcherPresent",
+            "description": {
+                "text": [
+                    "Check if the list data event dispatcher is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "listDataEventDispatcher",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isListErrorDispatcherPresent",
+            "description": {
+                "text": [
+                    "Check if the list error event dispatcher is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "listErrorEventDispatcher",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

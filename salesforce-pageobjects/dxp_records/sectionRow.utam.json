@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Selector: dxp_records-section-row",
+            "Represents dxp_records-section-rowcomponent.",
+            "Get all formFields"
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "formFields",
+            "public": true,
+            "selector": {
+                "css": "lightning-form-field",
+                "returnAll": true
+            },
+            "type": "utam-lightning/pageObjects/formField"
+        }
+    ]
+}

@@ -1,0 +1,116 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a state image and message for either an empty or error state, based on the `pageState` property.",
+            "Selector: dev_workspace-state-screen"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-state-screen"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "stateContainer",
+                "selector": {
+                    "css": ".img-container"
+                },
+                "description": "Represents the container for the state image and message.",
+                "elements": [
+                    {
+                        "name": "stateImage",
+                        "selector": {
+                            "css": "img"
+                        },
+                        "description": "Represents the image displayed for the empty or error state."
+                    },
+                    {
+                        "name": "stateMessageHeader",
+                        "selector": {
+                            "css": "h3.slds-text-heading_medium"
+                        },
+                        "description": "Represents the header of the state message."
+                    },
+                    {
+                        "name": "stateMessageText",
+                        "selector": {
+                            "css": "p.no-connection-text"
+                        },
+                        "description": "Represents the text of the state message."
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getStateImageSource",
+            "description": {
+                "text": [
+                    "Get the source URL of the state image"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stateImage",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getStateMessageHeaderText",
+            "description": {
+                "text": [
+                    "Get the text of the state message header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stateMessageHeader",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getStateMessageText",
+            "description": {
+                "text": [
+                    "Get the text of the state message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stateMessageText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isStateContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the state container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "stateContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

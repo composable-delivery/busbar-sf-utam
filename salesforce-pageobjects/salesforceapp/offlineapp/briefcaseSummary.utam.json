@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Briefcase summary view on Landing page.",
+            "Verify the briefcase priming summary."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "getSummaryTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "getSummaryText",
+            "returnType": "string"
+        },
+        {
+            "name": "waitForDownloadToComplete"
+        },
+        {
+            "name": "drillIn"
+        }
+    ]
+}

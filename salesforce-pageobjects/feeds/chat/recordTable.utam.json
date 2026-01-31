@@ -1,0 +1,193 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally displays an error UI with an illustration and message or a record list depending on the state of the data retrieval.",
+            "Selector: src-record-table"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "errorContainer",
+                "selector": {
+                    "css": ".error-container"
+                },
+                "description": "Represents the container for the error illustration and message.",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "errorIllustration",
+                        "selector": {
+                            "css": "img.slds-illustration__svg"
+                        },
+                        "description": "Represents the error illustration image.",
+                        "wait": true
+                    },
+                    {
+                        "name": "errorHeading",
+                        "selector": {
+                            "css": "h3.slds-text-heading_medium"
+                        },
+                        "description": "Represents the heading for the error message.",
+                        "wait": true
+                    },
+                    {
+                        "name": "errorDescription",
+                        "selector": {
+                            "css": "p.slds-text-body_regular"
+                        },
+                        "description": "Represents the description for the error message.",
+                        "wait": true
+                    }
+                ]
+            },
+            {
+                "name": "pageHeader",
+                "selector": {
+                    "css": ".slds-page-header"
+                },
+                "description": "Represents the header of the page displaying the list view title.",
+                "nullable": true
+            },
+            {
+                "name": "recordListInternal",
+                "selector": {
+                    "css": "feeds_chat-view-record-list-internal"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewRecordListInternal",
+                "description": "Represents the internal component for displaying the list of records.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isErrorContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the error container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorHeadingText",
+            "description": {
+                "text": [
+                    "Get the text of the error heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getErrorDescriptionText",
+            "description": {
+                "text": [
+                    "Get the text of the error description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isPageHeaderVisible",
+            "description": {
+                "text": [
+                    "Check if the page header is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pageHeader",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPageHeaderTitle",
+            "description": {
+                "text": [
+                    "Get the title text from the page header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "pageHeader",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyPageHeaderPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"pageHeader\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pageHeader",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorIllustrationPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorIllustration\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorIllustration",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-footer",
+            "Represents lightning-form-footer Lightning web component.",
+            "Get buttons by name"
+        ]
+    },
+    "type": [
+        "actionable"
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonByName",
+                "public": true,
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getButtonName",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "buttonName",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

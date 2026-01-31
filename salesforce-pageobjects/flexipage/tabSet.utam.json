@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .flexipageStackedTabset.",
+            "Represents the flexipage:stackedTabset Aura component.",
+            "Click a tab by label or check if a tab by label is visible."
+        ]
+    },
+    "elements": [
+        {
+            "name": "tabs",
+            "selector": {
+                "css": ".flexipageStackedTabset .slds-tabs-mobile__item button span",
+                "returnAll": true
+            },
+            "public": true,
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "tabByLabel",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": "li.slds-tabs-mobile__item button span",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "titleString",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isTabVisible",
+            "description": {
+                "text": [
+                    "Check if a tab by label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "tabByLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickTabByLabel",
+            "description": "Click a tab by label",
+            "compose": [
+                {
+                    "element": "tabByLabel",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "tabByLabel",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,67 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-confirmation-dialog",
+            "Represents the block builder confirmation dialog component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "public": true,
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "name": "body",
+                "selector": {
+                    "css": "lightning-modal-body"
+                }
+            },
+            {
+                "name": "footer",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "name": "cancelButton",
+                        "public": true,
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button:nth-of-type(1)"
+                        }
+                    },
+                    {
+                        "name": "confirmButton",
+                        "public": true,
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button:nth-of-type(2)"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getMessage",
+            "description": {
+                "text": [
+                    "Gets the message displayed in the dialog."
+                ]
+            },
+            "compose": [
+                {
+                    "element": "body",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "selectItemTableCell",
+                "type": "utam-energyutilities-eucommon/pageObjects/selectItemTableCell",
+                "selector": {
+                    "css": "c-select-item-table-cell"
+                }
+            }
+        ]
+    }
+}

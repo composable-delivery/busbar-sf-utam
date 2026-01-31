@@ -1,0 +1,64 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that provides a layout for a workspace explorer within a project studio page, encapsulating the workspace explorer in a styled container.",
+            "Selector: dev_workspace-project-detail-page"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-project-detail-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "pageLayout",
+                "selector": {
+                    "css": "dev_workspace-project-studio-page-layout"
+                },
+                "type": "utam-dev-workspace/pageObjects/projectStudioPageLayout",
+                "description": "Represents the main layout of the project studio page.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "explorerBox",
+                        "selector": {
+                            "css": ".workspace-explorer-box"
+                        },
+                        "description": "Represents the container box for the workspace explorer.",
+                        "elements": [
+                            {
+                                "name": "workspaceExplorer",
+                                "selector": {
+                                    "css": "dev_workspace-workspace-explorer"
+                                },
+                                "type": "utam-dev-workspace/pageObjects/workspaceExplorer",
+                                "description": "Represents the workspace explorer component.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isExplorerBoxVisible",
+            "description": {
+                "text": [
+                    "Check that the explorer box is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "explorerBox",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

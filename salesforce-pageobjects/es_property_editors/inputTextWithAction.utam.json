@@ -1,0 +1,118 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an input field which can either be a simple text input or a pill input with optional action handling.",
+            "Selector: src-input-text-with-action"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputTextProperty",
+                "selector": {
+                    "css": ".input-text-property"
+                },
+                "description": "Represents the div containing the text input field",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "lightningInput",
+                        "selector": {
+                            "css": "lightning-input"
+                        },
+                        "type": "utam-lightning/pageObjects/input",
+                        "description": "Represents the Lightning input field",
+                        "public": true
+                    },
+                    {
+                        "name": "iconWrapper",
+                        "selector": {
+                            "css": ".icon-wrapper"
+                        },
+                        "description": "Represents the wrapper for the icon",
+                        "elements": [
+                            {
+                                "name": "responsiveIcon",
+                                "selector": {
+                                    "css": "community_builder-screen-responsive-icon"
+                                },
+                                "description": "Represents the screen responsive icon component",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "pillInputWithAction",
+                "selector": {
+                    "css": "es_property_editors-pill-input-with-action"
+                },
+                "type": "utam-es_property_editors/pageObjects/pillInputWithAction",
+                "description": "Represents the pill input with action component",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "pillInput",
+                "selector": {
+                    "css": "es_property_editors-pill-input"
+                },
+                "type": "utam-es_property_editors/pageObjects/pillInput",
+                "description": "Represents the pill input component",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isInputTextPropertyVisible",
+            "description": {
+                "text": [
+                    "Check that input text property div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputTextProperty",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isIconWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that icon wrapper div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyInputTextPropertyPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"inputTextProperty\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputTextProperty",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

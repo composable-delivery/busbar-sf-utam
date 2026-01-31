@@ -1,0 +1,38 @@
+{
+    "description": {
+        "text": [
+            "Page Object: Enable GenCanvas"
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": "experience_ui_gen_canvas-setup-gen-canvas"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "enableCanvas",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "type": [
+                                "clickable",
+                                "actionable"
+                            ],
+                            "name": "lightningPrimitiveToggleInput",
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-primitive-input-toggle"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

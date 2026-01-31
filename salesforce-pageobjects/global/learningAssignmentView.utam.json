@@ -1,0 +1,22 @@
+{
+    "shadow": {
+        "elements": [
+            {
+                "name": "newButton",
+                "public": true,
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button.slds-button.slds-button_neutral,.slds-button.slds-button_brand.slds-m-top_medium"
+                }
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

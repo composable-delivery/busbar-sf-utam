@@ -1,0 +1,15 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the login navigation bar."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "chooseConnOption"
+        }
+    ]
+}

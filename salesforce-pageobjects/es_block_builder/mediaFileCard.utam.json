@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-media-file-card",
+            "Provides access to links, lightning spinner component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "links",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner#loadingSpinner"
+                }
+            }
+        ]
+    }
+}

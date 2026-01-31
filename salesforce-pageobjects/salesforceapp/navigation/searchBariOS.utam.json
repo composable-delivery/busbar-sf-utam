@@ -1,0 +1,67 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: nav.AllItems, nav.AppLauncher, search.global.searchBar, **/XCUIElementTypeOther[$type == 'XCUIElementTypeSearchField'$][-1], or **/XCUIElementTypeNavigationBar[$type == 'XCUIElementTypeSearchField'$].",
+            "Represents the iOS generic search bar.",
+            "Do a search or clear the search bar."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/searchBar",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSearchField"
+            }
+        },
+        {
+            "name": "clearSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSearchField/XCUIElementTypeButton"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "clearSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

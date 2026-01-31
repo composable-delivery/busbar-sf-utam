@@ -1,0 +1,124 @@
+{
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: experience_ui_gen_canvas-landing-page",
+            "Represents the content of the page for enabling Generative Canvas.  It will only show when Generative Canvas is not yet enabled.  We call it the Landing Page for Generative Canvas."
+        ]
+    },
+    "selector": {
+        "css": "experience_ui_gen_canvas-landing-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "pageContainer",
+                "type": "utam-lightning/pageObjects/card",
+                "selector": {
+                    "css": ".slds-card.page-container"
+                }
+            },
+            {
+                "public": true,
+                "name": "title",
+                "selector": {
+                    "css": ".slds-text-heading_large.title"
+                }
+            },
+            {
+                "public": true,
+                "name": "overview1",
+                "selector": {
+                    "css": ".slds-text-body_regular p:nth-of-type(1)"
+                }
+            },
+            {
+                "public": true,
+                "name": "overview2",
+                "selector": {
+                    "css": ".slds-text-body_regular p:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "learnMoreLink",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a[onclick*='goToTrialHelpLink']"
+                }
+            },
+            {
+                "public": true,
+                "name": "learnHowLink",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a[onclick*='goToPaidNonAdminHelpLink']"
+                }
+            },
+            {
+                "public": true,
+                "name": "assignPermissionLink",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a[onclick*='goToAssignPermissionHelpLink']"
+                }
+            },
+            {
+                "public": true,
+                "name": "ctaButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "introVideo",
+                "type": "frame",
+                "selector": {
+                    "css": "iframe.intro-video"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCtaButton",
+            "compose": [
+                {
+                    "element": "ctaButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getOverviewText1",
+            "compose": [
+                {
+                    "element": "overview1",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getOverviewText2",
+            "compose": [
+                {
+                    "element": "overview2",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

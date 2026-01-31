@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListViewManagerPrimaryDisplayManager.",
+            "Represents the list view manager primary display manager Aura component.",
+            "Access the grid page object and the record layout for the list view."
+        ]
+    },
+    "elements": [
+        {
+            "name": "managerGrid",
+            "type": "utam-force/pageObjects/listViewManagerGrid",
+            "selector": {
+                "css": ".forceListViewManagerGrid"
+            },
+            "public": true
+        },
+        {
+            "name": "recordLayout",
+            "type": "utam-force/pageObjects/recordLayout",
+            "selector": {
+                "css": ".forceRecordLayout"
+            },
+            "public": true
+        }
+    ]
+}

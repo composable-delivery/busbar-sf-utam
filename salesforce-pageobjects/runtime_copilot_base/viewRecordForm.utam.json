@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally displays a record ID or a form for viewing and editing record data based on the record's fields and the component's state.",
+            "Selector: runtime_copilot_view-record-form"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordIdView",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-id"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordId",
+                "description": "Represents the component showing the record ID when in read-only mode with no fields.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "recordForm",
+                "selector": {
+                    "css": "runtime_copilot_base-base-record-form"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseRecordForm",
+                "description": "Represents the record form for viewing or editing record data.",
+                "public": true
+            }
+        ]
+    }
+}

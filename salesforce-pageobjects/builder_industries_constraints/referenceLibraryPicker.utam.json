@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-reference-library-picker",
+            "Constraint Builder reference library picker component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox[class*='referenceLibrary']"
+                }
+            },
+            {
+                "public": true,
+                "name": "recordPicker",
+                "type": "utam-lightning/pageObjects/recordPicker",
+                "selector": {
+                    "css": "lightning-record-picker"
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

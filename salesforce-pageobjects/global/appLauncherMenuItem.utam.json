@@ -1,0 +1,26 @@
+{
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "description": {
+        "text": [
+            "Selector: one-app-launcher-menu-item.",
+            "Represents the one-app-launcher-menu-item Lightning web component.",
+            "Access the avatar."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "avatar",
+                "public": true,
+                "type": "utam-lightning/pageObjects/avatar",
+                "selector": {
+                    "css": "lightning-avatar"
+                }
+            }
+        ]
+    }
+}

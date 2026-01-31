@@ -1,0 +1,123 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"%s\").",
+            "Represents the Android Landing Page Card.",
+            "Verify the card and its components."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/landingPageCard",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable"
+    ],
+    "elements": [
+        {
+            "name": "actionList",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionList",
+            "selector": {
+                "uiautomator": "resourceId(\"action_grid\")"
+            }
+        },
+        {
+            "name": "recordList",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList",
+            "selector": {
+                "uiautomator": "resourceId(\"list\")"
+            }
+        },
+        {
+            "name": "cardTitle",
+            "selector": {
+                "uiautomator": "className(\"android.widget.TextView\").index(0)"
+            }
+        },
+        {
+            "name": "viewMoreButton",
+            "nullable": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"view_more\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "viewMore",
+            "compose": [
+                {
+                    "element": "viewMoreButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasViewMoreButton",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "viewMoreButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getCardTitle",
+            "compose": [
+                {
+                    "element": "cardTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getRecordList",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordList"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getActionList",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "actionList"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,314 @@
+{
+    "exposeRootElement": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-button-menu",
+            "Represents the lightning-button-menu Lightning web component.",
+            "Click a button, Check if menu items are loading, Check if dropdown is opened, or wait for a custom menu item by title."
+        ]
+    },
+    "methods": [
+        {
+            "name": "hasFocus",
+            "description": "Checks if lightning-button-menu has focus at the moment",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "clickButton",
+            "description": "Performs a click action and wait for dropdown to open",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "button",
+                                    "apply": "click"
+                                },
+                                {
+                                    "element": "dropdown",
+                                    "apply": "isVisible"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hover",
+            "description": "Scrolls to the button and performs a hover action on the button",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "scrollToTop"
+                },
+                {
+                    "element": "button",
+                    "apply": "moveTo"
+                }
+            ]
+        },
+        {
+            "name": "isLoading",
+            "description": {
+                "text": [
+                    "Checks if menu items are loading and spinner is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinner",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isDropdownOpened",
+            "description": {
+                "text": [
+                    "Checks if menu dropdown is opened"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-open"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "waitForDropdownToOpen",
+            "description": {
+                "text": [
+                    "Wait for dropdown menu to open"
+                ],
+                "throws": "TimeoutError"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "dropdown",
+                                    "apply": "isVisible"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForCustomMenuItemByTitle",
+            "description": {
+                "text": [
+                    "Wait for a specific menu item to be present"
+                ],
+                "throws": "TimeoutError"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ":scope *[title='%s']",
+                                                "args": [
+                                                    {
+                                                        "name": "title",
+                                                        "type": "string",
+                                                        "description": "Title of the menu item"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "returnSelf"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                },
+                "public": true
+            },
+            {
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "name": "dropdown",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".slds-dropdown"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "selector": {
+                    "css": "lightning-primitive-icon"
+                },
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "allCustomMenuItems",
+            "type": "container",
+            "selector": {
+                "css": ":scope *",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "customMenuItemByTitle",
+            "type": "container",
+            "selector": {
+                "css": ":scope *[title='%s']",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "customMenuItemByIndex",
+            "type": "container",
+            "selector": {
+                "css": ":scope *:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "menuItem",
+            "type": "utam-lightning/pageObjects/menuItem",
+            "selector": {
+                "css": "slot > lightning-menu-item:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "itemIndex",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "menuItemByText",
+            "type": "utam-lightning/pageObjects/menuItem",
+            "selector": {
+                "css": "lightning-menu-item",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getItemText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        },
+        {
+            "name": "allMenuItems",
+            "type": "utam-lightning/pageObjects/menuItem",
+            "selector": {
+                "css": ".slds-dropdown__list slot > lightning-menu-item",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "menuHeaderByIndex",
+            "type": "container",
+            "selector": {
+                "css": "slot > lightning-menu-subheader:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

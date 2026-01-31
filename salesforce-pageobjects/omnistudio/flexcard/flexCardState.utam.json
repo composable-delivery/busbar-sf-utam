@@ -1,0 +1,73 @@
+{
+    "description": {
+        "text": [
+            "Selector: runtime_omnistudio_flexcards-flex-card-state"
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "exposeRootElement": true,
+    "selector": {
+        "css": "runtime_omnistudio_flexcards-flex-card-state"
+    },
+    "type": [
+        "actionable",
+        "editable",
+        "clickable"
+    ],
+    "elements": [
+        {
+            "type": "utam-omnistudio-flexcard/pageObjects/element",
+            "name": "elements",
+            "public": true,
+            "selector": {
+                "css": "div[data-style-id]",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "childFlexCards",
+            "selector": {
+                "css": "runtime_omnistudio-flexcard",
+                "returnAll": true
+            },
+            "public": true,
+            "type": "utam-omnistudio-core/pageObjects/flexCard"
+        },
+        {
+            "name": "block",
+            "public": true,
+            "selector": {
+                "css": "runtime_omnistudio_flexcards-block",
+                "returnAll": true
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "elementByCssSelector",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "%s",
+                "args": [
+                    {
+                        "name": "elementName",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "flexAction",
+            "public": true,
+            "type": "utam-omnistudio-flexcard/pageObjects/flexAction",
+            "selector": {
+                "css": "runtime_omnistudio_flexcards-flex-action"
+            }
+        }
+    ]
+}

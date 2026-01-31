@@ -1,0 +1,155 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-carousel-image",
+            "Represents the lightning-carousel-image Lightning web component.",
+            "Get the link URL, the image URL, or get the tab index from the link attribute.",
+            " Get the description text, get the image's alternate text, or the header text."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "getLinkUrl",
+            "description": {
+                "text": [
+                    "Get the link URL from href attribute value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTabIndex",
+            "description": {
+                "text": [
+                    "Get the link tabindex value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "tabindex"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getDescription",
+            "description": {
+                "text": [
+                    "Get the carousel image content description text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "description",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getHeader",
+            "description": {
+                "text": [
+                    "Get the carousel image content header text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getImageUrl",
+            "description": {
+                "text": [
+                    "Get the carousel image source"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "src"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAlternativeText",
+            "description": {
+                "text": [
+                    "Get the carousel image alternative text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "alt"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "selector": {
+                    "css": "a"
+                },
+                "type": "clickable",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "image",
+                        "selector": {
+                            "css": "img"
+                        }
+                    },
+                    {
+                        "name": "header",
+                        "selector": {
+                            "css": "h2"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "selector": {
+                            "css": "p"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

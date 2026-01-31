@@ -1,0 +1,63 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that functions as a container for a group of buttons, allowing them to be slotted in and styled as a collective unit.",
+            "Selector: src-base-button-group"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonGroupContainer",
+                "selector": {
+                    "css": "div[part='button-group']"
+                },
+                "description": "Represents the container that wraps the slotted button elements.",
+                "elements": [
+                    {
+                        "name": "slotDefaultContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the default slot for inserting button elements.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isButtonGroupContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the button group container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "buttonGroupContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isButtonGroupContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the button group container is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "buttonGroupContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

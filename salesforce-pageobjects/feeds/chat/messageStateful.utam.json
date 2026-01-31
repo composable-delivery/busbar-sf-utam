@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that dynamically renders a message based on the provided state, using a child component to display the content.",
+            "Selector: feed_chat-message-stateful"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dynamicMessage",
+                "selector": {
+                    "css": "feeds_chat-dynamic-message"
+                },
+                "description": "Represents the dynamic message component that is rendered based on the state.",
+                "type": "utam-feeds-chat/pageObjects/dynamicMessage",
+                "public": true
+            }
+        ]
+    }
+}

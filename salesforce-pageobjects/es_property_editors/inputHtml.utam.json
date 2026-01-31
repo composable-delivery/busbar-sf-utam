@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-html"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "labelContent",
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "public": true,
+                "name": "codeEditor",
+                "type": "utam-es_property_editors/pageObjects/codeEditor",
+                "selector": {
+                    "css": "es_property_editors-code-editor"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "mergeFieldButton",
+                "type": "utam-es_property_editors/pageObjects/mergeFieldButton",
+                "selector": {
+                    "css": "es_property_editors-merge-field-button"
+                }
+            }
+        ]
+    }
+}

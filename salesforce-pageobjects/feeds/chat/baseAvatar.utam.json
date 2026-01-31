@@ -1,0 +1,110 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an avatar which can either be an image if a source is provided or a fallback icon otherwise.",
+            "Selector: src-base-avatar"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "avatarSpan",
+                "selector": {
+                    "css": "span.part-avatar"
+                },
+                "description": "Represents the container span for the avatar or fallback icon.",
+                "elements": [
+                    {
+                        "name": "imageAvatar",
+                        "selector": {
+                            "css": "img"
+                        },
+                        "description": "Represents the image element for the avatar when a source is provided.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "fallbackIcon",
+                        "selector": {
+                            "css": "feeds_chat-base-icon"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the fallback icon element when no image source is provided.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isAvatarSpanPresent",
+            "description": {
+                "text": [
+                    "Check if the avatar span is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "avatarSpan",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isImageAvatarVisible",
+            "description": {
+                "text": [
+                    "Check if the image avatar is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "imageAvatar",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getImageAvatarAltText",
+            "description": {
+                "text": [
+                    "Retrieve the alternative text of the image avatar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "imageAvatar",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "verifyImageAvatarPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"imageAvatar\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "imageAvatar",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

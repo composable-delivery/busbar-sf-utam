@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a dynamic table with data fetched based on a query, provides a spinner while loading, shows a message when there's no data, and allows for infinite scrolling to load more data. It also includes an accordion component for query input.",
+            "Selector: experience_ui_gen_canvas-tile-dynamic-table"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a loading spinner displayed while data is being fetched.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "dataTable",
+                "selector": {
+                    "css": "lightning-datatable"
+                },
+                "type": "utam-lightning/pageObjects/datatable",
+                "description": "Represents the main data table component for displaying fetched data.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "noResultMessage",
+                "selector": {
+                    "css": ".slds-var-m-bottom_small"
+                },
+                "description": "Represents a message displayed when there is no data to show in the table.",
+                "nullable": true
+            },
+            {
+                "name": "queryAccordion",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-query-accordion"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/queryAccordion",
+                "description": "Represents an accordion component for inputting and changing the query.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isNoResultMessageVisible",
+            "description": {
+                "text": [
+                    "Check that the no result message is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyNoResultMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"noResultMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

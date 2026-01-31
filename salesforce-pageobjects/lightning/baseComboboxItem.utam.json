@@ -1,0 +1,207 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-base-combobox-item.",
+            "Represents the lightning-base-combobox-item Lightning web component.",
+            "Click the item, Check if item checked or get the item by value text or label, which returns the item itself, if successful."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-base-combobox-item"
+    },
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getItemValue",
+            "description": {
+                "text": [
+                    "Gets the data-value attribute value of the item"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-value"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getClassAttribute",
+            "description": {
+                "text": [
+                    "Get class name of lightning-base-combobox-item"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getClassAttribute"
+                }
+            ]
+        },
+        {
+            "name": "isChecked",
+            "description": {
+                "text": [
+                    "Check if aria-checked is set to true"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-checked"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getItemLabel",
+            "description": {
+                "text": [
+                    "Gets the label text of the item"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickItem",
+            "description": "Scroll to the item in the list and then performs click action on the item",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "isPresent"
+                                },
+                                {
+                                    "element": "root",
+                                    "apply": "scrollToTop"
+                                },
+                                {
+                                    "element": "root",
+                                    "apply": "isVisible"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getLeftIcon",
+            "description": {
+                "text": [
+                    "Gets the name of left icon"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "leftIcon",
+                    "apply": "getName",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getRightIcon",
+            "description": {
+                "text": [
+                    "Gets the name of right icon"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "rightIcon",
+                    "apply": "getName",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": ".slds-media__body"
+                }
+            },
+            {
+                "name": "itemByLabel",
+                "nullable": true,
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "span[title='%s']",
+                    "args": [
+                        {
+                            "name": "itemLabel",
+                            "type": "string",
+                            "description": "label text of the item"
+                        }
+                    ]
+                },
+                "public": true
+            },
+            {
+                "name": "leftIcon",
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": ".slds-listbox__option-icon lightning-icon"
+                }
+            },
+            {
+                "name": "rightIcon",
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": ".slds-media__figure_reverse lightning-icon"
+                }
+            }
+        ]
+    }
+}

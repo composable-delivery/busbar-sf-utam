@@ -1,0 +1,133 @@
+{
+    "selector": {
+        "css": "form"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: form.",
+            "Represents the onesetup:setupAlohaPage Aura component.",
+            "Access its buttons by name, the item label at a specified row and column, a select box by name, an input box by name, or a text area by name."
+        ]
+    },
+    "elements": [
+        {
+            "name": "buttonByName",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".pbHeader input.btn[name='%s']",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "itemLabel",
+            "selector": {
+                "css": ".pbBody tr:nth-of-type(%d) td:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "row",
+                        "type": "number"
+                    },
+                    {
+                        "name": "column",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "selectBoxByName",
+            "type": "utam-aura/pageObjects/inputSelect",
+            "selector": {
+                "css": "select[name*='%s']",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "inputBoxByName",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input[name*='%s']",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "textAreaByName",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "textarea[name*='%s']",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "setupAlohaItemRowByLabel",
+            "type": "utam-setup/pageObjects/setupAlohaPageItemRow",
+            "selector": {
+                "css": ".pbBody tr",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabel",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "itemText",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        },
+        {
+            "name": "footerButtonByText",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".pbBottomButtons > input.btn[value*='%s']",
+                "args": [
+                    {
+                        "name": "text",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,251 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that enables users to provide feedback on content by selecting 'like' or 'dislike'. It includes a popover form for 'dislike' feedback with reasons and an optional text area for additional information.",
+            "Selector: src-feedback-tooltip"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "thumbsUpButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-tooltip-button:nth-of-type(1)"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the thumbs up button for positive feedback"
+            },
+            {
+                "name": "thumbsDownButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-tooltip-button:nth-of-type(2)"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the thumbs down button for negative feedback"
+            },
+            {
+                "name": "tooltipContent",
+                "selector": {
+                    "css": ":scope > *:first-child",
+                    "returnAll": true
+                },
+                "description": "Represents the content displayed in tooltips"
+            },
+            {
+                "name": "closeFeedbackButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button-icon.close-feedback"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the close button for the feedback popover"
+            },
+            {
+                "name": "feedbackForm",
+                "selector": {
+                    "css": "form.feedback-form"
+                },
+                "description": "Represents the feedback form within the popover",
+                "elements": [
+                    {
+                        "name": "moreInfoTextArea",
+                        "selector": {
+                            "css": "lightning-primitive-textarea"
+                        },
+                        "type": [
+                            "editable",
+                            "actionable"
+                        ],
+                        "description": "Represents the text area for additional feedback, shown when 'Other' is selected",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "submitButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button.submit-feedback"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the submit button for the feedback form"
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button.cancel-feedback"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the cancel button for the feedback form"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickThumbsUp",
+            "description": {
+                "text": [
+                    "Click the thumbs up button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "thumbsUpButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickThumbsDown",
+            "description": {
+                "text": [
+                    "Click the thumbs down button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "thumbsDownButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickCloseFeedback",
+            "description": {
+                "text": [
+                    "Click the close button on the feedback popover"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeFeedbackButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTooltipContents",
+            "description": {
+                "text": [
+                    "Get the text from all tooltips"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "tooltipContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickSubmitButton",
+            "description": {
+                "text": [
+                    "Click the submit button on the feedback form"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Click the cancel button on the feedback form"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "enterMoreInfoText",
+            "description": {
+                "text": [
+                    "Clear and enter text in the more info textarea"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "moreInfoTextArea",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMoreInfoText",
+            "description": {
+                "text": [
+                    "Get the text from the more info textarea"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "moreInfoTextArea",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isMoreInfoTextAreaVisible",
+            "description": {
+                "text": [
+                    "Check if the more info textarea is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "moreInfoTextArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyMoreInfoTextAreaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"moreInfoTextArea\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "moreInfoTextArea",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

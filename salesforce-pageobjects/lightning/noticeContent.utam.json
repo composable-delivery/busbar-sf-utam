@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-notice-content",
+            "Represents the lightning-notice-content Lightning web component.",
+            "Get the formatted text component containing the text value of the notice content."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedText",
+                "public": true,
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            }
+        ]
+    }
+}

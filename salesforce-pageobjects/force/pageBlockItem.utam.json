@@ -1,0 +1,186 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forcePageBlockItem.",
+            "Represents the force:pageBlockItem Aura component.",
+            "Check if the checkbox is selected, if the field is required, or if the field has an error.",
+            "Get the field value, a field error, or the element name. Click the inline edit button."
+        ]
+    },
+    "elements": [
+        {
+            "name": "inputItem",
+            "type": "container",
+            "selector": {
+                "css": ".uiInput--default"
+            },
+            "public": true
+        },
+        {
+            "name": "errorMessage",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "ul.has-error"
+            }
+        },
+        {
+            "name": "fieldRequired",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "span.required"
+            }
+        },
+        {
+            "name": "elementName",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "span.test-id__field-label, .label span[id$='-label']"
+            }
+        },
+        {
+            "name": "fieldValue",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "span.test-id__field-value"
+            }
+        },
+        {
+            "name": "checkboxStatus",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "span.test-id__field-value img"
+            }
+        },
+        {
+            "name": "inlineEditButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button.inline-edit-trigger"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "isCheckboxSelected",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the checkbox is checked"
+                ],
+                "return": "true if the checkbox is checked; otherwise, false"
+            },
+            "compose": [
+                {
+                    "element": "checkboxStatus",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "alt"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getFieldValue",
+            "description": {
+                "text": [
+                    "Gets the value of the field"
+                ],
+                "return": "the value of the field"
+            },
+            "compose": [
+                {
+                    "element": "fieldValue",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getFieldError",
+            "description": {
+                "text": [
+                    "Gets the error message of the field"
+                ],
+                "return": "the error message of the field"
+            },
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasFieldError",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the field has an error"
+                ],
+                "return": "true if the field has an error is checked; otherwise, false"
+            },
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the field is required"
+                ],
+                "return": "true if the field is required; otherwise, false"
+            },
+            "compose": [
+                {
+                    "element": "fieldRequired",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getElementName",
+            "description": {
+                "text": [
+                    "Gets the name of the field"
+                ],
+                "return": "the name of the field"
+            },
+            "compose": [
+                {
+                    "element": "elementName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "inlineEdit",
+            "description": {
+                "text": [
+                    "Starts an inline edit of the value of the field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inlineEditButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

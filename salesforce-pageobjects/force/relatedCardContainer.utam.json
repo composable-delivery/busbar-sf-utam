@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRelatedCardContainer.",
+            "Represents the related card container Aura component.",
+            "Access the related list cards on the Salesforce Mobile app."
+        ]
+    },
+    "elements": [
+        {
+            "name": "cardByTitle",
+            "public": true,
+            "nullable": true,
+            "type": "utam-force/pageObjects/relatedListCard",
+            "selector": {
+                "css": ".forceRelatedListCard",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getCardTitle",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "tabName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

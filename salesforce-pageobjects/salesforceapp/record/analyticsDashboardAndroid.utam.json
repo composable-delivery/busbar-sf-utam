@@ -1,0 +1,222 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/tab_fragment_container\").",
+            "Represents the Android fragment for the Einstein analytics dashboard.",
+            "Verify the dashboard and text widget label are loaded, and verify link action navigation."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/analyticsDashboard",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/tab_fragment_container\")"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "uiautomator": "resourceId(\"com.salesforce.chatter:id/dashboard_page\")"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "uiautomator": "className(\"android.widget.ProgressBar\")"
+                                    }
+                                }
+                            ],
+                            "matcher": {
+                                "type": "isFalse"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "pageNavigator",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/tab_label\")"
+            }
+        },
+        {
+            "name": "brokenWidget",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/error_view\")"
+            },
+            "nullable": true
+        },
+        {
+            "name": "dashboardTitle",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/toolbar_title\")"
+            }
+        },
+        {
+            "name": "textWidgetByLabel",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/textView\").text(\"%s\"))",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "table",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/table_view\"))"
+            }
+        },
+        {
+            "name": "tableCellByLabel",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/textViewTableCellContent\").text(\"%s\"))",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "linkWidgetByLabel",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/content_view\").text(\"%s\"))",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "switchTab",
+            "compose": [
+                {
+                    "element": "pageNavigator",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasBrokenWidgets",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "brokenWidget",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getDashboardTitle",
+            "compose": [
+                {
+                    "element": "dashboardTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasTextWidgetWithLabel",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "textWidgetByLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickTable",
+            "compose": [
+                {
+                    "element": "table",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickTableCellWithLabel",
+            "compose": [
+                {
+                    "element": "tableCellByLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickLinkWidgetWithLabel",
+            "compose": [
+                {
+                    "element": "linkWidgetByLabel",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

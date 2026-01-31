@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListViewManagerStatusInfo.",
+            "Represents the list view manager status info Aura component.",
+            "Access the record count, sort, filter information, and the timestamp."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "countSortAndFilterBy",
+                "public": true,
+                "selector": {
+                    "css": ".countSortedByFilteredBy"
+                }
+            },
+            {
+                "name": "lastUpdated",
+                "public": true,
+                "selector": {
+                    "css": "span > span:last-child"
+                }
+            }
+        ]
+    }
+}

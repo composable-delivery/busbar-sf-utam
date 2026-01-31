@@ -1,0 +1,13 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceFilterList .",
+            "Represents the item list on the mru page and the search result page."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceFilterList"
+    }
+}

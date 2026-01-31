@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays a list of Copilot topics with an optional guidance component. It allows interaction such as editing, viewing details, and removing topics from a Copilot version. The list can be displayed in a condensed or expanded format based on the `expanded` property.",
+            "Selector: src-rail-panel-topics"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "copilotTopicsList",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-list-copilot-topics.list"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/listCopilotTopics",
+                "description": "Represents the list of Copilot topics.",
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "topicRowActions",
+                        "selector": {
+                            "css": "lightning-button-icon",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the action buttons for each topic row.",
+                        "public": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    }
+}

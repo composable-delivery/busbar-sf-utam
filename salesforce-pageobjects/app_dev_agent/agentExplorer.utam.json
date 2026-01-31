@@ -1,0 +1,86 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "type": [
+        "actionable",
+        "editable"
+    ],
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a card layout with a metadata explorer title, an agent selection combobox, and a nested explorer view for displaying metadata details based on the selected agent.",
+            "Selector: src-agent-explorer"
+        ]
+    },
+    "selector": {
+        "css": "app_dev_agent-agent-explorer"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "metadataExplorerIcon",
+                "selector": {
+                    "css": "lightning-icon.metadata-explorer-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the icon next to the metadata explorer title.",
+                "public": true
+            },
+            {
+                "name": "metadataExplorerTitle",
+                "selector": {
+                    "css": "h2.slds-text-heading_medium"
+                },
+                "description": "Represents the title of the metadata explorer."
+            },
+            {
+                "name": "agentLabel",
+                "selector": {
+                    "css": "span.slds-text-color_weak"
+                },
+                "description": "Represents the label for the agent combobox."
+            },
+            {
+                "name": "agentCombobox",
+                "selector": {
+                    "css": "lightning-combobox.slds-combobox__form-element"
+                },
+                "type": "utam-lightning/pageObjects/combobox",
+                "description": "Represents the combobox for selecting an agent.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getMetadataExplorerTitleText",
+            "description": {
+                "text": [
+                    "Get the text from the metadata explorer title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "metadataExplorerTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isAgentLabelVisible",
+            "description": {
+                "text": [
+                    "Check that the agent label is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "agentLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

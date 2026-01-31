@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages the chat interface for the copilot panel on Setup Home, handling connection state and message sending functionality.",
+            "Selector: setup-agentic-setup-chat-view"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "agenticLayout",
+                "selector": {
+                    "css": "runtime_copilot-agentic-layout"
+                },
+                "type": "utam-runtime_copilot/pageObjects/agenticLayout",
+                "description": "Represents the main layout component for the copilot panel",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "statusPanel",
+                        "selector": {
+                            "css": "app_dev_agent-status-panel"
+                        },
+                        "type": "utam-app_dev_agent/pageObjects/statusPanel",
+                        "description": "Represents the status panel for the agent",
+                        "public": true
+                    },
+                    {
+                        "name": "inputSlotContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": [
+                            "actionable"
+                        ],
+                        "description": "Represents the content of the named slot with input data",
+                        "public": true
+                    },
+                    {
+                        "name": "chatInput",
+                        "selector": {
+                            "css": "setup-agentic-setup-home-chat-input"
+                        },
+                        "type": "utam-setup/pageObjects/agenticSetupHomeChatInput",
+                        "description": "Represents the chat input component",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStatusPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the status panel is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusPanel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatInputVisible",
+            "description": {
+                "text": [
+                    "Check if the chat input is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatInput",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

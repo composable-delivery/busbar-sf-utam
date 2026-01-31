@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: expressionBuilderForm"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "expressionBuilderFormFields",
+                "type": "utam-builder-framework/pageObjects/expressionBuilderFormField",
+                "selector": {
+                    "css": "builder_framework-expression-builder-form-field",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "expressionBuilderFormFieldByIndex",
+                "type": "utam-builder-framework/pageObjects/expressionBuilderFormField",
+                "selector": {
+                    "css": "builder_framework-expression-builder-form-field:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

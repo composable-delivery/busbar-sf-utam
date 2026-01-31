@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceObjectHomeDesktop.",
+            "Represents the object home desktop Aura component.",
+            "Access the list view manager."
+        ]
+    },
+    "selector": {
+        "css": ".oneConsoleObjectHome,.forceObjectHomeDesktop"
+    },
+    "root": true,
+    "elements": [
+        {
+            "type": "utam-force/pageObjects/listViewManager",
+            "name": "listView",
+            "public": true,
+            "selector": {
+                "css": ".forceListViewManager"
+            }
+        }
+    ]
+}

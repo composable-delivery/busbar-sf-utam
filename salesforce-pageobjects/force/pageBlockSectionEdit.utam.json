@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forcePageBlockSectionEdit.",
+            "Represents the force:pageBlockSectionEdit Aura component.",
+            "Get the force:pageBlockItemEdit component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "pageBlockSectionRow",
+            "selector": {
+                "css": ".forcePageBlockSectionRow:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true,
+            "elements": [
+                {
+                    "name": "itemEdit",
+                    "type": "utam-force/pageObjects/pageBlockItemEdit",
+                    "public": true,
+                    "selector": {
+                        "css": ".forcePageBlockItemEdit:nth-of-type(%d)",
+                        "args": [
+                            {
+                                "name": "itemIndex",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

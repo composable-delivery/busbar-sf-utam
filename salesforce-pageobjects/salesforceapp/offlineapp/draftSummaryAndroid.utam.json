@@ -1,0 +1,114 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: draft_status",
+            "Represents the Android Draft summary row on Landing page and Briefcase.",
+            "Verify the draft summary row."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/draftSummary",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "elements": [
+        {
+            "name": "draftsCount",
+            "selector": {
+                "uiautomator": "resourceId(\"draft_count\")"
+            }
+        },
+        {
+            "name": "draftsIcon",
+            "selector": {
+                "uiautomator": "resourceId(\"draft_icon\")"
+            }
+        },
+        {
+            "name": "draftsTitle",
+            "selector": {
+                "uiautomator": "className(\"android.widget.TextView\").textContains(\"Draft\")"
+            }
+        },
+        {
+            "name": "errorIcon",
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"draft_error_icon\")"
+            }
+        },
+        {
+            "name": "syncErrorMessage",
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"draft_sync_error_message\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "drillIn",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getDraftsCount",
+            "compose": [
+                {
+                    "element": "draftsCount",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getDraftsTitle",
+            "compose": [
+                {
+                    "element": "draftsTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSyncErrorMsg",
+            "compose": [
+                {
+                    "element": "syncErrorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasDraftsErrorIcon",
+            "compose": [
+                {
+                    "element": "errorIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasDraftsIcon",
+            "compose": [
+                {
+                    "element": "draftsIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}
