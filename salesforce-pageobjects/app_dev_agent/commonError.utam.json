@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays error notifications and an empty state message when an error occurs.",
+            "Selector: app_dev_agent-common-error"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "errorNotification",
+                "selector": {
+                    "css": "app_dev_agent-error-notification"
+                },
+                "type": "utam-app_dev_agent/pageObjects/errorNotification",
+                "description": "Represents the error notification component with title, description, and optional retry action",
+                "public": true
+            },
+            {
+                "name": "emptyStateContainer",
+                "selector": {
+                    "css": ".slds-m-top_large"
+                },
+                "description": "Contains the empty state component",
+                "elements": [
+                    {
+                        "name": "emptyState",
+                        "selector": {
+                            "css": "app_dev_agent-empty-state"
+                        },
+                        "type": "utam-app_dev_agent/pageObjects/emptyState",
+                        "description": "Represents the empty state component with heading, sub-heading, and optional image or content",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isEmptyStateContainerVisible",
+            "description": {
+                "text": [
+                    "Check that empty state container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyStateContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

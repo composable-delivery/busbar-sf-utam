@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a toggle switch inside a table cell, allowing users to toggle a value and dispatch events for changes.",
+            "Selector: src-table-toggle-switch"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "toggleSwitchContainer",
+                "selector": {
+                    "css": ".toggleSwitchContainer"
+                },
+                "description": "Represents the container that holds the toggle switch",
+                "elements": [
+                    {
+                        "name": "toggleSwitchInput",
+                        "selector": {
+                            "css": "lightning-input"
+                        },
+                        "type": "utam-lightning/pageObjects/input",
+                        "description": "Represents the lightning input toggle switch that can be toggled on or off",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isToggleSwitchContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the toggle switch container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "toggleSwitchContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

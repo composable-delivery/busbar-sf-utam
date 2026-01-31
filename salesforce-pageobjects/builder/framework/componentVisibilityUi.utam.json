@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: componentVisibilityUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "expressionBuilder",
+                "type": "utam-builder-framework/pageObjects/expressionBuilder",
+                "selector": {
+                    "css": "builder_framework-expression-builder"
+                }
+            }
+        ]
+    }
+}

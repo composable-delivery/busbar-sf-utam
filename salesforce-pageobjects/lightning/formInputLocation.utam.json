@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-input-location.",
+            "Represents the lightning-form-input-location Lightning web component.",
+            "Access the input location."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputLocation",
+                "type": "utam-lightning/pageObjects/inputLocation",
+                "selector": {
+                    "css": "lightning-input-location"
+                },
+                "public": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: exampleHtmlEditorUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "dialog",
+                "type": "utam-lightning/pageObjects/dialog",
+                "selector": {
+                    "css": "lightning-dialog"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "textarea",
+                "type": "utam-lightning/pageObjects/textarea",
+                "selector": {
+                    "css": "lightning-textarea"
+                }
+            }
+        ]
+    }
+}

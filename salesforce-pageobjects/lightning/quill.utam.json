@@ -1,0 +1,22 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-quill",
+            "Represents the lightning-quill Lightning web component.",
+            "Get the rich input"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "richInput",
+                "type": "utam-lightning/pageObjects/inputRichText",
+                "selector": {
+                    "css": "lightning-input-rich-text"
+                },
+                "public": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-formatted-address",
+            "Represents the lightning-form-formatted-address Lightning web component.",
+            "Get formatted address"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedAddress",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-address"
+                },
+                "type": "utam-lightning/pageObjects/formattedAddress"
+            }
+        ]
+    }
+}

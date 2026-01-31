@@ -1,0 +1,81 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-breadcrumbs.",
+            "Represents the lightning-breadcrumbs Lightning web component.",
+            "Retrieve the number of lightning-breadcrumb page objects it contains. Get the href link or the label of a specific breadcrumb at a given index."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getBreadcrumbLabelAtIndex",
+            "description": {
+                "text": [
+                    "Get breadcrumb label at a position index"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "breadcrumbAtIndex",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getBreadcrumbHrefAtIndex",
+            "description": {
+                "text": [
+                    "Get breadcrumb link URL/href"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "breadcrumbAtIndex",
+                    "apply": "getLinkHref"
+                }
+            ]
+        },
+        {
+            "name": "getBreadcrumbsCount",
+            "description": {
+                "text": [
+                    "Get count/size of lightning-breadcrumb elements"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "element": "breadcrumbs",
+                    "apply": "size"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "breadcrumbs",
+            "type": "utam-lightning/pageObjects/breadcrumb",
+            "selector": {
+                "css": "lightning-breadcrumb",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "breadcrumbAtIndex",
+            "type": "utam-lightning/pageObjects/breadcrumb",
+            "public": true,
+            "selector": {
+                "css": "lightning-breadcrumb:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        }
+    ]
+}

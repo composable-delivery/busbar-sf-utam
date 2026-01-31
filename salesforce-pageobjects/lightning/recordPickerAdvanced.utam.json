@@ -1,0 +1,234 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-picker-advanced",
+            "Represents the lightning-record-picker-advanced Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "searchInput",
+                "public": false,
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input.header__input"
+                }
+            },
+            {
+                "name": "searchButton",
+                "public": false,
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button.header__right-aside__button"
+                }
+            },
+            {
+                "name": "searchGrid",
+                "public": false,
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                }
+            },
+            {
+                "name": "datatable",
+                "public": false,
+                "selector": {
+                    "css": "lightning-datatable"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "rowSelectors",
+                            "public": false,
+                            "selector": {
+                                "css": "lightning-primitive-cell-checkbox",
+                                "returnAll": true
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "countRecords",
+            "description": {
+                "text": [
+                    "How many records are displayed"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "element": "searchGrid",
+                    "returnType": "number",
+                    "apply": "getNumRows"
+                }
+            ]
+        },
+        {
+            "name": "isLoading",
+            "description": {
+                "text": [
+                    "Checks if results are being loaded"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "lightning-spinner"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "pressSearchButton",
+            "description": {
+                "text": [
+                    "Raise a search"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectRecord",
+            "description": {
+                "text": [
+                    "Select the record with the provided index"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchGrid",
+                    "apply": "toggleRowSelection",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "type",
+            "description": {
+                "text": [
+                    "Type some search terms in the search input"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessage",
+            "description": {
+                "text": [
+                    "Get error message as text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "getErrorText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "waitForErrorMessage",
+            "description": {
+                "text": [
+                    "Wait for error message to be displayed"
+                ],
+                "throws": "TimeoutError"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "waitForErrorMessage"
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Waits for the record picker advanced to be ready"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isLoading",
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForRecords",
+            "description": {
+                "text": [
+                    "Waits to see some records"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "rowSelectors"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

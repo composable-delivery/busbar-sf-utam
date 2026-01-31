@@ -1,0 +1,74 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeOther[`name == 'action_row'`].",
+            "Represents the iOS Landing Page Action Row inside of Action List.",
+            "Verify the action row items."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionRow",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "actionItemAtIndex",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "nullable": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[`name == 'action_item' AND index == %d`]",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "actionItems",
+            "nullable": true,
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[`name == 'action_item'`]",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "actionItemByName",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[`name == 'action_item'`]",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getActionName",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Service Report section of a Work Order."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/sections/serviceReportSection",
+    "platform": "native",
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "errorHeader",
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`name CONTAINS \"Salesforce Error\")]"
+            },
+            "public": false
+        },
+        {
+            "name": "serviceReportLocator",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "accessid": "SCFieldServiceReportWithAvatarCell"
+            }
+        },
+        {
+            "name": "viewController",
+            "selector": {
+                "accessid": "SCFFileDetailViewController.view"
+            },
+            "type": [
+                "actionable",
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "openServiceReport",
+            "compose": [
+                {
+                    "element": "serviceReportLocator",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

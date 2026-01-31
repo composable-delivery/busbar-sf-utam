@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form",
+            "Represents lightning-form Lightning web component.",
+            "Get content, footer"
+        ]
+    },
+    "type": [
+        "actionable",
+        "clickable"
+    ],
+    "elements": [
+        {
+            "name": "content",
+            "public": true,
+            "type": "container",
+            "selector": {
+                "css": "div > slot > *"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "footer",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-footer"
+                },
+                "type": "utam-lightning/pageObjects/formFooter"
+            }
+        ]
+    }
+}

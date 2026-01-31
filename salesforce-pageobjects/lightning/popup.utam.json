@@ -1,0 +1,51 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-popup",
+            "Represents the lightning-popup Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "popupContent",
+            "selector": {
+                "css": "slot > *",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "section",
+                "selector": {
+                    "css": "section"
+                },
+                "nullable": true
+            },
+            {
+                "name": "focusTrap",
+                "type": "utam-lightning/pageObjects/focusTrap",
+                "selector": {
+                    "css": "lightning-focus-trap"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isOpen",
+            "compose": [
+                {
+                    "element": "section",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

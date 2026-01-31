@@ -1,0 +1,94 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/coordinator\").",
+            "Represents the Android Reports search bar.",
+            "Start a report search and select an item from search results."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/reportCardSearchBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/coordinator\")"
+    },
+    "elements": [
+        {
+            "name": "searchBarReport",
+            "type": [
+                "clickable",
+                "editable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/report_list_search\")"
+            }
+        },
+        {
+            "name": "selectSearchResult",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/recent_item_title\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "query",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "populateSearchReport",
+            "compose": [
+                {
+                    "element": "searchBarReport",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "reportName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "selectReportSearchResult",
+            "compose": [
+                {
+                    "element": "selectSearchResult",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the view with the top record actions.",
+            "Find an action and navigate to it, or navigate to the overflow."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickAction",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getActions",
+            "returnType": [
+                "clickable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "hasAction",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "clickMore"
+        }
+    ]
+}

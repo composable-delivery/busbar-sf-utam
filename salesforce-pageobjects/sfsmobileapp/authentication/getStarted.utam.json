@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the initial Get Started Screen for the Field Service app."
+        ]
+    },
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "interface": true,
+    "methods": [
+        {
+            "name": "getStarted"
+        }
+    ]
+}

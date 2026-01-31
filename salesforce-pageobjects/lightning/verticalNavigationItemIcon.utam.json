@@ -1,0 +1,72 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-vertical-navigation-item-icon",
+            "Represents the lightning-vertical-navigation-item-icon Lightning web component.",
+            "An item icon inside the vertical navigation"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "name": "icon",
+                "public": true,
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isActive",
+            "description": "Check if item is marked as active",
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-active"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "description": "Get the text inside the item",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "Click on the item",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that provides a tooltip with a help text feature using a button icon and a popover container to display additional information.",
+            "Selector: src-base-helptext"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonIcon",
+                "selector": {
+                    "css": "feeds_chat-base-button-icon"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseButtonIcon",
+                "description": "Represents an icon button that triggers the tooltip display.",
+                "public": true
+            },
+            {
+                "name": "tooltipContainer",
+                "selector": {
+                    "css": "feeds_chat-base-popover-container"
+                },
+                "type": "utam-feeds-chat/pageObjects/basePopoverContainer",
+                "description": "Represents the container for the tooltip content.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "tooltipContent",
+                        "selector": {
+                            "css": "[slot='tooltip']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the tooltip provided through a named slot.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

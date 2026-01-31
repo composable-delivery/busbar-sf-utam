@@ -1,0 +1,203 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a card with a header, body, and actions, allowing for interaction such as updating or removing a data provider.",
+            "Selector: src-data-provider-base-card"
+        ]
+    },
+    "elements": [
+        {
+            "name": "iconSlotContent",
+            "selector": {
+                "css": "[slot='icon']"
+            },
+            "type": "container",
+            "description": "Represents the content of the slot for the icon",
+            "public": true
+        },
+        {
+            "name": "titleSlotContent",
+            "selector": {
+                "css": "[slot='title']"
+            },
+            "type": "container",
+            "description": "Represents the content of the slot for the title",
+            "public": true
+        },
+        {
+            "name": "subtitleSlotContent",
+            "selector": {
+                "css": "[slot='subtitle']"
+            },
+            "type": "container",
+            "description": "Represents the content of the slot for the subtitle",
+            "public": true
+        },
+        {
+            "name": "actionsSlotContent",
+            "selector": {
+                "css": "[slot='actions']"
+            },
+            "type": "container",
+            "description": "Represents the content of the slot for the actions",
+            "public": true
+        },
+        {
+            "name": "bodySlotContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the default slot content inside the body",
+            "public": true
+        },
+        {
+            "name": "iconImage",
+            "selector": {
+                "css": "img"
+            },
+            "description": "Represents the image element inside the icon slot",
+            "nullable": true
+        },
+        {
+            "name": "lightningIcon",
+            "selector": {
+                "css": "lightning-icon"
+            },
+            "type": "utam-lightning/pageObjects/icon",
+            "description": "Represents the lightning icon inside the icon slot",
+            "nullable": true,
+            "public": true
+        },
+        {
+            "name": "lightningButtonMenu",
+            "selector": {
+                "css": "lightning-button-menu"
+            },
+            "type": "utam-lightning/pageObjects/buttonMenu",
+            "description": "Represents the lightning button menu in the actions slot",
+            "public": true,
+            "elements": [
+                {
+                    "name": "updateMenuItem",
+                    "selector": {
+                        "css": "lightning-menu-item[value='update']"
+                    },
+                    "type": "utam-lightning/pageObjects/menuItem",
+                    "description": "Represents the menu item for updating the data provider",
+                    "public": true
+                },
+                {
+                    "name": "removeMenuItem",
+                    "selector": {
+                        "css": "lightning-menu-item[value='remove']"
+                    },
+                    "type": "utam-lightning/pageObjects/menuItem",
+                    "description": "Represents the menu item for removing the data provider",
+                    "public": true
+                }
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "isIconImageVisible",
+            "description": {
+                "text": [
+                    "Check if the icon image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isIconImagePresent",
+            "description": {
+                "text": [
+                    "Check if the icon image is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconImage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getIconImageSrc",
+            "description": {
+                "text": [
+                    "Get the src attribute of the icon image"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "iconImage",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isIconImageFocused",
+            "description": {
+                "text": [
+                    "Check if the icon image is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconImage",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isIconImageEnabled",
+            "description": {
+                "text": [
+                    "Check if the icon image is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconImage",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "verifyIconImagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"iconImage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconImage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that performs an action through the Copilot API and dispatches a workflow state change event.",
+            "Selector: app_dev_agent-utterance-action"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "utteranceActionTrigger",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the interactive element that triggers the utterance action."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "triggerUtteranceAction",
+            "description": {
+                "text": [
+                    "Simulate a click action to trigger the utterance action"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "utteranceActionTrigger",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

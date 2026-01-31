@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: propertySheetUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "pContent",
+                "type": [],
+                "selector": {
+                    "css": "p"
+                }
+            },
+            {
+                "public": true,
+                "name": "component",
+                "type": "utam-builder-framework/pageObjects/component",
+                "selector": {
+                    "css": "builder_framework-component"
+                }
+            }
+        ]
+    }
+}

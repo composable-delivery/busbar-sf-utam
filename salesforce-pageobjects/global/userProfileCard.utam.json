@@ -1,0 +1,90 @@
+{
+    "description": {
+        "text": [
+            "Selector: .userProfilePanel.",
+            "Represents the one:userProfileCard Aura component.",
+            "Access the profile link, settings link, logout link, or density option by name. Click a footer link by name."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "profileLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".avatar-holder a"
+            },
+            "public": true
+        },
+        {
+            "name": "settingsLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a[href*='settings']"
+            },
+            "public": true
+        },
+        {
+            "name": "logoutLick",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.logout"
+            },
+            "public": true
+        },
+        {
+            "name": "densityOptionByName",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "one-density-switcher button",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        },
+        {
+            "name": "footerLinkByName",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".profile-card-footer a",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        }
+    ]
+}

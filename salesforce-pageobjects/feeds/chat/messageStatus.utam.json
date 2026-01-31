@@ -1,0 +1,94 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a message status with an icon and text content, intended for non-actionable error or success messages to the user.",
+            "Selector: src-message-status"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".message-status_container"
+                },
+                "description": "Represents the container that wraps the message status icon and text.",
+                "elements": [
+                    {
+                        "name": "baseIcon",
+                        "selector": {
+                            "css": "feeds_chat-base-icon"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the icon indicating the message status variant.",
+                        "public": true
+                    },
+                    {
+                        "name": "messageStatusText",
+                        "selector": {
+                            "css": ".message-status_text"
+                        },
+                        "description": "Represents the container for the message text content.",
+                        "elements": [
+                            {
+                                "name": "messageContent",
+                                "selector": {
+                                    "css": ".message-status-text_small"
+                                },
+                                "description": "Represents the text content of the message status."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the status container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageContentText",
+            "description": {
+                "text": [
+                    "Get the text content from the message status"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isMessageContentVisible",
+            "description": {
+                "text": [
+                    "Check if the message content text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageContent",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

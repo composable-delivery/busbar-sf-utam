@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal-body",
+            "Represents the lightning-modal-body Lightning web component.",
+            "Get the body content."
+        ]
+    },
+    "elements": [
+        {
+            "name": "contents",
+            "selector": {
+                "css": ":scope *",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "bodyContent",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": "[data-default-slot] %s",
+                "args": [
+                    {
+                        "name": "selector",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

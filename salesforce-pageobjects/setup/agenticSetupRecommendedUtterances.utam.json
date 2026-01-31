@@ -1,0 +1,102 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a group of utterance buttons and optionally a Salesforce Studio link button, allowing the user to interact with these buttons.",
+            "Selector: setup-agentic-setup-recommended-utterances"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "utteranceButtonWrappers",
+                "selector": {
+                    "css": ".pill-button-wrapper",
+                    "returnAll": true
+                },
+                "description": "Represents wrappers for utterance buttons",
+                "elements": [
+                    {
+                        "name": "utteranceButtons",
+                        "selector": {
+                            "css": "lightning-button",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents utterance buttons inside the wrappers",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "studioLinkButtonWrapper",
+                "selector": {
+                    "css": ".pill-button-wrapper"
+                },
+                "description": "Represents wrapper for the Salesforce Studio link button",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "studioLinkButton",
+                        "selector": {
+                            "css": "lightning-button"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the Salesforce Studio link button",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isUtteranceButtonWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that utterance button wrapper is present and visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "utteranceButtonWrappers",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isStudioLinkButtonWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that studio link button wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "studioLinkButtonWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyStudioLinkButtonWrapperPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"studioLinkButtonWrapper\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "studioLinkButtonWrapper",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

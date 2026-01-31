@@ -1,0 +1,152 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal.",
+            "Represents the list view settings modal dialog.",
+            "Access the model body content."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "public": true,
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "name": "body",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "public": true,
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "pageLevelErrors",
+                        "selector": {
+                            "css": "div.pageLevelErrors"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listName",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listApiName",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input input[name='developerName']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "allPageInputs",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listViewVisibilitySelfCheckbox",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input input[value='PRIVATE']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listViewVisibilityAllCheckbox",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input input[value='GLOBAL']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "dualListbox",
+                        "type": "utam-lightning/pageObjects/dualListbox",
+                        "selector": {
+                            "css": "lightning-dual-listbox"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "footer",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "name": "deleteOrSaveButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "public": true,
+                        "selector": {
+                            "css": "lightning-button.test-confirmButton"
+                        }
+                    },
+                    {
+                        "name": "cancelButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "public": true,
+                        "selector": {
+                            "css": "lightning-button.test-cancelButton"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Clicks the confirm button to save edits to or to delete the list ",
+                    "view settings and waits for the modal to disappear"
+                ]
+            },
+            "name": "clickConfirm",
+            "compose": [
+                {
+                    "element": "deleteOrSaveButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Clicks the cancel button to cancel edits to the list ",
+                    "view settings and waits for the modal to disappear"
+                ]
+            },
+            "name": "clickCancel",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        }
+    ]
+}

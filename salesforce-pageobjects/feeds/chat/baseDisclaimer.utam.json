@@ -1,0 +1,117 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a disclaimer with a tooltip button and a message. It allows the tooltip to be opened and closed, and the disclaimer message to be shown based on the variant.",
+            "Selector: src-base-disclaimer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "disclaimerButton",
+                "selector": {
+                    "css": "feeds_chat-base-tooltip-button"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseTooltipButton",
+                "description": "Represents the button that shows the disclaimer tooltip.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "disclaimerContent",
+                        "selector": {
+                            "css": "[slot='popover']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot within the disclaimer tooltip button.",
+                        "public": true
+                    },
+                    {
+                        "name": "popoverSection",
+                        "selector": {
+                            "css": "section.popover-disclaimer"
+                        },
+                        "description": "Represents the section within the popover that holds the disclaimer content.",
+                        "elements": [
+                            {
+                                "name": "formattedRichText",
+                                "selector": {
+                                    "css": "lightning-formatted-rich-text.disclaimer-popover-content"
+                                },
+                                "description": "Represents the rich text content within the popover.",
+                                "public": true
+                            },
+                            {
+                                "name": "closeButton",
+                                "selector": {
+                                    "css": "feeds_chat-base-button-icon.close-disclaimer"
+                                },
+                                "type": "utam-feeds-chat/pageObjects/baseButtonIcon",
+                                "description": "Represents the close button within the popover.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "messageContainer",
+                "selector": {
+                    "css": "div[aria-live='polite']"
+                },
+                "description": "Represents the container for the disclaimer message.",
+                "elements": [
+                    {
+                        "name": "messageIcon",
+                        "selector": {
+                            "css": "feeds_chat-base-icon"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the icon within the disclaimer message area.",
+                        "public": true
+                    },
+                    {
+                        "name": "messageFormattedText",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text.disclaimer-content"
+                        },
+                        "description": "Represents the rich text content within the message container.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPopoverSectionVisible",
+            "description": {
+                "text": [
+                    "Check if the popover section is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "popoverSection",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the message container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

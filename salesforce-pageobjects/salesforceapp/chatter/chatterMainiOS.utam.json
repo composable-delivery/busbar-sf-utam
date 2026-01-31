@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: feedMainPage.tableView.loaded.",
+            "Represents the iOS scrollview that contains the search bar and posts.",
+            "Load the Chatter post search, scroll, and interact with individual Chatter posts."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/chatter/chatterMain",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "feedMainPage.tableView.loaded"
+    },
+    "elements": [
+        {
+            "name": "searchBar",
+            "type": "utam-salesforceapp/pageObjects/navigation/searchBar",
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeSearchField'$][-1]"
+            },
+            "public": true
+        },
+        {
+            "name": "postDetailsList",
+            "type": "utam-salesforceapp/pageObjects/chatter/chatterPostCell",
+            "selector": {
+                "classchain": "**/XCUIElementTypeCell[`enabled == true`]",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_design-error-component ",
+            "Error component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "section",
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "name": "header",
+                        "selector": {
+                            "css": "header"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "headerContent",
+                                "selector": {
+                                    "css": "h2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "public": true,
+                        "name": "bodyContent",
+                        "selector": {
+                            "css": ".error-component__card-body"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

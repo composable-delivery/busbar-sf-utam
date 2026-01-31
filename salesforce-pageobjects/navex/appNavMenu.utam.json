@@ -1,0 +1,48 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".oneAppNavMenu"
+    },
+    "description": {
+        "text": [
+            "Selector: .oneAppNavMenu.",
+            "Represents the one:appNavMenu Aura component.",
+            "Get a nav button by title or a revealed nav menu item by title."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "navButtonWithTitle",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button[title='%s']",
+                "args": [
+                    {
+                        "name": "buttonTitle",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "revealedNavMenuItem",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "a[data-label='%s']",
+                "args": [
+                    {
+                        "name": "menuTitle",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

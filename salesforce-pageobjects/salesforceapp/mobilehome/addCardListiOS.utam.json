@@ -1,0 +1,68 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeAny[`label == \"Select a card to appear on Home\"`][1]",
+            "Represents the iOS mobile home Selector view controller.",
+            "Select card from Add list."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/mobilehome/addCardList",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeAny[`label == \"Select a card to appear on Home\"`][1]"
+    },
+    "methods": [
+        {
+            "name": "selectCardWithName",
+            "compose": [
+                {
+                    "element": "cardWithName",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "cardWithName",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "\"%s\"",
+                "args": [
+                    {
+                        "name": "cardName",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

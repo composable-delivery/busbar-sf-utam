@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-content-type",
+            "Provides access to lightning input component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                }
+            },
+            {
+                "public": true,
+                "name": "outputText",
+                "type": "utam-es_property_editors/pageObjects/outputText",
+                "selector": {
+                    "css": "es_property_editors-output-text"
+                }
+            }
+        ]
+    }
+}

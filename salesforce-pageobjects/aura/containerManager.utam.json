@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiContainerManager",
+            "Represents the ui:containerManager Aura component.",
+            "Get the panel component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiContainerManager"
+    },
+    "elements": [
+        {
+            "name": "panel",
+            "type": "utam-aura/pageObjects/panel",
+            "public": true,
+            "selector": {
+                "css": ".uiPanel"
+            }
+        },
+        {
+            "name": "modalByIndex",
+            "type": "utam-aura/pageObjects/modal",
+            "public": true,
+            "selector": {
+                "css": ".uiModal.active:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        }
+    ]
+}

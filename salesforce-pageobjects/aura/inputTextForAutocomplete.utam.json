@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputTextForAutocomplete.",
+            "Represents the ui:inputTextForAutocomplete Aura component.",
+            "Set text for the field."
+        ]
+    },
+    "type": [
+        "editable"
+    ],
+    "methods": [
+        {
+            "name": "enterText",
+            "description": "Set text for the input field",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

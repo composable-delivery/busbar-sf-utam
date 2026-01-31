@@ -1,0 +1,116 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeWindow[$type == 'XCUIElementTypeTable' AND name == 'stageleft.tableview'$].",
+            "Represents the iOS menu view controller.",
+            "Load the app launcher, load the all items list, or interact with the existing list of items."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/navMenu",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeWindow[$type == 'XCUIElementTypeTable' AND name == 'stageleft.tableview'$]"
+    },
+    "elements": [
+        {
+            "name": "allItems",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "All Items"
+            }
+        },
+        {
+            "name": "appLauncher",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "App Launcher"
+            }
+        },
+        {
+            "name": "appName",
+            "selector": {
+                "classchain": "**/XCUIElementTypeAny[`name == 'cell.appTitle'`]/XCUIElementTypeStaticText[`enabled == true`]"
+            },
+            "type": [
+                "actionable"
+            ]
+        },
+        {
+            "name": "navItemsList",
+            "type": "utam-salesforceapp/pageObjects/navigation/navItemsList",
+            "selector": {
+                "accessid": "stageleft.tableview"
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "openAllItems",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "allItems",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "openAppLauncher",
+            "compose": [
+                {
+                    "element": "appLauncher",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getAppName",
+            "compose": [
+                {
+                    "element": "appName",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

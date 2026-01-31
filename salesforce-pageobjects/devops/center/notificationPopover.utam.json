@@ -1,0 +1,163 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays a popover with a message and allows interaction with a close button. It also supports drag-and-drop functionality for adding ingredients to a soup.",
+            "Selector: src-soup"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "closePopoverButton",
+                "selector": {
+                    "css": "button.slds-button_icon"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the close button on the popover.",
+                "nullable": true
+            },
+            {
+                "name": "popoverIcon",
+                "selector": {
+                    "css": "lightning-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the icon displayed in the popover header.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "popoverTitle",
+                "selector": {
+                    "css": "h2.slds-text-heading_medium"
+                },
+                "description": "Represents the title of the current message displayed in the popover.",
+                "nullable": true
+            },
+            {
+                "name": "popoverBody",
+                "selector": {
+                    "css": ".slds-popover__body p"
+                },
+                "description": "Represents the body text of the current message displayed in the popover.",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCloseButton",
+            "description": {
+                "text": [
+                    "Simulate a click on the close button of the popover"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closePopoverButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isPopoverVisible",
+            "description": {
+                "text": [
+                    "Check if the popover is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "closePopoverButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPopoverTitle",
+            "description": {
+                "text": [
+                    "Get the title text from the popover"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "popoverTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getPopoverBody",
+            "description": {
+                "text": [
+                    "Get the body text from the popover"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "popoverBody",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyClosePopoverButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"closePopoverButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "closePopoverButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyPopoverTitlePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"popoverTitle\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "popoverTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyPopoverBodyPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"popoverBody\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "popoverBody",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

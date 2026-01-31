@@ -1,0 +1,155 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: record_flexipage-record-field",
+            "Represents the record_flexipage-record-field Lightning web component.",
+            "Check if the field is read only, is required, or if a label is present. Get the label text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Gets the label text of the record field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasLabelText",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the record field has label text"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isFieldReadOnly",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the record field is read only"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "readOnlyField",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isFieldRequired",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the record field is required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredField",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isAiEnabledField",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the record field is ai enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "aiEnabledField",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": ".test-id__field-label"
+                }
+            },
+            {
+                "name": "inlineEditTrigger",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button[class*='inline-edit-trigger']"
+                },
+                "public": true
+            },
+            {
+                "name": "readOnlyField",
+                "selector": {
+                    "css": ".is-read-only"
+                }
+            },
+            {
+                "name": "requiredField",
+                "selector": {
+                    "css": ".slds-required"
+                }
+            },
+            {
+                "name": "undoButton",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".inline-edit-undo"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "aiEnabledField",
+                "selector": {
+                    "css": "lightning-ai-form-control"
+                },
+                "nullable": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "fieldContentEditMode",
+            "type": "container",
+            "selector": {
+                "css": "[slot='input']"
+            },
+            "public": true
+        },
+        {
+            "name": "fieldContentViewMode",
+            "type": "container",
+            "selector": {
+                "css": ":scope *"
+            },
+            "public": true
+        }
+    ]
+}

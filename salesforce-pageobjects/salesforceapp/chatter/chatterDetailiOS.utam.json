@@ -1,0 +1,155 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeOther[$type == 'XCUIElementTypeOther' AND name == 'comment.container'$][-2].",
+            "Represents the iOS single Chatter post view controller.",
+            "Interact with an individual Chatter post."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/chatter/chatterDetail",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeOther' AND name == 'comment.container'$][-2]"
+    },
+    "elements": [
+        {
+            "name": "postDetail",
+            "type": "utam-salesforceapp/pageObjects/chatter/chatterPostCell",
+            "selector": {
+                "classchain": "**/XCUIElementTypeCell[`enabled == true`]"
+            },
+            "public": true
+        },
+        {
+            "name": "mentionIcon",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "comment.mentionButton"
+            }
+        },
+        {
+            "name": "attachIcon",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "comment.attachmentButton"
+            }
+        },
+        {
+            "name": "postButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "Post"
+            }
+        },
+        {
+            "name": "commentInput",
+            "type": [
+                "clickable",
+                "editable"
+            ],
+            "selector": {
+                "accessid": "comment.textView"
+            }
+        },
+        {
+            "name": "linkInPost",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[`name == 'feedCell.textBody' AND label == '%s'`]",
+                "args": [
+                    {
+                        "name": "link",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickMentionIcon",
+            "compose": [
+                {
+                    "element": "mentionIcon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickAttachIcon",
+            "compose": [
+                {
+                    "element": "attachIcon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickPostButton",
+            "compose": [
+                {
+                    "element": "postButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickOnLinkInPost",
+            "compose": [
+                {
+                    "element": "linkInPost",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "typeText",
+            "compose": [
+                {
+                    "element": "commentInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "textToType",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

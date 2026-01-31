@@ -1,0 +1,25 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "licenseEditorButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "input[name='licenseEditor']"
+            },
+            "public": true
+        }
+    ]
+}

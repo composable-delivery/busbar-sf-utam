@@ -1,0 +1,69 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiMenuItem.",
+            "Represents the ui:menuItem Aura component.",
+            "Select an item, select an item by title, or get a menu item's text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "selectItem",
+            "description": "Clicks the menu item",
+            "compose": [
+                {
+                    "element": "item",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectItemByTitle",
+            "description": "Clicks the menu item with the given title",
+            "compose": [
+                {
+                    "element": "itemWithTitle",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getMenuItemText",
+            "description": "Gets the text of the menu item",
+            "compose": [
+                {
+                    "element": "item",
+                    "apply": "getTitle"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "item",
+            "selector": {
+                "css": "a"
+            },
+            "type": [
+                "clickable"
+            ],
+            "public": true
+        },
+        {
+            "name": "itemWithTitle",
+            "selector": {
+                "css": "a[title='%s']",
+                "args": [
+                    {
+                        "name": "text",
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ]
+}

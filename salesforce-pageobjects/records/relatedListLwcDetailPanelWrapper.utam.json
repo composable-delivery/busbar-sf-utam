@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-related-list-lwc-detail-panel-wrapper.",
+            "Represents the records-related-list-lwc-detail-panel-wrapper Lightning web component.",
+            "Access the event broker or the detail panel."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "eventBroker",
+                "selector": {
+                    "css": "records-record-layout-event-broker"
+                },
+                "type": "utam-records/pageObjects/recordLayoutEventBroker",
+                "public": true
+            },
+            {
+                "name": "detailPanel",
+                "selector": {
+                    "css": "records-lwc-detail-panel"
+                },
+                "type": "utam-records/pageObjects/lwcDetailPanel",
+                "public": true
+            }
+        ]
+    }
+}

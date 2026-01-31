@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of records within a card structure, including a title and the ability to handle record updates.",
+            "Selector: feeds_chat-view-record-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "card",
+                "selector": {
+                    "css": "feeds_chat-base-card"
+                },
+                "description": "Represents the card.",
+                "elements": [
+                    {
+                        "name": "cardTitle",
+                        "public": true,
+                        "selector": {
+                            "css": "feeds_chat-base-text-heading"
+                        },
+                        "description": "Represents the title of the card."
+                    },
+                    {
+                        "name": "recordListInternal",
+                        "selector": {
+                            "css": "feeds_chat-view-record-list-internal"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/viewRecordListInternal",
+                        "description": "Represents the internal component that displays the list of records.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

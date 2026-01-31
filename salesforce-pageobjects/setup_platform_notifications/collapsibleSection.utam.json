@@ -1,0 +1,60 @@
+{
+    "description": {
+        "text": [
+            "A collapsible section providing access to the expand button as well as the contained data table."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "waitForDatatable",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "lightning-datatable"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "returnSelf"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "expandButton",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "h3 > button"
+            }
+        },
+        {
+            "name": "datatable",
+            "type": "utam-lightning/pageObjects/datatable",
+            "selector": {
+                "css": "lightning-datatable"
+            },
+            "public": true
+        }
+    ]
+}

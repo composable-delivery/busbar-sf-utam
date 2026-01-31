@@ -1,0 +1,68 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: paletteItem"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "itemRow",
+                "type": [
+                    "actionable",
+                    "draggable"
+                ],
+                "selector": {
+                    "css": "div[id^='palette-item-row']"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "elementIcon",
+                        "type": "utam-builder-framework/pageObjects/elementIcon",
+                        "selector": {
+                            "css": "builder_framework-element-icon"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "spanContent",
+                        "type": [],
+                        "selector": {
+                            "css": "span"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "icon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon[id^='rhs-icon']"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "componentlabelidContent",
+                "type": [],
+                "selector": {
+                    "css": "span#componentlabelid"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "compose": [
+                {
+                    "element": "spanContent",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

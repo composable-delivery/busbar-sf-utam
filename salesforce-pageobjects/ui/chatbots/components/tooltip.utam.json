@@ -1,0 +1,83 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a tooltip functionality which can be toggled on mouse enter and leave events. It can wrap any element to show a popover style tooltip with configurable placement and delay.",
+            "Selector: src-tooltip"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "tooltipWrapper",
+                "selector": {
+                    "css": "span"
+                },
+                "type": "actionable",
+                "description": "Represents the wrapper that toggles the tooltip on mouse events.",
+                "elements": [
+                    {
+                        "name": "tooltipContainer",
+                        "selector": {
+                            "css": ".tooltip-container"
+                        },
+                        "description": "Represents the container of the tooltip which is shown or hidden based on mouse interaction.",
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "richTextField",
+                                "selector": {
+                                    "css": "lightning-formatted-rich-text"
+                                },
+                                "type": "utam-lightning/pageObjects/formattedRichText",
+                                "description": "Represents the rich text field used to display the tooltip's content.",
+                                "public": true,
+                                "wait": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "slotContent",
+                        "selector": {
+                            "css": "[slot='content']"
+                        },
+                        "type": "container",
+                        "description": "Represents the named slot where additional content can be inserted.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "hoverOverTooltipWrapper",
+            "description": {
+                "text": [
+                    "Hover over the tooltip wrapper to trigger tooltip visibility"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "tooltipWrapper",
+                    "apply": "moveTo"
+                }
+            ]
+        },
+        {
+            "name": "isTooltipVisible",
+            "description": {
+                "text": [
+                    "Check that tooltip container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "tooltipContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

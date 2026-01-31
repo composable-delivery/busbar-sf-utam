@@ -1,0 +1,26 @@
+{
+    "description": {
+        "text": [
+            "Selector: .forceSearchPredictedResults.predictedResults--nls",
+            "Represents the forceSearch:predictResultsPage for NLS Aura component."
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceSearchPredictedResults.predictedResults--nls"
+    },
+    "elements": [
+        {
+            "name": "helpLink",
+            "public": true,
+            "selector": {
+                "css": "forcehelp-link-to-salesforce-help"
+            },
+            "type": [
+                "clickable",
+                "actionable"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceVirtualAction.",
+            "Represents the virtual action Aura component.",
+            "Click the dropdown trigger for row-level actions."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickActionsDropDownTrigger",
+            "description": {
+                "text": [
+                    "Clicks the actions dropdown"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "dropDownLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "dropDownLink",
+            "selector": {
+                "css": "a"
+            }
+        }
+    ]
+}

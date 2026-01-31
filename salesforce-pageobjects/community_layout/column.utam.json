@@ -1,0 +1,33 @@
+{
+    "description": {
+        "text": [
+            "Selector: community_layout-column",
+            "Represents the column Lightning web component of the community_layout namespace.",
+            "Find an inner dxp_base-text-block component that has the specified text,",
+            "all dxp_base-text-block components, or all inner components of any kind,",
+            "or find an inner dxp_form-lead-form component or an inner dxp_base-language-selector component."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "columnContent",
+            "type": "container",
+            "selector": {
+                "css": ".column-content"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

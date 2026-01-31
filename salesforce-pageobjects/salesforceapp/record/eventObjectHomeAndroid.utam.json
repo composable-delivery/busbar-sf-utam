@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/common_toolbar\").className(\"android.widget.LinearLayout\").enabled(true).",
+            "Represents the Android event object home view.",
+            "Verify the event object home has loaded."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/eventObjectHome",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/common_toolbar\").className(\"android.widget.LinearLayout\").enabled(true)"
+    }
+}

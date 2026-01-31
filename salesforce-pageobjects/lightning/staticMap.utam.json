@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-static-map",
+            "Represents the lightning-static-map Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "mapIframe",
+                "type": "utam-lightning/pageObjects/primitiveIframe",
+                "selector": {
+                    "css": "lightning-primitive-iframe"
+                },
+                "public": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-list-view-manger-button-bar.",
+            "Represents the list view manager button bar Lightning web component.",
+            "Access icon buttons in the list view manager button bar."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

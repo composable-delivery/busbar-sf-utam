@@ -1,0 +1,25 @@
+{
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component is a wrapper of the Agentforce panel component"
+        ]
+    },
+    "selector": {
+        "css": "experience_ui_gen_canvas-agent-panel"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "assistantPanelHomeView",
+                "type": "utam-runtime_copilot/pageObjects/assistantPanelHomeView",
+                "description": "Represents the runtime_copilot-assistant-panel-home-view Lightning web component.",
+                "selector": {
+                    "css": "runtime_copilot-assistant-panel-home-view"
+                },
+                "public": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-color-scheme-editor",
+            "Provides access to dataProviderBaseContainer component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "dataProviderBaseContainer",
+                "type": "utam-es_property_editors/pageObjects/dataProviderBaseContainer",
+                "selector": {
+                    "css": "es_property_editors-data-provider-base-container"
+                }
+            }
+        ]
+    }
+}

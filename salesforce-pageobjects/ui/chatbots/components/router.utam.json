@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A router component that manages the display of different views based on the application's current route. It shows a spinner while loading new views and allows for dynamic registration of view components.",
+            "Selector: src-router"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner.router__spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner shown while views are being loaded.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "viewSlot",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the slot where the current view's content will be displayed.",
+            "public": true
+        }
+    ]
+}

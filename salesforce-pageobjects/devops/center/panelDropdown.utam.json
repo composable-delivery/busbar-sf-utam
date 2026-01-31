@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to create a soup by dragging and dropping ingredients. It displays a button menu for additional actions such as logging out.",
+            "Selector: src-soup"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "menuButton",
+                "selector": {
+                    "css": "lightning-button-menu.no-border-menu"
+                },
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "description": "Represents the button menu for additional actions.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "menuItemLogout",
+                        "selector": {
+                            "css": "lightning-menu-item.custom-text-color[value='logout']"
+                        },
+                        "type": "utam-lightning/pageObjects/menuItem",
+                        "description": "Represents the menu item for logging out.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

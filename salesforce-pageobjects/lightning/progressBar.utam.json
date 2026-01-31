@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-progress-bar",
+            "Represents the lightning-progress-bar Lightning web component.",
+            "Get the assistive text. Get the current value of the bar. Check if the bar is busy."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "assistiveText",
+                "selector": {
+                    "css": ".slds-assistive-text"
+                }
+            },
+            {
+                "name": "progressBusy",
+                "selector": {
+                    "css": "[aria-busy]"
+                }
+            },
+            {
+                "name": "currentValue",
+                "selector": {
+                    "css": "[aria-valuenow]"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Get assistive input description of progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isBusy",
+            "description": {
+                "text": [
+                    "Is progress bar busy"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "progressBusy",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getValue",
+            "description": {
+                "text": [
+                    "Get the percentage value of the progress bar"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "currentValue",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-valuenow"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

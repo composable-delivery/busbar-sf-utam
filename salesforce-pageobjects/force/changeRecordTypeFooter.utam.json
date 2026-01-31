@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: forceChangeRecordTypeFooter.",
+            "Represents the force:changeRecordTypeFooter Aura component.",
+            "Click the action button containing text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickButton",
+            "description": {
+                "text": [
+                    "Clicks the action button with the specified text"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "actionButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "actionButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "buttonText",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_einstein_coach-scenario-list-view-table"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "datatable",
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                }
+            }
+        ]
+    }
+}

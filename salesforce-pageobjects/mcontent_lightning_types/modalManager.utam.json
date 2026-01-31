@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: modalManager",
+            "Dynamic modal manager that loads different modal components",
+            "Selector: mcontent_lightning_types-modal-manager"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent_lightning_types-modal-manager"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "setupFlow",
+                "type": "utam-mcontent_lightning_types/pageObjects/newLightningTypeSetupFlow",
+                "selector": {
+                    "css": "mcontent_lightning_types-new-lightning-type-setup-flow"
+                }
+            }
+        ]
+    }
+}

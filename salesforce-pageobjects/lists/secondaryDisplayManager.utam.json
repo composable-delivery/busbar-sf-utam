@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-secondary-display-manager.",
+            "Represents the list secondary display manager Lightning web component.",
+            "Access the empty states and secondary displays."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/secondaryDisplay",
+                "name": "secondaryDisplay",
+                "public": true,
+                "selector": {
+                    "css": "lst-secondary-display"
+                }
+            }
+        ]
+    }
+}

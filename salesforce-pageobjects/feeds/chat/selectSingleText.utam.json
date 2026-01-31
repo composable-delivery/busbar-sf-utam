@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a radio group for selecting a single option from a list of primitive type picklist options.",
+            "Selector: src-select-single-text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroupContainer",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio group"
+            },
+            {
+                "name": "picklistOptions",
+                "selector": {
+                    "css": "feeds_chat-primitive-type-picklist",
+                    "returnAll": true
+                },
+                "description": "Represents all picklist options as custom elements",
+                "public": true
+            },
+            {
+                "name": "optionLabel",
+                "selector": {
+                    "css": ":scope > *:first-child"
+                },
+                "description": "Represents the label for a picklist option"
+            },
+            {
+                "name": "formattedTextValue",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                },
+                "description": "Represents formatted text for picklist option value when label is not provided",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the radio group container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroupContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getOptionLabelText",
+            "description": {
+                "text": [
+                    "Get the text of the option label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isOptionLabelPresent",
+            "description": {
+                "text": [
+                    "Check if the option label is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

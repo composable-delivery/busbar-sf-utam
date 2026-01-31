@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Robot Edit Form"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "robotEditInputs",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "selects",
+                "type": "utam-lightning/pageObjects/select",
+                "selector": {
+                    "css": "lightning-select",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

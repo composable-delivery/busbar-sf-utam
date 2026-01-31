@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the login button screen (not the actual screen for logging in) for the Field Service app."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/loginButtonScreen",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeStaticText[`name == \"Log In\"`]"
+    },
+    "methods": [
+        {
+            "name": "login",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

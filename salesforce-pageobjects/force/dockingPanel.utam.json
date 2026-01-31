@@ -1,0 +1,182 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: forceDockingPanel.",
+            "Represents the force:dockingPanel Aura component.",
+            "Get the panel title. Check if a panel is docked. Get a button by text."
+        ]
+    },
+    "elements": [
+        {
+            "name": "panelTitle",
+            "selector": {
+                "css": "h2[class*=panelTitle]"
+            }
+        },
+        {
+            "name": "dockedPanel",
+            "selector": {
+                "css": ".slds-is-open"
+            }
+        },
+        {
+            "name": "panelHeaderButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button[title='%s']",
+                "args": [
+                    {
+                        "name": "buttonTitle",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "datatable",
+            "public": true,
+            "type": "utam-lightning/pageObjects/datatable",
+            "selector": {
+                "css": "lightning-datatable"
+            }
+        },
+        {
+            "name": "recordLayout",
+            "type": "utam-force/pageObjects/recordLayout",
+            "selector": {
+                "css": ".forceRecordLayout"
+            }
+        },
+        {
+            "name": "buttonByText",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "allErrors",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".pageLevelErrors ul[class='errorsList'] li",
+                "returnAll": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getPanelTitle",
+            "description": {
+                "text": [
+                    "Gets the title of the docking panel"
+                ],
+                "return": "the title of the docking panel"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "panelTitle"
+                }
+            ]
+        },
+        {
+            "name": "isPanelDocked",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the docking panel is docked"
+                ],
+                "return": "true if the docking panel is docked; otherwise, false"
+            },
+            "compose": [
+                {
+                    "apply": "isPresent",
+                    "element": "dockedPanel"
+                }
+            ]
+        },
+        {
+            "name": "getRecordLayout",
+            "description": {
+                "text": [
+                    "Waits for and gets the record layout in the docking panel"
+                ],
+                "return": "the record layout (utam-force/pageObjects/recordLayout)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordLayout"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAllErrors",
+            "description": {
+                "text": [
+                    "Waits for and gets the list of errors in the docking panel, if any"
+                ],
+                "return": "the list of errors in the docking panel, if any"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".pageLevelErrors ul[class='errorsList']"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "allErrors"
+                }
+            ]
+        }
+    ]
+}

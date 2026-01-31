@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the screen viewing and accepting the EULA."
+        ]
+    },
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "interface": true,
+    "methods": [
+        {
+            "name": "accept"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-output-lookup.",
+            "Represents the lists output lookup Lightning web component.",
+            "Access the inner lookup component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-force/pageObjects/lookup",
+                "name": "lookup",
+                "public": true,
+                "selector": {
+                    "css": "force-lookup"
+                }
+            }
+        ]
+    }
+}

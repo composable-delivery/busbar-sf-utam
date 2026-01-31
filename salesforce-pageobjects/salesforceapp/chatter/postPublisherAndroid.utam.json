@@ -1,0 +1,121 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/feedsdk_frag\").enabled(true).",
+            "Represents the Android fragment for posting in Chatter.",
+            "Input text to post and publish."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/chatter/postPublisher",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_frag\").enabled(true)"
+    },
+    "elements": [
+        {
+            "name": "inputText",
+            "type": [
+                "clickable",
+                "editable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_publisher_text\")"
+            }
+        },
+        {
+            "name": "postButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_publisher_submit\")"
+            }
+        },
+        {
+            "name": "button",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_actor_name\").textContains(\"%s\")",
+                "args": [
+                    {
+                        "name": "text",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeText",
+            "compose": [
+                {
+                    "element": "inputText",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "textToType",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickPostButton",
+            "compose": [
+                {
+                    "element": "postButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "uiautomator": "resourceId(\"com.salesforce.chatter:id/feedsdk_publisher_submit\")"
+                                            }
+                                        }
+                                    ],
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickButtonWithText",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,147 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-button-icon",
+            "Represents the lightning-button-icon Lightning web component.",
+            "Click or focus a button, or click a button with a given title, check if button has focus, hover on a button or get alternate text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickButton",
+            "description": "Performs click action on button element",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "button",
+                                    "apply": "click"
+                                },
+                                {
+                                    "apply": "returnSelf"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "description": "Performs focus action on button element",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "hasFocus",
+            "description": {
+                "text": [
+                    "Checks if button has focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "hover",
+            "description": "Scroll and hover on the button element",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "button",
+                    "apply": "moveTo"
+                }
+            ]
+        },
+        {
+            "name": "clickButtonWithTitle",
+            "description": "Performs click action on the button which is matching the given title",
+            "compose": [
+                {
+                    "element": "clickableButtonWithTitle",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "clickableButtonWithTitle",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getAlternativeText",
+            "description": {
+                "text": [
+                    "Gets assistive text which is read by screen readers"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "alternativeText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "button"
+                }
+            },
+            {
+                "name": "clickableButtonWithTitle",
+                "type": "clickable",
+                "selector": {
+                    "css": "button[title='%s']",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string",
+                            "description": "title of the button element"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "alternativeText",
+                "selector": {
+                    "css": ".slds-assistive-text"
+                },
+                "nullable": true
+            },
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "selector": {
+                    "css": "lightning-primitive-icon"
+                },
+                "public": true
+            }
+        ]
+    }
+}

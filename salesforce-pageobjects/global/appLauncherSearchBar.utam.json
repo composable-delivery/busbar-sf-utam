@@ -1,0 +1,22 @@
+{
+    "description": {
+        "text": [
+            "Selector: one-app-launcher-search-bar.",
+            "Represents the one-app-launcher-search-bar Lightning web component.",
+            "Access the search input."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "lwcInput",
+                "public": true,
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            }
+        ]
+    }
+}

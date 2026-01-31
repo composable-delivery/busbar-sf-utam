@@ -1,0 +1,99 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: primitive-column-sorter",
+            "Represents the PrimitiveColumnSorter Lightning web component.",
+            "Contains buttons for moving up and down, a combobox, and radio buttons for sorting order."
+        ]
+    },
+    "methods": [
+        {
+            "name": "moveUp",
+            "description": "Clicks the 'Move Up' button.",
+            "compose": [
+                {
+                    "element": "moveUpButton",
+                    "apply": "clickButton"
+                }
+            ]
+        },
+        {
+            "name": "moveDown",
+            "description": "Clicks the 'Move Down' button.",
+            "compose": [
+                {
+                    "element": "moveDownButton",
+                    "apply": "clickButton"
+                }
+            ]
+        },
+        {
+            "name": "delete",
+            "description": "Clicks the 'Delete' button.",
+            "compose": [
+                {
+                    "element": "deleteButton",
+                    "apply": "clickButton"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "comboBox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "radioAscending",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "input[value='asc']"
+                }
+            },
+            {
+                "name": "radioDescending",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "input[value='desc']"
+                }
+            },
+            {
+                "name": "moveUpButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-group lightning-button-icon:first-child"
+                },
+                "public": true
+            },
+            {
+                "name": "moveDownButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-group lightning-button-icon:last-child"
+                },
+                "public": true
+            },
+            {
+                "name": "deleteButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon:last-child"
+                },
+                "public": true
+            }
+        ]
+    }
+}

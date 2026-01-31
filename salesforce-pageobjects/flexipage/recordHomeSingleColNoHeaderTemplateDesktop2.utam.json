@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-record-home-single-col-no-header-template-desktop2.",
+            "Represents the flexipage-record-home-single-col-no-header-template-desktop2 Lightning web component.",
+            "Wait for the field content to load.  Get the flexipage-component2 by ID."
+        ]
+    },
+    "elements": [
+        {
+            "name": "component2",
+            "type": "utam-flexipage/pageObjects/component2",
+            "selector": {
+                "css": "flexipage-component2[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "componentId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

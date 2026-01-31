@@ -1,0 +1,98 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows selection and filtering of layout options.",
+            "Selector: src-repeater-layout-picker"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "headerText",
+                "selector": {
+                    "css": "h3.slds-text-heading_small"
+                },
+                "description": "Represents the header text displaying the section title."
+            },
+            {
+                "name": "descriptionText",
+                "selector": {
+                    "css": "p.slds-p-top_small.slds-p-bottom_x-small.slds-text-body_small"
+                },
+                "description": "Represents the description text below the header."
+            },
+            {
+                "name": "layoutPicker",
+                "selector": {
+                    "css": "lightning-grouped-combobox.layout-picker"
+                },
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "description": "Represents the grouped combobox for selecting and filtering layouts.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isHeaderTextVisible",
+            "description": {
+                "text": [
+                    "Check that header text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderText",
+            "description": {
+                "text": [
+                    "Get text from header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isDescriptionTextVisible",
+            "description": {
+                "text": [
+                    "Check that description text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDescriptionText",
+            "description": {
+                "text": [
+                    "Get text from description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

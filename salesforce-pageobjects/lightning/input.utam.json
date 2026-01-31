@@ -1,0 +1,701 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-input",
+            "Represents the lightning-input Lightning web component.",
+            "Check if it has a label and get the label text. Check if the element has focus.",
+            "Get the text value and set the text by scrolling to the input field.",
+            "Toggle the checkbox or set the required status if the component contains a checkbox.",
+            "Get the checked status. Check if there are any errors, and get the error text.",
+            "Select the date and time if the component has date and time pickers. Check if the input is enabled, or if it's read only."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "hasLabel",
+            "description": {
+                "text": [
+                    "Checks if input parent wrapper contains label or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasFocus",
+            "description": {
+                "text": [
+                    "Checks if the input has focus at the moment or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "description": "Applies focus on the input element",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "clickClearButton",
+            "description": "Clicks on Clear button",
+            "compose": [
+                {
+                    "element": "clearButton"
+                },
+                {
+                    "chain": true,
+                    "apply": "clickIcon"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "Clicks on the input tag",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "blur",
+            "description": "Applies blur action on the lightning-input element",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "blur"
+                }
+            ]
+        },
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get label text for input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickCheckboxLabel",
+            "description": {
+                "text": [
+                    "Clicks the label for a checkbox-button or toggle-button style input"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getValueText",
+            "description": {
+                "text": [
+                    "Get input tag value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "setText",
+            "description": "Set new value of input",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "input",
+                    "apply": "click"
+                },
+                {
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/inputUtils",
+                        "invoke": "setText",
+                        "args": [
+                            {
+                                "type": "elementReference",
+                                "value": "input"
+                            },
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getRootAttribute",
+            "description": {
+                "text": [
+                    "Get root element attribute value by attribute name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputAttribute",
+            "description": {
+                "text": [
+                    "Get input attribute value by attribute name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "toggleCheckbox",
+            "description": "Click to toggle input checkbox state",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "pressSpace",
+            "description": "Presses Space key on input checkbox",
+            "compose": [
+                {
+                    "element": "inputCheckbox",
+                    "apply": "press",
+                    "args": [
+                        {
+                            "value": "Space"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getCheckedState",
+            "description": {
+                "text": [
+                    "Get input checkbox state by getting it's checked attribute"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "inputCheckbox",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "checked"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAriaDescribedBy",
+            "description": {
+                "text": [
+                    "Get input aria-describedby attribute value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-describedby"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAriaErrorMessage",
+            "description": {
+                "text": [
+                    "Get input aria-errormessage attribute value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-errormessage"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getAriaLabelledBy",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-labelledby"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getDateTime",
+            "description": {
+                "text": [
+                    "Get input datetime value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "inputDateTime",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "getErrorText",
+            "description": {
+                "text": [
+                    "Get error help message text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "error",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getErrorAssistiveText",
+            "description": {
+                "text": [
+                    "Get assistive help message text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasError",
+            "description": {
+                "text": [
+                    "Checks if error message is present or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "error",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isReadonly",
+            "description": {
+                "text": [
+                    "Checks if the input is readonly by getting it's readonly attribute"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "readonly"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isEnabled",
+            "description": {
+                "text": [
+                    "Checks if the input is enabled or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "selectDate",
+            "description": "Select date from datePicker and date should be in 'yyyy-mm-dd' format",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/inputUtils",
+                        "invoke": "selectDate",
+                        "args": [
+                            {
+                                "name": "date",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "selectTime",
+            "description": "Select time from input time picker and time should be in H:MM XM format",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/inputUtils",
+                        "invoke": "selectTime",
+                        "args": [
+                            {
+                                "name": "time",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "check",
+            "description": "Set the status of the input checkbox",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/inputUtils",
+                        "invoke": "setCheckboxState",
+                        "args": [
+                            {
+                                "name": "state",
+                                "type": "boolean"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isSelectable",
+            "description": {
+                "text": [
+                    "Checks if the input checkbox selection is enabled or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputCheckbox",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "scrollToCenter",
+            "description": "Scroll input to center of the screen",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "scrollToCenter"
+                }
+            ]
+        },
+        {
+            "name": "hasDatetimepicker",
+            "description": {
+                "text": [
+                    "Checks if the wrapper element contains datetimepicker or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "lightning-datetimepicker"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForErrorMessage",
+            "description": {
+                "text": [
+                    "Wait for error message to be displayed"
+                ],
+                "throws": "TimeoutError"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "error",
+                                    "apply": "isVisible"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "primitiveInput",
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-primitive-input-simple, lightning-primitive-input-checkbox-button, lightning-primitive-input-color, lightning-primitive-input-toggle, lightning-primitive-input-checkbox, lightning-primitive-input-radio, lightning-primitive-input-file"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "label",
+                            "nullable": true,
+                            "selector": {
+                                "css": "label"
+                            },
+                            "type": [
+                                "clickable"
+                            ],
+                            "elements": [
+                                {
+                                    "name": "required",
+                                    "nullable": true,
+                                    "selector": {
+                                        "css": ".slds-required"
+                                    },
+                                    "public": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "helpText",
+                            "public": true,
+                            "nullable": true,
+                            "type": "utam-lightning/pageObjects/helptext",
+                            "selector": {
+                                "css": "lightning-helptext"
+                            }
+                        },
+                        {
+                            "name": "input",
+                            "nullable": true,
+                            "type": [
+                                "actionable",
+                                "clickable",
+                                "editable"
+                            ],
+                            "selector": {
+                                "css": "input"
+                            }
+                        },
+                        {
+                            "name": "colorButton",
+                            "nullable": true,
+                            "type": [
+                                "actionable",
+                                "clickable",
+                                "editable"
+                            ],
+                            "selector": {
+                                "css": "lightning-primitive-colorpicker-button"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "colorButtonRoot",
+                                        "public": true,
+                                        "nullable": true,
+                                        "type": [
+                                            "actionable",
+                                            "clickable",
+                                            "editable"
+                                        ],
+                                        "selector": {
+                                            "css": "button"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "error",
+                            "selector": {
+                                "css": ".slds-form-element__help"
+                            },
+                            "public": true,
+                            "nullable": true
+                        },
+                        {
+                            "name": "assistiveText",
+                            "selector": {
+                                "css": ".slds-assistive-text"
+                            },
+                            "public": true,
+                            "nullable": true
+                        },
+                        {
+                            "name": "clearButton",
+                            "nullable": true,
+                            "type": "utam-lightning/pageObjects/primitiveIcon",
+                            "selector": {
+                                "css": "[data-element-id=searchClear] lightning-primitive-icon"
+                            },
+                            "public": true
+                        },
+                        {
+                            "name": "fileDroppableZone",
+                            "public": true,
+                            "nullable": true,
+                            "type": "utam-lightning/pageObjects/primitiveFileDroppableZone",
+                            "selector": {
+                                "css": "lightning-primitive-file-droppable-zone"
+                            }
+                        },
+                        {
+                            "name": "inputCheckbox",
+                            "nullable": true,
+                            "type": [
+                                "clickable",
+                                "editable"
+                            ],
+                            "selector": {
+                                "css": "input[type='checkbox']"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "datepicker",
+                "public": true,
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/datepicker",
+                "selector": {
+                    "css": "lightning-datepicker"
+                }
+            },
+            {
+                "name": "timepicker",
+                "public": true,
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/timepicker",
+                "selector": {
+                    "css": "lightning-timepicker"
+                }
+            },
+            {
+                "name": "datetimepicker",
+                "nullable": true,
+                "public": true,
+                "type": "utam-lightning/pageObjects/datetimepicker",
+                "selector": {
+                    "css": "lightning-datetimepicker"
+                }
+            },
+            {
+                "name": "inputDateTime",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "lightning-datetimepicker"
+                }
+            }
+        ]
+    }
+}

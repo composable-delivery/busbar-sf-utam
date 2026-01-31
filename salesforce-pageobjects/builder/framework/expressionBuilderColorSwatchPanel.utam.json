@@ -1,0 +1,167 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a color picker dialog with swatches for color selection and buttons to cancel or apply the chosen color."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "colorPickerDialog",
+                "selector": {
+                    "css": "section.slds-popover"
+                },
+                "type": "actionable",
+                "description": "Represents the main dialog of the color picker",
+                "elements": [
+                    {
+                        "name": "swatchList",
+                        "selector": {
+                            "css": "ul.swatch-list"
+                        },
+                        "description": "Represents the list of color swatches",
+                        "elements": [
+                            {
+                                "name": "swatchItems",
+                                "selector": {
+                                    "css": "li.slds-color-picker__swatch",
+                                    "returnAll": true
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the individual color swatches",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "dialogFooter",
+                        "selector": {
+                            "css": "footer.slds-popover__footer"
+                        },
+                        "description": "Represents the footer of the dialog",
+                        "elements": [
+                            {
+                                "name": "cancelButton",
+                                "selector": {
+                                    "css": "button[name='cancel']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the cancel button in the dialog footer",
+                                "public": true
+                            },
+                            {
+                                "name": "doneButton",
+                                "selector": {
+                                    "css": "button[name='done']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the done button in the dialog footer",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isColorPickerDialogVisible",
+            "description": {
+                "text": [
+                    "Check if the color picker dialog is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "colorPickerDialog",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSwatchListPresent",
+            "description": {
+                "text": [
+                    "Check if the swatch list is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "swatchList",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isSwatchItemVisible",
+            "description": {
+                "text": [
+                    "Check if a swatch item is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "swatchItems",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDialogFooterVisible",
+            "description": {
+                "text": [
+                    "Check if the dialog footer is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dialogFooter",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Click the cancel button in the dialog footer"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDoneButton",
+            "description": {
+                "text": [
+                    "Click the done button in the dialog footer"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "doneButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

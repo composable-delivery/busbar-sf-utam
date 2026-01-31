@@ -1,0 +1,204 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-select",
+            "Represents the lightning-select Lightning web component.",
+            "Check if the field is required or get the label text. Expand by clicking the select box.",
+            "Select by value or select by text."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get select label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getValueText",
+            "description": {
+                "text": [
+                    "Get select value text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "selectBox",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Is lightning-select required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "required",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "expand",
+            "description": "Clicks select to expand",
+            "compose": [
+                {
+                    "element": "selectBox",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectByValue",
+            "description": "Click an select option with matching value",
+            "compose": [
+                {
+                    "element": "selectValueOption",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectByText",
+            "description": "Click an select option with matching text",
+            "compose": [
+                {
+                    "element": "selectTextOption",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasFocus",
+            "description": {
+                "text": [
+                    "Checks if the select is in focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "selectBox",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "getAttribute",
+            "description": {
+                "text": [
+                    "Get select attribute value by attribute name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "selectBox",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "label"
+                },
+                "elements": [
+                    {
+                        "name": "required",
+                        "selector": {
+                            "css": ".slds-required"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "helptext",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "public": true
+            },
+            {
+                "name": "selectBox",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "select"
+                },
+                "elements": [
+                    {
+                        "name": "selectValueOption",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "option[value='%s']",
+                            "args": [
+                                {
+                                    "name": "text",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "selectTextOption",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "option",
+                            "returnAll": true
+                        },
+                        "filter": {
+                            "apply": "getText",
+                            "findFirst": true,
+                            "matcher": {
+                                "type": "stringContains",
+                                "args": [
+                                    {
+                                        "name": "text",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

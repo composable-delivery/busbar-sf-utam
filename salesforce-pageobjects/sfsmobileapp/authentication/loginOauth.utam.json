@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the oauth login navigation flow."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "div#main"
+    },
+    "methods": [
+        {
+            "name": "clickAllow",
+            "compose": [
+                {
+                    "element": "allow",
+                    "apply": "scrollToTop"
+                },
+                {
+                    "element": "allow",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDeny",
+            "compose": [
+                {
+                    "element": "deny",
+                    "apply": "scrollToTop"
+                },
+                {
+                    "element": "deny",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "name": "allow",
+            "selector": {
+                "css": "input#oaapprove"
+            }
+        },
+        {
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "name": "deny",
+            "selector": {
+                "css": "input#oadeny"
+            }
+        }
+    ]
+}

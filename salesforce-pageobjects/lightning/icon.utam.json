@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-icon",
+            "Represents the lightning-icon Lightning web component.",
+            "Get the lightning-primitive-icon component or get the assistive text."
+        ]
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-primitive-icon"
+                }
+            },
+            {
+                "name": "assistiveText",
+                "selector": {
+                    "css": ".slds-assistive-text"
+                },
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Get lightning-icon assistive text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getIconAttribute",
+            "description": {
+                "text": [
+                    "Get lightning-icon attribute by passing attribute name as parameter"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attribute",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getName",
+            "description": {
+                "text": [
+                    "Get lightning-primitive-icon name value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "icon",
+                    "apply": "getName",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "root": true,
+    "selector": {
+        "css": "search_filters-panel"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: search_filters-panel",
+            "Represents a filter panel component with filter form & buttons.",
+            "Access the filter form and buttons."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "filterForm",
+                "type": "utam-search-filters/pageObjects/filtersForm",
+                "public": true,
+                "selector": {
+                    "css": "search_filters-filters-form"
+                },
+                "wait": true
+            }
+        ]
+    }
+}

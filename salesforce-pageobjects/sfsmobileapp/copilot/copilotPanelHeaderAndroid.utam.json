@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"copilotContainer\").",
+            "Represents the Android copilot panel header."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/copilot/copilotPanelHeader",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"copilotContainer\")"
+    },
+    "methods": [
+        {
+            "name": "closePanel",
+            "compose": [
+                {
+                    "element": "closeBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "closeBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"Close\")"
+            }
+        },
+        {
+            "name": "title",
+            "selector": {
+                "uiautomator": "resourceId(\"copilotTitle\").childSelector(new UiSelector().className(\"android.widget.TextView\"))"
+            }
+        }
+    ]
+}

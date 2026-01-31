@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-checkbox.",
+            "Represents the records-record-layout-checkbox Lightning web component.",
+            "Access the input."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/input",
+                "name": "input",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-input"
+                }
+            }
+        ]
+    }
+}

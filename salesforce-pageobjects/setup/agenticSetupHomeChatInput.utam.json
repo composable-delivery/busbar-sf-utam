@@ -1,0 +1,168 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that extends base chat input functionality with a text area for user input and an optional static input mode.",
+            "Selector: setup-agentic-setup-home-chat-input"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dynamicBaseChatInput",
+                "selector": {
+                    "css": "app_dev_agent_base/baseChatInput"
+                },
+                "description": "Represents the base chat input component",
+                "elements": [
+                    {
+                        "name": "inputContent",
+                        "selector": {
+                            "css": "[slot='inputContent']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot with input data",
+                        "public": true
+                    },
+                    {
+                        "name": "textArea",
+                        "selector": {
+                            "css": "textarea"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents text area for user input"
+                    },
+                    {
+                        "name": "disclaimerText",
+                        "selector": {
+                            "css": ".disclaimer"
+                        },
+                        "description": "Represents the disclaimer text that is shown when not in static input mode",
+                        "nullable": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isDisclaimerVisible",
+            "description": {
+                "text": [
+                    "Check that disclaimer text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTextAreaEnabled",
+            "description": {
+                "text": [
+                    "Check if textarea is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textArea",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "enterText",
+            "description": {
+                "text": [
+                    "Clear text area and enter string"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "textArea",
+                    "apply": "clear"
+                },
+                {
+                    "element": "textArea",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "description": {
+                "text": [
+                    "Get text from text area"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "textArea",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickTextArea",
+            "description": {
+                "text": [
+                    "Click on the text area"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "textArea",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "focusTextArea",
+            "description": {
+                "text": [
+                    "Focus on the text area"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "textArea",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "verifyDisclaimerTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"disclaimerText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

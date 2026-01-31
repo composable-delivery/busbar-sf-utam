@@ -1,0 +1,65 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-copilot-system-messages",
+            "Displays the System Messages tab of the Agent Details."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-copilot-system-messages"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "divContent1",
+                "type": [],
+                "selector": {
+                    "css": "div:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "primitiveFieldInputWelcome",
+                "type": "utam-ui-chatbots-components/pageObjects/primitiveFieldInput",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-primitive-field-input[data-id='welcomeMessage']"
+                }
+            },
+            {
+                "public": true,
+                "name": "primitiveFieldInputError",
+                "type": "utam-ui-chatbots-components/pageObjects/primitiveFieldInput",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-primitive-field-input[data-id='errorMessage']"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "button1",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button:nth-of-type(2)"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: componentEditorUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "tabset",
+                "type": "utam-lightning/pageObjects/tabset",
+                "selector": {
+                    "css": "lightning-tabset"
+                }
+            },
+            {
+                "public": true,
+                "name": "activeTabPropertySheetContainer",
+                "type": "container",
+                "selector": {
+                    "css": "lightning-tabset .slds-show[role='tabpanel'] %s",
+                    "args": [
+                        {
+                            "name": "componentTagName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "noEventPropertySheetContainer",
+                "type": "container"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isShowingTabs",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "lightning-tabset"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

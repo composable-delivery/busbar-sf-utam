@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-primary-display-card.",
+            "Represents the list primary display card Lightning web component.",
+            "Access the template list."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "lst-template-list"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/templateList",
+                "name": "cardList",
+                "public": true,
+                "selector": {
+                    "css": "lst-template-list"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/stencilCard",
+                "name": "stencilCard",
+                "public": true,
+                "selector": {
+                    "css": "lst-stencil-card"
+                }
+            }
+        ]
+    }
+}

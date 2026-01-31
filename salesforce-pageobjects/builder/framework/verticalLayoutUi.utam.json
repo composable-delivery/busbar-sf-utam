@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_framework-vertical-layout-ui",
+            "Represents layout items on property panel."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "section",
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "allComponents",
+                        "selector": {
+                            "css": "div.slds-ui-gen__layout-item builder_framework-component",
+                            "returnAll": true
+                        },
+                        "type": "utam-builder-framework/pageObjects/component"
+                    },
+                    {
+                        "name": "layoutItems",
+                        "selector": {
+                            "css": "div.slds-ui-gen__layout-item:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "itemIndex",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "component",
+                                "type": "utam-builder-framework/pageObjects/component",
+                                "selector": {
+                                    "css": "builder_framework-component"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

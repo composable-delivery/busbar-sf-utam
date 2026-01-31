@@ -1,0 +1,129 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to select and manage metadata records. It includes a search and filter functionality for metadata types and records, a spinner to indicate loading, a list of metadata records, and buttons to cancel or add selected metadata.",
+            "Selector: setup_platform_unifiedapp-metadata-picker-modal"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-metadata-picker-modal"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with a label.",
+                "public": true
+            },
+            {
+                "name": "metadataTypeSearchInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the search input for filtering metadata types.",
+                "public": true
+            },
+            {
+                "name": "metadataTypeNav",
+                "selector": {
+                    "css": "lightning-vertical-navigation",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/verticalNavigation",
+                "description": "Represents navigation for metadata types.",
+                "public": true
+            },
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner while records are being fetched.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "commonList",
+                "selector": {
+                    "css": "lst-common-list"
+                },
+                "type": "utam-lists/pageObjects/commonList",
+                "description": "Represents the list of metadata records.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "selectedItemsCounter",
+                "selector": {
+                    "css": "span.slds-float_left"
+                },
+                "description": "Represents the counter for the number of selected items.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button.metadata-picker-cancel-button"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the cancel button in the modal footer.",
+                "public": true
+            },
+            {
+                "name": "addButton",
+                "selector": {
+                    "css": "lightning-button.metadata-picker-add-button"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the add button in the modal footer, which may be disabled.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getSelectedItemsCountText",
+            "description": {
+                "text": [
+                    "Get the text from the selected items counter"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "selectedItemsCounter",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifySelectedItemsCounterPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"selectedItemsCounter\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "selectedItemsCounter",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

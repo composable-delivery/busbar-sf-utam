@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-time",
+            "Provides access to lightning input component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            }
+        ]
+    }
+}

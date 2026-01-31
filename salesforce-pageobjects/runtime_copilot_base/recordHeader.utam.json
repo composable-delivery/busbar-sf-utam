@@ -1,0 +1,111 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays a header with an optional avatar image and title for list or card layouts.",
+            "Selector: src-record-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "headerArea",
+                "selector": {
+                    "css": "div.header"
+                },
+                "description": "Represents the header area of the component.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "avatarImage",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-avatar"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseAvatar",
+                        "description": "Represents the avatar image within the header area.",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "headerSlotContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the unnamed slot within the header area.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "recordHeader",
+            "selector": {
+                "css": "h1"
+            },
+            "description": "Represents the name of header",
+            "public": true
+        },
+        {
+            "name": "textHeading",
+            "selector": {
+                "css": "runtime_copilot_base-base-text-heading"
+            },
+            "public": true,
+            "nullable": true,
+            "wait": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isHeaderAreaVisible",
+            "description": {
+                "text": [
+                    "Check if the header area is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHeaderAreaNotPresent",
+            "description": {
+                "text": [
+                    "Check if the header area is not present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerArea",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyHeaderAreaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"headerArea\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerArea",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

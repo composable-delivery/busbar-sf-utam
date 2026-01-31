@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component designed to display actionable messages, such as prompts, outputs, inputs, and actions associated with a chat feature. It responds to user interactions by dispatching events for actions like hyperlink clicks and action button clicks.",
+            "Selector: feeds_chat-message-actionable"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "promptRegion",
+                "selector": {
+                    "css": "feeds_chat-view-component[data-prompt-region]"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewComponent",
+                "description": "Represents the prompt area of the component.",
+                "public": true
+            },
+            {
+                "name": "outputRegion",
+                "selector": {
+                    "css": "feeds_chat-view-component[data-output-region]"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewComponent",
+                "description": "Represents the output area where messages are displayed.",
+                "public": true
+            },
+            {
+                "name": "inputRegion",
+                "selector": {
+                    "css": "feeds_chat-view-component[data-input-region]"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewComponent",
+                "description": "Represents the input area for user interaction.",
+                "public": true
+            },
+            {
+                "name": "actionRegion",
+                "selector": {
+                    "css": "feeds_chat-view-component[data-action-region]"
+                },
+                "type": "utam-feeds-chat/pageObjects/viewComponent",
+                "description": "Represents the action buttons area for user to take actions.",
+                "public": true
+            }
+        ]
+    }
+}

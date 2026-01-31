@@ -1,0 +1,175 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a dropdown with a button that can display a popover with customizable content and headers. The button can be disabled, and the popover can be opened or closed programmatically.",
+            "Selector: src-base-drop-down"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "popoverManager",
+                "selector": {
+                    "css": "lightning-primitive-popover-manager"
+                },
+                "description": "Represents the popover manager that controls the popover visibility.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "dropdownButton",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-button"
+                        },
+                        "type": "clickable",
+                        "description": "Represents the button that triggers the popover.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "dropdownButtonIcon",
+                                "selector": {
+                                    "css": "runtime_copilot_base-base-icon"
+                                },
+                                "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                                "description": "Represents the icon displayed within the dropdown button.",
+                                "public": true
+                            },
+                            {
+                                "name": "dropdownHeader",
+                                "selector": {
+                                    "css": "h2.dropdown-header"
+                                },
+                                "description": "Represents the header text within the dropdown button.",
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "popoverContainer",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-popover-container"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/basePopoverContainer",
+                        "description": "Represents the container for the popover content.",
+                        "wait": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "headerStartSlot",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the slot for custom content at the start of the popover header.",
+                                "public": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "headerSlot",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the slot for custom content in the popover header.",
+                                "public": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "headerEndSlot",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the slot for custom content at the end of the popover header.",
+                                "public": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "popoverContentSlot",
+                                "selector": {
+                                    "css": "[slot='popover']"
+                                },
+                                "type": "container",
+                                "description": "Represents the main content slot of the popover.",
+                                "public": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "agentLabels",
+                                "selector": {
+                                    "css": "span[slot='popover'] p.agent-label"
+                                }
+                            },
+                            {
+                                "name": "agentRadios",
+                                "selector": {
+                                    "css": "span[slot='popover'] lightning-primitive-radio"
+                                },
+                                "type": "clickable"
+                            },
+                            {
+                                "name": "footerSlot",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the slot for custom content in the popover footer.",
+                                "public": true,
+                                "wait": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isDropdownHeaderVisible",
+            "description": {
+                "text": [
+                    "Check if the dropdown header is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownHeader",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDropdownHeaderText",
+            "description": {
+                "text": [
+                    "Retrieve the text of the dropdown header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "dropdownHeader",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyDropdownHeaderPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"dropdownHeader\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownHeader",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

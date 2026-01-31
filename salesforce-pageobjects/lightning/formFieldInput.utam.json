@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-field-input",
+            "Represents lightning-form-field-input Lightning web component.",
+            "Get form input, form input name, form input address"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/formInput",
+                "name": "input",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-input"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formInputName",
+                "name": "inputName",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-input-name"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formInputAddress",
+                "name": "inputAddress",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-input-address"
+                }
+            },
+            {
+                "name": "picklist",
+                "type": "utam-lightning/pageObjects/picklist",
+                "selector": {
+                    "css": "lightning-picklist"
+                },
+                "public": true
+            }
+        ]
+    }
+}

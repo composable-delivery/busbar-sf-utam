@@ -1,0 +1,146 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the sheet for the activity timeline.",
+            "Selector: bottomsheet_container"
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/embeddedHalfSheet",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceIdMatches(\"com.salesforce.chatter:id/.*bottom.*sheet.*\")"
+    },
+    "elements": [
+        {
+            "name": "closeButton",
+            "description": "This button closes the recent activity overlay if the close button exists.",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/activity_timeline_close\")"
+            },
+            "type": [
+                "clickable",
+                "touchable"
+            ]
+        },
+        {
+            "name": "recentActivityButton",
+            "description": "This button opens the recent activity overlay.",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/halfsheet_header\")"
+            },
+            "type": [
+                "clickable",
+                "touchable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "close",
+            "description": {
+                "text": [
+                    "Close the recent activity overlay"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "expand",
+            "description": {
+                "text": [
+                    "Open the recent activity overlay"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recentActivityButton",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "recentActivityButton",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": -400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "collapse",
+            "description": {
+                "text": [
+                    "Collapse the recent activity overlay"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recentActivityButton",
+                    "apply": "isPresent"
+                },
+                {
+                    "element": "recentActivityButton",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForRecentActivityContainer",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "uiautomator": "resourceId(\"com.salesforce.chatter:id/internal_container\")"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

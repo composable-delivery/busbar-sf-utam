@@ -1,0 +1,183 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: XCUIElementTypeWindow[$name == 'search.rootView'$].",
+            "Represents the iOS object home window.",
+            "Find a list or record and navigate to it, or verify records are still syncing."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/objectHomeNoList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "selector": {
+        "classchain": "XCUIElementTypeWindow[$name == 'search.rootView'$]"
+    },
+    "elements": [
+        {
+            "name": "recordCards",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeAny[`name BEGINSWITH 'searchCell.recentDetail'`]",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "recordCard",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeAny[`name BEGINSWITH 'searchCell.recentDetail' AND label BEGINSWITH '%s'`]",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "syncPendingBaner",
+            "selector": {
+                "classchain": "**/XCUIElementTypeImage[`label == 'Sync Pending'`]"
+            }
+        },
+        {
+            "name": "searchBar",
+            "type": "utam-salesforceapp/pageObjects/navigation/searchBar",
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeNavigationBar[$type == 'XCUIElementTypeSearchField'$]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickRecord",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "classchain": "**/XCUIElementTypeAny[`name BEGINSWITH 'searchCell.recentDetail'`]"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "recordCard",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasRecord",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "classchain": "**/XCUIElementTypeAny[`name BEGINSWITH 'searchCell.recentDetail'`]"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "classchain": "**/XCUIElementTypeAny[`name BEGINSWITH 'searchCell.recentDetail' AND label BEGINSWITH '%s'`]",
+                                "args": [
+                                    {
+                                        "name": "title",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hasRecordWithChangesToBeSynced",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "classchain": "**/XCUIElementTypeImage[`label == 'Sync Pending'`]"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "pullToRefresh",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

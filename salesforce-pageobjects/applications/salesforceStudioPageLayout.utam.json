@@ -1,0 +1,124 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a layout for Salesforce Studio pages, including a header with breadcrumbs and slots for additional content.",
+            "Selector: setup_platform_unifiedapp-salesforce-studio-page-layout"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-salesforce-studio-page-layout"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "studioComponent",
+                "selector": {
+                    "css": "#studioComponent"
+                },
+                "description": "Represents the main container of the studio component with dynamic classes based on the variant.",
+                "elements": [
+                    {
+                        "name": "breadcrumbs",
+                        "selector": {
+                            "css": "lightning-breadcrumbs"
+                        },
+                        "type": "utam-lightning/pageObjects/breadcrumbs",
+                        "description": "Represents the breadcrumbs container, which is conditional.",
+                        "nullable": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "breadcrumbItem",
+                                "selector": {
+                                    "css": "lightning-breadcrumb",
+                                    "returnAll": true
+                                },
+                                "type": "utam-lightning/pageObjects/breadcrumb",
+                                "description": "Represents individual breadcrumb items, which are repeated for each breadcrumb.",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "pageHeader",
+                        "selector": {
+                            "css": "setup_platform_unifiedapp-salesforce-studio-page-header"
+                        },
+                        "description": "Represents the page header with title, icon, and description.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "rightHeaderSlotContent",
+                                "selector": {
+                                    "css": "[slot='rightHeader']"
+                                },
+                                "type": "container",
+                                "description": "Represents the content of the named slot for the right side of the header.",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "onboardingBannerContent",
+                        "selector": {
+                            "css": "[slot='onboardingBanner']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot for the onboarding banner.",
+                        "public": true
+                    },
+                    {
+                        "name": "pageContentSlot",
+                        "selector": {
+                            "css": "[slot='pageContent']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot for the main page content.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStudioComponentVisible",
+            "description": {
+                "text": [
+                    "Checks if the studio component is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "studioComponent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getStudioComponentClass",
+            "description": {
+                "text": [
+                    "Returns the class attribute of the studio component"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "studioComponent",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

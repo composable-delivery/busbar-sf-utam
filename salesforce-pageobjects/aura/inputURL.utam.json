@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputUrl",
+            "Represents the ui:inputUrl Aura component.",
+            "Get the label and input elements. Clear text and enter a value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clearAndEnterURL",
+            "description": "Clear input text and enter a new value passed as param",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "clear"
+                },
+                {
+                    "element": "input",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "url",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "input",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input"
+            }
+        }
+    ]
+}

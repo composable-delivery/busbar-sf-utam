@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputEmail.",
+            "Represents the ui:inputEmail Aura component.",
+            "Get the label and input elements."
+        ]
+    },
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "emailInput",
+            "public": true,
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input[inputmode='email']"
+            }
+        }
+    ]
+}

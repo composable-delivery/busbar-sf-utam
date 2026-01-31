@@ -1,0 +1,90 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".onesetupSetupNavTree"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .onesetupSetupNavTree.",
+            "Represents the onesetup:setupNavTree Aura component.",
+            "Access a navigation tree node by name."
+        ]
+    },
+    "elements": [
+        {
+            "name": "navTreeNodeByName",
+            "public": true,
+            "type": "utam-setup/pageObjects/navTreeNode",
+            "selector": {
+                "css": ".onesetupNavTreeNode[aria-label*='%s']",
+                "args": [
+                    {
+                        "name": "ariaLabel",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Wait for and return navTreeNodeByName"
+                ],
+                "return": "utam-setup/pageObjects/navTreeNode"
+            },
+            "name": "getAndWaitForNavTreeNodeByName",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "navTreeNodeByName"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Waits for a specific URL match"
+                ],
+                "return": "none"
+            },
+            "name": "waitForUrl",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "document",
+                                    "apply": "getUrl",
+                                    "matcher": {
+                                        "type": "stringContains",
+                                        "args": [
+                                            {
+                                                "type": "string",
+                                                "name": "url"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

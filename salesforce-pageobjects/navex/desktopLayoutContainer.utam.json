@@ -1,0 +1,65 @@
+{
+    "description": {
+        "text": [
+            "Selector: .navexDesktopLayoutContainer",
+            "Represents the navex:DesktopLayoutContainer  aura component.",
+            "Get force:DockingPanel and one-appnav components"
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": ".navexDesktopLayoutContainer"
+    },
+    "elements": [
+        {
+            "name": "dockingPanel",
+            "type": "utam-force/pageObjects/dockingPanel",
+            "selector": {
+                "css": ".forceDockingPanel"
+            },
+            "public": true
+        },
+        {
+            "name": "dirtyStateDialog",
+            "type": "container",
+            "selector": {
+                "css": ".dirtyStateModal"
+            },
+            "public": true
+        },
+        {
+            "name": "appNavPrivate",
+            "type": "utam-global/pageObjects/appNav",
+            "selector": {
+                "css": "one-appnav"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Gets the app nav component"
+                ],
+                "return": "the app nav component"
+            },
+            "name": "getAppNav",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "appNavPrivate"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

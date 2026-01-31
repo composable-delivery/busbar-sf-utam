@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the list view of overflow actions from the toolbar.",
+            "Perform actions that are held in the toolbar overflow."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickShare"
+        },
+        {
+            "name": "clickFavorite"
+        },
+        {
+            "name": "waitForIsFavorite",
+            "returnType": "boolean"
+        },
+        {
+            "name": "waitForIsNotFavorite",
+            "returnType": "boolean"
+        }
+    ]
+}

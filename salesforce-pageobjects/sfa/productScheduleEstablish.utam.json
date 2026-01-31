@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: test-quantity-schedule-fields.",
+            "Represents the product schedules web component.",
+            "You can retrieve the quantity or revenue fields."
+        ]
+    },
+    "elements": [
+        {
+            "name": "quantityScheduleStartDate",
+            "type": "utam-aura/pageObjects/inputText",
+            "public": true,
+            "selector": {
+                "css": "div.test-quantity-schedule-fields div.scheduleStartDateInputField"
+            }
+        },
+        {
+            "name": "quantityScheduleQuantity",
+            "type": "utam-aura/pageObjects/inputText",
+            "public": true,
+            "selector": {
+                "css": "div.test-quantity-schedule-fields div.qtyRevInputField"
+            }
+        },
+        {
+            "name": "quantityScheduleInstallmentPeriod",
+            "type": "utam-aura/pageObjects/inputSelect",
+            "public": true,
+            "selector": {
+                "css": "div.test-quantity-schedule-fields div.installmentPeriod"
+            }
+        },
+        {
+            "name": "quantityScheduleScheduleType",
+            "type": "utam-aura/pageObjects/inputSelect",
+            "public": true,
+            "selector": {
+                "css": "div.test-quantity-schedule-fields div.scheduleType"
+            }
+        },
+        {
+            "name": "quantityScheduleInstallmentsNumber",
+            "type": "utam-aura/pageObjects/inputText",
+            "public": true,
+            "selector": {
+                "css": "div.test-quantity-schedule-fields div.scheduleInstallmentsNumber"
+            }
+        },
+        {
+            "name": "revenueScheduleStartDate",
+            "type": "utam-aura/pageObjects/inputText",
+            "public": true,
+            "selector": {
+                "css": "div.test-revenue-schedule-fields div.scheduleStartDateInputField"
+            }
+        },
+        {
+            "name": "revenueScheduleRevenue",
+            "type": "utam-aura/pageObjects/inputText",
+            "public": true,
+            "selector": {
+                "css": "div.test-revenue-schedule-fields div.qtyRevInputField"
+            }
+        },
+        {
+            "name": "revenueScheduleInstallmentPeriod",
+            "type": "utam-aura/pageObjects/inputSelect",
+            "public": true,
+            "selector": {
+                "css": "div.test-revenue-schedule-fields div.installmentPeriod"
+            }
+        },
+        {
+            "name": "revenueScheduleScheduleType",
+            "type": "utam-aura/pageObjects/inputSelect",
+            "public": true,
+            "selector": {
+                "css": "div.test-revenue-schedule-fields div.scheduleType"
+            }
+        },
+        {
+            "name": "revenueScheduleInstallmentsNumber",
+            "type": "utam-aura/pageObjects/inputText",
+            "public": true,
+            "selector": {
+                "css": "div.test-revenue-schedule-fields div.scheduleInstallmentsNumber"
+            }
+        }
+    ]
+}

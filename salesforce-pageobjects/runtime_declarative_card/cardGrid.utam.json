@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-grid2",
+            "Represents the flexipage-grid card component",
+            "This specific Page Object (PO) built for the feature is currently in development and will not be available to customers until Summer '24."
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "gridColumns",
+            "type": "utam-runtime_declarative_card/pageObjects/gridColumn",
+            "selector": {
+                "css": "flexipage-grid-column2",
+                "returnAll": true
+            }
+        }
+    ]
+}

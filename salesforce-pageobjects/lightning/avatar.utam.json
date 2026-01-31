@@ -1,0 +1,135 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-avatar.",
+            "Represents the lightning-avatar Lightning web component.",
+            "Access the Header label, or the Label when there is no header and the message text. Additionally allows clicking the OK button."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "image",
+                "selector": {
+                    "css": "img"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "initials",
+                "selector": {
+                    "css": ".slds-avatar__initials"
+                },
+                "nullable": true
+            },
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                },
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getClassAttr",
+            "description": {
+                "text": [
+                    "Get lightning-avatar class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "getImageTitle",
+            "description": {
+                "text": [
+                    "Get avatar image title text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getAlternativeText",
+            "description": {
+                "text": [
+                    "Get avatar image alternative text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "alt"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInitials",
+            "description": "Get avatar intials abbr text",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "initials",
+                                    "apply": "getText"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getSrc",
+            "description": "Get avatar's image source",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "image",
+                                    "apply": "getAttribute",
+                                    "args": [
+                                        {
+                                            "value": "src"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

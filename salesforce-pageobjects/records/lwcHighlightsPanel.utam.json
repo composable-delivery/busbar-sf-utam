@@ -1,0 +1,81 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-lwc-highlights-panel.",
+            "Represents the records-lwc-highlights-panel Lightning web component.",
+            "Get the record layout or actions."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-records/pageObjects/lwcRecordLayout",
+                "name": "recordLayout",
+                "selector": {
+                    "css": "records-lwc-record-layout"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the record layout"
+                ],
+                "return": "LWCRecordLayout"
+            },
+            "name": "getRecordLayout",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordLayout"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the actions"
+                ],
+                "return": "actionsRibbon"
+            },
+            "name": "getActions",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordLayout"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "apply": "waitForHighlights2",
+                    "returnType": "utam-records/pageObjects/highlights2"
+                },
+                {
+                    "chain": true,
+                    "element": "actionsRibbon",
+                    "returnType": "utam-action/pageObjects/actionsRibbon"
+                }
+            ]
+        }
+    ]
+}

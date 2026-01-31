@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Purchase Now page object"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-purchase-now"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='purchase_now_button']"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiPillContainer.",
+            "Represents the ui:pillContainer Aura component.",
+            "Get a pill by text."
+        ]
+    },
+    "elements": [
+        {
+            "name": "pillByText",
+            "type": "utam-aura/pageObjects/pill",
+            "public": true,
+            "selector": {
+                "css": ".uiPill",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getPillText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

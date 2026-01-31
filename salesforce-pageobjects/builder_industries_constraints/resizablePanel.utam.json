@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-resizable-panel",
+            "Constraint Builder resizable panel component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonGroup",
+                "type": "utam-lightning/pageObjects/buttonGroup",
+                "selector": {
+                    "css": "lightning-button-group"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "minimizeButton",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon[class='minimize']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "maximizeButton",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon[class='maximize']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "closeButton",
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon[class='close']"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

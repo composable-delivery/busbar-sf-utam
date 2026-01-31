@@ -1,0 +1,69 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-required-expression",
+            "Constraint Builder Business UI Required Expression"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "buiRequiredAttributeRowContainer",
+                                "type": "utam-builder_industries_constraints/pageObjects/buiRequiredAttributeRowContainer",
+                                "selector": {
+                                    "css": "builder_industries_constraints-bui-required-attribute-row-container"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

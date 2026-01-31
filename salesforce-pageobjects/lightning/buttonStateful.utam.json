@@ -1,0 +1,142 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-button-stateful",
+            "Represents the lightning-button-stateful Lightning web component.",
+            "Click a button, get its class attribute, get a selected label or check if it's selected."
+        ]
+    },
+    "type": [
+        "clickable"
+    ],
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonElement",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "button"
+                }
+            },
+            {
+                "name": "selectedText",
+                "selector": {
+                    "css": ".slds-text-selected"
+                }
+            },
+            {
+                "name": "notSelectedText",
+                "selector": {
+                    "css": ".slds-text-not-selected"
+                }
+            },
+            {
+                "name": "hoverText",
+                "selector": {
+                    "css": ".slds-text-selected-focus"
+                }
+            },
+            {
+                "name": "selectedIcon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "public": true,
+                "selector": {
+                    "css": ".slds-text-selected lightning-primitive-icon"
+                }
+            },
+            {
+                "name": "notSelectedIcon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "public": true,
+                "selector": {
+                    "css": ".slds-text-not-selected lightning-primitive-icon"
+                }
+            },
+            {
+                "name": "hoverIcon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "public": true,
+                "selector": {
+                    "css": ".slds-text-selected-focus lightning-primitive-icon"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "description": "Clicks button element",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "buttonElement"
+                }
+            ]
+        },
+        {
+            "name": "getClassAttr",
+            "description": {
+                "text": [
+                    "Get button element class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "buttonElement"
+                }
+            ]
+        },
+        {
+            "name": "getSelectedLabel",
+            "description": {
+                "text": [
+                    "Get button label when stateful button is selected/on"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "selectedText"
+                }
+            ]
+        },
+        {
+            "name": "getNotSelectedLabel",
+            "description": {
+                "text": [
+                    "Get button label when stateful button is not-selected/off"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "notSelectedText"
+                }
+            ]
+        },
+        {
+            "name": "getHoverLabel",
+            "description": {
+                "text": [
+                    "Get button label when stateful button is hovered"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "hoverText"
+                }
+            ]
+        }
+    ]
+}

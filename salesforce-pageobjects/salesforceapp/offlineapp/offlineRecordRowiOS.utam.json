@@ -1,0 +1,123 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: row.",
+            "Represents the iOS row inside of List.",
+            "Verify the row and its fields."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "time",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "record_time"
+            }
+        },
+        {
+            "name": "title",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "record_title"
+            }
+        },
+        {
+            "name": "text",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "accessid": "record_text"
+            }
+        },
+        {
+            "name": "subText",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "accessid": "record_sub_text"
+            }
+        },
+        {
+            "name": "icon",
+            "type": [
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "accessid": "icon"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getTime",
+            "compose": [
+                {
+                    "element": "time",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "text",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSubText",
+            "compose": [
+                {
+                    "element": "subText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickRow",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

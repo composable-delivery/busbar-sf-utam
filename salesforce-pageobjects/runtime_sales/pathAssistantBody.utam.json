@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .runtime_sales_pathassistantPathAssistantBody",
+            "Represents the path assistant body.",
+            "You can access the buttons by title and edit section."
+        ]
+    },
+    "elements": [
+        {
+            "name": "bodyHeader",
+            "selector": {
+                "css": ".bodyHeader"
+            },
+            "public": true,
+            "elements": [
+                {
+                    "name": "title",
+                    "selector": {
+                        "css": "h2"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "editPageLink",
+                    "type": [
+                        "clickable"
+                    ],
+                    "selector": {
+                        "css": ".actionLink"
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "pageBlockView",
+            "selector": {
+                "css": ".content"
+            },
+            "elements": [
+                {
+                    "name": "formViewSection",
+                    "type": "utam-force/pageObjects/pageBlockSectionView",
+                    "selector": {
+                        "css": ".forcePageBlockSectionView"
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "formEditSection",
+            "type": "utam-force/pageObjects/pageBlockSectionEdit",
+            "selector": {
+                "css": ".forcePageBlockSectionEdit"
+            },
+            "public": true
+        },
+        {
+            "name": "buttonByTitle",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button[title*='%s']",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "pathAssistantInfo",
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantInfo"
+            },
+            "public": true
+        },
+        {
+            "name": "pathAssistantKeyFields",
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantFields"
+            },
+            "public": true
+        }
+    ]
+}

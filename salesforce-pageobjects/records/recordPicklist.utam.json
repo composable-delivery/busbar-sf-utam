@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-picklist.",
+            "Represents the records-record-picklist Lightning web component.",
+            "Access the form picklist or get the base picklist."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the base picklist"
+                ],
+                "return": "picklist"
+            },
+            "name": "getBasePicklist",
+            "compose": [
+                {
+                    "returnType": "utam-records/pageObjects/formPicklist",
+                    "element": "formPicklist"
+                },
+                {
+                    "returnType": "utam-lightning/pageObjects/picklist",
+                    "element": "picklist",
+                    "chain": true
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "formPicklist",
+                "type": "utam-records/pageObjects/formPicklist",
+                "selector": {
+                    "css": "records-form-picklist"
+                },
+                "public": true
+            }
+        ]
+    }
+}

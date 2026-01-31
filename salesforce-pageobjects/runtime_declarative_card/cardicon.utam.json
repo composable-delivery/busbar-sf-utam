@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_declarative_card-icon",
+            "Represents the runtime_declarative_card-icon card component",
+            "This specific Page Object (PO) built for the feature is currently in development and will not be available to customers until Summer '24."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            }
+        ]
+    }
+}

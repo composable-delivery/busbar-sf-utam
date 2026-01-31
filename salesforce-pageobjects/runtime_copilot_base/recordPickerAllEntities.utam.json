@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that allows users to pick records from various entities. It supports both single and multi-selection and can be disabled. The component fetches entity information dynamically based on a search term.",
+            "Selector: runtime_copilot_base-record-picker-all-entities"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordPicker",
+                "selector": {
+                    "css": "runtime_copilot_base-base-record-picker"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseRecordPicker",
+                "description": "Represents the base record picker component.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

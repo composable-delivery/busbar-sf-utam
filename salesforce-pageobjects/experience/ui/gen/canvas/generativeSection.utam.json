@@ -1,0 +1,242 @@
+{
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A complex Lightning Web Component that serves as a user interface for a canvas application, with functionalities such as managing and displaying UI elements, handling user interactions, and communicating with the backend.",
+            "Selector: experience_ui_gen_canvas-generative-section"
+        ]
+    },
+    "selector": {
+        "css": "experience_ui_gen_canvas-generative-section"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "lightningCard",
+                "selector": {
+                    "css": "lightning-card.genCanvas-app"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the main lightning card container for the generative section.",
+                "public": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "canvasEditorContainer",
+                        "selector": {
+                            "css": "div.canvas-editor-container"
+                        },
+                        "description": "Represents the main canvas editor container",
+                        "public": true,
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "headerSlot",
+                                "selector": {
+                                    "css": "div.canvas-editor-header"
+                                },
+                                "description": "Container for the header slot content",
+                                "public": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "genCanvasContainer",
+                                "selector": {
+                                    "css": "div.genCanvas-container"
+                                },
+                                "description": "Container that holds the left panel, content, and right panel",
+                                "public": true,
+                                "wait": true,
+                                "elements": [
+                                    {
+                                        "name": "leftPanelSlot",
+                                        "selector": {
+                                            "css": "div.canvas-editor-left-panel"
+                                        },
+                                        "description": "Container for the left panel slot content",
+                                        "public": true,
+                                        "wait": true
+                                    },
+                                    {
+                                        "name": "contentContainer",
+                                        "selector": {
+                                            "css": "div.content-container"
+                                        },
+                                        "description": "Container for the main content",
+                                        "public": true,
+                                        "wait": true,
+                                        "elements": [
+                                            {
+                                                "name": "dynamicContentComponent",
+                                                "selector": {
+                                                    "css": ".dynamic-content-component"
+                                                },
+                                                "description": "Represents the dynamically loaded content renderer component",
+                                                "public": true,
+                                                "wait": true,
+                                                "nullable": true
+                                            },
+                                            {
+                                                "name": "placeholderContent",
+                                                "selector": {
+                                                    "css": "div.canvas-editor-placeholder"
+                                                },
+                                                "description": "Container shown when there is no content to render",
+                                                "public": true,
+                                                "wait": true,
+                                                "nullable": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "rightPanelSlot",
+                                        "selector": {
+                                            "css": "div.canvas-editor-right-panel"
+                                        },
+                                        "description": "Container for the right panel slot content",
+                                        "public": true,
+                                        "wait": true,
+                                        "nullable": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "promptBar",
+                                "selector": {
+                                    "css": "experience_ui_gen_canvas-prompt-bar"
+                                },
+                                "type": "utam-experience-ui-gen-canvas/pageObjects/promptBar",
+                                "description": "Represents the prompt bar component for user input",
+                                "public": true,
+                                "wait": true,
+                                "nullable": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "cmsTypesProvider",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-canvas-cms-types-provider"
+                },
+                "description": "Represents the CMS types provider component",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "contentRendererElement",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-content-renderer"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/contentRenderer",
+                "description": "Represents the container of tiles on a canvas. This LWC/element only shows on a populated canvas.",
+                "public": true,
+                "wait": true,
+                "nullable": true
+            },
+            {
+                "public": true,
+                "name": "recommendationItems",
+                "type": "utam-experience-ui-gen-canvas/pageObjects/recommendationItems",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-recommendation-items"
+                },
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPromptBarVisible",
+            "description": {
+                "text": [
+                    "Check if the prompt bar is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "promptBar",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDynamicContentVisible",
+            "description": {
+                "text": [
+                    "Check if the dynamic content component is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dynamicContentComponent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isContentRendererElementVisible",
+            "description": {
+                "text": [
+                    "Check if the content renderer element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "contentRendererElement",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isPlaceholderVisible",
+            "description": {
+                "text": [
+                    "Check if the placeholder content is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "placeholderContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLeftPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the left panel is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "leftPanelSlot",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRightPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the right panel is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rightPanelSlot",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

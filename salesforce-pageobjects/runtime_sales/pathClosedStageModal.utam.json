@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .slds-modal__container",
+            "Represents a path assistant closed stage selection modal.",
+            "You can select a closed stage"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".slds-modal__container"
+    },
+    "elements": [
+        {
+            "name": "stageSelect",
+            "type": "utam-aura/pageObjects/inputSelect",
+            "public": true,
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantStepClosed .uiInputSelect"
+            }
+        },
+        {
+            "name": "saveButton",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".uiButton--default"
+            }
+        }
+    ]
+}

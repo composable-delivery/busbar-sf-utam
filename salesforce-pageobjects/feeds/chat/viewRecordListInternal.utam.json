@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that conditionally displays a spinner or a list of records with configurable display types and preferences.",
+            "Selector: feeds_chat-view-record-list-internal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "description": "Represents a spinner displayed while loading.",
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "recordList",
+                "selector": {
+                    "css": "lst-common-list"
+                },
+                "type": "container",
+                "description": "Represents the list of records displayed once loading is complete.",
+                "public": true
+            },
+            {
+                "name": "container",
+                "type": "container",
+                "public": true
+            }
+        ]
+    }
+}

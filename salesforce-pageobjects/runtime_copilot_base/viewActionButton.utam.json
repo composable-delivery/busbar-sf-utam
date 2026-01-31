@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A button component that can be disabled, show a loading state, or indicate completion. It may be repeatable and can have different labels based on its state. The component handles click events and may be affected by external context data.",
+            "Selector: src-view-action-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button-complete"
+                },
+                "description": "Represents the main button component that can handle click events and change states.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "loadingIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the loading icon that appears within the button when in a loading state.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

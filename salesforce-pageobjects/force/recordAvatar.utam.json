@@ -1,0 +1,77 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-record-avatar.",
+            "Represents the force-record-avatar Lightning web component.",
+            "Get the image title, source or alt text."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "image",
+                "selector": {
+                    "css": "img"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getImageTitle",
+            "description": {
+                "text": [
+                    "Gets the title of the image"
+                ],
+                "return": "the title of the image"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getAlternativeText",
+            "description": {
+                "text": [
+                    "Gets the alt-text of the image"
+                ],
+                "return": "the alt-text of the image"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "alt"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getImageSource",
+            "description": {
+                "text": [
+                    "Gets the value of the src attribute of the image"
+                ],
+                "return": "the value of the src attribute of the image"
+            },
+            "compose": [
+                {
+                    "element": "image",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "src"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,214 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an analysis of opportunities related to an account, with the ability to toggle more detailed information via an accordion component.",
+            "Selector: src-experience_ui_gen_canvas-/tile-opportunity-analysis"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "opportunityAnalysisContainer",
+                "selector": {
+                    "css": ".opportunity-analysis-container"
+                },
+                "description": "Represents the container for the opportunity analysis content.",
+                "elements": [
+                    {
+                        "name": "recapTitle",
+                        "selector": {
+                            "css": ".slds-text-heading_small.slds-border_bottom"
+                        },
+                        "description": "Represents the title for the recap section of the analysis.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "recapContent",
+                        "selector": {
+                            "css": ".slds-border_bottom.slds-var-p-bottom_x-small.slds-var-p-top_x-small"
+                        },
+                        "description": "Represents the content of the recap section.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "analysisResults",
+                        "selector": {
+                            "css": "experience_ui_gen_canvas-analysis-result",
+                            "returnAll": true
+                        },
+                        "type": "utam-experience-ui-gen-canvas/pageObjects/analysisResult",
+                        "description": "Represents the individual analysis results displayed in the first batch.",
+                        "public": true
+                    },
+                    {
+                        "name": "showMoreAccordion",
+                        "selector": {
+                            "css": ".showmore-accordion"
+                        },
+                        "type": "utam-lightning/pageObjects/accordion",
+                        "description": "Represents the accordion for showing more analysis results.",
+                        "nullable": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "accordionSection",
+                                "selector": {
+                                    "css": "lightning-accordion-section[name=\"showMore\"]"
+                                },
+                                "type": "utam-lightning/pageObjects/accordionSection",
+                                "description": "Represents the accordion section that contains additional analysis results.",
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "additionalAnalysisResults",
+                                        "selector": {
+                                            "css": "experience_ui_gen_canvas-analysis-result",
+                                            "returnAll": true
+                                        },
+                                        "type": "utam-experience-ui-gen-canvas/pageObjects/analysisResult",
+                                        "description": "Represents additional analysis results that are revealed when the accordion is expanded.",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "loadingTile",
+                        "selector": {
+                            "css": "experience_ui_gen_canvas-loading-tile"
+                        },
+                        "type": "utam-experience-ui-gen-canvas/pageObjects/loadingTile",
+                        "description": "Represents the loading tile that is displayed while data is being fetched.",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "spinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        },
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "description": "Represents the spinner indicating that content is loading.",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isOpportunityAnalysisContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the opportunity analysis container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "opportunityAnalysisContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRecapTitleText",
+            "description": {
+                "text": [
+                    "Get the text of the recap title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recapTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRecapTitleVisible",
+            "description": {
+                "text": [
+                    "Check if the recap title is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recapTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRecapContentText",
+            "description": {
+                "text": [
+                    "Get the text of the recap content"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recapContent",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRecapContentVisible",
+            "description": {
+                "text": [
+                    "Check if the recap content is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recapContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRecapTitlePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recapTitle\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recapTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRecapContentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recapContent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recapContent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}
