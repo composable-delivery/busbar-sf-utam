@@ -1,0 +1,99 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: autocompleteCombobox"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "labelContent",
+                "type": [],
+                "selector": {
+                    "css": "label"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "abbrContent",
+                        "type": [],
+                        "selector": {
+                            "css": "abbr"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "helptext",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "input#input"
+                }
+            },
+            {
+                "public": true,
+                "name": "messageContent",
+                "type": [],
+                "selector": {
+                    "css": "div#help-message"
+                }
+            },
+            {
+                "name": "element",
+                "type": [],
+                "selector": {
+                    "css": "div#dropdown-element"
+                },
+                "elements": [
+                    {
+                        "name": "optionids",
+                        "type": [],
+                        "selector": {
+                            "css": "div",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "optionidByIndex",
+                        "type": [],
+                        "selector": {
+                            "css": "div:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "spanContent",
+                                "type": [],
+                                "selector": {
+                                    "css": "span"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

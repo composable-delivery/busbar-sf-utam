@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-vertical-navigation-overflow",
+            "Represents the lightning-vertical-navigation-overflow Lightning web component.",
+            "Allows you to get hidden items from inside the overflow"
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "isShown",
+            "description": "Return whether or not the overflow is shown",
+            "compose": [
+                {
+                    "element": "shownOverflow",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "Clicks the Overflow",
+            "compose": [
+                {
+                    "element": "overflowButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "shownOverflow",
+                "nullable": true,
+                "selector": {
+                    "css": "div .slds-show"
+                },
+                "public": true
+            },
+            {
+                "name": "overflowButton",
+                "type": "clickable",
+                "selector": {
+                    "css": ".slds-nav-vertical__overflow > button"
+                },
+                "public": true
+            }
+        ]
+    }
+}

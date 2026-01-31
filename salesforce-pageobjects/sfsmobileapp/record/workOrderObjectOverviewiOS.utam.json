@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Overview tab of a Work Order."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/record/workOrderObjectOverview",
+    "root": true,
+    "exposeRootElement": true,
+    "platform": "native",
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "SCFWorkDetailViewController.view"
+    },
+    "elements": [
+        {
+            "name": "serviceReportSection",
+            "public": true,
+            "selector": {
+                "accessid": "SCFWorkDetailLineItemsViewAdapter.tableView"
+            },
+            "type": "utam-sfsmobileapp/pageObjects/sections/serviceReportSection"
+        }
+    ]
+}

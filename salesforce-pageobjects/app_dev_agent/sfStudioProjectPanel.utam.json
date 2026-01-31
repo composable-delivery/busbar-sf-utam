@@ -1,0 +1,116 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a tabbed interface for displaying requirements and plan information in a project panel, with dynamic content based on the active tab.",
+            "Selector: app_dev_agent-sf-studio-project-panel"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "tabsWrapper",
+                "selector": {
+                    "css": ".panel-wrapper"
+                },
+                "description": "Represents the wrapper for the tabbed interface",
+                "elements": [
+                    {
+                        "name": "planHeader",
+                        "selector": {
+                            "css": ".plan-header"
+                        },
+                        "description": "Header section containing the Plan title",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "planTitle",
+                                "selector": {
+                                    "css": ".agent-plan-title"
+                                },
+                                "description": "Title text element for Plan header",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "tabSet",
+                        "selector": {
+                            "css": "lightning-tabset"
+                        },
+                        "type": "utam-lightning/pageObjects/tabset",
+                        "description": "Represents the tabset component",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "requirementsLayout",
+                                "selector": {
+                                    "css": "app_dev_agent-prd-layout"
+                                },
+                                "type": "utam/app_dev_agent/pageObjects/prdLayout",
+                                "description": "Represents the requirements layout component",
+                                "public": true
+                            },
+                            {
+                                "name": "planLayout",
+                                "selector": {
+                                    "css": "app_dev_agent-plan-preview-layout"
+                                },
+                                "type": "utam/app_dev_agent/pageObjects/planPreviewLayout",
+                                "description": "Represents the plan preview layout component",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTabsWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that the tabs wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "tabsWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isPlanHeaderVisible",
+            "description": {
+                "text": [
+                    "Check that the Plan header is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "planHeader",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPlanTitleText",
+            "description": {
+                "text": [
+                    "Get the text content of the Plan header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "planTitle",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

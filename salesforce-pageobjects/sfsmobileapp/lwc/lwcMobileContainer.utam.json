@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a Lightning Card within the mobile app (usually loaded from an LWC action)."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "fieldservicemobile-app"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "lightningmobileruntimeMhc",
+                "selector": {
+                    "css": "lightningmobileruntime-mhc"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "lwrRouterChild",
+                            "selector": {
+                                "css": "lwr-router-container > *:first-child"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "lwrDynamic",
+                                        "selector": {
+                                            "css": "lwr-dynamic"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "action",
+                                                    "type": "container",
+                                                    "public": true,
+                                                    "selector": {
+                                                        "css": ":scope > *:first-child"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

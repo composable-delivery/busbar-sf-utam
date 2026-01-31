@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-common-list.",
+            "Represents the common list Lightning web component.",
+            "Access the internal common list component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/commonListInternal",
+                "name": "commonListInternal",
+                "wait": true,
+                "public": true,
+                "selector": {
+                    "css": "lst-common-list-internal"
+                }
+            }
+        ]
+    }
+}

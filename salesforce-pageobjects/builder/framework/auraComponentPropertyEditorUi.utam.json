@@ -1,0 +1,95 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: auraComponentPropertyEditorUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "span",
+                "type": [
+                    "actionable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "span"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "span1",
+                "type": [
+                    "actionable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "span:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "span2",
+                "type": [
+                    "actionable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "span:nth-of-type(3)"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "expressionPropertyEditorUi",
+                        "type": "utam-builder-framework/pageObjects/expressionPropertyEditorUi",
+                        "selector": {
+                            "css": "builder_framework-expression-property-editor-ui"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "input1",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span:nth-of-type(4)"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertyEditorContainer",
+                "type": "container"
+            }
+        ]
+    }
+}

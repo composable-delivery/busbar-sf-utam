@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A base button component that can be used across different parts of the application, with support for ARIA attributes and styling.",
+            "Selector: src-base-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseButton",
+                "selector": {
+                    "css": "lightning-primitive-base-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents a clickable button that can be used for various actions within the application."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickBaseButton",
+            "description": {
+                "text": [
+                    "Simulate a click action on the base button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "baseButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isBaseButtonVisible",
+            "description": {
+                "text": [
+                    "Check that the base button is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "baseButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isBaseButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the base button is enabled and can be interacted with"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "baseButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        }
+    ]
+}

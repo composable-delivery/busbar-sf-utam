@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Promo banner page object"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "promoText",
+                "selector": {
+                    "css": ".promo-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "helpText",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": ".custom-helptext"
+                }
+            }
+        ]
+    }
+}

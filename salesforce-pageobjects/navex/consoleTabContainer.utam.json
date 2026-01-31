@@ -1,0 +1,130 @@
+{
+    "description": {
+        "text": [
+            "Selector: .oneConsoleTabContainer.",
+            "Represents the one:consoleTabContainer Aura component.",
+            "Display more tabs. Access a list of all tabs, a tab by name, highlighted tab, dirty tab, active tab, a list of pinned tabs, or the overflow trigger."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Click to display more tabs"
+                ],
+                "return": "none"
+            },
+            "name": "displayMoreTabs",
+            "compose": [
+                {
+                    "element": "overflowTrigger",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "allTabs",
+            "type": "utam-navex/pageObjects/consoleTabItem",
+            "selector": {
+                "css": ".oneConsoleTabItem",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "tabByName",
+            "type": "utam-navex/pageObjects/consoleTabItem",
+            "selector": {
+                "css": ".oneConsoleTabItem",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getTitle",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        },
+        {
+            "name": "highlightedTab",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "css": ".oneConsoleTabItem.slds-has-notification",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "dirtyTab",
+            "nullable": true,
+            "selector": {
+                "css": ".oneConsoleTabItem.slds-is-unsaved",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        },
+        {
+            "name": "activeTab",
+            "type": "utam-navex/pageObjects/consoleTabItem",
+            "selector": {
+                "css": ".oneConsoleTabItem.active"
+            },
+            "public": true
+        },
+        {
+            "name": "pinnedTabs",
+            "type": "utam-navex/pageObjects/consoleTabItem",
+            "selector": {
+                "css": ".pinnedItems .oneConsoleTabItem",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "overflowTrigger",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.overflowTrigger"
+            }
+        }
+    ]
+}

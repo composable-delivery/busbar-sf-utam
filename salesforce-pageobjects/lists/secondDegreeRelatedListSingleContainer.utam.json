@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-second-degree-related-list-single-container.",
+            "Represents the second degree related list single container Lightning web component.",
+            "Access the related list single container."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedListSingleContainer",
+                "name": "relatedList",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-list-single-container"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-component2",
+            "Represents the flexipage grid column component",
+            "This specific Page Object (PO) built for the feature is currently in development and will not be available to customers."
+        ]
+    },
+    "elements": [
+        {
+            "name": "cardImage",
+            "selector": {
+                "css": "runtime_declarative_card-image"
+            },
+            "nullable": true,
+            "public": true,
+            "type": "utam-runtime_declarative_card/pageObjects/cardimage"
+        },
+        {
+            "name": "cardText",
+            "selector": {
+                "css": "runtime_declarative_card-text"
+            },
+            "nullable": true,
+            "public": true,
+            "type": "utam-runtime_declarative_card/pageObjects/cardtext"
+        },
+        {
+            "name": "cardButton",
+            "selector": {
+                "css": "runtime_declarative_card-button"
+            },
+            "nullable": true,
+            "public": true,
+            "type": "utam-runtime_declarative_card/pageObjects/cardbutton"
+        },
+        {
+            "name": "cardIcon",
+            "selector": {
+                "css": "runtime_declarative_card-icon"
+            },
+            "nullable": true,
+            "public": true,
+            "type": "utam-runtime_declarative_card/pageObjects/cardicon"
+        }
+    ]
+}

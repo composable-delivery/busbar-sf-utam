@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a radio button with a customizable label slot. The radio button can be checked, unchecked, and disabled.",
+            "Selector: src-primitive-type-picklist"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioButton",
+                "selector": {
+                    "css": "lightning-primitive-radio.primitive-type-container"
+                },
+                "description": "Represents the radio button element which can be interacted with.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "labelSlot",
+                        "selector": {
+                            "css": "[slot='label']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for the radio button label.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

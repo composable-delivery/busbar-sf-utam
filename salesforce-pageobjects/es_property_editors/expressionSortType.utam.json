@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "sortOrder",
+                "type": "utam-es_property_editors/pageObjects/inputDropdown",
+                "selector": {
+                    "css": "es_property_editors-input-dropdown"
+                }
+            },
+            {
+                "public": true,
+                "name": "sortBy",
+                "type": "utam-es_property_editors/pageObjects/dataProviderGroupedCombobox",
+                "selector": {
+                    "css": "es_property_editors-data-provider-grouped-combobox"
+                }
+            }
+        ]
+    }
+}

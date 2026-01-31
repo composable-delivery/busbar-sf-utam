@@ -1,0 +1,20 @@
+{
+    "description": {
+        "text": [
+            "Selector: runtime_rpa-data-table."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "baseListActionsWithTooltip",
+                "selector": {
+                    "css": "runtime_rpa-base-list-actions-with-tooltip"
+                },
+                "type": "utam-runtime_rpa/pageObjects/baseListActionsWithTooltip"
+            }
+        ]
+    }
+}

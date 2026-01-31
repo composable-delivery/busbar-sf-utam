@@ -1,0 +1,26 @@
+{
+    "root": true,
+    "selector": {
+        "css": "one-app-launcher-modal"
+    },
+    "description": {
+        "text": [
+            "Selector: one-app-launcher-modal.",
+            "Represents the one-app-launcher-modal Lightning web component.",
+            "Access the accordion."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "accordion",
+                "public": true,
+                "type": "utam-lightning/pageObjects/accordion",
+                "selector": {
+                    "css": "lightning-accordion"
+                }
+            }
+        ]
+    }
+}

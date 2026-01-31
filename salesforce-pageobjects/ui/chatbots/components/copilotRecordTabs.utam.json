@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-copilot-record-tabs",
+            "Button for creating a new agent from Setup."
+        ]
+    },
+    "root": false,
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "tabset",
+                "type": "utam-lightning/pageObjects/tabset",
+                "selector": {
+                    "css": "lightning-tabset"
+                },
+                "elements": [
+                    {
+                        "name": "activeTabContent",
+                        "type": "container",
+                        "public": true,
+                        "selector": {
+                            "css": "[class*='slds-show'][role='tabpanel'] div.tab-content > *"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

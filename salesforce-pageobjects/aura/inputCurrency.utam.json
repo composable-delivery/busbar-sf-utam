@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputCurrency.",
+            "Represents the ui:inputCurrency Aura component. ",
+            "Get the label and input elements."
+        ]
+    },
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "input",
+            "public": true,
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input"
+            }
+        }
+    ]
+}

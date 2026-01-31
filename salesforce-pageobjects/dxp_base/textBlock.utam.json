@@ -1,0 +1,32 @@
+{
+    "root": true,
+    "selector": {
+        "css": "dxp_base-text-block"
+    },
+    "elements": [
+        {
+            "name": "textInsideBlock",
+            "public": true,
+            "selector": {
+                "css": ".dxp-text-heading-large"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getTextInBlock",
+            "compose": [
+                {
+                    "element": "textInsideBlock",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

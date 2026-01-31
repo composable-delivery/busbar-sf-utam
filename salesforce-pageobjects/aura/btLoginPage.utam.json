@@ -1,0 +1,25 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "loginWithOkta",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button.button.mb12.secondary.wide"
+            },
+            "public": true
+        }
+    ]
+}

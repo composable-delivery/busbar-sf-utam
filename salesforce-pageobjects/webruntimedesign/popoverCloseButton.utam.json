@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: webruntimedesign-popover-close-button",
+            "Representing a plus button for closing a cmp palette modal"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "icon",
+            "type": "utam-lightning/pageObjects/icon",
+            "selector": {
+                "css": "lightning-icon"
+            }
+        }
+    ]
+}

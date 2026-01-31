@@ -1,0 +1,153 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-base-filter-expression",
+            "Allows access to a base filter expression within a filter panel."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "error",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-has-error"
+                }
+            },
+            {
+                "name": "errorLabel",
+                "selector": {
+                    "css": ".slds-text-color_error"
+                }
+            },
+            {
+                "name": "edited",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-is-new"
+                }
+            },
+            {
+                "name": "filterItem",
+                "type": "container",
+                "selector": {
+                    "css": ".slds-filters__item"
+                },
+                "elements": [
+                    {
+                        "name": "filterEditButton",
+                        "type": "clickable",
+                        "selector": {
+                            "css": ".slds-button_reset"
+                        },
+                        "elements": [
+                            {
+                                "name": "assistiveText",
+                                "type": "clickable",
+                                "selector": {
+                                    "css": ".slds-assistive-text"
+                                }
+                            },
+                            {
+                                "name": "filterField",
+                                "type": "clickable",
+                                "selector": {
+                                    "css": ".slds-text-body_small"
+                                }
+                            },
+                            {
+                                "name": "operatorAndOperand",
+                                "type": "clickable",
+                                "selector": {
+                                    "css": ".operatorAndOperand"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "deleteFilterButton",
+                        "type": "clickable",
+                        "selector": {
+                            "css": "lightning-button-icon"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getOperatorAndOperandText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "operatorAndOperand"
+                }
+            ]
+        },
+        {
+            "name": "getFilterFieldText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "filterField"
+                }
+            ]
+        },
+        {
+            "name": "clickEditFilter",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "filterEditButton"
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "assistiveText"
+                }
+            ]
+        },
+        {
+            "name": "clickDeleteFilter",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "deleteFilterButton"
+                }
+            ]
+        },
+        {
+            "name": "isEdited",
+            "compose": [
+                {
+                    "apply": "isVisible",
+                    "element": "edited"
+                }
+            ]
+        },
+        {
+            "name": "hasError",
+            "compose": [
+                {
+                    "apply": "isVisible",
+                    "element": "error"
+                }
+            ]
+        },
+        {
+            "name": "getErrorText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "errorLabel"
+                }
+            ]
+        }
+    ]
+}

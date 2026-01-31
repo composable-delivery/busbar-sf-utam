@@ -1,0 +1,40 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_rpa-app-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "appHome",
+                "type": "utam-runtime_rpa/pageObjects/appHome",
+                "selector": {
+                    "css": "runtime_rpa-app-home"
+                }
+            },
+            {
+                "public": true,
+                "name": "robotDetailsWrapper",
+                "type": "utam-runtime_rpa/pageObjects/robotDetailsWrapper",
+                "selector": {
+                    "css": "runtime_rpa-robot-details-wrapper"
+                }
+            },
+            {
+                "public": true,
+                "name": "robotEdit",
+                "type": "utam-runtime_rpa/pageObjects/robotEdit",
+                "selector": {
+                    "css": "runtime_rpa-robot-edit"
+                }
+            }
+        ]
+    }
+}

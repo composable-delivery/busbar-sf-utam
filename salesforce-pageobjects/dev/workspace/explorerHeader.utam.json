@@ -1,0 +1,172 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a header with an optional icon and title, a metadata count, a sortable indicator, and a search input for filtering items. It also provides slots for additional actions and bulk operations.",
+            "Selector: dev_workspace-explorer-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "explorerIcon",
+                "selector": {
+                    "css": "lightning-icon.explorer-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents an icon associated with the explorer header.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "explorerTitle",
+                "selector": {
+                    "css": "h2"
+                },
+                "description": "Represents the title text in the explorer header.",
+                "nullable": true
+            },
+            {
+                "name": "metadataInfoText",
+                "selector": {
+                    "css": "p.metadata-info"
+                },
+                "description": "Displays metadata count and sorting information."
+            },
+            {
+                "name": "searchInput",
+                "selector": {
+                    "css": "lightning-input.metadata-search-input"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Allows users to input search terms to filter items.",
+                "nullable": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "headerRightSlot",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the slot for additional header actions on the right side.",
+            "public": true
+        },
+        {
+            "name": "bulkActionsSlot",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the slot for bulk actions.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Retrieve the title text from the explorer header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "explorerTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isMetadataInfoVisible",
+            "description": {
+                "text": [
+                    "Check if metadata information text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "metadataInfoText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "enterSearchTerm",
+            "description": {
+                "text": [
+                    "Enter a search term into the search input"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getSearchTerm",
+            "description": {
+                "text": [
+                    "Retrieve the current value from the search input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "verifyExplorerTitlePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"explorerTitle\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "explorerTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifySearchInputPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"searchInput\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

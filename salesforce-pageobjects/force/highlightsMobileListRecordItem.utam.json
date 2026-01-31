@@ -1,0 +1,56 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-secondary-fields.",
+            "Represents records-secondary-fields Lightning web component.",
+            "Access the secondary fields."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the label text"
+                ],
+                "return": "String value"
+            },
+            "name": "getLabel",
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the content"
+                ],
+                "return": "String value"
+            },
+            "name": "getContent",
+            "compose": [
+                {
+                    "element": "content",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "label",
+            "selector": {
+                "css": "ul>li.forceHighlightsMobileListRecordItem>div>span"
+            }
+        },
+        {
+            "name": "content",
+            "selector": {
+                "css": "ul li.forceHighlightsMobileListRecordItem .fieldValue"
+            }
+        }
+    ]
+}

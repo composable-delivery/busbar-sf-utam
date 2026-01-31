@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceBaseHome.",
+            "Represents the force:baseHome Aura component.",
+            "Get force:HighlightsStencil, force:AsyncCarousel, or force:RelatedCardContainer components."
+        ]
+    },
+    "selector": {
+        "css": ".forceBaseHome"
+    },
+    "root": true,
+    "elements": [
+        {
+            "type": "utam-force/pageObjects/highlightsPanel",
+            "name": "highlights",
+            "public": true,
+            "selector": {
+                "css": ".forceHighlightsStencil"
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/detailPanelMobile",
+            "name": "detailPanelMobile",
+            "public": true,
+            "selector": {
+                "css": ".forceDetailPanelMobile"
+            }
+        },
+        {
+            "name": "tabSet",
+            "type": "utam-force/pageObjects/asyncCarousel",
+            "public": true,
+            "selector": {
+                "css": ".forceAsyncCarousel"
+            }
+        },
+        {
+            "name": "relatedTab",
+            "type": "utam-force/pageObjects/relatedCardContainer",
+            "public": true,
+            "selector": {
+                "css": ".forceRelatedCardContainer"
+            }
+        }
+    ]
+}

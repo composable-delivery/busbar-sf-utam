@@ -1,0 +1,244 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a summary of account metrics, including total ACV closed to date, open ACV pipeline, and ACV closed last quarter.",
+            "Selector: experience_ui_gen_canvas-tile-recap"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "titleHeading",
+                "selector": {
+                    "css": "h1.title"
+                },
+                "description": "Represents the title of the metrics summary"
+            },
+            {
+                "name": "descriptionContent",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "description": "Represents the description or additional information about the metrics",
+                "public": true
+            },
+            {
+                "name": "totalACVFieldTitle",
+                "selector": {
+                    "css": "p.field-title[title='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the title for Total ACV Closed to Date metric"
+            },
+            {
+                "name": "totalACVFieldValue",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-formatted-number[value='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/genCanvasFormattedNumber",
+                "description": "Represents the value for Total ACV Closed to Date metric",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "openACVFieldTitle",
+                "selector": {
+                    "css": "p.field-title[title='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the title for Open ACV metric"
+            },
+            {
+                "name": "openACVFieldValue",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-formatted-number[value='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/genCanvasFormattedNumber",
+                "description": "Represents the value for Open ACV metric",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "qtrClosedACVFieldTitle",
+                "selector": {
+                    "css": "p.field-title[title='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the title for ACV Closed Last Quarter metric"
+            },
+            {
+                "name": "qtrClosedACVFieldValue",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-formatted-number[value='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/genCanvasFormattedNumber",
+                "description": "Represents the value for ACV Closed Last Quarter metric",
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the title heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitleVisibility",
+            "description": {
+                "text": [
+                    "Checks if the title heading is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTotalACVFieldTitle",
+            "description": {
+                "text": [
+                    "Retrieves the tooltip text of the Total ACV field title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "totalACVFieldTitle",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getOpenACVFieldTitle",
+            "description": {
+                "text": [
+                    "Retrieves the tooltip text of the Open ACV field title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "openACVFieldTitle",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getQtrClosedACVFieldTitle",
+            "description": {
+                "text": [
+                    "Retrieves the tooltip text of the Qtr Closed ACV field title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "qtrClosedACVFieldTitle",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "isTotalACVFieldTitleVisible",
+            "description": {
+                "text": [
+                    "Checks if the Total ACV field title is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "totalACVFieldTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isOpenACVFieldTitleVisible",
+            "description": {
+                "text": [
+                    "Checks if the Open ACV field title is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "openACVFieldTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isQtrClosedACVFieldTitleVisible",
+            "description": {
+                "text": [
+                    "Checks if the Qtr Closed ACV field title is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "qtrClosedACVFieldTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

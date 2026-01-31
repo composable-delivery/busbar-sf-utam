@@ -1,0 +1,72 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-types-rail-panel",
+            "Constraint Builder Business UI Types Rail Component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[name='search-bar']"
+                }
+            },
+            {
+                "public": true,
+                "name": "addItemButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "productTree",
+                "type": "utam-lightning/pageObjects/tree",
+                "selector": {
+                    "css": "lightning-tree"
+                }
+            },
+            {
+                "public": true,
+                "name": "pContent",
+                "type": [],
+                "selector": {
+                    "css": "p"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "compose": [
+                {
+                    "element": "addItemButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

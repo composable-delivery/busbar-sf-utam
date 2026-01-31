@@ -1,0 +1,112 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a radio group for selecting a single integer or number, with the ability to navigate and select options using the keyboard for accessibility.",
+            "Selector: src-select-single-integer-and-number"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroup",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio button group",
+                "elements": [
+                    {
+                        "name": "radioOptions",
+                        "selector": {
+                            "css": "feeds_chat-primitive-type-picklist",
+                            "returnAll": true
+                        },
+                        "description": "Represents all radio options within the group",
+                        "public": true
+                    },
+                    {
+                        "name": "radioOptionLabel",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the label for each radio option",
+                        "nullable": true
+                    },
+                    {
+                        "name": "formattedNumber",
+                        "selector": {
+                            "css": "lightning-formatted-number"
+                        },
+                        "description": "Represents the formatted number if no label is provided for the radio option",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupVisible",
+            "description": {
+                "text": [
+                    "Check that the radio group is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRadioOptionLabelText",
+            "description": {
+                "text": [
+                    "Get text from the radio option label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "radioOptionLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRadioOptionLabelPresent",
+            "description": {
+                "text": [
+                    "Check that the radio option label is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioOptionLabel",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyRadioOptionLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"radioOptionLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioOptionLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

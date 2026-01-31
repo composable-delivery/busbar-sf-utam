@@ -1,0 +1,192 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRelatedListContainer.",
+            "Represents the Aura related list container component.",
+            "View related list contents, headers, buttons, and take action on the list."
+        ]
+    },
+    "elements": [
+        {
+            "name": "relatedListItems",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".related-list-header-content",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "relatedListItemByLabel",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": ".related-list-header-content .slds-m-right--xx-small",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getTitle",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "titleString",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        },
+        {
+            "name": "viewMoreOrLessBtn",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".inline-exp-container-view-button"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasRelatedListItem",
+            "compose": [
+                {
+                    "element": "relatedListItemByLabel",
+                    "apply": "isPresent"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Returns a boolean value indicating whether a  related list item exists"
+                ],
+                "return": "boolean value"
+            }
+        },
+        {
+            "name": "getRelatedListItemsCount",
+            "compose": [
+                {
+                    "element": "relatedListItems",
+                    "apply": "size"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get count of the related list items"
+                ],
+                "return": "Integer value"
+            }
+        },
+        {
+            "name": "clickRelatedListItem",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lists/utils/auraRelatedListContainerUtils",
+                        "invoke": "clickRelatedListItem",
+                        "args": [
+                            {
+                                "name": "itemName",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "description": {
+                "text": [
+                    "Click the related list item"
+                ],
+                "return": "void"
+            }
+        },
+        {
+            "name": "viewMore",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lists/utils/auraRelatedListContainerUtils",
+                        "invoke": "viewMore"
+                    }
+                }
+            ],
+            "description": {
+                "text": [
+                    "Expand the related list container"
+                ],
+                "return": "ResultGrid value"
+            }
+        },
+        {
+            "name": "viewLess",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lists/utils/auraRelatedListContainerUtils",
+                        "invoke": "viewLess"
+                    }
+                }
+            ],
+            "description": {
+                "text": [
+                    "reduce the related list container"
+                ],
+                "return": "ResultGrid value"
+            }
+        },
+        {
+            "name": "canViewMore",
+            "compose": [
+                {
+                    "element": "viewMoreOrLessBtn",
+                    "apply": "getText",
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": "View More"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "description": {
+                "text": [
+                    "Returns a boolean value indicating whether a  related list item exists"
+                ],
+                "return": "boolean value"
+            }
+        },
+        {
+            "name": "canViewLess",
+            "compose": [
+                {
+                    "element": "viewMoreOrLessBtn",
+                    "apply": "getText",
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "value": "View Less"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "description": {
+                "text": [
+                    "Returns a boolean value indicating whether a  related list item exists"
+                ],
+                "return": "boolean value"
+            }
+        }
+    ]
+}

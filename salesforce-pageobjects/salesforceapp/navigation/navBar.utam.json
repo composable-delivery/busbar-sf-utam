@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the toolbar at the top of the tabbed activity.",
+            "Access the profile menu, load notifications, search, toggle favorite, or toggle overflow."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "openSearch"
+        },
+        {
+            "name": "openNotifications"
+        },
+        {
+            "name": "clickShare"
+        },
+        {
+            "name": "clickItem",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "clickProfile"
+        },
+        {
+            "name": "getTitleText",
+            "returnType": "string"
+        },
+        {
+            "name": "clickNew"
+        },
+        {
+            "name": "toggleFavorite"
+        },
+        {
+            "name": "waitForIsFavorite",
+            "returnType": "boolean"
+        },
+        {
+            "name": "waitForIsNotFavorite",
+            "returnType": "boolean"
+        },
+        {
+            "name": "openOverflow"
+        }
+    ]
+}

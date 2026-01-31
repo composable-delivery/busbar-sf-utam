@@ -1,0 +1,110 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a resizable right panel with a draggable handle and a slot for content.",
+            "Selector: src-right-panel"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "draggableArea",
+                "selector": {
+                    "css": ".draggable"
+                },
+                "type": [
+                    "actionable",
+                    "draggable"
+                ],
+                "description": "Represents the draggable area for resizing the panel",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "dragIcon",
+                        "selector": {
+                            "css": "lightning-icon.drag-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the drag icon within the draggable area",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "panelContent",
+                "selector": {
+                    "css": ".slds-grid.slds-panel_docked > div:not(.draggable)"
+                },
+                "type": "actionable",
+                "description": "Represents the main panel content area",
+                "elements": [
+                    {
+                        "name": "slotContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for nested content",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the panel content area is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "panelContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPanelAttribute",
+            "description": {
+                "text": [
+                    "Get a specific attribute from the panel content area"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "panelContent",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "verifyDraggableAreaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"draggableArea\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "draggableArea",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

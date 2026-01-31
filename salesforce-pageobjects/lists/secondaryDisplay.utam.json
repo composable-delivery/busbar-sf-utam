@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-secondary-display.",
+            "Represents the secondary display Lightning web component.",
+            "Access the lst-base-filter-panel component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/baseFilterPanel",
+                "name": "baseFilterPanel",
+                "public": true,
+                "selector": {
+                    "css": "lst-base-filter-panel"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: mergeFieldPicker"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "popup",
+                "type": "utam-lightning/pageObjects/popup",
+                "selector": {
+                    "css": "lightning-popup"
+                }
+            }
+        ]
+    }
+}

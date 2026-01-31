@@ -1,0 +1,139 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/action_bar_root\")",
+            "Represents the Android mobile home editor activity.",
+            "Add and remove mobile home cards."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/mobilehome/editHome",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/action_bar_root\")"
+    },
+    "methods": [
+        {
+            "name": "cancelEdit",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "saveEdit",
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "addCard",
+            "compose": [
+                {
+                    "element": "addCardButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "removeCardWithName",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-salesforceapp/utils/mobilehome/editHomeAndroidUtils",
+                        "invoke": "removeCardWithName",
+                        "args": [
+                            {
+                                "name": "cardName",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "cancelButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "description(\"Dismiss\")"
+            }
+        },
+        {
+            "name": "saveButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/primary_button\")"
+            }
+        },
+        {
+            "name": "addCardButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/add_card_button\")"
+            }
+        },
+        {
+            "name": "deleteCardButtons",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/remove_button\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "badgeLabels",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/mobile_home_badge_text_view\")",
+                "returnAll": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-output-phone",
+            "Represents the records-output-phone Lightning web component.",
+            "Access the record layout phone view component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/formattedPhone",
+                "name": "formattedPhone",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-formatted-phone"
+                }
+            }
+        ]
+    }
+}

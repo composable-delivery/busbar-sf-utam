@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal.",
+            "Represents the list view settings modal dialog.",
+            "Access the model body content."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "public": true,
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "name": "body",
+                "selector": {
+                    "css": "lightning-modal-body"
+                }
+            },
+            {
+                "name": "footer",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "name": "leaveButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "public": true,
+                        "selector": {
+                            "css": "lightning-button.test-leaveButton"
+                        }
+                    },
+                    {
+                        "name": "stayButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "public": true,
+                        "selector": {
+                            "css": "lightning-button.test-stayButton"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Clicks the leave button to discard edits to the list and leave the list view",
+                    "Waits for the confirm modal to disappear"
+                ]
+            },
+            "name": "clickLeave",
+            "compose": [
+                {
+                    "element": "leaveButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Clicks the stay button to remain on the current list view",
+                    "Waits for the confirm modal to disappear"
+                ]
+            },
+            "name": "clickStay",
+            "compose": [
+                {
+                    "element": "stayButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        }
+    ]
+}

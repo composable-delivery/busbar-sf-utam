@@ -1,0 +1,60 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Cadence Builder's Canvas component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_sales_cadencebuilder-cadence-builder-canvas"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "cadenceTrack",
+                "type": "utam-runtime_sales_cadencebuilder/pageObjects/cadenceTrack",
+                "selector": {
+                    "css": "runtime_sales_cadencebuilder-cadence-track"
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "public": true,
+                "name": "canvasIframe",
+                "type": "frame",
+                "selector": {
+                    "css": "iframe[name='surfaceFrame']"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForTracks",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "cadenceTrack"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

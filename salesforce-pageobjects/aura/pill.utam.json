@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiPill",
+            "Represents the ui:pill Aura component.",
+            "Get the pill text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getPillText",
+            "description": {
+                "text": [
+                    "Get pill text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "pillText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "pillText",
+            "selector": {
+                "css": ".pillText"
+            }
+        }
+    ]
+}

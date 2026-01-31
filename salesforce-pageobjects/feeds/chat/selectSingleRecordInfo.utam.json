@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a dropdown for selecting a single record from a list of records, with the ability to handle change events and disable the dropdown.",
+            "Selector: src-select-single-record-info"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordSelectDropdown",
+                "selector": {
+                    "css": "feeds_chat-select-single-record-id"
+                },
+                "type": "utam-feeds-chat/pageObjects/selectSingleRecordId",
+                "description": "Represents the custom dropdown for selecting a single record",
+                "public": true
+            }
+        ]
+    }
+}

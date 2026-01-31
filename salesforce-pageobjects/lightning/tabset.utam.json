@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-tabset",
+            "Represents the lightning-tabset Lightning web component.",
+            "Get the content for the active tab, or the tab bar component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "activeTabContent",
+            "type": "container",
+            "selector": {
+                "css": "[class*='slds-show'][role='tabpanel']"
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/tabBar",
+                "name": "tabBar",
+                "public": true,
+                "selector": {
+                    "css": "lightning-tab-bar"
+                }
+            }
+        ]
+    }
+}

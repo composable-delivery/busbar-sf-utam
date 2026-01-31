@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-header",
+            "Represents the block builder header component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_block_builder-header"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "div.test-content-type"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "items",
+            "public": true,
+            "selector": {
+                "css": ".slds-builder-header__item",
+                "returnAll": true
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonIcon",
+                "public": true,
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-custom-edit-cell.",
+            "Represents the custom edit cell Lightning web component.",
+            "Access the input component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "contentScope",
+                "selector": {
+                    "css": "[data-inputable='true']"
+                },
+                "elements": [
+                    {
+                        "name": "customEditCellWrapper",
+                        "type": "container",
+                        "public": true,
+                        "selector": {
+                            "css": "*"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

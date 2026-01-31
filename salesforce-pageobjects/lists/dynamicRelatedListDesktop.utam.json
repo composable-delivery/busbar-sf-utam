@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-dynamic-related-list-desktop",
+            "Represents the desktop-specific implementation of the dynamic related list component",
+            "Uses the user preferences implementation for desktop-specific rendering",
+            "Handles desktop-specific UI layout and interactions"
+        ]
+    },
+    "selector": {
+        "css": "lst-dynamic-related-list-desktop"
+    },
+    "root": true,
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/dynamicRelatedListWithResolvedFields",
+                "name": "dynamicRelatedListWithResolvedFields",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-dynamic-related-list-with-resolved-fields"
+                }
+            }
+        ]
+    }
+}

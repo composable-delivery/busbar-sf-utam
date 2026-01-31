@@ -1,0 +1,158 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a card with a title, subtitle, image, description, and a clickable link for launching a specific action or page.",
+            "Selector: experience_ui_gen_canvas-launch-tile"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "articleCard",
+                "selector": {
+                    "css": "article.slds-card"
+                },
+                "description": "Represents the card element containing all the content",
+                "elements": [
+                    {
+                        "name": "cardHeaderTitle",
+                        "selector": {
+                            "css": "h2.slds-card__header-title"
+                        },
+                        "description": "Represents the title of the card"
+                    },
+                    {
+                        "name": "articleImage",
+                        "selector": {
+                            "css": "img.article-image"
+                        },
+                        "description": "Represents the image within the card"
+                    },
+                    {
+                        "name": "articleTitle",
+                        "selector": {
+                            "css": "h3.article-title"
+                        },
+                        "description": "Represents the subtitle of the card"
+                    },
+                    {
+                        "name": "articleDescription",
+                        "selector": {
+                            "css": "div.article-description"
+                        },
+                        "description": "Represents the description text of the card"
+                    },
+                    {
+                        "name": "launchLink",
+                        "selector": {
+                            "css": "footer.slds-card__footer > a.slds-card__footer-action"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the launch link in the card footer"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickLaunchLink",
+            "description": {
+                "text": [
+                    "Simulates a user clicking the launch link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "launchLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getCardTitleText",
+            "description": {
+                "text": [
+                    "Returns the text content of the card header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cardHeaderTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getArticleImageAltText",
+            "description": {
+                "text": [
+                    "Returns the alt text of the article image"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "articleImage",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getArticleTitleText",
+            "description": {
+                "text": [
+                    "Returns the text content of the article title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "articleTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getArticleDescriptionText",
+            "description": {
+                "text": [
+                    "Returns the text content of the article description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "articleDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isLaunchLinkVisible",
+            "description": {
+                "text": [
+                    "Checks if the launch link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "launchLink",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

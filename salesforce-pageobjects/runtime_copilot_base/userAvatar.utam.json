@@ -1,0 +1,69 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a user avatar with customizable type, variant, and alternative text. It can show an Einstein icon for inbound messages or user's photo for outbound messages. The avatar's background color is dynamically computed.",
+            "Selector: src-user-avatar"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "avatarWrapper",
+                "selector": {
+                    "css": ".inbound-wrapper, .outbound-wrapper"
+                },
+                "description": "Represents the wrapper div for the avatar component",
+                "elements": [
+                    {
+                        "name": "userAvatar",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-avatar"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseAvatar",
+                        "description": "Represents the avatar component itself",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isAvatarWrapperVisible",
+            "description": {
+                "text": [
+                    "Checks if the avatar wrapper is visible on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "avatarWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getAvatarWrapperClass",
+            "description": {
+                "text": [
+                    "Returns the class attribute of the avatar wrapper to determine if it is inbound or outbound"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "avatarWrapper",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

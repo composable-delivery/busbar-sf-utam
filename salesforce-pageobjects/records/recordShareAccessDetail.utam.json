@@ -1,0 +1,51 @@
+{
+    "root": true,
+    "selector": {
+        "css": "records-record-share-access-detail"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-share-access-detail.",
+            "Represents the records-record-share-access-detail Lightning web component.",
+            "Get the data table."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the datatable"
+                ],
+                "return": "datatable"
+            },
+            "name": "getDatatable",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "datatable"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "datatable",
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/profile_menu\").",
+            "Represents the Android offline profile menu fragment.",
+            "Switch apps, user accounts, logout."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineProfileMenu",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/profile_menu\")"
+    },
+    "elements": [
+        {
+            "name": "appLauncherCell",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/app_launcher_section\")"
+            }
+        },
+        {
+            "name": "changeAccountCell",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/change_account_section\")"
+            }
+        },
+        {
+            "name": "logOutCell",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/log_out_section\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "openAppLauncher",
+            "compose": [
+                {
+                    "element": "appLauncherCell",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "changeAccount",
+            "compose": [
+                {
+                    "element": "changeAccountCell",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "logout",
+            "compose": [
+                {
+                    "element": "logOutCell",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,163 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: draft_row.",
+            "Represents the Android draft row inside of the draft list.",
+            "Verify the draft row and its fields."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/draftRow",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "elements": [
+        {
+            "name": "draftsIcon",
+            "selector": {
+                "uiautomator": "resourceId(\"drafts-icon\")"
+            }
+        },
+        {
+            "name": "draftObject",
+            "selector": {
+                "uiautomator": "resourceId(\"draft_objectName\")"
+            }
+        },
+        {
+            "name": "editButton",
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"draft_edit_button\")"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "errorIcon",
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"draft-error-badge\")"
+            }
+        },
+        {
+            "name": "errorMessage",
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"draft_error_message\")"
+            }
+        },
+        {
+            "name": "title",
+            "selector": {
+                "uiautomator": "resourceId(\"draft_title\")"
+            }
+        },
+        {
+            "name": "undoButton",
+            "selector": {
+                "uiautomator": "resourceId(\"draft_undo_button\")"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "editDraft",
+            "compose": [
+                {
+                    "element": "editButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMsg",
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getObjectName",
+            "compose": [
+                {
+                    "element": "draftObject",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasDraftsErrorIcon",
+            "compose": [
+                {
+                    "element": "errorIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasDraftsIcon",
+            "compose": [
+                {
+                    "element": "draftsIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasEditButton",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "editButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasUndoButton",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "undoButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "undoDraft",
+            "compose": [
+                {
+                    "element": "undoButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

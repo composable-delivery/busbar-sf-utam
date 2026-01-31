@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_framework-property-editor-adapter",
+            "Provides access to accordion section fields"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "component",
+                "type": "utam-builder-framework/pageObjects/component",
+                "selector": {
+                    "css": "builder_framework-component"
+                }
+            }
+        ]
+    }
+}

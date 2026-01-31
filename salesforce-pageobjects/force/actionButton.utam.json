@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceActionButton.",
+            "Represents the force:actionButton Aura component.",
+            "Get the button label. Click the button."
+        ]
+    },
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Gets the label of the action button"
+                ],
+                "return": "the label of the action button"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": {
+                "text": [
+                    "Clicks the action button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,115 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents an assistant panel with a header, body, error, and input area that can handle scroll events.",
+            "Selector: src-assistant-panel"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "bodyArea",
+                "selector": {
+                    "css": ".assistant-panel-body"
+                },
+                "type": "actionable",
+                "description": "Represents the scrollable body area of the panel",
+                "wait": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "headerSlot",
+            "selector": {
+                "css": "[slot='header']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for the header",
+            "public": true
+        },
+        {
+            "name": "defaultSlot",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the default slot content",
+            "public": true
+        },
+        {
+            "name": "errorSlot",
+            "selector": {
+                "css": "[slot='error']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for error messages",
+            "public": true
+        },
+        {
+            "name": "inputBorderSlot",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for the input border",
+            "public": true
+        },
+        {
+            "name": "inputSlot",
+            "selector": {
+                "css": "[slot='input']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for input area",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "scrollBodyArea",
+            "description": {
+                "text": [
+                    "Scrolls the body area of the panel"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "bodyArea",
+                    "apply": "moveTo"
+                }
+            ]
+        },
+        {
+            "name": "isBodyAreaVisible",
+            "description": {
+                "text": [
+                    "Checks if the body area is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bodyArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isBodyAreaPresent",
+            "description": {
+                "text": [
+                    "Checks if the body area is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bodyArea",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

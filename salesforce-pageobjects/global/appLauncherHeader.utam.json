@@ -1,0 +1,24 @@
+{
+    "description": {
+        "text": [
+            "Selector: one-app-launcher-header.",
+            "Represents the one-app-launcher-header Lightning web component.",
+            "Access the button."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "public": true,
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                }
+            }
+        ]
+    }
+}

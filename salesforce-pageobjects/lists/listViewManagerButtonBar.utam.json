@@ -1,0 +1,203 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a button bar for various actions like refresh, inline editing, multi-column sorting, and secondary display options.",
+            "Selector: src-list-view-manager-button-bar"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonBarButtons",
+                "selector": {
+                    "css": "div lightning-button-icon",
+                    "returnAll": true
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "public": true
+            },
+            {
+                "name": "refreshButtonGroup",
+                "selector": {
+                    "css": "div[data-target-selection-name='190e4d92002345528a1fb843717c2e93']"
+                },
+                "description": "Represents the group containing the refresh button",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "refreshButton",
+                        "selector": {
+                            "css": "lightning-button-icon[name='refreshButton']"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the refresh button",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "multiColumnSortButtonGroup",
+                "selector": {
+                    "css": "div[data-target-selection-name='2cad6e3ceeeb43e3bbf46a26a549f7ab']"
+                },
+                "description": "Represents the group containing the multi-column sort button",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "multiColumnSortButton",
+                        "selector": {
+                            "css": "lightning-button-icon[name='multiColumnSortButton']"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the multi-column sort button",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "inlineEditButtonGroup",
+                "selector": {
+                    "css": "div[data-target-selection-name='7d985dc5145c4b87b9fb59d9a46fab85']"
+                },
+                "description": "Represents the group containing the inline edit button",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "inlineEditButton",
+                        "selector": {
+                            "css": "lightning-button-icon[name='inlineEditButton']"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the inline edit button",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "secondaryDisplayButtons",
+                "selector": {
+                    "css": "lightning-button-group"
+                },
+                "type": "utam-lightning/pageObjects/buttonGroup",
+                "description": "Represents the group containing secondary display buttons",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "secondaryDisplayButton",
+                        "selector": {
+                            "css": "lightning-button-icon-stateful",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIconStateful",
+                        "description": "Represents the secondary display buttons within their group",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRefreshButtonGroupVisible",
+            "description": {
+                "text": [
+                    "Check if the refresh button group is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "refreshButtonGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMultiColumnSortButtonGroupVisible",
+            "description": {
+                "text": [
+                    "Check if the multi-column sort button group is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "multiColumnSortButtonGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInlineEditButtonGroupVisible",
+            "description": {
+                "text": [
+                    "Check if the inline edit button group is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlineEditButtonGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRefreshButtonGroupPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"refreshButtonGroup\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "refreshButtonGroup",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMultiColumnSortButtonGroupPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"multiColumnSortButtonGroup\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "multiColumnSortButtonGroup",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyInlineEditButtonGroupPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"inlineEditButtonGroup\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlineEditButtonGroup",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

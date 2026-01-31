@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-primary-display.",
+            "Represents the list primary display Lightning web component.",
+            "Access the card and grid display components."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/primaryDisplayCard",
+                "name": "displayCard",
+                "public": true,
+                "selector": {
+                    "css": "lst-primary-display-card"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/primaryDisplayGrid",
+                "name": "displayGrid",
+                "public": true,
+                "selector": {
+                    "css": "lst-primary-display-grid"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForGridNotLoading",
+            "compose": [
+                {
+                    "element": "displayGrid",
+                    "apply": "waitForVisible"
+                }
+            ]
+        }
+    ]
+}

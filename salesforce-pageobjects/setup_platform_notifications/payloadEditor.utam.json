@@ -1,0 +1,29 @@
+{
+    "description": {
+        "text": [
+            "Represents the payload editor for a specific notification type. Allows access to the payload's title and body."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "titleInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input.title"
+                },
+                "public": true
+            },
+            {
+                "name": "bodyInput",
+                "type": "utam-lightning/pageObjects/textarea",
+                "selector": {
+                    "css": "lightning-textarea.body"
+                },
+                "public": true
+            }
+        ]
+    }
+}

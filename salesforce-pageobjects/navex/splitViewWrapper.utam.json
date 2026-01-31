@@ -1,0 +1,20 @@
+{
+    "description": {
+        "text": [
+            "Selector: .navexSplitViewWrapper",
+            "Represents the navex:SplitViewWrapper  aura component.",
+            "Get one:ConsoleObjectHome component."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "consoleObjectHome",
+            "type": "utam-global/pageObjects/consoleObjectHome",
+            "selector": {
+                "css": ".oneConsoleObjectHome"
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,80 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: community_builder-column-slider",
+            "Represents the column slider component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "columnSliderGuideByIndex",
+                "selector": {
+                    "css": ".cb-col-slider_guide-column:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "columnButtonByIndex",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".cb-col-slider_column-button:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "columnButtons",
+                "selector": {
+                    "css": ".cb-col-slider_column-button",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "columnGutterByIndex",
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "draggable"
+                ],
+                "selector": {
+                    "css": ".cb-col-slider_column-handle:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "deleteButton",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".cb-col-slider_column-delete"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a status message indicating the number of items, the sorted column, sort direction, and the filter applied.",
+            "Selector: src-base-list-status"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusMessage",
+                "selector": {
+                    "css": "h4"
+                },
+                "description": "Represents the status message displaying the number of items, sort details, and filter information."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getStatusMessageText",
+            "description": {
+                "text": [
+                    "Get the text content of the status message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "statusMessage",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

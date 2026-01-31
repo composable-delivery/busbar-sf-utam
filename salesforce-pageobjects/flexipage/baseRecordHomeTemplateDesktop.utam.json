@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .flexipageBaseRecordHomeTemplateDesktop.",
+            "Represents the flexipage:baseRecordHomeTemplateDesktop Aura component.",
+            "Get the flexipage:component component by id."
+        ]
+    },
+    "root": true,
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "css": ".flexipageBaseRecordHomeTemplateDesktop"
+    },
+    "elements": [
+        {
+            "name": "auraComponent",
+            "type": "utam-flexipage/pageObjects/component",
+            "selector": {
+                "css": ".flexipageComponent[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "componentId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

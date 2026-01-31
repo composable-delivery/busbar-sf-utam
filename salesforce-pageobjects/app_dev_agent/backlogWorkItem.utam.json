@@ -1,0 +1,254 @@
+{
+    "root": true,
+    "description": {
+        "text": [
+            "Component that represents a work item in a backlog, displaying a summary, status badges, and details that can be expanded or collapsed. It optionally shows a \"Try again\" button if there's an error.",
+            "Selector: app_dev_agent-backlog-work-item"
+        ],
+        "author": "Salesforce"
+    },
+    "selector": {
+        "css": "app_dev_agent-backlog-work-item"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "sectionContainer",
+                "selector": {
+                    "css": ".slds-section"
+                },
+                "description": "Represents the container for the backlog work item.",
+                "elements": [
+                    {
+                        "name": "toggleButton",
+                        "selector": {
+                            "css": ".slds-section__title"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the clickable section title used to toggle the expanded/collapsed state.",
+                        "elements": [
+                            {
+                                "name": "chevronIcon",
+                                "selector": {
+                                    "css": "lightning-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Represents the chevron icon indicating the expanded/collapsed state.",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "iconSlot",
+                        "selector": {
+                            "css": "[slot='icon']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for custom icons.",
+                        "public": true
+                    },
+                    {
+                        "name": "summaryText",
+                        "selector": {
+                            "css": ".slds-text-heading_large"
+                        },
+                        "description": "Represents the summary text of the work item."
+                    },
+                    {
+                        "name": "assigneeText",
+                        "selector": {
+                            "css": ".slds-text-body_small"
+                        },
+                        "description": "Represents the text displaying the assignee of the work item."
+                    },
+                    {
+                        "name": "tryAgainButton",
+                        "selector": {
+                            "css": "lightning-button.try-again-button"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the \"Try again\" button visible in the error state.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "errorBadge",
+                        "selector": {
+                            "css": "lightning-badge.error-badge"
+                        },
+                        "type": "utam-lightning/pageObjects/badge",
+                        "description": "Represents the error badge when the work item is in an error state.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "completeBadge",
+                        "selector": {
+                            "css": "lightning-badge.success-badge"
+                        },
+                        "type": "utam-lightning/pageObjects/badge",
+                        "description": "Represents the complete badge when the work item is completed.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "recommendBadge",
+                        "selector": {
+                            "css": "lightning-badge.recommend-badge"
+                        },
+                        "type": "utam-lightning/pageObjects/badge",
+                        "description": "Represents the recommended badge when the work item is recommended.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "todoBadge",
+                        "selector": {
+                            "css": "lightning-badge.todo-badge"
+                        },
+                        "type": "utam-lightning/pageObjects/badge",
+                        "description": "Represents the to-do badge when the work item is marked as to-do.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "workItemInfoWrapper",
+                "selector": {
+                    "css": ".work-item-info-wrapper"
+                },
+                "description": "Represents the main wrapper for work item information"
+            },
+            {
+                "name": "expandableIcon",
+                "selector": {
+                    "css": "lightning-icon.expandable-section__icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the expandable section icon"
+            },
+            {
+                "name": "backlogHeading",
+                "selector": {
+                    "css": ".backlog-heading"
+                },
+                "description": "Represents the backlog item heading"
+            },
+            {
+                "name": "expandableContent",
+                "selector": {
+                    "css": "#expandableSectionContent"
+                },
+                "description": "Represents the expandable content section"
+            },
+            {
+                "name": "scopedNotification",
+                "selector": {
+                    "css": "app_dev_agent-scoped-notification"
+                },
+                "type": "container",
+                "description": "Represents the scoped notification component"
+            },
+            {
+                "name": "viewContainer",
+                "selector": {
+                    "css": "app_dev_agent-view-container"
+                },
+                "type": "container",
+                "description": "Represents the view container component"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleSectionExpansion",
+            "description": {
+                "text": [
+                    "Toggle the expanded/collapsed state of the section"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "toggleButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getSummaryText",
+            "description": {
+                "text": [
+                    "Get the summary text of the work item"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "summaryText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getAssigneeText",
+            "description": {
+                "text": [
+                    "Get the assignee text of the work item"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assigneeText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isSectionExpanded",
+            "description": {
+                "text": [
+                    "Check if the section content is expanded and visible"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sectionContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isSectionCollapsed",
+            "description": {
+                "text": [
+                    "Check if the section content is collapsed and hidden"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sectionContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

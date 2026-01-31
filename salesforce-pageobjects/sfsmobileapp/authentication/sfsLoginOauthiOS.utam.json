@@ -1,0 +1,72 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the iOS Oauth screen for the SFS app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/sfsLoginOauth",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "Allow Access? | Salesforce"
+    },
+    "methods": [
+        {
+            "name": "clickAllow",
+            "compose": [
+                {
+                    "element": "allow",
+                    "apply": "scrollToTop"
+                },
+                {
+                    "element": "allow",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDeny",
+            "compose": [
+                {
+                    "element": "deny",
+                    "apply": "scrollToTop"
+                },
+                {
+                    "element": "deny",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "name": "allow",
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == \" Allow \"`]"
+            }
+        },
+        {
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "name": "deny",
+            "selector": {
+                "accessid": "**/XCUIElementTypeButton[`name == \" Deny \"`]"
+            }
+        }
+    ]
+}

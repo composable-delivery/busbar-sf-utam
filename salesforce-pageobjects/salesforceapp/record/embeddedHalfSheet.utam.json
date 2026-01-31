@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the sheet for the activity timeline.",
+            "Expand/Collapse sheet."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "close"
+        },
+        {
+            "name": "collapse"
+        },
+        {
+            "name": "expand"
+        },
+        {
+            "name": "waitForRecentActivityContainer",
+            "returnType": "boolean"
+        }
+    ]
+}

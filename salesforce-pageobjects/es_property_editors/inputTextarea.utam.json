@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-textarea",
+            "Provides access to lightning textarea, mergeFieldButton components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "textarea",
+                "type": "utam-lightning/pageObjects/textarea",
+                "selector": {
+                    "css": "lightning-textarea"
+                }
+            },
+            {
+                "public": true,
+                "name": "mergeFieldButton",
+                "type": "utam-es_property_editors/pageObjects/mergeFieldButton",
+                "selector": {
+                    "css": "es_property_editors-merge-field-button"
+                }
+            }
+        ]
+    }
+}

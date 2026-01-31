@@ -1,0 +1,96 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".uiModal.active"
+    },
+    "methods": [
+        {
+            "name": "close",
+            "description": "Closes the modal",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickOnButton",
+            "description": "Clicks on the active button",
+            "compose": [
+                {
+                    "element": "activeButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "activeButton",
+            "nullable": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button[aria-label='%s']",
+                "args": [
+                    {
+                        "name": "activeButtonName",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "public": true,
+            "name": "closeButton",
+            "selector": {
+                "css": ".slds-modal__close"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "public": true,
+            "name": "nextButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[data-save-button]"
+            }
+        },
+        {
+            "public": true,
+            "name": "cancelButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[data-cancel-button]"
+            }
+        },
+        {
+            "public": true,
+            "name": "contactsButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[data-contacts-button]"
+            }
+        },
+        {
+            "public": true,
+            "name": "lightningButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "returnAll": true,
+                "css": "lightning-button"
+            }
+        }
+    ],
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

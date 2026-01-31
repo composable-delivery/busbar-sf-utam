@@ -1,0 +1,171 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a grid of cards, each containing an image, icon, title, and description. Some cards may be faded to indicate an inactive state.",
+            "Selector: setup_platform_unifiedapp-studio-home-card"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-studio-home-card"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "cardsContainer",
+                "selector": {
+                    "css": ".studio-cards-container"
+                },
+                "description": "Represents the container for all studio cards.",
+                "elements": [
+                    {
+                        "name": "card",
+                        "selector": {
+                            "css": ".slds-col",
+                            "returnAll": true
+                        },
+                        "description": "Represents each card in the grid, which contains an image, icon, title, and description.",
+                        "elements": [
+                            {
+                                "name": "cardImage",
+                                "selector": {
+                                    "css": "img"
+                                },
+                                "description": "Represents the image of the card."
+                            },
+                            {
+                                "name": "cardIcon",
+                                "selector": {
+                                    "css": ".studio-card__icon img"
+                                },
+                                "description": "Represents the icon of the card."
+                            },
+                            {
+                                "name": "cardTitle",
+                                "selector": {
+                                    "css": ".studio-card__header h3"
+                                },
+                                "description": "Represents the title of the card."
+                            },
+                            {
+                                "name": "cardDescription",
+                                "selector": {
+                                    "css": "p"
+                                },
+                                "description": "Represents the description text of the card."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isCardsContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the cards container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardsContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getCardTitle",
+            "description": {
+                "text": [
+                    "Retrieve the title of the card"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cardTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCardDescription",
+            "description": {
+                "text": [
+                    "Retrieve the description of the card"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "cardDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "areCardsPresent",
+            "description": {
+                "text": [
+                    "Check if any cards are present in the container"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "card",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isCardImageVisible",
+            "description": {
+                "text": [
+                    "Check if a card's image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCardIconVisible",
+            "description": {
+                "text": [
+                    "Check if a card's icon is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cardIcon",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getAllCards",
+            "description": {
+                "text": [
+                    "Retrieve all card elements in the container as an array"
+                ],
+                "return": "card[]"
+            },
+            "compose": [
+                {
+                    "element": "card"
+                }
+            ]
+        }
+    ]
+}

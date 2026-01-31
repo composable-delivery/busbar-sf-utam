@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRecordEditActions.",
+            "Represents the force:recordEditActions component.",
+            "Get the action button by label."
+        ]
+    },
+    "elements": [
+        {
+            "name": "actionButton",
+            "type": "utam-force/pageObjects/actionButton",
+            "public": true,
+            "selector": {
+                "css": ".forceActionButton",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabel",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

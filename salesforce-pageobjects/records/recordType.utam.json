@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-type.",
+            "Represents the records-record-type Lightning web component.",
+            "Get the record type text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getRecordTypeText",
+            "description": {
+                "text": [
+                    "Gets the record type name"
+                ],
+                "return": "the record type name"
+            },
+            "compose": [
+                {
+                    "element": "typeName",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "typeName",
+                "selector": {
+                    "css": ".recordTypeName"
+                }
+            },
+            {
+                "name": "changeButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

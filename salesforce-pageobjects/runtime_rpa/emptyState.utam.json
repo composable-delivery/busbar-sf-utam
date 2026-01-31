@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "emptyStateImageContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='empty-state-image']"
+            }
+        },
+        {
+            "public": true,
+            "name": "emptyStateContentHeaderTitleContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='empty-state-content-header-title']"
+            }
+        },
+        {
+            "public": true,
+            "name": "emptyStateContentHeaderSubtitleContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='empty-state-content-header-subtitle']"
+            }
+        },
+        {
+            "public": true,
+            "name": "emptyStateContentBodyContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='empty-state-content-body']"
+            }
+        },
+        {
+            "public": true,
+            "name": "emptyStateContentButtonContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='empty-state-content-button']"
+            }
+        },
+        {
+            "public": true,
+            "name": "tableContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='table']"
+            }
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-vertical-navigation-section.",
+            "Represents the lightning-vertical-navigation-section Lightning web component.",
+            "Get the label, all the vertical navigation items, the active item, an item by name, or an item by index."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Get the header label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "type": [
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "h2.slds-nav-vertical__title"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "verticalNavigationItemBadges",
+            "type": "utam-lightning/pageObjects/verticalNavigationItemBadge",
+            "selector": {
+                "css": "lightning-vertical-navigation-item-badge",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

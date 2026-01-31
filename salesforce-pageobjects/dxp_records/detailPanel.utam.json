@@ -1,0 +1,52 @@
+{
+    "description": {
+        "text": [
+            "Selector: dxp_records-detail-panel",
+            "Represents the dxp_records-detail-panel component.",
+            "get lightning form "
+        ],
+        "author": "Salesforce"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": ".slds-card__body"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "panelBody",
+            "selector": {
+                "css": ".slds-card__body"
+            },
+            "elements": [
+                {
+                    "name": "form",
+                    "public": true,
+                    "selector": {
+                        "css": "lightning-form"
+                    },
+                    "type": "utam-lightning/pageObjects/form"
+                }
+            ]
+        }
+    ]
+}

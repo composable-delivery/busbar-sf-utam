@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a page header with an icon and text.",
+            "Selector: setup-agentic-setup-page-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "iconElement",
+                "selector": {
+                    "css": "lightning-icon.topic-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the lightning icon with a class of \"topic-icon\"",
+                "public": true
+            },
+            {
+                "name": "headerText",
+                "selector": {
+                    "css": "h1.topic-text"
+                },
+                "description": "Represents the header text inside the component"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isHeaderTextVisible",
+            "description": {
+                "text": [
+                    "Check that header text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderText",
+            "description": {
+                "text": [
+                    "Get text from the header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

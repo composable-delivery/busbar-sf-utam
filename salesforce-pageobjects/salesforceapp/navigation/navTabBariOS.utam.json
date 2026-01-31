@@ -1,0 +1,120 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: tab_bar.",
+            "Represents the iOS tab bar.",
+            "Check for a tab bar item and navigate to it, or open the menu tab."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/navTabBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "tab_bar"
+    },
+    "methods": [
+        {
+            "name": "openMenuSection",
+            "compose": [
+                {
+                    "element": "openMenuBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickTabBarItem",
+            "compose": [
+                {
+                    "element": "tabBarBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasTabBarItem",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "classchain": "**/XCUIElementTypeButton[`name == '%s'`]",
+                                "args": [
+                                    {
+                                        "name": "item",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "openMenuBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "menu"
+            }
+        },
+        {
+            "name": "tabBarBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == '%s'`]",
+                "args": [
+                    {
+                        "name": "item",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "tabBarItems",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton",
+                "returnAll": true
+            }
+        }
+    ]
+}

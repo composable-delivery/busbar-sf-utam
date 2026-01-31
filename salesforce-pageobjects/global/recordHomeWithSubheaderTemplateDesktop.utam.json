@@ -1,0 +1,176 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a flexipage on a record home screen with a subheader"
+        ]
+    },
+    "implements": "utam-global/pageObjects/recordHomeFlexipage2",
+    "profile": [
+        {
+            "entity": [
+                "lead"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "css": "one-record-home-flexipage2"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": ".forcegenerated-flexipage-module"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "flexipageModule",
+                "selector": {
+                    "css": ".forcegenerated-flexipage-module"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "type": "utam-record-flexipage/pageObjects/desktopRecordPageDecorator",
+                            "name": "decorator",
+                            "selector": {
+                                "css": "record_flexipage-desktop-record-page-decorator"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "access tabset for entities with subheader structure"
+                ],
+                "return": "highlights panel with record name and summary information"
+            },
+            "name": "getHighlights",
+            "compose": [
+                {
+                    "element": "decorator",
+                    "returnType": "utam-record-flexipage/pageObjects/desktopRecordPageDecorator"
+                },
+                {
+                    "chain": true,
+                    "element": "eventBroker",
+                    "returnType": "utam-records/pageObjects/recordLayoutEventBroker"
+                },
+                {
+                    "chain": true,
+                    "apply": "waitForTemplate",
+                    "returnType": "utam-records/pageObjects/recordLayoutEventBroker"
+                },
+                {
+                    "chain": true,
+                    "returnType": "utam-flexipage/pageObjects/recordHomeWithSubheaderTemplateDesktop2",
+                    "element": "generatedTemplate",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-flexipage/pageObjects/recordHomeWithSubheaderTemplateDesktop2"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "element": "highlights",
+                    "returnType": "utam-records/pageObjects/lwcHighlightsPanel"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "access tabset for entities with subheader structure"
+                ],
+                "return": "tabset page object"
+            },
+            "name": "getTabset",
+            "compose": [
+                {
+                    "element": "decorator",
+                    "returnType": "utam-record-flexipage/pageObjects/desktopRecordPageDecorator"
+                },
+                {
+                    "chain": true,
+                    "element": "eventBroker",
+                    "returnType": "utam-records/pageObjects/recordLayoutEventBroker"
+                },
+                {
+                    "chain": true,
+                    "apply": "waitForTemplate",
+                    "returnType": "utam-records/pageObjects/recordLayoutEventBroker"
+                },
+                {
+                    "chain": true,
+                    "returnType": "utam-flexipage/pageObjects/recordHomeWithSubheaderTemplateDesktop2",
+                    "element": "generatedTemplate",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-flexipage/pageObjects/recordHomeWithSubheaderTemplateDesktop2"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "element": "tabset2",
+                    "returnType": "utam-flexipage/pageObjects/tabset2"
+                },
+                {
+                    "chain": true,
+                    "element": "tabset",
+                    "returnType": "utam-lightning/pageObjects/tabset"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "access highlights panel for Accounts, Contacts, Opportunities. Does NOT work for leads"
+                ],
+                "return": "highlights panel with record name and summary information"
+            },
+            "name": "getDecorator",
+            "compose": [
+                {
+                    "element": "decorator",
+                    "returnType": "utam-record-flexipage/pageObjects/desktopRecordPageDecorator"
+                }
+            ]
+        }
+    ]
+}

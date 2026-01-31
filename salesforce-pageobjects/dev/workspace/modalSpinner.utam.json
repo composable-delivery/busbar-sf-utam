@@ -1,0 +1,114 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a loading spinner with accompanying text, which is conditionally visible based on a property.",
+            "Selector: dev-workspace-modal-spinner"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loadingOverlay",
+                "selector": {
+                    "css": "[class='overlay']"
+                },
+                "description": "Represents the overlay that contains the loading spinner and text.",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "spinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        },
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "description": "Represents the loading spinner component.",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "loadingText",
+                        "selector": {
+                            "css": "class=['loading-text']"
+                        },
+                        "description": "Represents the main loading text element.",
+                        "wait": true
+                    },
+                    {
+                        "name": "waitMessage",
+                        "selector": {
+                            "css": "[class='please-wait']"
+                        },
+                        "description": "Represents the additional \"Please wait\" text element.",
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isLoadingOverlayVisible",
+            "description": {
+                "text": [
+                    "Check if the loading overlay is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingOverlay",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getLoadingText",
+            "description": {
+                "text": [
+                    "Retrieve the text displayed while loading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "loadingText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getWaitMessageText",
+            "description": {
+                "text": [
+                    "Retrieve the \"Please wait\" message text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "waitMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingOverlayPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingOverlay\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingOverlay",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

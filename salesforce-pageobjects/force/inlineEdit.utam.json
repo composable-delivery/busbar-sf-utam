@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceInlineEdit.",
+            "Represents the force:inlineEdit Aura component.",
+            "Get the force:recordLayout and force:recordEditActions components."
+        ]
+    },
+    "elements": [
+        {
+            "type": "utam-force/pageObjects/recordLayout",
+            "name": "recordForm",
+            "public": true,
+            "selector": {
+                "css": ".forceRecordLayout"
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/recordEditActions",
+            "name": "recordEditActions",
+            "public": true,
+            "selector": {
+                "css": ".forceRecordEditActions"
+            }
+        }
+    ]
+}

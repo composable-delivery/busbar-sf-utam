@@ -1,0 +1,97 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a device alert (such as allowing notifications) usually when logging into the app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/deviceAlerts/deviceAlert",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.android.permissioncontroller:id/content_container\")"
+    },
+    "elements": [
+        {
+            "name": "allowNotificationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.android.permissioncontroller:id/permission_allow_always_button\")"
+            }
+        },
+        {
+            "name": "allowNotificationWhenusingTheAppBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.android.permissioncontroller:id/permission_allow_foreground_only_button\")"
+            }
+        },
+        {
+            "name": "okBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.android.permissioncontroller:id/ok_button\")"
+            }
+        },
+        {
+            "name": "denyNotificationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.android.permissioncontroller:id/permission_deny_button\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickAllowNotification",
+            "compose": [
+                {
+                    "element": "allowNotificationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickAllowNotificationWhenUsingTheApp",
+            "compose": [
+                {
+                    "element": "allowNotificationWhenusingTheAppBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickOK",
+            "compose": [
+                {
+                    "element": "okBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDenyNotification",
+            "compose": [
+                {
+                    "element": "denyNotificationBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

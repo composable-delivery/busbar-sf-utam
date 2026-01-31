@@ -1,0 +1,64 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-primitive-bubble",
+            "Represents the lightning-primitive-bubble Lightning web component.",
+            " Get the bubble text."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "root": true,
+    "selector": {
+        "css": "lightning-primitive-bubble"
+    },
+    "methods": [
+        {
+            "name": "getText",
+            "description": {
+                "text": [
+                    "Get bubble text tooltip body value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "tooltip",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "tooltip",
+                "selector": {
+                    "css": ".slds-popover__body"
+                },
+                "public": true
+            },
+            {
+                "name": "overlay",
+                "selector": {
+                    "css": "[part='overlay']"
+                },
+                "public": true
+            },
+            {
+                "name": "popover",
+                "selector": {
+                    "css": ".slds-popover"
+                },
+                "public": true
+            },
+            {
+                "name": "invisibleDiv",
+                "selector": {
+                    "css": ".slds-popover__body > div"
+                },
+                "public": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-form-picklist",
+            "Represents the records-form-picklist Lightning web component.",
+            "Get lightning-picklist and lightning-button components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/picklist",
+                "name": "picklist",
+                "public": true,
+                "selector": {
+                    "css": "lightning-picklist"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/button",
+                "name": "editDependencyPanel",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

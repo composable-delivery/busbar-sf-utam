@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_copilot_base-output-rich-text",
+            "Represents the runtime_copilot_base-output-rich-text Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedRichText",
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "public": true
+            }
+        ]
+    }
+}

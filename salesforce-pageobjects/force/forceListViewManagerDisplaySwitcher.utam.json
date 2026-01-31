@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListViewManagerDisplaySwitcher",
+            "Represents the list view manager display switcher Lightning (Force) web component.",
+            "Access the options in the dropdown menu."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "name": "selectListDisplayButton",
+                "public": true,
+                "selector": {
+                    "css": "slds-button"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "selectListDisplayDropdownOption",
+                "public": true,
+                "selector": {
+                    "css": ".slds-dropdown__item[title='%s']",
+                    "args": [
+                        {
+                            "name": "subjectLinkTitle",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

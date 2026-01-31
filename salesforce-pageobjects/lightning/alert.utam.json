@@ -1,0 +1,158 @@
+{
+    "root": true,
+    "selector": {
+        "css": "lightning-overlay-container"
+    },
+    "description": {
+        "text": [
+            "Library: LightningAlert",
+            "Interact with the singular alert modal created by the LightningAlert library.",
+            "Access the Header label, or the Label when there is no header and the message text. Additionally allows clicking the OK button."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "clickOK",
+            "description": "Click OK button and wait for lightning-interactive-dialog-base absence",
+            "compose": [
+                {
+                    "element": "okButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "base",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderLabel",
+            "description": {
+                "text": [
+                    "Get alert header text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderlessLabel",
+            "description": {
+                "text": [
+                    "Get alert header aria-label text of headerless variant"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMessage",
+            "description": {
+                "text": [
+                    "Get meassage text that displays in the alert"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "message",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Checks if the the alert aria label text is in focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabel",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isAlertShown",
+            "description": {
+                "text": [
+                    "Checks if the the lightning-alert is open/shown"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "base",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "base",
+                "selector": {
+                    "css": "lightning-interactive-dialog-base"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "message",
+                            "selector": {
+                                "css": "lightning-alert"
+                            }
+                        },
+                        {
+                            "name": "okButton",
+                            "type": [
+                                "actionable",
+                                "clickable"
+                            ],
+                            "selector": {
+                                "css": "[data-ok-button]"
+                            },
+                            "public": true
+                        },
+                        {
+                            "name": "ariaLabel",
+                            "type": "actionable",
+                            "selector": {
+                                "css": "[data-modal]"
+                            }
+                        },
+                        {
+                            "name": "header",
+                            "selector": {
+                                "css": "[data-modal-heading]"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "text": [
+            "Selector: emailui-formatted-email-account, emailui-formatted-email-contact, emailui-formatted-email-case, emailui-formatted-email-lead.",
+            "Represents a container element for emailui-formatted-email-account, emailui-formatted-email-contact, emailui-formatted-email-case, emailui-formatted-email-lead Lightning web components.",
+            "Get the child formatted email wrapper."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-email/pageObjects/formattedEmailWrapper",
+                "name": "emailWrapper",
+                "public": true,
+                "selector": {
+                    "css": "emailui-formatted-email-wrapper"
+                }
+            }
+        ]
+    }
+}

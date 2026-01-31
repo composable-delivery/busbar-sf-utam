@@ -1,0 +1,53 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-primitive-file-droppable-zone",
+            "Represents the lightning-primitive-file-droppable-zone Lightning web component.",
+            "Upload a file from the path by passing the path as a parameter.",
+            "Get lightning-primitive-icon"
+        ]
+    },
+    "methods": [
+        {
+            "name": "uploadFromPath",
+            "description": "Upload a file from the path by passing path",
+            "compose": [
+                {
+                    "element": "inputFile",
+                    "apply": "scrollToTop"
+                },
+                {
+                    "element": "inputFile",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "inputFile",
+            "type": [
+                "actionable",
+                "editable"
+            ],
+            "selector": {
+                "css": "input[type='file']"
+            }
+        },
+        {
+            "name": "icon",
+            "type": "utam-lightning/pageObjects/primitiveIcon",
+            "selector": {
+                "css": "lightning-primitive-icon"
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: record_flexipage-highlights-primary-row",
+            "Represents the record_flexipage-highlights-primary-row Lightning web component.",
+            "Get the entityName and primary field content"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getEntityText",
+            "description": "Gets the display text of the entity",
+            "compose": [
+                {
+                    "element": "entityName",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "entityName",
+                "public": true,
+                "selector": {
+                    "css": ".entityNameTitle"
+                }
+            },
+            {
+                "name": "primaryField",
+                "type": "container",
+                "public": true,
+                "selector": {
+                    "css": "[slot='primaryField']"
+                }
+            }
+        ]
+    }
+}

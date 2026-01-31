@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-mobile-form-error",
+            "Represents the records-mobile-form-error Lightning web component.",
+            "Get the error content from dynamic forms."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dedupeContent",
+                "type": "utam-force/pageObjects/dedupeContent",
+                "public": true,
+                "selector": {
+                    "css": "force-dedupe-content"
+                }
+            },
+            {
+                "name": "linkByText",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "a",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getText",
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "findFirst": true
+                }
+            }
+        ]
+    }
+}

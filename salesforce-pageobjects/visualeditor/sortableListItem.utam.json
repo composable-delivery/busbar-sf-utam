@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .visualEditorSortableListItem.",
+            "Represents the visualEditor:sortableListItem Aura component.",
+            "Click a list item. Get ui:outputText or ui:tooltip components."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickListItem",
+            "description": "Clicks the list item",
+            "compose": [
+                {
+                    "element": "itemLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "itemLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.containerEditorItemLabel"
+            },
+            "elements": [
+                {
+                    "name": "itemTitle",
+                    "type": "utam-aura/pageObjects/outputText",
+                    "public": true,
+                    "selector": {
+                        "css": ".uiOutputText"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "tooltip",
+            "type": "utam-aura/pageObjects/tooltip",
+            "selector": {
+                "css": ".uiTooltip"
+            },
+            "public": true
+        }
+    ]
+}

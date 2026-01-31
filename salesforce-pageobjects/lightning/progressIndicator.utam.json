@@ -1,0 +1,145 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-progress-indicator.",
+            "Represents the lightning-progress-indicator Lightning web component.",
+            "Get the lightning-pregress-step component by label.",
+            "Get all the progress steps or progress steps with errors. Get the current step or the completed steps."
+        ]
+    },
+    "elements": [
+        {
+            "name": "step",
+            "type": "utam-lightning/pageObjects/progressStep",
+            "selector": {
+                "css": "lightning-progress-step:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "step",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "progressSteps",
+            "type": "utam-lightning/pageObjects/progressStep",
+            "selector": {
+                "css": "lightning-progress-step",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "stepWithLabel",
+            "type": "utam-lightning/pageObjects/progressStep",
+            "selector": {
+                "css": "lightning-progress-step",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabelText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "partialLabel",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        },
+        {
+            "name": "stepWithError",
+            "type": "utam-lightning/pageObjects/progressStep",
+            "selector": {
+                "css": "lightning-progress-step[class*='slds-has-error']"
+            },
+            "public": true,
+            "nullable": true
+        },
+        {
+            "name": "currentStep",
+            "type": "utam-lightning/pageObjects/progressStep",
+            "selector": {
+                "css": "lightning-progress-step[class*='slds-progress__item'][class*='slds-is-active'],lightning-progress-step[class*='slds-path__item'][class*='slds-is-current']"
+            },
+            "public": true,
+            "nullable": true
+        },
+        {
+            "name": "completedItem",
+            "type": "utam-lightning/pageObjects/progressStep",
+            "selector": {
+                "css": "lightning-progress-step.slds-is-complete,lightning-progress-step.slds-is-completed"
+            },
+            "public": true,
+            "nullable": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "ul",
+                "selector": {
+                    "css": "ul"
+                }
+            },
+            {
+                "name": "currStepLabel",
+                "selector": {
+                    "css": "[data-label]"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelSpanAttribute",
+            "description": {
+                "text": [
+                    "Get label span attribute"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "currStepLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attribute",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getUlAttribute",
+            "description": {
+                "text": [
+                    "Get ul attribute by name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ul",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attribute",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

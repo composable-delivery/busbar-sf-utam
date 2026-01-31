@@ -1,0 +1,102 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a skeleton loader which can be rendered as either a series of lines or a circle.",
+            "Selector: app_dev_agent-skeleton"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "wrapperDiv",
+                "selector": {
+                    "css": "div.main"
+                },
+                "description": "Represents the main wrapper div that contains either lines or a circle",
+                "elements": [
+                    {
+                        "name": "lineDivs",
+                        "selector": {
+                            "css": "div",
+                            "returnAll": true
+                        },
+                        "description": "Represents each line div within the wrapper"
+                    },
+                    {
+                        "name": "circleDiv",
+                        "selector": {
+                            "css": "div.skeleton-circle"
+                        },
+                        "description": "Represents the circle div within the wrapper",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that the main wrapper div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "wrapperDiv",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLineDivsVisible",
+            "description": {
+                "text": [
+                    "Check that all line divs are present and visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "lineDivs",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCircleVisible",
+            "description": {
+                "text": [
+                    "Check that the circle div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "circleDiv",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyCircleDivPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"circleDiv\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "circleDiv",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

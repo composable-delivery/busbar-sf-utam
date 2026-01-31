@@ -1,0 +1,50 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiLabel",
+            "Represents the ui:label Aura component.",
+            "Get label text. Check if the field associated with the label is required."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Check if the field associated with the label is required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "required",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "required",
+            "selector": {
+                "css": ".slds-required"
+            }
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".PathAssistantSetupPage"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .PathAssistantSetupPage",
+            "Represents the <body> of the iframe.",
+            "Use the selector to get the Path Setup component within the iframe."
+        ]
+    },
+    "elements": [
+        {
+            "name": "enableButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": ".enableButton"
+            }
+        }
+    ]
+}

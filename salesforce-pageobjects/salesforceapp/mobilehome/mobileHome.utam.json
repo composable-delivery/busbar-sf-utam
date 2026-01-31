@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the mobile home fragment.",
+            "Edit or access mobile home card list."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "editHome"
+        },
+        {
+            "name": "getHomeCardList",
+            "returnType": "utam-salesforceapp/pageObjects/mobilehome/homeCardList"
+        },
+        {
+            "name": "clickContinue"
+        },
+        {
+            "name": "hasContinueButton",
+            "returnType": "boolean"
+        },
+        {
+            "name": "waitForCardListToLoad",
+            "returnType": "boolean"
+        }
+    ]
+}

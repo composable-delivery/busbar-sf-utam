@@ -1,0 +1,106 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A base card component that serves as a foundational element for more complex components, utilizing native shadow DOM encapsulation and custom styles.",
+            "Selector: runtime_copilot_base-single-select-time"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroup",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio button group",
+                "elements": [
+                    {
+                        "name": "radioOptions",
+                        "selector": {
+                            "css": "runtime_copilot_base-primitive-type-picklist",
+                            "returnAll": true
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/primitiveTypePicklist",
+                        "description": "Represents all radio buttons in the group",
+                        "public": true
+                    },
+                    {
+                        "name": "radioOptionByIndex",
+                        "selector": {
+                            "css": "runtime_copilot_base-primitive-type-picklist:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "description": "element index starting from 1"
+                                }
+                            ]
+                        },
+                        "description": "Represents all radio buttons in the group",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "optionLabel",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "description": "Represents the label for each radio button, which can be a span or a formatted time component",
+                                "nullable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getRadioOptionLabel",
+            "description": {
+                "text": [
+                    "Retrieve the label of a radio button"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRadioGroupVisible",
+            "description": {
+                "text": [
+                    "Check that the radio group is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyOptionLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"optionLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_sales_adt-processRing",
+            "Represents setup_sales_adt-processRing Lightning Web Component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "newStageWarningSymbol",
+                "public": true,
+                "selector": {
+                    "css": "span.slds-icon_container.slds-icon-utility-warning"
+                },
+                "type": [
+                    "clickable"
+                ]
+            }
+        ]
+    }
+}

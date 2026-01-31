@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages a stack of views, allowing push and pop operations for navigation, and animates transitions between views.",
+            "Selector: src-base-view-drillin"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "sidePanelView",
+                "selector": {
+                    "css": ".side-panel-view"
+                },
+                "description": "Represents the container for dynamic views with manual DOM handling.",
+                "wait": true
+            },
+            {
+                "name": "railPanelTopic",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-rail-panel-topics",
+                    "returnAll": true
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/railPanelTopics",
+                "description": "Represents the list of left-rail view topic that are conditionally rendered.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSidePanelVisible",
+            "description": {
+                "text": [
+                    "Check if the side panel view is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "sidePanelView",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

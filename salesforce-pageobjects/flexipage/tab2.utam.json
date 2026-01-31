@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-tab2.",
+            "Represents the flexipage-tab2 Lightning web component.",
+            "Get the lwcHighlightsPanel, lwcDetailPanel, lwcRelatedRecord and tabset2."
+        ]
+    },
+    "elements": [
+        {
+            "name": "component2",
+            "type": "utam-flexipage/pageObjects/component2",
+            "selector": {
+                "css": "flexipage-component2[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "componentId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "type": "utam-records/pageObjects/lwcDetailPanel",
+            "name": "detailPanel",
+            "public": false,
+            "selector": {
+                "css": "records-lwc-detail-panel"
+            }
+        },
+        {
+            "type": "utam-lists/pageObjects/relatedListContainer",
+            "name": "relatedListContainer",
+            "public": false,
+            "selector": {
+                "css": "lst-related-list-container"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getDetailPanel",
+            "description": {
+                "text": [
+                    "Gets the detail panel for the tab"
+                ],
+                "return": "the detail panel (utam-records/pageObjects/lwcDetailPanel)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "detailPanel"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getRelatedListContainer",
+            "description": {
+                "text": [
+                    "Gets the related list container for the tab"
+                ],
+                "return": "the related list container (utam-lists/pageObjects/relatedListContainer)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "relatedListContainer"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

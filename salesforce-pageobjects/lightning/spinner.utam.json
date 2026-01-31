@@ -1,0 +1,67 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-spinner",
+            "Represents the lightning-spinner Lightning web component.",
+            "Check if the spinner is present. Check if the assistive text present and get the assistive text."
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSpinning",
+            "description": {
+                "text": [
+                    "Is lightning-spinner displayed"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasAssistingText",
+            "description": {
+                "text": [
+                    "Checks if the spinner has assisting text present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistingText",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getAssistingText",
+            "description": {
+                "text": [
+                    "Get spinner assisting text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistingText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "assistingText",
+                "selector": {
+                    "css": ".slds-assistive-text"
+                }
+            }
+        ]
+    }
+}

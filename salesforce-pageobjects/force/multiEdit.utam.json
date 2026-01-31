@@ -1,0 +1,168 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .modal-container.",
+            "Represents the modal-container Aura component for multiEdit.",
+            "Get forceListViewManager, lightning-formatted-number, actionButton by text, forceStatusIconSummary and lightning-tab-bar. Set setSmartInputValue"
+        ]
+    },
+    "selector": {
+        "css": ".modal-container"
+    },
+    "root": true,
+    "elements": [
+        {
+            "name": "listViewManager",
+            "type": "utam-force/pageObjects/listViewManager",
+            "selector": {
+                "css": ".forceListViewManager"
+            },
+            "public": true
+        },
+        {
+            "name": "addRowButton",
+            "type": "utam-force/pageObjects/actionButton",
+            "selector": {
+                "css": ".addNewRowsButton"
+            },
+            "public": true
+        },
+        {
+            "name": "totalPercent",
+            "type": "utam-lightning/pageObjects/formattedNumber",
+            "selector": {
+                "css": ".totalPercentage lightning-formatted-number"
+            },
+            "public": true
+        },
+        {
+            "name": "totalAmount",
+            "type": "utam-lightning/pageObjects/formattedNumber",
+            "selector": {
+                "css": ".totalAmount lightning-formatted-number"
+            },
+            "public": true
+        },
+        {
+            "name": "totalQuantity",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "div.multiEditFooterContainer div.quantity span.number"
+            },
+            "public": true
+        },
+        {
+            "name": "actionButton",
+            "type": "utam-force/pageObjects/actionButton",
+            "selector": {
+                "css": ".forceActionButton[title='%s']",
+                "args": [
+                    {
+                        "name": "titleString",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "errorText",
+            "type": "utam-force/pageObjects/statusIconSummary",
+            "selector": {
+                "css": ".forceStatusIconSummary"
+            },
+            "public": true
+        },
+        {
+            "name": "tabBar",
+            "type": "utam-lightning/pageObjects/tabBar",
+            "selector": {
+                "css": "lightning-tab-bar"
+            },
+            "public": true
+        },
+        {
+            "name": "closeButton",
+            "selector": {
+                "css": ".slds-modal__close"
+            },
+            "type": [
+                "clickable"
+            ],
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "setSmartInputValue",
+            "description": "Sets the smart input value",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "invoke": "setSmartInputValue",
+                        "type": "utam-force/utils/multiEditUtils",
+                        "args": [
+                            {
+                                "name": "rowIndex",
+                                "type": "number"
+                            },
+                            {
+                                "name": "colIndex",
+                                "type": "number"
+                            },
+                            {
+                                "name": "smartInputSelector",
+                                "type": "string"
+                            },
+                            {
+                                "name": "valueToSet",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickSaveButton",
+            "description": "Clicks the save button to save changes",
+            "compose": [
+                {
+                    "element": "actionButton",
+                    "returnType": "utam-force/pageObjects/actionButton",
+                    "args": [
+                        {
+                            "value": "Save"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDiscardButton",
+            "description": "Clicks the discard button to discard changes",
+            "compose": [
+                {
+                    "element": "actionButton",
+                    "returnType": "utam-force/pageObjects/actionButton",
+                    "args": [
+                        {
+                            "value": "Discard Changes"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

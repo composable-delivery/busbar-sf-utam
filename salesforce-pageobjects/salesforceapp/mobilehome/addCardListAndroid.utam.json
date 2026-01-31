@@ -1,0 +1,69 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/add_card_list\")",
+            "Represents the Android mobile home Select card list activity.",
+            "Select a card from 'Add' list."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/mobilehome/addCardList",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/add_card_list\")"
+    },
+    "methods": [
+        {
+            "name": "selectCardWithName",
+            "compose": [
+                {
+                    "element": "cardWithName",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "cardWithName",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/card_name\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "cardName",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

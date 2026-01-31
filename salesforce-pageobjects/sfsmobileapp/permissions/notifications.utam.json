@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for enabling notifications when logging into the app."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickTurnOnNotifications"
+        },
+        {
+            "name": "clickSkip"
+        }
+    ]
+}

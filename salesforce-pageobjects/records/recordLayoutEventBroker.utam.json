@@ -1,0 +1,93 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-event-broker.",
+            "Represents the records-record-layout-event-broker Lightning web component.",
+            "Access the content, detail panel, or content inside a slot or a generated template."
+        ]
+    },
+    "elements": [
+        {
+            "type": "container",
+            "public": true,
+            "name": "content"
+        },
+        {
+            "type": "utam-records/pageObjects/lwcDetailPanel",
+            "name": "lwcDetailPanel",
+            "selector": {
+                "css": "records-lwc-detail-panel"
+            },
+            "public": true
+        },
+        {
+            "type": "container",
+            "public": true,
+            "name": "contentInsideSlot",
+            "selector": {
+                "css": ":not(slot)"
+            }
+        },
+        {
+            "type": "container",
+            "public": true,
+            "name": "generatedTemplate",
+            "selector": {
+                "css": ".forcegenerated-flexipage-template"
+            }
+        },
+        {
+            "type": "container",
+            "public": true,
+            "name": "component2",
+            "selector": {
+                "css": "flexipage-component2[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "componentId",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Wait for the template to be loaded"
+                ],
+                "return": "Self"
+            },
+            "name": "waitForTemplate",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".forcegenerated-flexipage-template"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "returnSelf"
+                }
+            ]
+        }
+    ]
+}

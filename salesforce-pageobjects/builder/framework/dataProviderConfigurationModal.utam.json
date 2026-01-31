@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: dataProviderConfigurationModal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                }
+            }
+        ]
+    }
+}

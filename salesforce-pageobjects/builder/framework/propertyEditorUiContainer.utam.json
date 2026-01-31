@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: propertyEditorUiContainer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "lightningComponentPropertyEditor",
+                "type": "container",
+                "selector": {
+                    "css": ":scope %s",
+                    "args": [
+                        {
+                            "name": "lightningComponentSelector",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "auraComponentPropertyEditor",
+                "type": "utam-builder-framework/pageObjects/auraComponentPropertyEditorUi",
+                "selector": {
+                    "css": "builder_framework-aura-component-property-editor-ui"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "hasAuraComponentPropertyEditor",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "builder_framework-aura-component-property-editor-ui"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForAuraComponentPropertyEditor",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "hasAuraComponentPropertyEditor",
+                                    "returnType": "boolean"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "auraComponentPropertyEditor",
+                    "returnType": "utam-builder-framework/pageObjects/auraComponentPropertyEditorUi"
+                }
+            ]
+        }
+    ]
+}

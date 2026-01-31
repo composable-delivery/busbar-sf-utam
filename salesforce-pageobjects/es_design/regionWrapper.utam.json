@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_design-region-wrapper",
+            "Represents the block builder region wrapper component.",
+            "The region wrapper holds the iframe content."
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        },
+        {
+            "public": true,
+            "name": "contentWrappers",
+            "type": "utam-es_design/pageObjects/componentWrapper",
+            "selector": {
+                "css": ":scope > *:first-child > es_design-component-wrapper",
+                "returnAll": true
+            }
+        },
+        {
+            "public": true,
+            "name": "componentWrappers",
+            "type": "utam-es_design/pageObjects/componentWrapper",
+            "selector": {
+                "css": "es_design-component-wrapper",
+                "returnAll": true
+            }
+        },
+        {
+            "public": true,
+            "name": "palettePopoverTrigger",
+            "type": "utam-webruntimedesign/pageObjects/palettePopoverTrigger",
+            "selector": {
+                "css": "webruntimedesign-palette-popover-trigger"
+            }
+        }
+    ]
+}

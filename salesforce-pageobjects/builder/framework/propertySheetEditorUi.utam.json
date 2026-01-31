@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: propertySheetEditorUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "legendContent",
+                "type": [],
+                "selector": {
+                    "css": "legend"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertySheetUi",
+                "type": "utam-builder-framework/pageObjects/propertySheetUi",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                }
+            }
+        ]
+    }
+}

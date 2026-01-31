@@ -1,0 +1,442 @@
+{
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A complex Lightning Web Component that serves as a user interface for a canvas application, with functionalities such as managing and displaying UI elements, handling user interactions, and communicating with the backend.",
+            "Selector: experience_ui_gen_canvas-canvas-home"
+        ]
+    },
+    "selector": {
+        "css": "experience_ui_gen_canvas-canvas-home"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "contentRenderer",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-content-renderer"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/contentRenderer",
+                "description": "Represents the container of tiles on a canvas.  This LWC/element only shows on a populated canvas.  It will not render on the create canvas view when there is a question field, etc.",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "canvasHomeCard",
+                "selector": {
+                    "css": "lightning-card.genCanvas-app"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the main card container when Agentic UI is enabled.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "footerComponent",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-gen-ui-footer"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/genUiFooter",
+                "description": "Represents the footer component with input and action buttons",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "toggleChatButton",
+                "selector": {
+                    "css": "lightning-button-icon.agentforce-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to toggle the chat panel",
+                "wait": true
+            },
+            {
+                "name": "togglePanelButton",
+                "selector": {
+                    "css": "lightning-button-icon.utility-inbox"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to toggle the canvas panel",
+                "wait": true
+            },
+            {
+                "name": "canvasMenuButton",
+                "selector": {
+                    "css": "div.grid-layout div.left-column lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the button for toggling the menu of canvases",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "newCanvasButton",
+                "selector": {
+                    "css": "lightning-button-icon.new-layout-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to create a new canvas",
+                "wait": true
+            },
+            {
+                "name": "backHomeButton",
+                "selector": {
+                    "css": "lightning-button-icon[if:true='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to navigate back to the home page, shown only on record pages",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "agentforcePanel",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-agent-panel"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/agentPanel",
+                "description": "Represents the chat panel component",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "canvasMenu",
+                "selector": {
+                    "css": "lightning-vertical-navigation"
+                },
+                "type": "utam-lightning/pageObjects/verticalNavigation",
+                "description": "Represents the menu of canvases (a vertical navigation menu) when the panel is open",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "canvasMenuItem",
+                "selector": {
+                    "css": "lightning-vertical-navigation-item"
+                },
+                "type": "utam-lightning/pageObjects/verticalNavigationItem",
+                "description": "Represents individual navigation items within the vertical navigation menu",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "navigationMenu",
+                "selector": {
+                    "css": "lightning-vertical-navigation[if:true='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/verticalNavigation",
+                "description": "Represents the vertical navigation menu when the panel is open",
+                "nullable": true,
+                "public": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "navigationItems",
+                        "selector": {
+                            "css": "lightning-vertical-navigation-item",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/verticalNavigationItem",
+                        "description": "Represents individual navigation items within the vertical navigation menu",
+                        "public": true,
+                        "wait": true
+                    }
+                ]
+            },
+            {
+                "name": "deleteButton",
+                "selector": {
+                    "css": "lightning-button-icon.delete-button"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the delete canvas button",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "settingsMenu",
+                "selector": {
+                    "css": "lightning-button-menu[if:true='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "description": "Represents the settings menu for canvas configuration",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner[if:true='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a loading spinner shown when content is being fetched",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "enableEinsteinCard",
+                "selector": {
+                    "css": "div.slds-card[if:false='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the card shown when Einstein GPT is not enabled",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "enableEinsteinLink",
+                        "selector": {
+                            "css": "a[href=\"/lightning/setup/EinsteinGPTSetup/home\"]"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the link for admins to enable Einstein GPT",
+                        "nullable": true
+                    },
+                    {
+                        "name": "enableEinsteinHelpLink",
+                        "selector": {
+                            "css": "a[href=\"https://help.salesforce.com/s/articleView\"]"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the help link for non-admins to learn about enabling Einstein GPT",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "recommendationItems",
+                "type": "utam-experience-ui-gen-canvas/pageObjects/recommendationItems",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-recommendation-items"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickTogglePanel",
+            "description": {
+                "text": [
+                    "Click the button to toggle the left panel"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "togglePanelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickToggleChat",
+            "description": {
+                "text": [
+                    "Click the button to toggle the chat panel"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "toggleChatButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickNewCanvas",
+            "description": {
+                "text": [
+                    "Click the button to create a new canvas"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "newCanvasButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickBackHome",
+            "description": {
+                "text": [
+                    "Click the button to navigate back to the home page"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "backHomeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isEnableEinsteinCardVisible",
+            "description": {
+                "text": [
+                    "Check if the enable Einstein card is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enableEinsteinCard",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isEnableEinsteinLinkVisible",
+            "description": {
+                "text": [
+                    "Check if the enable Einstein link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enableEinsteinLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isEnableEinsteinHelpLinkVisible",
+            "description": {
+                "text": [
+                    "Check if the enable Einstein help link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enableEinsteinHelpLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyEnableEinsteinCardPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"enableEinsteinCard\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enableEinsteinCard",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyBackHomeButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"backHomeButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "backHomeButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyEnableEinsteinLinkPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"enableEinsteinLink\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enableEinsteinLink",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyEnableEinsteinHelpLinkPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"enableEinsteinHelpLink\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enableEinsteinHelpLink",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

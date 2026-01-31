@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputDefaultError.",
+            "Represents the ui:inputDefaultError Aura component. ",
+            "Get all the messages or a message by text."
+        ]
+    },
+    "elements": [
+        {
+            "name": "errorMessageList",
+            "selector": {
+                "css": ".uiInputDefaultError"
+            },
+            "elements": [
+                {
+                    "name": "allMessages",
+                    "public": true,
+                    "selector": {
+                        "css": "li",
+                        "returnAll": true
+                    }
+                },
+                {
+                    "name": "messageByText",
+                    "selector": {
+                        "css": "li",
+                        "returnAll": true
+                    },
+                    "filter": {
+                        "apply": "getText",
+                        "findFirst": true,
+                        "matcher": {
+                            "type": "stringContains",
+                            "args": [
+                                {
+                                    "name": "text",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "public": true
+                }
+            ]
+        }
+    ]
+}

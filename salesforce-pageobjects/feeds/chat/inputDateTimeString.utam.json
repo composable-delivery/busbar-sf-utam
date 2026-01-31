@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows input of a date and time, with the ability to commit the value and signal a change through a custom event.",
+            "Selector: src-input-date-time-string"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dateTimeInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the date and time input field with commit event handler",
+                "public": true
+            }
+        ]
+    }
+}

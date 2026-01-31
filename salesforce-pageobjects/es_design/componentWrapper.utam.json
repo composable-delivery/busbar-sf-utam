@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_design-component-wrapper",
+            "Represents the block builder component wrapper component.",
+            "The component wrapper serves as a container."
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "errorComponent",
+            "type": "utam-es_design/pageObjects/errorComponent",
+            "selector": {
+                "css": "es_design-error-component"
+            }
+        },
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        },
+        {
+            "public": true,
+            "name": "wrappedBody",
+            "type": "container",
+            "selector": {
+                "css": "es_design-component-wrapper > *"
+            }
+        },
+        {
+            "public": true,
+            "name": "treeComponentNode",
+            "type": "utam-es_design/pageObjects/treeComponentNode",
+            "selector": {
+                "css": "es_design-tree-component-node"
+            }
+        },
+        {
+            "public": true,
+            "name": "clickableDiv",
+            "type": "clickable",
+            "selector": {
+                "css": "div.interactions-component"
+            }
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The component serves as a dynamic message resolver, which takes ES Type Nodes and UEM Schemas and renders the appropriate chat view components based on metadata, response, and actions.",
+            "Selector: runtime_copilot_base-message-resolver"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewComponent",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component[data-view-component]"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the chat view component resolved dynamically based on message content.",
+                "public": true,
+                "nullable": true
+            }
+        ]
+    }
+}

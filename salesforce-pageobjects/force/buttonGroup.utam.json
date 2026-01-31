@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-button-group.",
+            "Represents the lightning-button-group Lightning web component.",
+            "Get all the lightning-button components."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "allButtons",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

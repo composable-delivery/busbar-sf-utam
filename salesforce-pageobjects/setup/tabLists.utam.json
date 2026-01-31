@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup-tab-lists.",
+            "Represents the setup:tabLists Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "tabset",
+                "type": "utam-lightning/pageObjects/tabset",
+                "selector": {
+                    "css": "lightning-tabset"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the App Switching page for the Offline App.",
+            "Verify App switching is complete."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "waitForAppSwitchingToComplete"
+        }
+    ]
+}

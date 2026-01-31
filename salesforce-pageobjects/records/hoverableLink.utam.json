@@ -1,0 +1,118 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-hoverable-link",
+            "Represents the records-hoverable-link Lightning web component.",
+            "Get link text or click the link. Check if the link isn't previewable. Get the link text when the link isn't previewable",
+            "Click the link when it's not previewable. Get the link text when the link isn't navigable. Hover over the link."
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "type": "container",
+            "name": "content"
+        },
+        {
+            "name": "linkTextInSpan",
+            "description": "An element representing text that a wrapping component might slot into hoverableLink if that text is wrapped in a <span>.",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "span"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Click the link"
+                ],
+                "return": "none"
+            },
+            "name": "clickLink",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click a span within the link's slot (use when this component is wrapped by force-lookup)."
+                ],
+                "return": "none"
+            },
+            "name": "clickLinkText",
+            "compose": [
+                {
+                    "element": "linkTextInSpan",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the link text"
+                ],
+                "return": "String value"
+            },
+            "name": "getLinkText",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "innerText"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Hover over the link"
+                ],
+                "return": "none"
+            },
+            "name": "hoverLink",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "moveTo"
+                }
+            ]
+        }
+    ]
+}

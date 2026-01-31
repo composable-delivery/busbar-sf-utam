@@ -1,0 +1,216 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows selecting a color from a color swatch panel or entering it directly into an input field, with the option to provide help text and a required field indicator."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "colorPickerContainer",
+                "selector": {
+                    "css": ".slds-color-picker"
+                },
+                "description": "Represents the container for the color picker component",
+                "elements": [
+                    {
+                        "name": "selectableColorSelectorContent",
+                        "type": "container",
+                        "public": true
+                    },
+                    {
+                        "name": "requiredIndicator",
+                        "selector": {
+                            "css": ".slds-required"
+                        },
+                        "description": "Represents the required field indicator",
+                        "nullable": true
+                    },
+                    {
+                        "name": "helpText",
+                        "selector": {
+                            "css": "lightning-helptext"
+                        },
+                        "type": "utam-lightning/pageObjects/helptext",
+                        "description": "Represents the help text component",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "colorTriggerButton",
+                        "selector": {
+                            "css": "button.slds-color-picker__summary-button"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the button to toggle the color swatch panel",
+                        "public": true
+                    },
+                    {
+                        "name": "colorSwatchStyle",
+                        "selector": {
+                            "css": ".slds-swatch"
+                        },
+                        "description": "Represents the style of the selected color swatch"
+                    },
+                    {
+                        "name": "colorInputField",
+                        "selector": {
+                            "css": "input#input"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents the input field for the color value"
+                    },
+                    {
+                        "name": "colorSwatchPanel",
+                        "selector": {
+                            "css": "builder_framework-expression-builder-color-swatch-panel"
+                        },
+                        "description": "Represents the color swatch panel, which is conditionally rendered",
+                        "nullable": true,
+                        "public": true,
+                        "type": "utam-builder-framework/pageObjects/expressionBuilderColorSwatchPanel"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleColorSwatchPanel",
+            "description": {
+                "text": [
+                    "Simulate a click on the color trigger button to open or close the color swatch panel"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "colorTriggerButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isColorSwatchPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the color swatch panel is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "colorSwatchPanel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isColorPickerContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the color picker container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "colorPickerContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isColorInputFieldEnabled",
+            "description": {
+                "text": [
+                    "Check if the color input field is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "colorInputField",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "getColorFromSwatchStyle",
+            "description": {
+                "text": [
+                    "Get the background color style of the swatch"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "colorSwatchStyle",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isRequiredIndicatorVisible",
+            "description": {
+                "text": [
+                    "Check if the required indicator is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredIndicator",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRequiredIndicatorPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"requiredIndicator\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredIndicator",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyColorSwatchPanelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"colorSwatchPanel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "colorSwatchPanel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

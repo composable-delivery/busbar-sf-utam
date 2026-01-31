@@ -1,0 +1,417 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a home page for Salesforce Studio, greeting the user, providing an input for chat, recommended utterances, and additional information cards.",
+            "Selector: setup_platform_unifiedapp-salesforce-studio-home"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-salesforce-studio-home"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "greetingText",
+                "selector": {
+                    "css": ".greeting"
+                },
+                "description": "Represents the greeting text personalized with the user's first name."
+            },
+            {
+                "name": "welcomeText",
+                "selector": {
+                    "css": ".welcome-text"
+                },
+                "description": "Represents the welcome message text."
+            },
+            {
+                "name": "chatInput",
+                "selector": {
+                    "css": "app_dev_agent-studio-chat-input"
+                },
+                "type": "utam-app_dev_agent/pageObjects/studioChatInput",
+                "public": true
+            },
+            {
+                "name": "recommendedUtterances",
+                "selector": {
+                    "css": "app_dev_agent-studio-recommended-utterances"
+                },
+                "type": "utam-app_dev_agent/pageObjects/studioRecommendedUtterances",
+                "public": true
+            },
+            {
+                "name": "projectPanel",
+                "selector": {
+                    "css": "app_dev_agent-sf-studio-project-panel"
+                },
+                "type": "utam-app_dev_agent/pageObjects/sfStudioProjectPanel",
+                "public": true
+            },
+            {
+                "name": "homeCard",
+                "selector": {
+                    "css": "setup_platform_unifiedapp-studio-home-card"
+                },
+                "type": "utam-applications/pageObjects/studioHomeCard",
+                "description": "Represents the home card component with additional information for the user.",
+                "public": true
+            },
+            {
+                "name": "homePageList",
+                "selector": {
+                    "css": "dev_workspace-home-page-list"
+                },
+                "description": "Represents the list of home page elements or items.",
+                "public": true
+            },
+            {
+                "name": "enhancedWelcomeText",
+                "selector": {
+                    "css": ".enhanced-welcome-text"
+                },
+                "description": "Enhanced welcome text for the enhanced project creation mode",
+                "public": true
+            },
+            {
+                "name": "studioDescription",
+                "selector": {
+                    "css": ".studio-description"
+                },
+                "description": "Studio description paragraph in enhanced mode",
+                "public": true
+            },
+            {
+                "name": "chatInputWrapper",
+                "selector": {
+                    "css": ".chat-input-wrapper"
+                },
+                "description": "Wrapper container for the chat input in enhanced mode",
+                "public": true
+            },
+            {
+                "name": "utterancesContainer",
+                "selector": {
+                    "css": ".utterances-container"
+                },
+                "description": "Container for recommended utterances in enhanced mode",
+                "public": true
+            },
+            {
+                "name": "recentProjectCol",
+                "selector": {
+                    "css": ".recent-project-col"
+                },
+                "description": "Column containing recent projects in enhanced mode",
+                "public": true
+            },
+            {
+                "name": "chatInputContainer",
+                "selector": {
+                    "css": ".chat-input-container"
+                },
+                "description": "Chat input container in standard mode",
+                "public": true
+            },
+            {
+                "name": "quickStartContainer",
+                "selector": {
+                    "css": "studio_quickstarts-quick-start-container"
+                },
+                "description": "Quick start container component",
+                "public": true
+            },
+            {
+                "name": "containerDiv",
+                "selector": {
+                    "css": ".container"
+                },
+                "description": "Main container div with dynamic classes",
+                "public": true
+            },
+            {
+                "name": "heroContentArea",
+                "selector": {
+                    "css": ".hero-content"
+                },
+                "description": "Hero content area with dynamic sizing",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getGreetingText",
+            "description": {
+                "text": [
+                    "Returns the greeting text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "greetingText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getWelcomeText",
+            "description": {
+                "text": [
+                    "Returns the welcome message text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "welcomeText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isGreetingTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the greeting text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "greetingText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isWelcomeTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the welcome text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "welcomeText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isEnhancedWelcomeTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the enhanced welcome text is visible in enhanced mode"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "enhancedWelcomeText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getEnhancedWelcomeMessage",
+            "description": {
+                "text": [
+                    "Returns the enhanced welcome text content"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "enhancedWelcomeText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getStudioDescriptionText",
+            "description": {
+                "text": [
+                    "Returns the studio description text in enhanced mode"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "studioDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isStudioDescriptionVisible",
+            "description": {
+                "text": [
+                    "Checks if the studio description is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "studioDescription",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatInputWrapperVisible",
+            "description": {
+                "text": [
+                    "Checks if the chat input wrapper is visible in enhanced mode"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatInputWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isUtterancesContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the utterances container is visible in enhanced mode"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "utterancesContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRecentProjectColVisible",
+            "description": {
+                "text": [
+                    "Checks if the recent projects column is visible in enhanced mode"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recentProjectCol",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatInputContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the chat input container is visible in standard mode"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatInputContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isQuickStartContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the quick start container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "quickStartContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isQuickStartContainerPresent",
+            "description": {
+                "text": [
+                    "Checks if the quick start container is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "quickStartContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isContainerDivVisible",
+            "description": {
+                "text": [
+                    "Checks if the main container div is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "containerDiv",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHeroContentAreaVisible",
+            "description": {
+                "text": [
+                    "Checks if the hero content area is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "heroContentArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHomePageListPresent",
+            "description": {
+                "text": [
+                    "Checks if the home page list component is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "homePageList",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isProjectPanelPresent",
+            "description": {
+                "text": [
+                    "Checks if the project panel component is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "projectPanel",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: community_builder-option-visual-picker-item",
+            "Represents each option picker item."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "optionInput",
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "input"
+                }
+            }
+        ]
+    }
+}

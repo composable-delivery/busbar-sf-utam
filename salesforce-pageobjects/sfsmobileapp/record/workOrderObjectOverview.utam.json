@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Overview tab of a Work Order."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "getServiceReportSection",
+            "returnType": "utam-sfsmobileapp/pageObjects/sections/serviceReportSection"
+        }
+    ]
+}

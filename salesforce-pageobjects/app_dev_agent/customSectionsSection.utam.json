@@ -1,0 +1,165 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages and displays custom sections with animated content.",
+            "Selector: app_dev_agent-custom-sections-section"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "markdownSectionTitle",
+                "selector": {
+                    "css": ".markdown-section-title"
+                },
+                "description": "Represents the section title container",
+                "elements": [
+                    {
+                        "name": "markdownHeading",
+                        "selector": {
+                            "css": ".markdown-heading"
+                        },
+                        "description": "Represents the heading element inside the section title"
+                    }
+                ]
+            },
+            {
+                "name": "loadingSkeleton",
+                "selector": {
+                    "css": "app_dev_agent-skeleton"
+                },
+                "type": "utam/app_dev_agent/pageObjects/skeleton",
+                "description": "Represents the skeleton loader component",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "markdownList",
+                "selector": {
+                    "css": ".markdown-list"
+                },
+                "description": "Represents the unordered list containing section items",
+                "elements": [
+                    {
+                        "name": "sectionItems",
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        },
+                        "description": "Represents each section item in the list",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "contentStream",
+                                "selector": {
+                                    "css": "app_dev_agent-content-stream"
+                                },
+                                "type": "utam/app_dev_agent/pageObjects/contentStream",
+                                "description": "Represents the content stream inside each section item",
+                                "public": true,
+                                "wait": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSectionTitleVisible",
+            "description": {
+                "text": [
+                    "Check that the section title container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownSectionTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHeadingVisible",
+            "description": {
+                "text": [
+                    "Check that the heading element is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownHeading",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMarkdownListVisible",
+            "description": {
+                "text": [
+                    "Check that the unordered list is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSectionItemVisible",
+            "description": {
+                "text": [
+                    "Check that a specific section item is present and visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "sectionItems",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getSectionItemText",
+            "description": {
+                "text": [
+                    "Get text from a specific section item"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "sectionItems",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifySectionItemsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"sectionItems\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "sectionItems",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

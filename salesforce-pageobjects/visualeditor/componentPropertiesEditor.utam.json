@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: visualEditorComponentPropertiesEditor",
+            "Represents the visualEditor:componentPropertiesEditor Aura component.",
+            "Get all the property editor item components."
+        ]
+    },
+    "elements": [
+        {
+            "name": "editorItems",
+            "type": "utam-visualeditor/pageObjects/propertyEditorItem",
+            "selector": {
+                "css": ".visualEditorPropertyEditorItem",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

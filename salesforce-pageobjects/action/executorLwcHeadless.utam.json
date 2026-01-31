@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_platform_actions-executor-lwc-headless.",
+            "Represents the runtime_platform_actions-executor-lwc-headless Lightning web component.",
+            "Get the lightning-button component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "lightningButton",
+            "type": "utam-lightning/pageObjects/button",
+            "public": true,
+            "selector": {
+                "css": "lightning-button"
+            }
+        }
+    ]
+}

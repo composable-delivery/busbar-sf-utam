@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: div",
+            "Wrapper for container element"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "listPanel",
+            "type": "utam-setup/pageObjects/listPanel",
+            "selector": {
+                "css": "setup-list-panel"
+            }
+        }
+    ]
+}

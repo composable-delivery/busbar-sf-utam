@@ -1,0 +1,129 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/pull_to_refresh_view\").",
+            "Represents the Android menu fragment.",
+            "Load the app launcher, load the all items list, or interact with the existing list of items."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/navMenu",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "uiautomator": "resourceId(\"com.salesforce.chatter:id/nav_menu_list\")"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/pull_to_refresh_view\")"
+    },
+    "elements": [
+        {
+            "name": "allItems",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/all_items_icon\")"
+            }
+        },
+        {
+            "name": "appLauncher",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/app_launcher_menu_item\"))"
+            }
+        },
+        {
+            "name": "appName",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/app_name\")"
+            },
+            "type": [
+                "actionable"
+            ]
+        },
+        {
+            "name": "navItemsList",
+            "type": "utam-salesforceapp/pageObjects/navigation/navItemsList",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/nav_menu_list\")"
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "openAllItems",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "allItems",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "openAppLauncher",
+            "compose": [
+                {
+                    "element": "appLauncher",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getAppName",
+            "compose": [
+                {
+                    "element": "appName",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

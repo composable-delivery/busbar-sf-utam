@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for allowing camera access when logging into the app."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickEnableCamera"
+        },
+        {
+            "name": "clickSkip"
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-media-with-preview",
+            "Provides access to mediaFileCard, lightning icon and button components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "mediaFileCard",
+                "type": "utam-es_block_builder/pageObjects/mediaFileCard",
+                "selector": {
+                    "css": "es_block_builder-media-file-card"
+                }
+            }
+        ]
+    }
+}

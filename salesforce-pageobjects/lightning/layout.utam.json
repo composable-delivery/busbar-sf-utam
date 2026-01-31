@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-layout",
+            "Represents the lightning-layout Lightning web component.",
+            "Get the lightning-layout-item by child position."
+        ]
+    },
+    "elements": [
+        {
+            "name": "layoutItem",
+            "type": "utam-lightning/pageObjects/layoutItem",
+            "selector": {
+                "css": "lightning-layout-item:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number",
+                        "description": "First index starts at 1"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "layoutContent",
+            "type": "container",
+            "selector": {
+                "css": "slot > *"
+            },
+            "public": true
+        }
+    ]
+}

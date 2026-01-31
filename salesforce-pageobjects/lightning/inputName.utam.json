@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-input-name",
+            "Represents the lightning-input-name Lightning web component.",
+            "Get the label, first name, last name, middle name, and formal name input components. Get the salutation picklist component."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Get input name label display value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "legend",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "firstNameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='firstName']"
+                },
+                "public": true
+            },
+            {
+                "name": "informalNameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='informalName']"
+                },
+                "public": true
+            },
+            {
+                "name": "lastNameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='lastName']"
+                },
+                "public": true
+            },
+            {
+                "name": "middleNameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='middleName']"
+                },
+                "public": true
+            },
+            {
+                "name": "salutationPicklist",
+                "type": "utam-lightning/pageObjects/picklist",
+                "selector": {
+                    "css": "lightning-picklist[data-field='salutation']"
+                },
+                "public": true
+            },
+            {
+                "name": "suffixInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-field='suffix']"
+                },
+                "public": true
+            },
+            {
+                "name": "legend",
+                "selector": {
+                    "css": "legend"
+                }
+            }
+        ]
+    }
+}

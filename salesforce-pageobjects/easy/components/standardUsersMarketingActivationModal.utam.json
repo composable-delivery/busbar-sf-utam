@@ -1,0 +1,212 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Standard Users Marketing Activation Modal - Page Object for test automation"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-overlay-container"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "lightningModalBase",
+                "description": "Lightning modal base container",
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-modal-base"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "lightningModal",
+                            "description": "Lightning modal container",
+                            "nullable": true,
+                            "selector": {
+                                "css": "lightning-modal"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "modalBody",
+                                        "description": "Modal body container",
+                                        "nullable": true,
+                                        "selector": {
+                                            "css": "lightning-modal-body"
+                                        }
+                                    },
+                                    {
+                                        "name": "contentContainer",
+                                        "description": "Main content container with medium padding and center alignment",
+                                        "public": true,
+                                        "selector": {
+                                            "css": ".slds-p-around_medium.slds-text-align_center"
+                                        }
+                                    },
+                                    {
+                                        "name": "marketingImage",
+                                        "description": "Marketing vignette image",
+                                        "selector": {
+                                            "css": "img[src*='vignette_marketing.png']"
+                                        }
+                                    },
+                                    {
+                                        "name": "modalTitle",
+                                        "description": "Modal title heading",
+                                        "selector": {
+                                            "css": ".marketingModalTitle"
+                                        }
+                                    },
+                                    {
+                                        "name": "modalDescription",
+                                        "description": "Modal description text",
+                                        "selector": {
+                                            "css": ".marketingModalDescription"
+                                        }
+                                    },
+                                    {
+                                        "name": "modalFooter",
+                                        "description": "Modal footer container",
+                                        "public": true,
+                                        "selector": {
+                                            "css": "lightning-modal-footer"
+                                        }
+                                    },
+                                    {
+                                        "name": "cancelButton",
+                                        "description": "Cancel/OK button to close the modal",
+                                        "type": "clickable",
+                                        "selector": {
+                                            "css": "lightning-button[variant='brand']"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCancel",
+            "description": {
+                "text": [
+                    "Clicks the cancel/OK button to close the modal"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Gets the text content of the modal title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "modalTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getDescriptionText",
+            "description": {
+                "text": [
+                    "Gets the text content of the modal description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "modalDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isModalVisible",
+            "description": {
+                "text": [
+                    "Checks if the modal is visible on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "modalBody",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isImageDisplayed",
+            "description": {
+                "text": [
+                    "Checks if the marketing image is displayed"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "marketingImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCancelButtonEnabled",
+            "description": {
+                "text": [
+                    "Checks if the cancel button is enabled and clickable"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "waitForModalContent",
+            "description": {
+                "text": [
+                    "Waits for the modal content to be visible"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "modalTitle",
+                    "apply": "waitForVisible"
+                }
+            ]
+        },
+        {
+            "name": "waitForModalAbsence",
+            "description": {
+                "text": [
+                    "Waits for the modal body to be absent from the dom"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "modalBody",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        }
+    ]
+}
