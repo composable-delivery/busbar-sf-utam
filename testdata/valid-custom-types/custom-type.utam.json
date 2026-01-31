@@ -1,0 +1,6 @@
+{
+  "description": "Page object with custom type reference",
+  "root": true,
+  "selector": { "css": ".button" },
+  "type": ["myCustomType", "clickable"]
+}

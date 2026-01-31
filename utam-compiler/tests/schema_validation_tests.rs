@@ -53,11 +53,11 @@ fn test_invalid_missing_selector() {
 #[test]
 fn test_custom_type_allowed() {
     let validator = SchemaValidator::new().unwrap();
-    let json_str = fs::read_to_string("../testdata/invalid/invalid-type.utam.json")
+    let json_str = fs::read_to_string("../testdata/valid-custom-types/custom-type.utam.json")
         .expect("Failed to read test file");
     
     // The schema allows any string values in the type array, including custom page object types
-    // like "invalidType" which could reference another UTAM page object.
+    // like "myCustomType" which could reference another UTAM page object.
     // Known basic types (actionable, clickable, editable, etc.) are documented but not enforced
     // by the schema since custom types are valid and can't be distinguished at schema level.
     let result = validator.validate_str(&json_str);

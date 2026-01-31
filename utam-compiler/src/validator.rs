@@ -91,11 +91,16 @@ impl SchemaValidator {
             })
             .collect();
 
-        if !validation_errors.is_empty() {
-            return Err(CompilerError::SchemaValidation(validation_errors));
+        if validation_errors.is_empty() {
+            // This should never happen: if is_valid() returns false, iter_errors() should yield errors.
+            // If we reach here, it indicates a bug in the jsonschema library or our usage of it.
+            unreachable!(
+                "Schema validation indicated errors but iter_errors() yielded none. \
+                 This is a bug in the validation logic."
+            );
         }
 
-        Ok(())
+        Err(CompilerError::SchemaValidation(validation_errors))
     }
 
     /// Validate a JSON string against the UTAM schema
@@ -132,11 +137,9 @@ impl SchemaValidator {
     }
 }
 
-impl Default for SchemaValidator {
-    fn default() -> Self {
-        Self::new().expect("Failed to compile embedded schema")
-    }
-}
+// Note: Default implementation is intentionally not provided because schema
+// compilation can fail (though it shouldn't with an embedded schema).
+// Users should explicitly call SchemaValidator::new() and handle potential errors.
 
 #[cfg(test)]
 mod tests {
