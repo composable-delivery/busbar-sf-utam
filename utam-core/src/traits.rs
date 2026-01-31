@@ -121,3 +121,48 @@ pub trait Actionable: Send + Sync {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_actionable_trait_is_object_safe() {
+        // Verify the trait can be used as a trait object
+        // This is important for dynamic dispatch
+        fn _assert_object_safe(_: &dyn Actionable) {}
+    }
+
+    #[test]
+    fn test_actionable_requires_send() {
+        // Verify Send bound
+        fn _assert_send<T: Actionable>() {
+            fn _is_send<S: Send>() {}
+            _is_send::<T>();
+        }
+    }
+
+    #[test]
+    fn test_actionable_requires_sync() {
+        // Verify Sync bound
+        fn _assert_sync<T: Actionable>() {
+            fn _is_sync<S: Sync>() {}
+            _is_sync::<T>();
+        }
+    }
+
+    // Test that the trait compiles with required method signature
+    #[test]
+    fn test_actionable_inner_signature() {
+        struct TestElement {
+            element: Option<WebElement>,
+        }
+
+        #[async_trait]
+        impl Actionable for TestElement {
+            fn inner(&self) -> &WebElement {
+                self.element.as_ref().unwrap()
+            }
+        }
+    }
+}
