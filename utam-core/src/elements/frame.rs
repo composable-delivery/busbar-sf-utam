@@ -49,15 +49,15 @@ impl FrameElement {
     pub async fn enter(&self) -> UtamResult<FrameContext> {
         // Clone the element to enter frame (enter_frame consumes self)
         let element = self.inner.clone();
-        
+
         // SAFETY: WebDriver is a simple wrapper around Arc<SessionHandle>.
         // We're constructing it from the same handle that's already in use by
         // the WebElement, so this is safe and maintains all existing session state.
         let driver = WebDriver { handle: element.handle.clone() };
-        
+
         // Switch to the frame context
         element.enter_frame().await?;
-        
+
         Ok(FrameContext { driver, exited: false })
     }
 }
@@ -188,4 +188,41 @@ mod tests {
             }
         }
     }
+
+    #[test]
+    fn test_frame_element_debug() {
+        // Test Debug trait implementation exists
+        fn _check_debug_impl() {
+            use std::fmt::Debug;
+            fn _assert_debug<T: Debug>() {}
+            _assert_debug::<FrameElement>();
+        }
+    }
+
+    #[test]
+    fn test_frame_element_clone() {
+        // Test Clone trait implementation exists
+        fn _check_clone_impl() {
+            use std::clone::Clone;
+            fn _assert_clone<T: Clone>() {}
+            _assert_clone::<FrameElement>();
+        }
+    }
+
+    #[test]
+    fn test_frame_context_exited_flag() {
+        // Verify FrameContext has exited field for tracking state
+        // This is a compile-time check that the field exists
+        fn _check_exited_field() {
+            #[allow(unreachable_code)]
+            #[allow(clippy::diverging_sub_expression)]
+            {
+                let ctx: FrameContext = panic!("not meant to run");
+                let _ = ctx.exited;
+            }
+        }
+    }
+
+    // Integration tests with mock WebDriver would go in tests/ directory
+    // These unit tests verify the structure and API surface
 }
