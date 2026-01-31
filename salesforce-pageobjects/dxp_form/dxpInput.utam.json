@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: dxp_form-input",
+            "Represents the dxp_form/input component.",
+            "Get the lightning-input component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "dxp_form-input"
+    },
+    "elements": [
+        {
+            "name": "lightningInput",
+            "selector": {
+                "css": "lightning-input"
+            },
+            "public": true,
+            "type": "utam-lightning/pageObjects/input"
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Check if lightningInput flag is set to true."
+                ],
+                "return": "boolean value"
+            },
+            "name": "checkDxpCheckbox",
+            "compose": [
+                {
+                    "element": "lightningInput",
+                    "apply": "check",
+                    "args": [
+                        {
+                            "type": "boolean",
+                            "name": "checked"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

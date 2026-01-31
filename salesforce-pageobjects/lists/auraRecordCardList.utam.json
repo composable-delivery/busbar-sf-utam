@@ -1,0 +1,87 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .windowViewMode-normal .forceRelatedList.uiAbstractList.",
+            "Represents the Aura record card list component.",
+            "Access labels, fields, and open the record."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".windowViewMode-normal .forceRelatedList.uiAbstractList"
+    },
+    "elements": [
+        {
+            "name": "recordNames",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".listContent .forceListRecord .itemTitle .uiOutputText",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "emptyListContent",
+            "selector": {
+                "css": ".emptyListContent"
+            }
+        },
+        {
+            "name": "listContent",
+            "type": "utam-lists/pageObjects/listContent",
+            "public": true,
+            "selector": {
+                "css": ".listContent"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getRecordsCount",
+            "compose": [
+                {
+                    "element": "recordNames",
+                    "apply": "size"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the number of records"
+                ],
+                "return": "Integer value"
+            }
+        },
+        {
+            "name": "isEmpty",
+            "compose": [
+                {
+                    "element": "emptyListContent",
+                    "apply": "isPresent"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Returns a boolean value indicating whether the list is empty"
+                ],
+                "return": "boolean value"
+            }
+        },
+        {
+            "name": "getRecordNames",
+            "compose": [
+                {
+                    "element": "recordNames",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the names of records."
+                ],
+                "return": "List of string value"
+            }
+        }
+    ]
+}

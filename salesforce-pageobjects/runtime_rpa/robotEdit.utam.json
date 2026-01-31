@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Robot Edit Page"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "buttons",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button",
+                "returnAll": true
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "rpaPageHeader",
+                "type": "utam-runtime_rpa/pageObjects/rpaPageHeader",
+                "selector": {
+                    "css": "runtime_rpa-page-header"
+                }
+            }
+        ]
+    }
+}

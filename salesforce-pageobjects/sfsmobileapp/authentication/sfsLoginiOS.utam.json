@@ -1,0 +1,107 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the iOS login screen for the SFS app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/sfsLogin",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "Login | Salesforce"
+    },
+    "methods": [
+        {
+            "name": "login",
+            "description": "login to the environment: enter login credentials, submit",
+            "args": [
+                {
+                    "description": "username to the environment",
+                    "name": "userNameStr",
+                    "type": "string"
+                },
+                {
+                    "description": "password to the environment",
+                    "name": "passwordStr",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "password",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "password",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "passwordStr",
+                            "type": "argumentReference"
+                        }
+                    ]
+                },
+                {
+                    "element": "userName",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "userName",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "userNameStr",
+                            "type": "argumentReference"
+                        }
+                    ]
+                },
+                {
+                    "element": "submitBtn",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "submitBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "userName",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeTextField"
+            }
+        },
+        {
+            "name": "password",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSecureTextField"
+            }
+        },
+        {
+            "name": "submitBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`label == \"Log In\"`]"
+            }
+        }
+    ]
+}

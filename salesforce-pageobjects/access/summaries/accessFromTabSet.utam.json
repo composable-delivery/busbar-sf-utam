@@ -1,0 +1,20 @@
+{
+    "description": {
+        "text": [
+            "Selector: setup_access_summaries-access-from-tab-set"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "accessSummaryTabSet",
+                "type": "utam-access-summaries/pageObjects/accessSummaryTabSet",
+                "selector": {
+                    "css": "setup_access_summaries-access-summary-tab-set"
+                },
+                "public": true
+            }
+        ]
+    }
+}

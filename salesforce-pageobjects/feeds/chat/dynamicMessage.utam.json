@@ -1,0 +1,56 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The `DynamicMessage` component dynamically renders message-specific components within a container based on the provided message object. It handles the lifecycle of the dynamic component, including creation, attachment to the DOM, and cleanup.",
+            "Selector: src-dynamic-message"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageResolver",
+                "selector": {
+                    "css": "feeds_chat-message-resolver"
+                },
+                "description": "The component serves as a dynamic message resolver.",
+                "type": "utam-feeds-chat/pageObjects/messageResolver",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "statusTyping",
+                "selector": {
+                    "css": "feeds_chat-status-typing"
+                },
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "dynamicMessageContainer",
+                "selector": {
+                    "css": ".dynamic-message"
+                },
+                "description": "Represents the container where the dynamic message component will be attached.",
+                "wait": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isDynamicMessageContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the dynamic message container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dynamicMessageContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

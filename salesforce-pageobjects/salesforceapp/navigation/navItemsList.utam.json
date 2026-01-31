@@ -1,0 +1,60 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the generic item list.",
+            "Check for an item in the list and navigate to it."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "clickNavItemWithLabel",
+            "args": [
+                {
+                    "name": "itemLabel",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getVisibleNavItemWithLabel",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getVisibleNavItems",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "hasNavItemWithLabel",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "itemLabel",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "pullToRefresh"
+        }
+    ]
+}

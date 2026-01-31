@@ -1,0 +1,124 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRecordLayout.",
+            "Represents the force:recordLayout Aura component.",
+            "Get the inputText, InputPhone, inputUrl, sectionEdit or inputSelect components. Get the pageBlockItemView or pageBlockItemEdit components."
+        ]
+    },
+    "elements": [
+        {
+            "type": "utam-aura/pageObjects/inputText",
+            "name": "inputTexts",
+            "public": true,
+            "selector": {
+                "css": ".uiInputText",
+                "returnAll": true
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/inputPhone",
+            "name": "inputPhones",
+            "public": true,
+            "selector": {
+                "css": ".uiInputPhone",
+                "returnAll": true
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/inputURL",
+            "name": "inputURLs",
+            "public": true,
+            "selector": {
+                "css": ".uiInputURL",
+                "returnAll": true
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/inputSelect",
+            "name": "inputSelects",
+            "public": true,
+            "selector": {
+                "css": ".uiInputSelect",
+                "returnAll": true
+            }
+        },
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "recordLink",
+            "nullable": true,
+            "selector": {
+                "css": "a[title='%s']",
+                "args": [
+                    {
+                        "name": "text",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "outputRecordType",
+            "selector": {
+                "css": ".forceOutputRecordType"
+            },
+            "public": true
+        },
+        {
+            "name": "readOnlyItemByName",
+            "type": "utam-force/pageObjects/pageBlockItem",
+            "public": true,
+            "selector": {
+                "css": ".forcePageBlockItem.forcePageBlockItemView",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getElementName",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/pageBlockItem",
+            "public": true,
+            "name": "editableItemByName",
+            "selector": {
+                "css": ".forcePageBlockItem.forcePageBlockItemEdit",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getElementName",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "utam-force/pageObjects/pageBlockSectionEdit",
+            "public": true,
+            "name": "sectionEdit",
+            "selector": {
+                "css": ".forcePageBlockSectionEdit"
+            }
+        }
+    ]
+}

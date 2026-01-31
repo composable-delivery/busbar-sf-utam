@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-primitive-icon",
+            "Represents the lightning-primitive-icon Lightning web component.",
+            "Click the icon."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickIcon",
+            "description": "Click SVG icon",
+            "compose": [
+                {
+                    "element": "icon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getName",
+            "description": {
+                "text": [
+                    "Get icon name by getting icon attribute value of data-key"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "icon",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-key"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "name": "icon",
+                "public": true,
+                "selector": {
+                    "css": "svg"
+                }
+            }
+        ]
+    }
+}

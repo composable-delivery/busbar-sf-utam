@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: checkoutSuccess"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "confirmDiv",
+                "selector": {
+                    "css": "div[data-id='confirm_div']"
+                }
+            }
+        ]
+    }
+}

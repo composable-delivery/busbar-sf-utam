@@ -1,0 +1,123 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an analysis of an opportunity, including a URL, amount, current roadblock, next milestone, cross-sell opportunities, and competitive landscape.",
+            "Selector: src-experience_ui_gen_canvas-/analysis-result"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedUrl",
+                "selector": {
+                    "css": "lightning-formatted-url"
+                },
+                "type": "utam-lightning/pageObjects/formattedUrl",
+                "description": "Represents the URL of the analysis as a clickable link",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "formattedAmount",
+                "selector": {
+                    "css": "experience_ui_gen_canvas-formatted-number"
+                },
+                "type": "utam-experience-ui-gen-canvas/pageObjects/genCanvasFormattedNumber",
+                "description": "Represents the amount associated with the analysis",
+                "public": true
+            },
+            {
+                "name": "currentRoadblockText",
+                "selector": {
+                    "css": "[data-id='currentRoadblock']"
+                },
+                "description": "Displays the current roadblock text"
+            },
+            {
+                "name": "nextMilestoneText",
+                "selector": {
+                    "css": "[data-id='nextMilestone']"
+                },
+                "description": "Displays the next milestone text"
+            },
+            {
+                "name": "crossSellOpportunitiesText",
+                "selector": {
+                    "css": "[data-id='crossSellOpportunities']"
+                },
+                "description": "Displays the cross-sell opportunities text"
+            },
+            {
+                "name": "competitiveLandscapeText",
+                "selector": {
+                    "css": "[data-id='competitiveLandscape']"
+                },
+                "description": "Displays the competitive landscape text"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getCurrentRoadblockText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the current roadblock"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "currentRoadblockText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getNextMilestoneText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the next milestone"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "nextMilestoneText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCrossSellOpportunitiesText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the cross-sell opportunities"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "crossSellOpportunitiesText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCompetitiveLandscapeText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the competitive landscape"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "competitiveLandscapeText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: iframeCanvasUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "div",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "div"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "spinner",
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "surfaceFrame",
+                        "type": "frame",
+                        "selector": {
+                            "css": "iframe[name='surfaceFrame']"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

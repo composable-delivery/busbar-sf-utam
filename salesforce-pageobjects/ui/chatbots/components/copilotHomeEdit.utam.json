@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentBuilder-copilot-home-edit",
+            "Setup container for editing Agent info."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-copilot-home-edit"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "copilotHomeEditHeader",
+                "type": "utam-ui-chatbots-components/pageObjects/copilotHomeEditHeader",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-copilot-home-edit-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "copilotRecordTabs",
+                "type": "utam-ui-chatbots-components/pageObjects/copilotRecordTabs",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-copilot-record-tabs"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "copilotDetailsRecordForm",
+            "type": "utam-ui-chatbots-components/pageObjects/copilotDetailsRecordForm",
+            "selector": {
+                "css": "gen_ai_agentbuilder-copilot-details-record-form"
+            },
+            "public": true,
+            "nullable": true
+        }
+    ]
+}

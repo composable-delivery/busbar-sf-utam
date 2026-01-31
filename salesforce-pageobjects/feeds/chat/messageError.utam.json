@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays an error message with an icon and provides a link to refresh the page.",
+            "Selector: src-message-error"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".message-status_container"
+                },
+                "description": "Represents the container for the message status.",
+                "elements": [
+                    {
+                        "name": "baseIcon",
+                        "selector": {
+                            "css": "feeds_chat-base-icon"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the icon indicating the message status.",
+                        "public": true
+                    },
+                    {
+                        "name": "messageText",
+                        "selector": {
+                            "css": ".message-status_text"
+                        },
+                        "description": "Represents the text container for the message.",
+                        "elements": [
+                            {
+                                "name": "computedMessageSpan",
+                                "selector": {
+                                    "css": ".message-status-text_small"
+                                },
+                                "description": "Represents the span element that displays the computed message."
+                            }
+                        ]
+                    },
+                    {
+                        "name": "refreshPageLink",
+                        "selector": {
+                            "css": ".link-button"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the link to refresh the page."
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the status container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessage",
+            "description": {
+                "text": [
+                    "Return the text of the error message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "computedMessageSpan",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickRefreshPage",
+            "description": {
+                "text": [
+                    "Simulate a click on the refresh page link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "refreshPageLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

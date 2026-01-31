@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceMultiAddSearch.",
+            "Represents the force:multiAddSearch Aura component.",
+            "Get ui:label, ui:input, or ui:pillContainer components."
+        ]
+    },
+    "elements": [
+        {
+            "type": "utam-aura/pageObjects/label",
+            "name": "assistiveText",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "type": "utam-forcesearch/pageObjects/inputLookupDesktop",
+            "name": "inputLookupDesktop",
+            "public": true,
+            "selector": {
+                "css": ".uiInput"
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/pillContainer",
+            "name": "pillContainer",
+            "public": true,
+            "selector": {
+                "css": ".uiPillContainer"
+            }
+        }
+    ]
+}

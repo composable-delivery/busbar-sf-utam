@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputRadio",
+            "Represents the ui:inputRadio Aura component",
+            "Click the element."
+        ]
+    },
+    "type": [
+        "clickable"
+    ],
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "select",
+            "description": "Click the element",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

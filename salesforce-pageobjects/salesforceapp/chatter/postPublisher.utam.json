@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the fragment for posting in Chatter.",
+            "Input text to post and publish."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickButtonWithText",
+            "args": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "clickPostButton",
+            "returnType": "boolean"
+        },
+        {
+            "name": "typeText",
+            "args": [
+                {
+                    "name": "textToType",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

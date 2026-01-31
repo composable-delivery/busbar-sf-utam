@@ -1,0 +1,74 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-base-filter-expression-editor.",
+            "Represents the base filter expression editor Lightning web component.",
+            "Access the input and combobox fields to edit list filters."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/combobox",
+                "name": "fieldInput",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='FieldInput']"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/combobox",
+                "name": "operatorInput",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='OperatorInput']"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/input",
+                "name": "operandInput",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='OperandInput']"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/radioGroup",
+                "name": "operandBooleanInput",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='OperandInput']"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/button",
+                "name": "saveButton",
+                "selector": {
+                    "css": "[data-id='SaveButton']"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForSaveButtonClick",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "saveButton",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

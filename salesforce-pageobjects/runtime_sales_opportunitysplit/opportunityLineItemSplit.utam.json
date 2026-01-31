@@ -1,0 +1,53 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .runtime_sales_opportunitysplitOpportunityLineItemSplit",
+            "Represents the opportunity split flexipage on record home."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".runtime_sales_opportunitysplitOpportunityLineItemSplit"
+    },
+    "elements": [
+        {
+            "type": "utam-lightning/pageObjects/tabset",
+            "name": "tabset",
+            "public": true,
+            "selector": {
+                "css": "lightning-tabset"
+            }
+        },
+        {
+            "name": "revenueSplitChart",
+            "public": true,
+            "selector": {
+                "css": "runtime_sales_opportunitysplit-revenue-split-chart"
+            }
+        },
+        {
+            "name": "overlaySplitChart",
+            "public": true,
+            "selector": {
+                "css": "runtime_sales_opportunitysplit-overlay-split-chart"
+            }
+        },
+        {
+            "name": "emptyState",
+            "public": true,
+            "selector": {
+                "css": "force-empty-state"
+            }
+        },
+        {
+            "type": "utam-runtime_sales_opportunitysplit/pageObjects/opportunityLineItemSplitDatatable",
+            "name": "datatable",
+            "public": true,
+            "selector": {
+                "css": "runtime_sales_opportunitysplit-opportunity-line-item-split-datatable"
+            }
+        }
+    ],
+    "type": "actionable"
+}

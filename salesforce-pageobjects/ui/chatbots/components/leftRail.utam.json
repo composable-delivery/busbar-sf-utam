@@ -1,0 +1,185 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component representing a navigation panel with top and bottom sections containing buttons for different views, and a main content area with a header and slots for dynamic content."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "topButtonGroupContainer",
+                "selector": {
+                    "css": ".top-button-group-container"
+                },
+                "description": "Container for the top group of navigation buttons",
+                "elements": [
+                    {
+                        "name": "navItemButton",
+                        "selector": {
+                            "css": "gen_ai_agentbuilder-left-rail-tab-item-button",
+                            "returnAll": true
+                        },
+                        "type": "utam-ui-chatbots-components/pageObjects/leftRailTabItemButton",
+                        "description": "Represents the navigation buttons in the top section",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "type": "utam-ui-chatbots-components/pageObjects/leftRailTabItemButton",
+                "name": "leftRailTabItemButton",
+                "public": true,
+                "selector": {
+                    "css": "gen_ai_agentbuilder-left-rail-tab-item-button",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "bottomButtonGroupContainer",
+                "selector": {
+                    "css": ".bottom-button-group-container"
+                },
+                "description": "Container for the bottom group of navigation buttons that may not always be visible",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "footerNavItemButton",
+                        "selector": {
+                            "css": "gen_ai_agentbuilder-left-rail-tab-item-button",
+                            "returnAll": true
+                        },
+                        "type": "utam-ui-chatbots-components/pageObjects/leftRailTabItemButton",
+                        "description": "Represents the navigation buttons in the bottom section",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "panelHeader",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-panel-header"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/panelHeader",
+                "description": "Represents the header of the main content area",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "expandRestoreButton",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the expand/restore button in the header, if present",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "closePanelButton",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the close button in the header",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "leftRailBody",
+                "selector": {
+                    "css": ".left-rail-body"
+                },
+                "type": "actionable",
+                "description": "Represents the body of the main content area",
+                "elements": [
+                    {
+                        "name": "routerController",
+                        "selector": {
+                            "css": "chatbots-router"
+                        },
+                        "type": "utam-ui-chatbots-components/pageObjects/router",
+                        "description": "Represents the router controller for dynamic content",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "dynamicSlot",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": "container",
+                                "description": "Represents the content slot for dynamic components",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTopButtonGroupContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the top button group container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "topButtonGroupContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isBottomButtonGroupContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the bottom button group container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bottomButtonGroupContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isLeftRailBodyVisible",
+            "description": {
+                "text": [
+                    "Check if the left rail body is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "leftRailBody",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyBottomButtonGroupContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"bottomButtonGroupContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bottomButtonGroupContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

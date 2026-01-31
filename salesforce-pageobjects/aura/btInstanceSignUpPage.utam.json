@@ -1,0 +1,134 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "username",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": ".detailList textarea[id='p1']"
+            },
+            "public": true
+        },
+        {
+            "name": "password",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": ".detailList input[id='p19']"
+            },
+            "public": true
+        },
+        {
+            "name": "edition",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList select[id='p5']"
+            },
+            "public": true
+        },
+        {
+            "name": "editionOptions",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList select[id='p5'] option",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "systemDot",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList select[id='p6']"
+            },
+            "public": true
+        },
+        {
+            "name": "systemDotOptions",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList select[id='p6'] option",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "passwordResetCheckbox",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList input[id='p22']"
+            },
+            "public": true
+        },
+        {
+            "name": "forceSignUpCheckbox",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList input[id='p25']"
+            },
+            "public": true
+        },
+        {
+            "name": "suppressMarketingEmailCheckbox",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".detailList input[id='p23']"
+            },
+            "public": true
+        },
+        {
+            "name": "saveButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "input[name='save']"
+            },
+            "public": true
+        },
+        {
+            "name": "cancelButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "input[name='cancel']"
+            },
+            "public": true
+        },
+        {
+            "name": "successMessage",
+            "selector": {
+                "css": ".data2Col"
+            },
+            "public": true
+        }
+    ]
+}

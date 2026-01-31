@@ -1,0 +1,132 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides decorator functionality for list panels, enabling event dispatch for configuration updates and error handling.",
+            "Selector: src-list-decorator"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "instr",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the instrumentation object used for logging errors and handling telemetry."
+            },
+            {
+                "name": "dispatchProviderUpdate",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the method for dispatching provider configuration updates via a custom event."
+            },
+            {
+                "name": "dispatchError",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the method for dispatching error events and logging errors."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isInstrPresent",
+            "description": {
+                "text": [
+                    "Check that the instrumentation object is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "instr",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isInstrVisible",
+            "description": {
+                "text": [
+                    "Check that the instrumentation object is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "instr",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInstrEnabled",
+            "description": {
+                "text": [
+                    "Check if the instrumentation object is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "instr",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "isDispatchProviderUpdatePresent",
+            "description": {
+                "text": [
+                    "Check if the dispatchProviderUpdate method is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dispatchProviderUpdate",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isDispatchErrorPresent",
+            "description": {
+                "text": [
+                    "Check if the dispatchError method is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dispatchError",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

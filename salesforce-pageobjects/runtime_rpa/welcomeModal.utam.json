@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Welcome Page"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "notShowAgainCheckbox",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

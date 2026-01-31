@@ -1,0 +1,150 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-dialog.",
+            "Represents the lightning-dialog web component",
+            "Gets element from dialog body or footer, Gets dialog title and waits for dialog modal to open, Checks if dialog modal is opened and Checks if dialog has footer"
+        ]
+    },
+    "elements": [
+        {
+            "name": "dialogBodyContent",
+            "type": "container",
+            "selector": {
+                "css": ".slds-modal__content slot %s",
+                "args": [
+                    {
+                        "name": "selector",
+                        "type": "string",
+                        "description": "selector of element inside the dialog body"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "footerContent",
+            "type": "container",
+            "selector": {
+                "css": "[slot='footer'] %s",
+                "args": [
+                    {
+                        "name": "selector",
+                        "type": "string",
+                        "description": "selector of element inside the dialog footer"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "selector": {
+                    "css": "header"
+                },
+                "elements": [
+                    {
+                        "name": "modalHeading",
+                        "nullable": true,
+                        "selector": {
+                            "css": "h2.slds-text-heading_medium"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "closeButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon[data-close-button]"
+                },
+                "public": true
+            },
+            {
+                "name": "footer",
+                "selector": {
+                    "css": ".slds-modal__footer"
+                }
+            },
+            {
+                "name": "dialogWrapper",
+                "nullable": true,
+                "selector": {
+                    "css": "[role='dialog']"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForDialogToOpen",
+            "description": "Wait for dialog modal to open",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "dialogWrapper"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isDialogOpened",
+            "description": {
+                "text": [
+                    "Checks if dialog modal is opened"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dialogWrapper",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasFooter",
+            "description": {
+                "text": [
+                    "Checks if dialog modal has footer"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "footer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDialogTitle",
+            "description": {
+                "text": [
+                    "Gets the dialog modal title"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "modalHeading",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

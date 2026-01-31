@@ -1,0 +1,153 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-vertical-navigation",
+            "Represents the lightning-vertical-navigation Lightning web component.",
+            "Allows you to get items from inside the vertical navigation, and their class attributes"
+        ]
+    },
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "clickItem",
+            "description": "Clicks on a particular nav item by its index",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "navigationItem"
+                }
+            ]
+        },
+        {
+            "name": "clickItemIcon",
+            "description": "Clicks on a particular nav item iconby its index",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "navigationItemIcon"
+                }
+            ]
+        },
+        {
+            "name": "clickOverflow",
+            "description": "Clicks the overflow inside of the verticalNavigation",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "overflow"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "navigationItem",
+            "type": "utam-lightning/pageObjects/verticalNavigationItem",
+            "public": true,
+            "selector": {
+                "css": "lightning-vertical-navigation-item:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "navigationItemIcon",
+            "type": "utam-lightning/pageObjects/verticalNavigationItemIcon",
+            "public": true,
+            "selector": {
+                "css": "lightning-vertical-navigation-item-icon:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "navigationItems",
+            "type": "utam-lightning/pageObjects/verticalNavigationItem",
+            "public": true,
+            "selector": {
+                "css": "lightning-vertical-navigation-item",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "navigationItemIcons",
+            "type": "utam-lightning/pageObjects/verticalNavigationItemIcon",
+            "public": true,
+            "selector": {
+                "css": "lightning-vertical-navigation-item-icon",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "navigationItemsByName",
+            "type": "utam-lightning/pageObjects/verticalNavigationItem",
+            "public": true,
+            "selector": {
+                "css": "lightning-vertical-navigation-item",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "itemText",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "navigationItemIconByName",
+            "type": "utam-lightning/pageObjects/verticalNavigationItemIcon",
+            "public": true,
+            "selector": {
+                "css": "lightning-vertical-navigation-item-icon",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "itemText",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "activeItem",
+            "public": true,
+            "type": "utam-lightning/pageObjects/verticalNavigationItem",
+            "selector": {
+                "css": ".slds-is-active"
+            }
+        },
+        {
+            "name": "overflow",
+            "type": "utam-lightning/pageObjects/verticalNavigationOverflow",
+            "selector": {
+                "css": "lightning-vertical-navigation-overflow"
+            },
+            "public": true
+        }
+    ]
+}

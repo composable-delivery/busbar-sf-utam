@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the frame layout of favorite cells.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "clickRecordWithTitle",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasRecord",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getVisibleFavoriteRecords",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getVisibleFavoriteRecordWithTitle",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

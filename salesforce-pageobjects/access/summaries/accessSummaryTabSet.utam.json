@@ -1,0 +1,138 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_access_summaries-access-summary-tab-set."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "tabset",
+                "type": "utam-lightning/pageObjects/tabset",
+                "selector": {
+                    "css": "lightning-tabset"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickTab",
+            "args": [
+                {
+                    "name": "tabName",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "tabset",
+                    "apply": "getTabBar",
+                    "returnType": "utam-lightning/pageObjects/tabBar"
+                },
+                {
+                    "chain": true,
+                    "args": [
+                        {
+                            "name": "tabName",
+                            "type": "argumentReference"
+                        }
+                    ],
+                    "apply": "clickTab"
+                }
+            ]
+        },
+        {
+            "name": "getActiveTabListPanel",
+            "compose": [
+                {
+                    "element": "tabset",
+                    "apply": "getActiveTabContent",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-flexipage/pageObjects/component2"
+                        }
+                    ],
+                    "returnType": "utam-flexipage/pageObjects/component2"
+                },
+                {
+                    "chain": true,
+                    "apply": "getContent",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-setup/pageObjects/listPanelWrapper"
+                        }
+                    ],
+                    "returnType": "utam-setup/pageObjects/listPanelWrapper"
+                },
+                {
+                    "chain": true,
+                    "element": "listPanel",
+                    "returnType": "utam-setup/pageObjects/listPanel"
+                }
+            ]
+        },
+        {
+            "name": "getActiveTabCommonList",
+            "compose": [
+                {
+                    "apply": "getActiveTabListPanel",
+                    "returnType": "utam-setup/pageObjects/listPanel"
+                },
+                {
+                    "chain": true,
+                    "apply": "waitForCommonList",
+                    "returnType": "utam-lists/pageObjects/commonList"
+                }
+            ]
+        },
+        {
+            "name": "getTabCommonList",
+            "args": [
+                {
+                    "name": "tabName",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "apply": "clickTab",
+                    "args": [
+                        {
+                            "name": "tabName",
+                            "type": "argumentReference"
+                        }
+                    ]
+                },
+                {
+                    "apply": "getActiveTabCommonList",
+                    "returnType": "utam-lists/pageObjects/commonList"
+                }
+            ]
+        },
+        {
+            "name": "getSlotOptions",
+            "compose": [
+                {
+                    "apply": "getActiveTabListPanel",
+                    "returnType": "utam-setup/pageObjects/listPanel"
+                },
+                {
+                    "chain": true,
+                    "element": "listDecorator",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-access-summaries/pageObjects/slotOptions"
+                        }
+                    ],
+                    "returnType": "utam-access-summaries/pageObjects/slotOptions"
+                }
+            ]
+        }
+    ]
+}

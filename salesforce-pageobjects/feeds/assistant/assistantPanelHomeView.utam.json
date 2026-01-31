@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A chat interface that allows users to interact with an AI assistant, send messages, and receive recommendations. It includes an introduction message, a message history, typing status, error messages, and input for sending new messages.",
+            "Selector: feeds_assistant-assistant-panel-home-view"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recommendLabel",
+                "selector": {
+                    "css": "p.recommend-label"
+                },
+                "public": true
+            },
+            {
+                "name": "headerSlotContent",
+                "selector": {
+                    "css": "[slot='header']"
+                },
+                "type": "container",
+                "description": "Represents the content of the header slot in the chat panel.",
+                "public": true
+            },
+            {
+                "name": "errorSlotContent",
+                "selector": {
+                    "css": "[slot='error']"
+                },
+                "type": "container",
+                "description": "Represents the content of the error slot in the chat panel.",
+                "public": true
+            },
+            {
+                "name": "errorMessage",
+                "selector": {
+                    "css": "feeds_chat-message-error"
+                },
+                "type": "utam-feeds-chat/pageObjects/messageError",
+                "description": "Represents the error message component within the chat panel.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "inputBorder",
+                "selector": {
+                    "css": "hr.assistant-input-border"
+                },
+                "description": "Represents the horizontal rule serving as a border above the input area."
+            }
+        ]
+    }
+}

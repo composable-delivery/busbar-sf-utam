@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: baseEditorUi"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "topContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='top']"
+            }
+        },
+        {
+            "public": true,
+            "name": "leftContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='left']"
+            }
+        },
+        {
+            "public": true,
+            "name": "centerContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='center']"
+            }
+        },
+        {
+            "public": true,
+            "name": "rightContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='right']"
+            }
+        },
+        {
+            "public": true,
+            "name": "guardrailsContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='guardrails']"
+            }
+        },
+        {
+            "public": true,
+            "name": "footerContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='footer']"
+            }
+        }
+    ]
+}

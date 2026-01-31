@@ -1,0 +1,149 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/ui_common__toolbar_content_container\").",
+            "Represents the Android search result view.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/searchResult",
+    "platform": "native",
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/ui_common__toolbar_content_container\")"
+    },
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "visibleRecordCards",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/recent_item_title\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "recordByTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/recent_item_title\").text(\"%s\"))",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "visibleRecordWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "classchain": "resourceId(\"com.salesforce.chatter:id/recent_item_title\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "syncPendingBanner",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/recent_item_sash\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasRecord",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "recordByTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickRecordMatchingTitle",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "uiautomator": "resourceId(\"com.salesforce.chatter:id/recent_item_sash\")"
+                                            }
+                                        }
+                                    ],
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "recordByTitle",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

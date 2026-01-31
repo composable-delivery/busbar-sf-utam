@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for sharing the user's location when logging into the app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/permissions/shareLocation",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/design_bottom_sheet\")"
+    },
+    "elements": [
+        {
+            "name": "shareLocationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/positive_btn\")"
+            }
+        },
+        {
+            "name": "skipBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/negative_btn\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickShareLocation",
+            "compose": [
+                {
+                    "element": "shareLocationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSkip",
+            "compose": [
+                {
+                    "element": "skipBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

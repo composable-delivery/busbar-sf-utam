@@ -1,0 +1,74 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"action_row\").",
+            "Represents the Android Landing Page Action Row inside of Action List.",
+            "Verify the action row items."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionRow",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "actionItemAtIndex",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"action_item\").index(%d))",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "actionItems",
+            "nullable": true,
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"action_item\"))",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "actionItemByName",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"action_item\"))",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getActionName",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the list view of apps in 'App Launcher'.",
+            "Look for an app by title and navigate to it."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "clickAppItemWithTitle",
+            "args": [
+                {
+                    "name": "appTitle",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasAppItemWithTitle",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "appTitle",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getVisibleAppItems",
+            "returnType": [
+                "clickable",
+                "touchable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getAppItemDescs",
+            "returnType": [
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getAppItemTitles",
+            "returnType": [
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getVisibleAppItemByTitle",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "args": [
+                {
+                    "name": "appTitle",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

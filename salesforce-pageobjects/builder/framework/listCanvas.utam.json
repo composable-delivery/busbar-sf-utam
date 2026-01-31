@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: listCanvas"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "listRenderer",
+                "type": "utam-builder-framework/pageObjects/listRenderer",
+                "selector": {
+                    "css": "builder_framework-list-renderer"
+                }
+            }
+        ]
+    }
+}

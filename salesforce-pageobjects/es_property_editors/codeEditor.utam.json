@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-code-editor"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "section",
+                "selector": {
+                    "css": "section.codemirror-container"
+                }
+            }
+        ]
+    }
+}

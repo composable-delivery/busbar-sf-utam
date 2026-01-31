@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Service Appointment list and allows interacting with or opening Service Appointment records."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickCalendarIcon"
+        },
+        {
+            "name": "hasCalendarIcon",
+            "returnType": "boolean"
+        },
+        {
+            "name": "getCalendarIcon",
+            "returnType": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "openServiceAppointment",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "openFirstServiceAppointment"
+        },
+        {
+            "name": "clickServiceAppointmentTitle"
+        },
+        {
+            "name": "pullToRefresh"
+        }
+    ]
+}

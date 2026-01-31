@@ -1,0 +1,169 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of use cases with animated text and acceptance criteria.",
+            "Selector: app_dev_agent-use-cases-section"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "skeletonLoader",
+                "selector": {
+                    "css": "app_dev_agent-skeleton"
+                },
+                "type": "utam/app_dev_agent/pageObjects/skeleton",
+                "description": "Represents the skeleton loader shown while data is loading",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "contentWrapper",
+                "selector": {
+                    "css": ".content-wrapper"
+                },
+                "type": "actionable",
+                "description": "Represents the content wrapper that holds the animated use cases",
+                "elements": [
+                    {
+                        "name": "useCaseItems",
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        },
+                        "description": "Represents each use case item in the list",
+                        "nullable": true,
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "useCaseItem",
+                                "selector": {
+                                    "css": "app_dev_agent-content-stream"
+                                },
+                                "type": "utam/app_dev_agent/pageObjects/contentStream",
+                                "description": "Represents the content stream inside each item",
+                                "public": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "criteriaContainer",
+                                "selector": {
+                                    "css": "h5.markdown-subheading"
+                                },
+                                "description": "Represents the acceptance criteria container",
+                                "nullable": true
+                            },
+                            {
+                                "name": "criteriaItems",
+                                "selector": {
+                                    "css": "li",
+                                    "returnAll": true
+                                },
+                                "description": "Represents each acceptance criteria item in the list",
+                                "nullable": true,
+                                "wait": true,
+                                "elements": [
+                                    {
+                                        "name": "criteriaItem",
+                                        "selector": {
+                                            "css": "app_dev_agent-content-stream"
+                                        },
+                                        "type": "utam/app_dev_agent/pageObjects/contentStream",
+                                        "description": "Represents the content stream inside each item",
+                                        "public": true,
+                                        "wait": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isContentWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that content wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "contentWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCriteriaContainerVisible",
+            "description": {
+                "text": [
+                    "Check that criteria container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "criteriaContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyUseCaseItemsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"useCaseItems\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "useCaseItems",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyCriteriaContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"criteriaContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "criteriaContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyCriteriaItemsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"criteriaItems\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "criteriaItems",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

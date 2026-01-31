@@ -1,0 +1,121 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The component represents a clickable item in a left rail navigation panel that, when clicked, triggers navigation to a main view or a sub-view associated with the item."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "leftRailItem",
+                "selector": {
+                    "css": ":host"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the clickable left rail item that triggers navigation.",
+                "elements": [
+                    {
+                        "name": "iconElement",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents an optional icon associated with the left rail item.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "itemLabel",
+                        "selector": {
+                            "css": ".item-label"
+                        },
+                        "description": "Represents the label text for the left rail item.",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickLeftRailItem",
+            "description": {
+                "text": [
+                    "Simulate a mouse click action on the left rail item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "leftRailItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getLeftRailItemText",
+            "description": {
+                "text": [
+                    "Return the text of the left rail item label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "itemLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isLeftRailItemVisible",
+            "description": {
+                "text": [
+                    "Check if the left rail item is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "leftRailItem",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLeftRailItemEnabled",
+            "description": {
+                "text": [
+                    "Check if the left rail item is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "leftRailItem",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "verifyItemLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"itemLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "itemLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

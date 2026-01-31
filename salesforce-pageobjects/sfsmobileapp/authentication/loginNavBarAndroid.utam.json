@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the login navigation bar."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/loginNavBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"android:id/action_bar_container\")"
+    },
+    "methods": [
+        {
+            "name": "chooseConnOption",
+            "compose": [
+                {
+                    "element": "connBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "connBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "More options"
+            }
+        }
+    ]
+}

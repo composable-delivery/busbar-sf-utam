@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: MaintenancePage",
+            "Selector : runtime_online_sales-maintenance-page"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": false,
+                "name": "maintenancePageText",
+                "selector": {
+                    "css": ".slds-test-longform"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "maintenancePageHeading",
+                        "selector": {
+                            "css": ".slds-text-heading_medium"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "maintenancePageBody",
+                        "selector": {
+                            "css": "slds-text-body_small"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

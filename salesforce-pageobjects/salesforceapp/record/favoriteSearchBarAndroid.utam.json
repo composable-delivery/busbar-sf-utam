@@ -1,0 +1,76 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/favorite_search_bar\").",
+            "Represents the Android 'Favorites' search bar.",
+            "Do a search or clear the search bar."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/favoriteSearchBar",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "className(\"android.widget.EditText\")"
+            }
+        },
+        {
+            "name": "cancelSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/favorite_clear_search\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cancelSearch",
+            "compose": [
+                {
+                    "element": "cancelSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clear"
+                }
+            ]
+        }
+    ]
+}

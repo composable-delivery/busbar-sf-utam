@@ -1,0 +1,37 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-rich-text-toolbar-button-group",
+            "Represents the lightning-rich-text-toolbar-button-group Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "toolbarButtons",
+            "type": "container",
+            "selector": {
+                "css": "slot > lightning-rich-text-toolbar-button",
+                "returnAll": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getToolbarButtons",
+            "compose": [
+                {
+                    "element": "toolbarButtons",
+                    "returnAll": true,
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-lightning/pageObjects/richTextToolbarButton"
+                        }
+                    ],
+                    "returnType": "utam-lightning/pageObjects/richTextToolbarButton"
+                }
+            ]
+        }
+    ]
+}

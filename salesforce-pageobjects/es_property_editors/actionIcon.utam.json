@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a stateful icon button which can handle click events and be disabled based on provided metadata.",
+            "Selector: src-action-icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statefulButton",
+                "selector": {
+                    "css": "lightning-button-icon-stateful"
+                },
+                "type": "utam-lightning/pageObjects/buttonIconStateful",
+                "description": "Represents the stateful icon button that handles click events",
+                "public": true
+            }
+        ]
+    }
+}

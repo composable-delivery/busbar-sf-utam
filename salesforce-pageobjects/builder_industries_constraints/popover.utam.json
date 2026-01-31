@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-popover",
+            "Constraint Builder popover component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "popoverDiv",
+                "type": [
+                    "actionable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "div[data-id='popElement']"
+                },
+                "elements": [
+                    {
+                        "name": "dialogSection",
+                        "type": [],
+                        "selector": {
+                            "css": "section[role='dialog']"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "closeButton",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "button[class*='slds-popover__close']"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "closeButtonAssistiveText",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "span[class='slds-assistive-text']"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "header",
+                                "type": [],
+                                "selector": {
+                                    "css": "header[class='slds-popover__header']"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "icon",
+                                        "type": "utam-lightning/pageObjects/icon",
+                                        "selector": {
+                                            "css": "lightning-icon"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "title",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "h3"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "public": true,
+                                "name": "messages",
+                                "type": [],
+                                "selector": {
+                                    "css": "p",
+                                    "returnAll": true
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "messageByIndex",
+                                "type": [],
+                                "selector": {
+                                    "css": "p:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

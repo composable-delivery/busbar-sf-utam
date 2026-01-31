@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: spinner"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "title",
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,452 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a custom input field which can act as a single-line input or a text area, with support for expression merge fields represented as pills.",
+            "Selector: src-pill-input"
+        ]
+    },
+    "elements": [
+        {
+            "name": "inputTextContainer",
+            "selector": {
+                "css": "div[part='input-text']"
+            },
+            "description": "Represents the main container for the input text field",
+            "elements": [
+                {
+                    "name": "label",
+                    "selector": {
+                        "css": "label.slds-form-element__label"
+                    },
+                    "description": "Represents the label for the input field",
+                    "elements": [
+                        {
+                            "name": "requiredMarker",
+                            "selector": {
+                                "css": "abbr.slds-required"
+                            },
+                            "description": "Represents the required marker for the input field",
+                            "nullable": true
+                        },
+                        {
+                            "name": "formattedLabelText",
+                            "selector": {
+                                "css": "lightning-formatted-text"
+                            },
+                            "type": "utam-lightning/pageObjects/formattedText",
+                            "description": "Represents the formatted text for the label",
+                            "public": true
+                        }
+                    ]
+                },
+                {
+                    "name": "helpText",
+                    "selector": {
+                        "css": "lightning-helptext"
+                    },
+                    "type": "utam-lightning/pageObjects/helptext",
+                    "description": "Represents the help text for the input field",
+                    "nullable": true,
+                    "public": true
+                },
+                {
+                    "name": "inlineInputContainer",
+                    "selector": {
+                        "css": "div.content-container-inline-wrapper"
+                    },
+                    "type": "actionable",
+                    "description": "Represents the container for the single-line input field",
+                    "nullable": true,
+                    "elements": [
+                        {
+                            "name": "inlineInput",
+                            "selector": {
+                                "css": "div.content-container-inline"
+                            },
+                            "type": [
+                                "actionable",
+                                "clickable",
+                                "editable"
+                            ],
+                            "description": "Represents the single-line input field"
+                        }
+                    ]
+                },
+                {
+                    "name": "textAreaContainer",
+                    "selector": {
+                        "css": "div.content-container-textarea"
+                    },
+                    "type": [
+                        "actionable",
+                        "editable"
+                    ],
+                    "description": "Represents the container for the text area input field",
+                    "nullable": true,
+                    "public": true,
+                    "elements": [
+                        {
+                            "name": "textAreaInput",
+                            "selector": {
+                                "css": "div.content-container"
+                            },
+                            "type": [
+                                "actionable",
+                                "clickable",
+                                "editable"
+                            ],
+                            "description": "Represents the text area input field",
+                            "public": true
+                        }
+                    ]
+                },
+                {
+                    "name": "validationMessage",
+                    "selector": {
+                        "css": "div.validation-message"
+                    },
+                    "description": "Represents the validation message displayed for the input field",
+                    "nullable": true
+                },
+                {
+                    "name": "iconWrapper",
+                    "selector": {
+                        "css": "div.icon-wrapper"
+                    },
+                    "description": "Represents the container for the responsive icon",
+                    "elements": [
+                        {
+                            "name": "responsiveIcon",
+                            "selector": {
+                                "css": "community_builder-screen-responsive-icon"
+                            },
+                            "description": "Represents the responsive icon",
+                            "public": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "mergeFieldButton",
+            "selector": {
+                "css": "es_property_editors-merge-field-button"
+            },
+            "type": "utam-es_property_editors/pageObjects/mergeFieldButton",
+            "description": "Represents the merge field button",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isInputTextContainerVisible",
+            "description": {
+                "text": [
+                    "Check that input text container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputTextContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLabelVisible",
+            "description": {
+                "text": [
+                    "Check that label is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRequiredMarkerVisible",
+            "description": {
+                "text": [
+                    "Check that required marker is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredMarker",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInlineInputContainerVisible",
+            "description": {
+                "text": [
+                    "Check that inline input container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlineInputContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTextAreaContainerVisible",
+            "description": {
+                "text": [
+                    "Check that text area container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textAreaContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isValidationMessageVisible",
+            "description": {
+                "text": [
+                    "Check that validation message is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "validationMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isIconWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that icon wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInlineInputEnabled",
+            "description": {
+                "text": [
+                    "Check if single-line input field is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlineInput",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "enterInlineInput",
+            "description": {
+                "text": [
+                    "Clear single-line input field and enter text"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inlineInput",
+                    "apply": "clear"
+                },
+                {
+                    "element": "inlineInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInlineInputText",
+            "description": {
+                "text": [
+                    "Get text from single-line input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "inlineInput",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "blurInlineInput",
+            "description": {
+                "text": [
+                    "Trigger blur event on single-line input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inlineInput",
+                    "apply": "blur"
+                }
+            ]
+        },
+        {
+            "name": "isTextAreaInputEnabled",
+            "description": {
+                "text": [
+                    "Check if text area input field is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textAreaInput",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "enterTextAreaInput",
+            "description": {
+                "text": [
+                    "Clear text area input field and enter text"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "textAreaInput",
+                    "apply": "clear"
+                },
+                {
+                    "element": "textAreaInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTextAreaInputText",
+            "description": {
+                "text": [
+                    "Get text from text area input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "textAreaInput",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "blurTextAreaInput",
+            "description": {
+                "text": [
+                    "Trigger blur event on text area input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "textAreaInput",
+                    "apply": "blur"
+                }
+            ]
+        },
+        {
+            "name": "verifyRequiredMarkerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"requiredMarker\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "requiredMarker",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyInlineInputContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"inlineInputContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlineInputContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyTextAreaContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"textAreaContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textAreaContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyValidationMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"validationMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "validationMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

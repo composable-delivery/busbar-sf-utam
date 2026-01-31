@@ -1,0 +1,87 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A header component for a chat interface that can optionally be closed, displays a title, a description, and includes a disclaimer and an icon.",
+            "Selector: src-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "einsteinIcon",
+                "selector": {
+                    "css": "lightning-icon.einstein-utility-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon",
+                "description": "Represents the Einstein icon in the header",
+                "public": true
+            },
+            {
+                "name": "headerTitle",
+                "selector": {
+                    "css": ".slds-card__header-title .slds-truncate"
+                },
+                "description": "Represents the title text of the header"
+            },
+            {
+                "name": "chatDisclaimer",
+                "selector": {
+                    "css": "feeds_chat-copilot-disclaimer.feeds-chat-disclaimer"
+                },
+                "type": "utam-feeds-chat/pageObjects/copilotDisclaimer",
+                "description": "Represents the disclaimer component in the header",
+                "public": true
+            },
+            {
+                "name": "chatSubtitle",
+                "selector": {
+                    "css": "div[data-chat-subtitle]"
+                },
+                "description": "Represents the subtitle or description text area of the header"
+            },
+            {
+                "name": "closeButton",
+                "selector": {
+                    "css": "lightning-button-icon[icon-name='utility:close']"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the close button of the header",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getHeaderTitleText",
+            "description": {
+                "text": [
+                    "Get the text of the header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getChatSubtitleText",
+            "description": {
+                "text": [
+                    "Get the text of the chat subtitle"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "chatSubtitle",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

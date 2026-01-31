@@ -1,0 +1,147 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-view-manager-composite.",
+            "Represents the related list view manager composite Lightning web component.",
+            "Access the related list single app builder mapper or the grid and table displays directly."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getRelatedListViewManager",
+            "compose": [
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListSingleAppBuilderMapper",
+                    "element": "appBuilderList"
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListViewManager",
+                    "element": "relatedListViewManager",
+                    "chain": true
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the list view manager for related list. "
+                ],
+                "return": "relatedListViewManager"
+            }
+        },
+        {
+            "name": "getDatatable",
+            "compose": [
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListSingleAppBuilderMapper",
+                    "element": "appBuilderList"
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListViewManager",
+                    "element": "relatedListViewManager",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/commonListInternal",
+                    "element": "commonListInternal",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/primaryDisplayManager",
+                    "element": "displayManager",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/primaryDisplay",
+                    "element": "display",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/primaryDisplayGrid",
+                    "element": "displayGrid",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lightning/pageObjects/datatable",
+                    "element": "datatable",
+                    "chain": true
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the data table"
+                ],
+                "return": "datatable"
+            }
+        },
+        {
+            "name": "getTemplateList",
+            "compose": [
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListSingleAppBuilderMapper",
+                    "element": "appBuilderList"
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListViewManager",
+                    "element": "relatedListViewManager",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/commonListInternal",
+                    "element": "commonListInternal",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/primaryDisplayManager",
+                    "element": "displayManager",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/primaryDisplay",
+                    "element": "display",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/primaryDisplayCard",
+                    "element": "displayCard",
+                    "chain": true
+                },
+                {
+                    "returnType": "utam-lists/pageObjects/templateList",
+                    "element": "cardList",
+                    "chain": true
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the template list"
+                ],
+                "return": "templateList"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedListSingleAuraWrapper",
+                "name": "auraRelatedList",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-related-list-single-aura-wrapper"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/relatedListSingleAppBuilderMapper",
+                "name": "appBuilderList",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-list-single-app-builder-mapper"
+                }
+            }
+        ]
+    }
+}

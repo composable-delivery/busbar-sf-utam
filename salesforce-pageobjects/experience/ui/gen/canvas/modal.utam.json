@@ -1,0 +1,114 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a modal with either text or JSON content and provides a close button.",
+            "Selector: experience_ui_gen_canvas-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with the title",
+                "public": true
+            },
+            {
+                "name": "textResult",
+                "selector": {
+                    "css": ".text-result"
+                },
+                "description": "Represents the preformatted text content when displaying text",
+                "nullable": true
+            },
+            {
+                "name": "codeEditor",
+                "selector": {
+                    "css": "es_property_editors-code-editor"
+                },
+                "type": "utam-es_property_editors/pageObjects/codeEditor",
+                "description": "Represents the code editor when displaying JSON content",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "closeButton",
+                "selector": {
+                    "css": "lightning-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the close button in the modal footer"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCloseButton",
+            "description": {
+                "text": [
+                    "Simulate clicking the close button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isTextResultVisible",
+            "description": {
+                "text": [
+                    "Check if the text result element is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textResult",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTextResultContent",
+            "description": {
+                "text": [
+                    "Get the text content from the text result element"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "textResult",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyTextResultPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"textResult\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textResult",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

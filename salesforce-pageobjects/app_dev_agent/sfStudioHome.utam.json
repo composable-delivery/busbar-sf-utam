@@ -1,0 +1,270 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages the SF Studio home page, including app development plans, chat interactions, and navigation.",
+            "Selector: app_dev_agent-sf-studio-home"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "projectStudioPageLayout",
+                "selector": {
+                    "css": "dev_workspace-project-studio-page-layout"
+                },
+                "type": "container",
+                "description": "Represents the root layout component for the page",
+                "elements": [
+                    {
+                        "name": "pageContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the container for the page content in the layout's slot",
+                        "elements": [
+                            {
+                                "name": "tabsContainer",
+                                "selector": {
+                                    "css": ".tabs-container"
+                                },
+                                "description": "Represents the container for the tabs section",
+                                "elements": [
+                                    {
+                                        "name": "executionCompleteMessage",
+                                        "selector": {
+                                            "css": "app_dev_agent-scoped-notification"
+                                        },
+                                        "type": "utam-app_dev_agent/pageObjects/scopedNotification",
+                                        "description": "Represents the notification component shown when execution is complete",
+                                        "nullable": true,
+                                        "wait": true,
+                                        "public": true,
+                                        "elements": [
+                                            {
+                                                "name": "viewMetadataLink",
+                                                "selector": {
+                                                    "css": "lightning-formatted-url.view-metadata"
+                                                },
+                                                "type": "utam-lightning/pageObjects/formattedUrl",
+                                                "description": "Represents the link to view metadata",
+                                                "public": true,
+                                                "wait": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "previewButton",
+                                        "selector": {
+                                            "css": "button.slds-button_brand"
+                                        },
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "description": "Represents the preview button for custom apps",
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "projectPanel",
+                                        "selector": {
+                                            "css": "app_dev_agent-sf-studio-project-panel"
+                                        },
+                                        "type": "utam-app_dev_agent/pageObjects/sfStudioProjectPanel",
+                                        "description": "Represents the project panel for app development plans",
+                                        "public": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "chatComponentContainer",
+                                "selector": {
+                                    "css": "div.chat-container"
+                                },
+                                "description": "Represents the container for the chat component",
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "chatShell",
+                                        "selector": {
+                                            "css": "runtime_copilot-agentic-shell"
+                                        },
+                                        "type": "container",
+                                        "description": "Represents the runtime shell for chat interactions",
+                                        "nullable": true,
+                                        "wait": true,
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "chatPanelEmptyState",
+                                        "selector": {
+                                            "css": "app_dev_agent-chat-panel-empty-state"
+                                        },
+                                        "type": "utam-app_dev_agent/pageObjects/chatPanelEmptyState",
+                                        "description": "Represents the empty state for the chat panel",
+                                        "nullable": true,
+                                        "public": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "pageContentDiv",
+                                "selector": {
+                                    "css": "div.flex-box"
+                                },
+                                "description": "Main page content div with dynamic classes",
+                                "public": true
+                            },
+                            {
+                                "name": "expandedCanvasDiv",
+                                "selector": {
+                                    "css": "div.expanded-canvas"
+                                },
+                                "description": "Expanded canvas div for enhanced project creation mode",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "executionCompleteGrid",
+                                "selector": {
+                                    "css": ".slds-grid.slds-grid_vertical-align-center.slds-grid_align-spread"
+                                },
+                                "description": "Grid container shown when execution is complete",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "successNotificationContainer",
+                                "selector": {
+                                    "css": ".slds-col.grow"
+                                },
+                                "description": "Container for success notification and metadata link",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "previewButtonContainer",
+                                "selector": {
+                                    "css": ".slds-col.slds-p-horizontal_medium"
+                                },
+                                "description": "Container for the preview button",
+                                "nullable": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPageContentVisible",
+            "description": {
+                "text": [
+                    "Check if the page content container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pageContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTabsContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the tabs container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "tabsContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickPreviewButton",
+            "description": {
+                "text": [
+                    "Click the preview button for custom apps"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "previewButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isPreviewButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the preview button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "previewButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the chat component container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatComponentContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyPreviewButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"previewButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "previewButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyChatComponentContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"chatComponentContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatComponentContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

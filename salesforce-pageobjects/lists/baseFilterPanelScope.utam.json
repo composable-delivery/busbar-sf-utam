@@ -1,0 +1,98 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-base-filter-panel-scope.",
+            "Represents the list base filter scope component.",
+            "Provides access to open the filter scope editor.",
+            "Access the current scope or initiate a scope edit."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "edited",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-is-new"
+                }
+            },
+            {
+                "name": "filterScopeClickable",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "[data-id='filter-panel-scope']"
+                },
+                "elements": [
+                    {
+                        "name": "scopeLabel",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": ".filterLabel"
+                        }
+                    },
+                    {
+                        "name": "currentScopeLabel",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": ".currentScopeLabel"
+                        }
+                    },
+                    {
+                        "name": "currentCampaignScopeLabel",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": ".currentCampaignScopeLabel"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getCurrentScopeText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "currentScopeLabel"
+                }
+            ]
+        },
+        {
+            "name": "getCurrentCampaignScopeText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "currentCampaignScopeLabel"
+                }
+            ]
+        },
+        {
+            "name": "isEdited",
+            "compose": [
+                {
+                    "apply": "isVisible",
+                    "element": "edited"
+                }
+            ]
+        },
+        {
+            "name": "clickEditFilterScope",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "filterScopeClickable"
+                }
+            ]
+        }
+    ]
+}

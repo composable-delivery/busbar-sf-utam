@@ -1,0 +1,133 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Service Appointment list and allows interacting with or opening Service Appointment records."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/record/serviceAppointmentObject",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/schedule_list\")"
+    },
+    "type": [
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "calendarIcon",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/date_icon\")"
+            }
+        },
+        {
+            "name": "serviceAppointmentLabel",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/schedule_item_single_title\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "serviceAppointmentFirstItem",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/schedule_item_view_root\")"
+            }
+        },
+        {
+            "name": "serviceAppointmentTitle",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.fieldservice.app:id/listview_click_handler\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickCalendarIcon",
+            "compose": [
+                {
+                    "element": "calendarIcon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasCalendarIcon",
+            "compose": [
+                {
+                    "element": "calendarIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "openServiceAppointment",
+            "compose": [
+                {
+                    "element": "serviceAppointmentLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openFirstServiceAppointment",
+            "compose": [
+                {
+                    "element": "serviceAppointmentFirstItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickServiceAppointmentTitle",
+            "compose": [
+                {
+                    "element": "serviceAppointmentTitle",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "pullToRefresh",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

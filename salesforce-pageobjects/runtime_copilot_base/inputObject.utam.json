@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A simple Lightning Web Component with no user interface elements defined in the provided template or JavaScript source code.",
+            "Selector: src-input-object"
+        ]
+    }
+}

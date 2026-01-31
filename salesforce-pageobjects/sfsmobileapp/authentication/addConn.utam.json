@@ -1,0 +1,25 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the screen for adding a connection to the mobile app."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "addConnection",
+            "args": [
+                {
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

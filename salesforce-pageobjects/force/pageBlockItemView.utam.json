@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forcePageBlockItemView.",
+            "Represents the force:pageBlockItemView Aura component.",
+            "Get the item value or the item label elements."
+        ]
+    },
+    "elements": [
+        {
+            "name": "itemLabel",
+            "type": "utam-aura/pageObjects/label",
+            "selector": {
+                "css": "span[class*='field-label']"
+            },
+            "public": true
+        },
+        {
+            "name": "itemValue",
+            "selector": {
+                "css": ".slds-form-element__static"
+            },
+            "public": true
+        }
+    ]
+}

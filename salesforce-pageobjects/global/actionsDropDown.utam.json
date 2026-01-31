@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .oneActionsDropDown.",
+            "Represents the one:actionsDropDown Aura component.",
+            "Open the dropdown."
+        ]
+    },
+    "methods": [
+        {
+            "name": "openDropdown",
+            "description": {
+                "text": [
+                    "Opens the dropdown"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "dropdownButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "dropdownButton",
+            "selector": {
+                "css": "a"
+            }
+        }
+    ]
+}

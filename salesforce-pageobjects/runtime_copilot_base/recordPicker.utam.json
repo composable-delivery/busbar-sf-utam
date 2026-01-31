@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a UI for selecting records, with the ability to toggle between a limited set of entities and all entities based on the presence of allowed entities.",
+            "Selector: runtime_copilot_base-record-picker"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "limitedRecordPicker",
+                "selector": {
+                    "css": "runtime_copilot_base-record-picker-limited-entities"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/recordPickerLimitedEntities",
+                "description": "Represents a component for picking from a limited set of allowed entities.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "allEntitiesRecordPicker",
+                "selector": {
+                    "css": "runtime_copilot_base-record-picker-all-entities"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/recordPickerAllEntities",
+                "description": "Represents a component for picking from all entities.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

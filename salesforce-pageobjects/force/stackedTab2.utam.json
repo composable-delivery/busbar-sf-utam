@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-stacked-tab2",
+            "Represents the stackedTab LWC component.",
+            "Click a tab by label or check if a tab by label is visible."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "tabLabel",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "div button span"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTabVisible",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the tab is visible"
+                ],
+                "return": "true if the tab is visible; otherwise, false"
+            },
+            "compose": [
+                {
+                    "element": "tabLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickTab",
+            "description": {
+                "text": [
+                    "Clicks the tab"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "tabLabel",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "tabLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTabText",
+            "description": {
+                "text": [
+                    "Gets the text of the tab label"
+                ],
+                "return": "the text of the tab label"
+            },
+            "compose": [
+                {
+                    "element": "tabLabel",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

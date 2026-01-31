@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the profile menu fragment.",
+            "Get logged in info, navigate to an item in the list, or logout."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "getUserName",
+            "returnType": "string"
+        },
+        {
+            "name": "getOrgName",
+            "returnType": "string"
+        },
+        {
+            "name": "openProfile"
+        },
+        {
+            "name": "openFavorites"
+        },
+        {
+            "name": "changeAccount"
+        },
+        {
+            "name": "openPendingChanges"
+        },
+        {
+            "name": "hasPendingChangesToSync",
+            "returnType": "boolean"
+        },
+        {
+            "name": "openFeedback"
+        },
+        {
+            "name": "openSettings"
+        },
+        {
+            "name": "openHelp"
+        },
+        {
+            "name": "logout"
+        }
+    ]
+}

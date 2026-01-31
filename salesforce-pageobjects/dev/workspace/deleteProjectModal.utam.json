@@ -1,0 +1,83 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A modal component that prompts the user to confirm the deletion of a project. It displays a heading, a confirmation message, and two buttons: one to cancel the action and another to confirm the deletion.",
+            "Selector: dev_workspace-delete-project-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header[data-id=\"dataHeader\"]"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with the title.",
+                "public": true
+            },
+            {
+                "name": "richConfirmationText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "description": "Represents the rich text formatted confirmation message.",
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button[data-id=\"cancel-button\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to cancel the deletion."
+            },
+            {
+                "name": "deleteButton",
+                "selector": {
+                    "css": ".delete-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button to confirm the deletion of the project."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Simulates a click on the cancel button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDeleteButton",
+            "description": {
+                "text": [
+                    "Simulates a click on the delete button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "deleteButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

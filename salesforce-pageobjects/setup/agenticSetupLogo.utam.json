@@ -1,0 +1,67 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a centered logo image and a secondary image with Salesforce branding.",
+            "Selector: setup-agentic-setup-logo"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "container",
+                "selector": {
+                    "css": "div.slds-text-align_center"
+                },
+                "description": "Represents the outer container for the welcome title",
+                "elements": [
+                    {
+                        "name": "innerContainer",
+                        "selector": {
+                            "css": "div.slds-container_center"
+                        },
+                        "description": "Represents the inner container for the welcome title",
+                        "elements": [
+                            {
+                                "name": "welcomeTitle",
+                                "selector": {
+                                    "css": "h1"
+                                },
+                                "description": "Represents the welcome title",
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "prefix",
+                                        "selector": {
+                                            "css": "welcome-text-part"
+                                        },
+                                        "description": "Represents the welcome title prefix",
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "name",
+                                        "selector": {
+                                            "css": "user-name"
+                                        },
+                                        "description": "Represents the welcome title first name",
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "suffix",
+                                        "selector": {
+                                            "css": "welcome-text-part:nth-of-type(2)"
+                                        },
+                                        "description": "Represents the welcome title suffix",
+                                        "public": true,
+                                        "nullable": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

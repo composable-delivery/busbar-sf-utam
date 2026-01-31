@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays either a text output or a combobox depending on access check.",
+            "Selector: src-input-dropdown-or-default-text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "outputText",
+                "selector": {
+                    "css": "es_property_editors-output-text"
+                },
+                "type": "utam-es_property_editors/pageObjects/outputText",
+                "description": "Represents the custom output text component displayed when access is granted",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                },
+                "type": "utam-lightning/pageObjects/combobox",
+                "description": "Represents the Lightning combobox component displayed when access is denied",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

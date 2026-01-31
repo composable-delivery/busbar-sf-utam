@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the options present on the login navigation bar."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "changeServer"
+        },
+        {
+            "name": "clearCookies"
+        },
+        {
+            "name": "reload"
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-type-detail",
+            "Constraint Builder type detail component - Relationships tab"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "addRelationsButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[class='addRelations']"
+            }
+        },
+        {
+            "public": true,
+            "name": "relationList",
+            "type": "utam-builder_industries_constraints/pageObjects/relationList",
+            "selector": {
+                "css": "builder_industries_constraints-relation-list"
+            }
+        },
+        {
+            "public": true,
+            "name": "relationsIllustration",
+            "type": "utam-builder_industries_constraints/pageObjects/illustration",
+            "selector": {
+                "css": "builder_industries_constraints-illustration"
+            }
+        },
+        {
+            "public": true,
+            "name": "createRelationsButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[class='createAttributes']"
+            }
+        }
+    ]
+}

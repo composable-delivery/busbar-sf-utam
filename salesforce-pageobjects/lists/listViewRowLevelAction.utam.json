@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-list-view-row-level-action.",
+            "Represents the list view row level action Lightning web component.",
+            "Access the dropdown menu and actions wrapper."
+        ]
+    },
+    "methods": [
+        {
+            "name": "hasDropdownButton",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "lightning-button-menu"
+                            }
+                        },
+                        {
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "description": {
+                "text": [
+                    "Check if a dropdown button exists"
+                ],
+                "return": "Boolean value"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "dropdownButton",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            },
+            {
+                "type": "utam-force/pageObjects/auraActionWrapper",
+                "name": "auraActionWrapper",
+                "public": true,
+                "selector": {
+                    "css": "force-aura-action-wrapper"
+                }
+            }
+        ]
+    }
+}

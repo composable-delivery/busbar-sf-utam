@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: expressionBuilderFormField"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "name": "formattedTextInput",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            },
+            {
+                "name": "selectableFormFieldContentWrapper",
+                "selector": {
+                    "css": ".slds-expression__options"
+                },
+                "elements": [
+                    {
+                        "name": "selectableFormFieldContent",
+                        "type": "container",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

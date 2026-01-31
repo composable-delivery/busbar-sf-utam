@@ -1,0 +1,47 @@
+{
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-online-sales-home-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "browseProducts",
+                "selector": {
+                    "css": "runtime_online_sales-browse-products"
+                },
+                "public": true
+            },
+            {
+                "name": "maintenancePage",
+                "type": "utam-online-sales/pageObjects/maintenancePage",
+                "selector": {
+                    "css": "runtime_online_sales-maintenance-page"
+                },
+                "public": true
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-illustration",
+            "Constraint Builder illustration component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "title",
+                "type": [],
+                "selector": {
+                    "css": "h3"
+                }
+            },
+            {
+                "public": true,
+                "name": "description",
+                "type": [],
+                "selector": {
+                    "css": "p"
+                }
+            }
+        ]
+    }
+}

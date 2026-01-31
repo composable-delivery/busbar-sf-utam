@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the 'App Launcher' fragment.",
+            "Start a search or interact with the existing list of apps."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "getSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/searchBar"
+        },
+        {
+            "name": "getAppItemsList",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/appItemsList"
+        }
+    ]
+}

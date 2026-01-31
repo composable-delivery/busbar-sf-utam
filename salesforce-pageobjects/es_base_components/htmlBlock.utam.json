@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the html block element in the CMS builder runtime"
+        ]
+    },
+    "elements": [
+        {
+            "name": "wrapper",
+            "selector": {
+                "css": ".html-wrapper"
+            },
+            "public": false
+        }
+    ],
+    "methods": [
+        {
+            "name": "getMarkup",
+            "description": "returns the raw html in the block",
+            "compose": [
+                {
+                    "element": "wrapper",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "innerHTML"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

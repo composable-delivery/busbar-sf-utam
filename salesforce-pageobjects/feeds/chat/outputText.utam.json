@@ -1,0 +1,97 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a message with configurable alignment and can either show plain text content or custom content via a slot.",
+            "Selector: src-output-text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageContainer",
+                "selector": {
+                    "css": ".text-container"
+                },
+                "description": "Represents the container for the message content.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "messageText",
+                        "selector": {
+                            "css": "div.slds-text-align_'%s'",
+                            "args": [
+                                {
+                                    "name": "selectorStr",
+                                    "type": "string",
+                                    "description": "CSS selector parameter"
+                                }
+                            ]
+                        },
+                        "description": "Represents the text message with dynamic alignment."
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "defaultSlotContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the default slot for custom content.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isMessageContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the message container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Retrieve the text content of the message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyMessageContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"messageContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

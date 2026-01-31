@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Purchase options page object"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "productDetailCard",
+                "type": "utam-online-sales/pageObjects/productDetailCard",
+                "selector": {
+                    "css": "runtime_online_sales-product-detail-card",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "optionsToBuyEmptyState",
+                "type": "utam-online-sales/pageObjects/optionsToBuyEmptyState",
+                "selector": {
+                    "css": "runtime_online_sales-options-to-buy-empty-state"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_sales_adt-link-to-new-page",
+            "Represents setup_sales_adt-link-to-new-page Lightening web component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "goToECIButton",
+                "selector": {
+                    "css": "a[href='/lightning/setup/CallCoachingSettings/home']"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitAndClick",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "goToECIButton",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

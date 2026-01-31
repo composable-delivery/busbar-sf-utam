@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListViewManagerGrid.",
+            "Represents the list view manager grid Aura component.",
+            "Access the inline edit grid."
+        ]
+    },
+    "elements": [
+        {
+            "name": "listViewContent",
+            "selector": {
+                "css": ".listViewContent"
+            },
+            "elements": [
+                {
+                    "name": "inlineEditGrid",
+                    "type": "utam-force/pageObjects/inlineEditGrid",
+                    "selector": {
+                        "css": ".forceInlineEditGrid"
+                    },
+                    "public": true
+                }
+            ]
+        }
+    ]
+}

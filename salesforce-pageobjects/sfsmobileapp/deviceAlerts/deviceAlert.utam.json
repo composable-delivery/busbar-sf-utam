@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a device alert (such as allowing notifications) usually when logging into the app."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickAllowNotification"
+        },
+        {
+            "name": "clickAllowNotificationWhenUsingTheApp"
+        },
+        {
+            "name": "clickOK"
+        },
+        {
+            "name": "clickDenyNotification"
+        }
+    ]
+}

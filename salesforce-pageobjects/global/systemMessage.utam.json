@@ -1,0 +1,149 @@
+{
+    "description": {
+        "text": [
+            "Selector: .oneSystemMessage.",
+            "Represents the one:systemMessage Aura component.",
+            "Access a system message text or a system message link by ID. Get the system message text, link URL, or click a system message link."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "systemMessageText",
+            "selector": {
+                "css": "span:not(.slds-icon_container)"
+            }
+        },
+        {
+            "name": "systemMessageLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".action-link"
+            }
+        },
+        {
+            "name": "closeBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".close-btn"
+            },
+            "public": true
+        },
+        {
+            "name": "systemMessageTextById",
+            "selector": {
+                "css": "[data-message-id='%s'] span:not(.slds-icon_container)",
+                "args": [
+                    {
+                        "name": "messageId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "systemMessageLinkById",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "[data-message-id='%s'] .action-link",
+                "args": [
+                    {
+                        "name": "messageId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "closeBtnById",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "[data-message-id='%s'] .close-btn",
+                "args": [
+                    {
+                        "name": "messageId",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the system message text"
+                ],
+                "return": "the system message text"
+            },
+            "name": "getMessage",
+            "compose": [
+                {
+                    "element": "systemMessageText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click the close button"
+                ],
+                "return": "none"
+            },
+            "name": "dismissMessage",
+            "compose": [
+                {
+                    "element": "closeBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the link destination"
+                ],
+                "return": "the link destination"
+            },
+            "name": "getLinkDestination",
+            "compose": [
+                {
+                    "element": "systemMessageLink",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click the system message link"
+                ],
+                "return": "none"
+            },
+            "name": "clickSystemMessageLink",
+            "compose": [
+                {
+                    "element": "systemMessageLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

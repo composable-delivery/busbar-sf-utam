@@ -1,0 +1,2017 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-datatable",
+            "Represents the lightning-datatable Lightning web component.",
+            "Get cell value by index with row and column indexes, get cell value by label with in a row.",
+            "Get number of rows, number of columns, check if the row with index is selectable, check if table having rows, get count of selected rows",
+            "Scroll to last row, check if row is selected, check if table is loading, check if the sortable column present in the table, click sort header button.",
+            "Click select all checkbox, get width of the column by retrieving style attribute, get row header text.",
+            "Check if header actions present, and row actions present.",
+            "Toggle row selection.",
+            "Get first and last rendered rows.",
+            "Methods requiring a rowIndex will return null if that row isn't currently being rendered due to viewport rendering or virtualization"
+        ]
+    },
+    "root": true,
+    "type": [
+        "actionable"
+    ],
+    "selector": {
+        "css": "lightning-datatable"
+    },
+    "methods": [
+        {
+            "name": "hasRowTooltip",
+            "description": {
+                "text": [
+                    "Checks if row has tooltips present or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rowTooltip",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getCellValueByIndex",
+            "description": {
+                "text": [
+                    "Get cell value by it's row and column index value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "returnType": "string",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "getCellValueByIndex",
+                        "args": [
+                            {
+                                "name": "rowIndex",
+                                "type": "number"
+                            },
+                            {
+                                "name": "columnIndex",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getCellValueByLabel",
+            "description": {
+                "text": [
+                    "Get cell value by it's row index and field label value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "returnType": "string",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "getCellValueByLabel",
+                        "args": [
+                            {
+                                "name": "rowIndex",
+                                "type": "number"
+                            },
+                            {
+                                "name": "fieldLabel",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getRowTooltipByIndex",
+            "description": {
+                "text": [
+                    "Get a row tooltip by it's row index"
+                ],
+                "return": "utam-lightning/pageObjects/primitiveDatatableTooltip"
+            },
+            "compose": [
+                {
+                    "returnType": "utam-lightning/pageObjects/primitiveDatatableTooltip",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "getRowTooltipByIndex",
+                        "args": [
+                            {
+                                "name": "rowIndex",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getNumRows",
+            "description": {
+                "text": [
+                    "Get number of data rows in table"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "returnType": "number",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "getAttributeAsNumber",
+                        "args": [
+                            {
+                                "type": "elementReference",
+                                "value": "tableElement"
+                            },
+                            {
+                                "value": "data-num-rows"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasRows",
+            "description": {
+                "text": [
+                    "Checks if datatable has rows present or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lastRenderedRow",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasHeader",
+            "description": {
+                "text": [
+                    "Checks if the table header is present or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getNumSelectedRows",
+            "description": {
+                "text": [
+                    "Get number of selected datatable rows"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "returnType": "number",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "getAttributeAsNumber",
+                        "args": [
+                            {
+                                "type": "elementReference",
+                                "value": "tableElement"
+                            },
+                            {
+                                "value": "data-num-selected-rows"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "scrollToLastRow",
+            "description": "Scroll to the last row in datatable",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "scrollToLastRow"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isRowSelected",
+            "description": {
+                "text": [
+                    "Checks if a row is selected if the table row element contains 'slds-is-selected' class"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "row",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-selected"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "rowHasFocus",
+            "description": {
+                "text": [
+                    "Checks if a row is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "row",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isLoading",
+            "description": {
+                "text": [
+                    "Checks the presence of table loader"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "tableLoader",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getNumColumns",
+            "description": "Get number of columns",
+            "compose": [
+                {
+                    "element": "columns",
+                    "apply": "size"
+                }
+            ]
+        },
+        {
+            "name": "isSortableColumn",
+            "description": {
+                "text": [
+                    "Checks if the column is sortable or not based on the presence of class 'slds-is-sortable' in table head cell"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "sortableHeader",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickSelectAllCheckbox",
+            "description": "Clicks on datatable select all checkbox",
+            "compose": [
+                {
+                    "element": "selectAllCheckbox",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSortHeaderButton",
+            "description": "Clicks on header of a sortable table header link",
+            "compose": [
+                {
+                    "element": "sortableHeaderLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getWidth",
+            "description": {
+                "text": [
+                    "Get column width style by matching it's label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "columnByLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "style"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getColumnWidthByIndex",
+            "description": {
+                "text": [
+                    "Get column width style by index value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "columnByIndex",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "style"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTableWidth",
+            "description": {
+                "text": [
+                    "Get table width style"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "returnType": "string",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/datatableUtils",
+                        "invoke": "getTableWidth",
+                        "args": [
+                            {
+                                "type": "elementReference",
+                                "value": "scrollYContainer"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasHeaderActions",
+            "description": {
+                "text": [
+                    "Checks if table header has primitive actions"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "primitiveHeaderActions",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isSelectableRow",
+            "description": {
+                "text": [
+                    "Checks if row is selectable based on the presence of input checkbox"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checkbox",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isInlinedSelectableRow",
+            "description": {
+                "text": [
+                    "Checks if row is selectable based on the presence of input checkbox"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCheckbox",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "toggleRowSelection",
+            "description": "Clicks row selection checkbox to toggle current row selection",
+            "compose": [
+                {
+                    "element": "checkboxLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "toggleInlinedRowSelection",
+            "description": "Clicks row selection checkbox to toggle current row selection",
+            "compose": [
+                {
+                    "element": "inlinedCheckboxLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickActionsMenu",
+            "description": "opens the actionsmenu to then open the multi-column-sorting modal",
+            "compose": [
+                {
+                    "element": "actionsMenu",
+                    "apply": "clickButton"
+                }
+            ]
+        },
+        {
+            "name": "getRowHeaderText",
+            "description": {
+                "text": [
+                    "Get header text of a row if it is present"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "rowHeader",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCellText",
+            "description": {
+                "text": [
+                    "Get cell text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "cellWrapperByLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCellTextByIndex",
+            "description": {
+                "text": [
+                    "Get cell text by index"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "cellWrapperByIndex",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasRowActionInRow",
+            "description": {
+                "text": [
+                    "If row has any row level actions present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "primitiveCellActions",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasStatusBar",
+            "description": {
+                "text": [
+                    "If the status bar is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusBar",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "applyMassInlineEdit",
+            "description": "Click 'Apply' action of multi inline edit popup",
+            "compose": [
+                {
+                    "element": "applyMassInlineEditBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "cancelMassInlineEdit",
+            "description": "Click 'Cancel' action of multi inline edit popup",
+            "compose": [
+                {
+                    "element": "cancelMassInlineEditBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isTableFocused",
+            "description": {
+                "text": [
+                    "Checks if table element is focused at the moment"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isHeaderCellFocused",
+            "description": {
+                "text": [
+                    "Checks if the header of the matching column label is focused at the moment. If it contains class 'slds-has-focus' or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "columnByLabel",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-has-focus"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isCellByIndexFocused",
+            "description": {
+                "text": [
+                    "Checks if the cell with matching row and column index is in focus at the moment. If it contains the class 'slds-has-focus' or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cellByIndex",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-has-focus"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isCellByLabelFocused",
+            "description": {
+                "text": [
+                    "Checks if the cell with matching row index and column label is in focus at the moment. If it contains the class 'slds-has-focus' or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cellByLabel",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-has-focus"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isCellWrapped",
+            "description": {
+                "text": [
+                    "Checks if the cell is wrapped or not. If the parent element contains class name 'slds-hyphenate'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cellWrapperByIndex",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-hyphenate"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isCellClipped",
+            "description": {
+                "text": [
+                    "Checks if the cell is clipped or not. If the parent element contains class name 'slds-truncate'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cellWrapperByIndex",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-truncate"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isHeaderCellWrapped",
+            "description": {
+                "text": [
+                    "Checks if the header cell is wrapped or not. If the parent element contains class name 'slds-hyphenate'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerLabel",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-hyphenate"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isHeaderCellClipped",
+            "description": {
+                "text": [
+                    "Checks if the cell is header clipped or not. If the parent element contains class name 'slds-truncate'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerLabel",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-truncate"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isEditPopOpened",
+            "description": {
+                "text": [
+                    "Checks if the cell edit popup is open or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "editPopup",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isColumnResizable",
+            "description": {
+                "text": [
+                    "Checks if the column is resizable If column header wrapper element contains class name 'slds-is-resizable'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerWrapper",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-resizable"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getTableScrollPosition",
+            "description": {
+                "text": [
+                    "Get table container scroll top position"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "scrollYContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "scrollTop"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTableScrollLeftPosition",
+            "description": {
+                "text": [
+                    "Get table container scroll left position"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "scrollXContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "scrollLeft"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isInlinedCellByLabel",
+            "description": {
+                "text": [
+                    "Checks if cell is inlined"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCellWrapperByLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isInlinedCellByIndex",
+            "description": {
+                "text": [
+                    "Checks if cell is inlined"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCellWrapperByIndex",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getInlinedCellText",
+            "description": {
+                "text": [
+                    "Get cell text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCellWrapperByLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getInlinedCellTextByIndex",
+            "description": {
+                "text": [
+                    "Get cell text by index"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCellWrapperByIndex",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isInlinedCellWrapped",
+            "description": {
+                "text": [
+                    "Checks if the cell is wrapped or not. If the parent element contains class name 'slds-hyphenate'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCellWrapperByIndex",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-hyphenate"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isInlinedCellClipped",
+            "description": {
+                "text": [
+                    "Checks if the cell is clipped or not. If the parent element contains class name 'slds-truncate'"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inlinedCellWrapperByIndex",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-truncate"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "inlineEditPanel",
+                "selector": {
+                    "css": "lightning-primitive-datatable-iedit-panel"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "editPopup",
+                            "selector": {
+                                "css": "section.slds-popover"
+                            },
+                            "nullable": true
+                        },
+                        {
+                            "name": "inlineEditPanelContent",
+                            "selector": {
+                                "css": "lightning-primitive-datatable-iedit-type-factory"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "inlineEditInput",
+                                        "type": "utam-lightning/pageObjects/input",
+                                        "selector": {
+                                            "css": "[data-inputable='true']"
+                                        },
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "customInlineEditInput",
+                                        "selector": {
+                                            "css": "[data-inputable='true']"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "customInlineEditInputContent",
+                                                    "type": "container",
+                                                    "selector": {
+                                                        "css": "[data-inputable='true']"
+                                                    },
+                                                    "public": true
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "massInlineEdit",
+                            "selector": {
+                                "css": "lightning-input[data-mass-selection='true']"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "massInlineEditPrimitiveCheckbox",
+                                        "selector": {
+                                            "css": "lightning-primitive-input-checkbox"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "massInlineEditCheckbox",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "label.slds-checkbox__label"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "cancelMassInlineEditBtn",
+                            "type": "utam-lightning/pageObjects/button",
+                            "selector": {
+                                "css": ".slds-popover__footer lightning-button:nth-child(1)"
+                            },
+                            "nullable": true
+                        },
+                        {
+                            "name": "applyMassInlineEditBtn",
+                            "type": "utam-lightning/pageObjects/button",
+                            "selector": {
+                                "css": ".slds-popover__footer lightning-button:nth-child(2)"
+                            },
+                            "nullable": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "navMode",
+                "selector": {
+                    "css": "span[aria-live='polite'] [data-keyboard-mode='navigation']"
+                },
+                "public": true
+            },
+            {
+                "name": "actionMode",
+                "selector": {
+                    "css": "span[aria-live='polite'] [data-keyboard-mode='action']"
+                },
+                "public": true
+            },
+            {
+                "name": "tableElement",
+                "selector": {
+                    "css": ".slds-table"
+                },
+                "elements": [
+                    {
+                        "name": "header",
+                        "selector": {
+                            "css": "[data-row-key-value='HEADER']"
+                        },
+                        "elements": [
+                            {
+                                "name": "columns",
+                                "selector": {
+                                    "css": "th, div[role='columnheader'], div[role='gridcell']",
+                                    "returnAll": true
+                                },
+                                "public": true
+                            },
+                            {
+                                "name": "selectionColumn",
+                                "selector": {
+                                    "css": "[data-col-key-value*='SELECTABLE_CHECKBOX']"
+                                },
+                                "elements": [
+                                    {
+                                        "name": "selectionColumnHeaderFactory",
+                                        "selector": {
+                                            "css": "lightning-primitive-header-factory"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "type": [
+                                                        "clickable"
+                                                    ],
+                                                    "name": "selectAllCheckbox",
+                                                    "selector": {
+                                                        "css": "input.datatable-select-all[type='checkbox'] + label"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "actionsMenuColumn",
+                                "selector": {
+                                    "css": "[data-col-key-value*='SELECTABLE_BUTTON_MENU']"
+                                },
+                                "public": true,
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "actionsMenuColumnHeaderFactory",
+                                        "selector": {
+                                            "css": "lightning-primitive-header-factory"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "actionsMenu",
+                                                    "type": "utam-lightning/pageObjects/buttonMenu",
+                                                    "selector": {
+                                                        "css": "lightning-button-menu"
+                                                    },
+                                                    "public": true
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "columnByIndex",
+                                "selector": {
+                                    "css": "[data-col-key-value]:nth-child(%d)",
+                                    "args": [
+                                        {
+                                            "name": "columnIndex",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "elements": [
+                                    {
+                                        "name": "headerFactoryByIndex",
+                                        "selector": {
+                                            "css": "lightning-primitive-header-factory"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "headerColumnByIndex",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "span"
+                                                    },
+                                                    "public": true,
+                                                    "elements": [
+                                                        {
+                                                            "name": "headerLabel",
+                                                            "selector": {
+                                                                "css": "span"
+                                                            },
+                                                            "public": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "columnByLabel",
+                                "selector": {
+                                    "css": "[aria-label='%s']",
+                                    "args": [
+                                        {
+                                            "name": "columnLabel",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "nullable": true,
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "sortableHeader",
+                                        "selector": {
+                                            "css": "lightning-primitive-header-factory.slds-is-sortable"
+                                        },
+                                        "nullable": true,
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "type": [
+                                                        "clickable"
+                                                    ],
+                                                    "name": "sortableHeaderLink",
+                                                    "selector": {
+                                                        "css": "a[role='button']"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "headerFactory",
+                                        "selector": {
+                                            "css": "lightning-primitive-header-factory"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "primitiveHeaderActions",
+                                                    "selector": {
+                                                        "css": "lightning-primitive-header-actions"
+                                                    },
+                                                    "nullable": true,
+                                                    "shadow": {
+                                                        "elements": [
+                                                            {
+                                                                "name": "headerActions",
+                                                                "type": "utam-lightning/pageObjects/buttonMenu",
+                                                                "selector": {
+                                                                    "css": "lightning-button-menu"
+                                                                },
+                                                                "public": true
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "name": "primitiveResizeHandler",
+                                                    "selector": {
+                                                        "css": "lightning-primitive-resize-handler"
+                                                    },
+                                                    "shadow": {
+                                                        "elements": [
+                                                            {
+                                                                "name": "resizeInput",
+                                                                "type": "clickable",
+                                                                "selector": {
+                                                                    "css": ".slds-resizable__input.slds-assistive-text"
+                                                                },
+                                                                "public": true
+                                                            },
+                                                            {
+                                                                "name": "resizeHandle",
+                                                                "type": [
+                                                                    "clickable",
+                                                                    "draggable"
+                                                                ],
+                                                                "selector": {
+                                                                    "css": ".slds-resizable__handle"
+                                                                },
+                                                                "public": true
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "name": "headerColumn",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "span"
+                                                    },
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "headerActionLink",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "a.slds-th__action"
+                                                    },
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "headerSortingIcon",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "a.slds-th__action lightning-primitive-icon"
+                                                    },
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "headerWrapper",
+                                                    "selector": {
+                                                        "css": ":scope > div"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "ascendingHeaderSort",
+                                "selector": {
+                                    "css": "[aria-label='%s'][aria-sort='ascending']",
+                                    "args": [
+                                        {
+                                            "name": "columnLabel",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "descendingHeaderSort",
+                                "selector": {
+                                    "css": "[aria-label='%s'][aria-sort='descending']",
+                                    "args": [
+                                        {
+                                            "name": "columnLabel",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "nullable": true,
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "headerRow",
+                        "selector": {
+                            "css": "[data-row-key-value='HEADER']"
+                        }
+                    },
+                    {
+                        "name": "body",
+                        "selector": {
+                            "css": "[data-rowgroup-body]"
+                        },
+                        "elements": [
+                            {
+                                "name": "lastRenderedRow",
+                                "nullable": true,
+                                "type": [
+                                    "actionable"
+                                ],
+                                "selector": {
+                                    "css": "[data-row-number]:last-child"
+                                },
+                                "public": true
+                            },
+                            {
+                                "name": "rows",
+                                "type": [
+                                    "actionable"
+                                ],
+                                "selector": {
+                                    "css": "[data-row-number]",
+                                    "returnAll": true
+                                },
+                                "public": true,
+                                "nullable": true
+                            },
+                            {
+                                "name": "row",
+                                "type": [
+                                    "actionable"
+                                ],
+                                "selector": {
+                                    "css": "[data-row-number='%d']",
+                                    "args": [
+                                        {
+                                            "name": "rowIndex",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "public": true,
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "rowTooltip",
+                                        "public": true,
+                                        "type": "utam-lightning/pageObjects/primitiveDatatableTooltip",
+                                        "nullable": true,
+                                        "selector": {
+                                            "css": "lightning-primitive-datatable-tooltip"
+                                        }
+                                    },
+                                    {
+                                        "name": "checkboxCell",
+                                        "selector": {
+                                            "css": "lightning-primitive-cell-checkbox"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "checkbox",
+                                                    "type": [
+                                                        "clickable",
+                                                        "editable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "span.slds-checkbox > input, span.slds-radio > input"
+                                                    },
+                                                    "nullable": true,
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "checkboxLabel",
+                                                    "type": "clickable",
+                                                    "selector": {
+                                                        "css": "span.slds-checkbox > input + label, span.slds-radio > input + label"
+                                                    },
+                                                    "nullable": true
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "inlinedCheckbox",
+                                        "type": [
+                                            "clickable",
+                                            "editable"
+                                        ],
+                                        "selector": {
+                                            "css": "span.slds-checkbox > input, span.slds-radio > input"
+                                        },
+                                        "nullable": true,
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "inlinedCheckboxLabel",
+                                        "type": "clickable",
+                                        "selector": {
+                                            "css": "span.slds-checkbox > input + label, span.slds-radio > input + label"
+                                        },
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "rowHeader",
+                                        "selector": {
+                                            "css": "th, [role='rowheader']"
+                                        },
+                                        "nullable": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "cellByIndex",
+                                "selector": {
+                                    "css": "[data-row-number='%d'] > :nth-child(%d)",
+                                    "args": [
+                                        {
+                                            "name": "rowIndex",
+                                            "type": "number"
+                                        },
+                                        {
+                                            "name": "columnIndex",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "type": [
+                                    "clickable",
+                                    "actionable"
+                                ],
+                                "public": true,
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "cellFactoryByColumnIndex",
+                                        "selector": {
+                                            "css": "lightning-primitive-cell-factory"
+                                        },
+                                        "public": true,
+                                        "nullable": true,
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "cellTooltip",
+                                                    "type": "utam-lightning/pageObjects/primitiveDatatableTooltip",
+                                                    "nullable": true,
+                                                    "selector": {
+                                                        "css": "lightning-primitive-datatable-tooltip"
+                                                    },
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "cellAlignmentByIndex",
+                                                    "selector": {
+                                                        "css": "span"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "cellToggleByIndex",
+                                                    "selector": {
+                                                        "css": "lightning-primitive-treegrid-cell-toggle"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "cellWrapperByIndex",
+                                                    "selector": {
+                                                        "css": "div"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true,
+                                                    "elements": [
+                                                        {
+                                                            "name": "cellIconsByIndex",
+                                                            "type": "utam-lightning/pageObjects/icon",
+                                                            "selector": {
+                                                                "css": "lightning-icon",
+                                                                "returnAll": true
+                                                            },
+                                                            "public": true,
+                                                            "nullable": true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "formattedUrlByColumnIndex",
+                                                    "type": "utam-lightning/pageObjects/formattedUrl",
+                                                    "selector": {
+                                                        "css": "lightning-formatted-url"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "formattedTextByColumnIndex",
+                                                    "type": "utam-lightning/pageObjects/formattedText",
+                                                    "selector": {
+                                                        "css": "lightning-base-formatted-text"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "formattedNumberByColumnIndex",
+                                                    "type": "utam-lightning/pageObjects/formattedNumber",
+                                                    "selector": {
+                                                        "css": "lightning-formatted-number"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "customCellByColumnIndex",
+                                                    "selector": {
+                                                        "css": "lightning-primitive-custom-cell"
+                                                    },
+                                                    "shadow": {
+                                                        "elements": [
+                                                            {
+                                                                "name": "customCellBySelector",
+                                                                "type": [
+                                                                    "clickable",
+                                                                    "actionable"
+                                                                ],
+                                                                "selector": {
+                                                                    "css": "%s",
+                                                                    "args": [
+                                                                        {
+                                                                            "name": "selector",
+                                                                            "type": "string"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "public": true
+                                                            },
+                                                            {
+                                                                "name": "customCellBySelectorTypeless",
+                                                                "type": "container",
+                                                                "selector": {
+                                                                    "css": "%s",
+                                                                    "args": [
+                                                                        {
+                                                                            "name": "selector",
+                                                                            "type": "string"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "public": true
+                                                            },
+                                                            {
+                                                                "name": "customCellContentByIndex",
+                                                                "type": "container",
+                                                                "selector": {
+                                                                    "css": ":scope *"
+                                                                },
+                                                                "public": true
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "name": "cellEditButton",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "button.slds-cell-edit__button"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "inlinedCellAlignmentByIndex",
+                                        "selector": {
+                                            "css": "span"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedCellWrapperByIndex",
+                                        "selector": {
+                                            "css": "div"
+                                        },
+                                        "public": true,
+                                        "nullable": true,
+                                        "elements": [
+                                            {
+                                                "name": "inlinedCellIconsByIndex",
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "selector": {
+                                                    "css": "lightning-icon",
+                                                    "returnAll": true
+                                                },
+                                                "public": true,
+                                                "nullable": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "inlinedFormattedUrlByColumnIndex",
+                                        "selector": {
+                                            "css": "[data-cell-type='url']"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedFormattedTextByColumnIndex",
+                                        "selector": {
+                                            "css": "[data-cell-type='text']"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedFormattedNumberByColumnIndex",
+                                        "selector": {
+                                            "css": "[data-cell-type='number'], [data-cell-type='currency'], [data-cell-type='percent']"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedCustomCellByColumnIndex",
+                                        "selector": {
+                                            "css": "lightning-primitive-custom-cell"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "inlinedCustomCellBySelector",
+                                                    "type": [
+                                                        "clickable",
+                                                        "actionable"
+                                                    ],
+                                                    "selector": {
+                                                        "css": "%s",
+                                                        "args": [
+                                                            {
+                                                                "name": "selector",
+                                                                "type": "string"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "inlinedCustomCellBySelectorTypeless",
+                                                    "type": "container",
+                                                    "selector": {
+                                                        "css": "%s",
+                                                        "args": [
+                                                            {
+                                                                "name": "selector",
+                                                                "type": "string"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "public": true
+                                                },
+                                                {
+                                                    "name": "inlinedCustomCellContentByIndex",
+                                                    "type": "container",
+                                                    "selector": {
+                                                        "css": ":scope *"
+                                                    },
+                                                    "public": true
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "inlinedCellEditButton",
+                                        "type": [
+                                            "clickable",
+                                            "actionable"
+                                        ],
+                                        "selector": {
+                                            "css": "button.slds-cell-edit__button"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "cellByLabel",
+                                "selector": {
+                                    "css": "[data-row-number='%d'] > [data-label='%s']",
+                                    "args": [
+                                        {
+                                            "name": "rowIndex",
+                                            "type": "number"
+                                        },
+                                        {
+                                            "name": "columnLabel",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "public": true,
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "cellFactoryByLabel",
+                                        "selector": {
+                                            "css": "lightning-primitive-cell-factory"
+                                        },
+                                        "nullable": true,
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "cellAlignmentByLabel",
+                                                    "selector": {
+                                                        "css": "span"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "cellWrapperByLabel",
+                                                    "selector": {
+                                                        "css": "div"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true,
+                                                    "elements": [
+                                                        {
+                                                            "name": "cellIconsByLabel",
+                                                            "type": "utam-lightning/pageObjects/icon",
+                                                            "selector": {
+                                                                "css": "lightning-icon",
+                                                                "returnAll": true
+                                                            },
+                                                            "public": true,
+                                                            "nullable": true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "formattedUrlByLabel",
+                                                    "type": "utam-lightning/pageObjects/formattedUrl",
+                                                    "selector": {
+                                                        "css": "lightning-formatted-url"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "formattedTextByLabel",
+                                                    "type": "utam-lightning/pageObjects/formattedText",
+                                                    "selector": {
+                                                        "css": "lightning-base-formatted-text"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "formattedNumberByLabel",
+                                                    "type": "utam-lightning/pageObjects/formattedNumber",
+                                                    "selector": {
+                                                        "css": "lightning-formatted-number"
+                                                    },
+                                                    "public": true,
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "customCellByLabel",
+                                                    "selector": {
+                                                        "css": "lightning-primitive-custom-cell"
+                                                    },
+                                                    "shadow": {
+                                                        "elements": [
+                                                            {
+                                                                "name": "customCellContentByLabel",
+                                                                "type": "container",
+                                                                "selector": {
+                                                                    "css": ":scope *"
+                                                                },
+                                                                "public": true
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "inlinedCellAlignmentByLabel",
+                                        "selector": {
+                                            "css": "span"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedCellWrapperByLabel",
+                                        "selector": {
+                                            "css": "div"
+                                        },
+                                        "public": true,
+                                        "nullable": true,
+                                        "elements": [
+                                            {
+                                                "name": "inlinedCellIconsByLabel",
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "selector": {
+                                                    "css": "lightning-icon",
+                                                    "returnAll": true
+                                                },
+                                                "public": true,
+                                                "nullable": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "inlinedFormattedUrlByLabel",
+                                        "selector": {
+                                            "css": "[data-cell-type='url']"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedFormattedTextByLabel",
+                                        "selector": {
+                                            "css": "[data-cell-type='text']"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedFormattedNumberByLabel",
+                                        "selector": {
+                                            "css": "[data-cell-type='number'], [data-cell-type='currency'], [data-cell-type='percent']"
+                                        },
+                                        "public": true,
+                                        "nullable": true
+                                    },
+                                    {
+                                        "name": "inlinedCustomCellByLabel",
+                                        "selector": {
+                                            "css": "lightning-primitive-custom-cell"
+                                        },
+                                        "shadow": {
+                                            "elements": [
+                                                {
+                                                    "name": "inlinedCustomCellContentByLabel",
+                                                    "type": "container",
+                                                    "selector": {
+                                                        "css": ":scope *"
+                                                    },
+                                                    "public": true
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "lastCell",
+                                "selector": {
+                                    "css": "[data-row-number='%d'] > [data-col-key-value]:last-child lightning-primitive-cell-factory",
+                                    "args": [
+                                        {
+                                            "name": "rowIndex",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "nullable": true,
+                                "shadow": {
+                                    "elements": [
+                                        {
+                                            "name": "primitiveCellActions",
+                                            "type": [
+                                                "actionable"
+                                            ],
+                                            "selector": {
+                                                "css": "lightning-primitive-cell-actions"
+                                            },
+                                            "nullable": true,
+                                            "shadow": {
+                                                "elements": [
+                                                    {
+                                                        "name": "rowAction",
+                                                        "public": true,
+                                                        "type": "utam-lightning/pageObjects/buttonMenu",
+                                                        "selector": {
+                                                            "css": "lightning-button-menu"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "tableLoader",
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-primitive-datatable-loading-indicator"
+                }
+            },
+            {
+                "name": "statusBar",
+                "selector": {
+                    "css": "lightning-primitive-datatable-status-bar"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "cancelButton",
+                            "type": [
+                                "clickable",
+                                "actionable"
+                            ],
+                            "selector": {
+                                "css": "button.slds-button_neutral"
+                            },
+                            "public": true
+                        },
+                        {
+                            "name": "saveButton",
+                            "type": [
+                                "clickable",
+                                "actionable"
+                            ],
+                            "selector": {
+                                "css": "button.save-btn"
+                            },
+                            "public": true
+                        },
+                        {
+                            "name": "tooltip",
+                            "type": "utam-lightning/pageObjects/primitiveDatatableTooltip",
+                            "selector": {
+                                "css": "lightning-primitive-datatable-tooltip"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "scrollXContainer",
+                "selector": {
+                    "css": ".slds-scrollable_x"
+                }
+            },
+            {
+                "name": "scrollYContainer",
+                "selector": {
+                    "css": ".slds-scrollable_y"
+                }
+            }
+        ]
+    }
+}

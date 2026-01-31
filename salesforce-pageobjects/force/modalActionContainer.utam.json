@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceModalActionContainer.",
+            "Represents the force:modalActionContainer Aura component.",
+            "Get all the force:actionButton component by label text."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceModalActionContainer"
+    },
+    "elements": [
+        {
+            "name": "actionButton",
+            "type": "utam-force/pageObjects/actionButton",
+            "public": true,
+            "selector": {
+                "css": ".forceActionButton",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabel",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

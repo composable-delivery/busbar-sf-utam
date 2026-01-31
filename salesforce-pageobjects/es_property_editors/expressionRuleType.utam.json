@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a modal body interface for building expressions with criteria and resources. It supports updating conditions, fetching resources, and managing the number of conditions.",
+            "Selector: src-expression-rule-type"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "expressionBuilderModalBody",
+                "selector": {
+                    "css": "builder_framework-expression-builder-modal-body"
+                },
+                "type": "utam-builder-framework/pageObjects/expressionBuilderModalBody",
+                "description": "Represents the entire expression builder modal body component.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

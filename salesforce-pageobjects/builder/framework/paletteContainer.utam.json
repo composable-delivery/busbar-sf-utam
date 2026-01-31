@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: paletteContainer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "h2Content",
+                "type": [],
+                "selector": {
+                    "css": "h2"
+                }
+            },
+            {
+                "public": true,
+                "name": "labelContent",
+                "type": [],
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input.palette-search-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "palette",
+                "type": "utam-builder-framework/pageObjects/palette",
+                "selector": {
+                    "css": "builder_framework-palette"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "filterrhsContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='filter-rhs']"
+            }
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the screen viewing and accepting the EULA."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/sfsEula",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "selector": {
+        "uiautomator": "new UiSelector().className(\"android.widget.TextView\").text(\"I AGREE\")"
+    },
+    "methods": [
+        {
+            "name": "accept",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

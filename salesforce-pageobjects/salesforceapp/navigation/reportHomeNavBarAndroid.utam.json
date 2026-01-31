@@ -1,0 +1,78 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/toolbar\").",
+            "Represents the Android navigation bar at the top of a report.",
+            "Get the report name or navigate back from the report."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/reportHomeNavBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/toolbar\")"
+    },
+    "elements": [
+        {
+            "name": "reportName",
+            "selector": {
+                "uiautomator": "className(\"android.widget.TextView\")"
+            }
+        },
+        {
+            "name": "backButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "className(\"android.widget.ImageButton\").description(\"Navigate up\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getReportName",
+            "compose": [
+                {
+                    "element": "reportName",
+                    "apply": "getText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "goBack",
+            "compose": [
+                {
+                    "element": "backButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

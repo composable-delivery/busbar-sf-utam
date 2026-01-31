@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/tab_fragment_container\").",
+            "Represents the Android scrollview that contains the 'All Items' search bar and item list.",
+            "Start a search or interact with the existing list of items."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/allItemsNav",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/tab_fragment_container\")"
+    },
+    "elements": [
+        {
+            "name": "searchBar",
+            "type": "utam-salesforceapp/pageObjects/navigation/searchBar",
+            "selector": {
+                "uiautomator": "resourceIdMatches(\"^.*/(all_items_search_Bar|search_bar_container)\")"
+            },
+            "public": true
+        },
+        {
+            "name": "navItemsList",
+            "type": "utam-salesforceapp/pageObjects/navigation/navItemsList",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/view_allItems\")"
+            },
+            "public": true
+        }
+    ]
+}

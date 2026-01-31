@@ -1,0 +1,76 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/compose_view\").",
+            "Represents the Android Offline object home window.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectHome",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/compose_view\")"
+    },
+    "elements": [
+        {
+            "name": "recordList",
+            "public": true,
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList",
+            "selector": {
+                "uiautomator": "resourceId(\"briefcase_recordsList\")"
+            }
+        },
+        {
+            "name": "searchField",
+            "selector": {
+                "uiautomator": "resourceId(\"search_field\")"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "pullToRefresh",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": 400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickSearch",
+            "compose": [
+                {
+                    "element": "searchField",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

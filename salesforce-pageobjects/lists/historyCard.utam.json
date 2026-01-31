@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-history-card.",
+            "Represents the history card Lightning web component.",
+            "Access the title, labels, and fields in the card."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "fieldLabels",
+                "public": true,
+                "selector": {
+                    "css": ".slds-item_label",
+                    "returnAll": true
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/templateListField",
+                "name": "fields",
+                "public": true,
+                "selector": {
+                    "css": "lst-template-list-field",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "title",
+                "public": true,
+                "selector": {
+                    "css": ".slds-tile__title"
+                }
+            }
+        ]
+    }
+}

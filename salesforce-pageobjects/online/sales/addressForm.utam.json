@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: AddressForm"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "inputs",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "combos",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

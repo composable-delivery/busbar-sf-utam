@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Android table in the report home view."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/reportTable",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ]
+}

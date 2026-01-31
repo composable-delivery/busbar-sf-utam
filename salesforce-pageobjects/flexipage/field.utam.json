@@ -1,0 +1,78 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-field.",
+            "Represents the flexipage-field Lightning web component.",
+            "Wait for the field content to load. Get the field content using the container element."
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForRecordFieldContent",
+            "description": "Waits for the record field content to be displayed",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "records-record-layout-base-input"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForAIRecordFieldContent",
+            "description": "Waits for the AI enabled record field content to be displayed",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "record_flexipage-record-field"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "recordFieldContent",
+            "public": true,
+            "type": "container",
+            "selector": {
+                "css": ":scope *"
+            }
+        }
+    ]
+}

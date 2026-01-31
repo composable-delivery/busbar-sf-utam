@@ -1,0 +1,69 @@
+{
+    "description": {
+        "text": [
+            "Represents the Opportunity Card tile component in the generative canvas",
+            "Displays opportunity card information"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "opportunityCardSummary",
+                "public": true,
+                "description": "The opportunity card summary that displays the opportunity name",
+                "selector": {
+                    "css": "h3[class*='titleStyle']+p"
+                }
+            },
+            {
+                "name": "viewOpportunityButton",
+                "public": true,
+                "description": "The view opportunity button that displays the opportunity details",
+                "selector": {
+                    "css": "a[class*='slds-button']"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            },
+            {
+                "name": "dealClosePlanText",
+                "public": true,
+                "description": "The opportunity card footer that displays the opportunity details",
+                "selector": {
+                    "css": "h3[class*='slds-text-heading_small']",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "dealCloseTileText",
+                "public": true,
+                "description": "The opportunity card footer that displays the opportunity details",
+                "selector": {
+                    "css": "h4[class*='dealCloseTitle']",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "dealCloseTileBodyText",
+                "public": true,
+                "description": "The opportunity card footer that displays the opportunity details",
+                "selector": {
+                    "css": "h4[class*='dealCloseTitle']+p",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "textContentIsAIGenerated",
+                "public": true,
+                "description": "Footer component of the Meeting Goals Composer tile",
+                "selector": {
+                    "css": "sales_gencanvas-tile-footer"
+                },
+                "type": "utam-sales-gencanvas/pageObjects/tileFooter"
+            }
+        ]
+    }
+}

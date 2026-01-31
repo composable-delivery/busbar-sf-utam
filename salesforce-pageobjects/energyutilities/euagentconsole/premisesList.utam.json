@@ -1,0 +1,48 @@
+{
+    "selector": {
+        "css": "euagentconsole-premises-list"
+    },
+    "root": true,
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "groupedCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            },
+            {
+                "public": true,
+                "name": "groupedCombobox1",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedText",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "servicePointsList",
+                "type": "utam-energyutilities-euagentconsole/pageObjects/servicePointsList",
+                "selector": {
+                    "css": "c-service-points-list"
+                }
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

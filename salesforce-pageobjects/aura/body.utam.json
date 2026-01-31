@@ -1,0 +1,510 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "message",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "div.messageText"
+            },
+            "public": true
+        },
+        {
+            "name": "inputBoxByValue",
+            "type": [
+                "editable",
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": "input[value$='%s']",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "buttonByValueAttribute",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "css": "input[type='button'][value*='%s']",
+                "args": [
+                    {
+                        "name": "value",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "title",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "h2.pageDescription"
+            },
+            "public": true
+        },
+        {
+            "name": "eciHeader",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "span.slds-text-heading_medium.title-header"
+            },
+            "public": true
+        },
+        {
+            "name": "selectQuiz",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": ".th-quiz__item-text",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "PrivacyCheckbox",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": "input[type='checkbox']",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "submit",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": "button[type='submit']",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "spinner",
+            "public": true,
+            "selector": {
+                "css": "lightning-spinner.slds-spinner_container"
+            }
+        },
+        {
+            "name": "enterMessage",
+            "type": "editable",
+            "selector": {
+                "css": "div.ql-editor",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "addPage",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": ".addPage"
+            }
+        },
+        {
+            "name": "addSurveyQuestion",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": ".survey-question-creator-button"
+            }
+        },
+        {
+            "name": "surveyQuestionType",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": ".survey-question-type",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "activateSurvey",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": "button.draft"
+            }
+        },
+        {
+            "name": "surveyLeftPanelIteam",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": "div.surveyBuilderLeftPanelSurveyItem",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "activateSurveyConfirmation",
+            "public": true,
+            "type": "clickable",
+            "selector": {
+                "css": "button.primaryButton"
+            }
+        },
+        {
+            "name": "viewProfile",
+            "type": "clickable",
+            "selector": {
+                "css": ".slds-global-actions__avatar"
+            }
+        },
+        {
+            "name": "profileCard",
+            "type": "clickable",
+            "selector": {
+                "css": "a.profile-link-label",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "createContentButton",
+            "type": "clickable",
+            "public": true,
+            "selector": {
+                "css": "button.slds-button.slds-button_brand.saveButton"
+            }
+        },
+        {
+            "name": "createFlow",
+            "type": "clickable",
+            "public": true,
+            "selector": {
+                "css": ".bRight > button:nth-of-type(2)"
+            }
+        },
+        {
+            "name": "unenrollButton",
+            "type": "clickable",
+            "public": true,
+            "selector": {
+                "css": "button[title='Unenroll']"
+            }
+        },
+        {
+            "name": "permissionSetLabel",
+            "type": "clickable",
+            "selector": {
+                "css": ".inlineEditLockHidden",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "cancelButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "'button:nth-of-type(1)"
+            }
+        },
+        {
+            "name": "saveButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button:nth-of-type(2)"
+            }
+        },
+        {
+            "name": "selectSegments",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "div:nth-of-type('%d')>div >input[type=checkbox]",
+                "args": [
+                    {
+                        "name": "segmentDisplayOrder",
+                        "type": "number"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "saveApplyButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button[title='Save + Apply']"
+            }
+        },
+        {
+            "name": "enterDetailComboBox",
+            "type": "editable",
+            "selector": {
+                "css": "input[role=combobox]"
+            }
+        },
+        {
+            "name": "filterValueInDropdown",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "li.lookup__item a .primaryLabel[title='%s']",
+                "args": [
+                    {
+                        "name": "cadenceName",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "opportunityLoadingSpinner",
+            "public": true,
+            "selector": {
+                "css": "div.forceModalSpinner"
+            }
+        },
+        {
+            "name": "onSaveOpportunityLoadingSpinner",
+            "public": true,
+            "selector": {
+                "css": "div.indicatorContainer.forceInlineSpinner.darkened"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getViewProfile",
+            "description": {
+                "text": [
+                    "Gets the profile avatar icon"
+                ],
+                "return": "the profile avatar icon"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "viewProfile"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getProfileCard",
+            "description": {
+                "text": [
+                    "Gets the profile card"
+                ],
+                "return": "the profile card"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "profileCard"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getEnterMessage",
+            "description": {
+                "text": [
+                    "Gets element to enter a message"
+                ],
+                "return": "the element used to enter a message"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "enterMessage"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForCancelButton",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "cancelButton"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForSaveButton",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "saveButton"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForSaveApplyButton",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "saveApplyButton"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForSelectSegments",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "selectSegments"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "enterDetailComboBox",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "enterDetailComboBox"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "filterValueInDropdown",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "filterValueInDropdown"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getPermissionSetLabelLinkByRowNum",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "permissionSetLabel"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

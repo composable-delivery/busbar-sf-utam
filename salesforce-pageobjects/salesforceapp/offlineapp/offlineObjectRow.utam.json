@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Briefcase Object row view.",
+            "Verify the downloaded objects."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "getText",
+            "returnType": "string"
+        },
+        {
+            "name": "clickRow"
+        }
+    ]
+}

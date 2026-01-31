@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: community_builder-option-visual-picker",
+            "Represents the option picker component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "optionVisualPickerItems",
+                "type": "utam-community_builder/pageObjects/optionVisualPickerItem",
+                "selector": {
+                    "css": "community_builder-option-visual-picker-item",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "optionVisualPickerItemByIndex",
+                "type": "utam-community_builder/pageObjects/optionVisualPickerItem",
+                "selector": {
+                    "css": "community_builder-option-visual-picker-item:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

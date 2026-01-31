@@ -1,0 +1,175 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of projects, allows searching through the projects, and provides a card view or state message based on the projects available.",
+            "Selector: dev_workspace-project-home-page-list"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-project-home-page-list"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinnerOverlay",
+                "selector": {
+                    "css": ".spinner-overlay"
+                },
+                "description": "Represents the spinner overlay shown when data is loading",
+                "nullable": true,
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "spinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        },
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "description": "Represents the spinner component indicating loading state",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "searchInput",
+                "selector": {
+                    "css": "lightning-input.slds-grid"
+                },
+                "type": [
+                    "actionable",
+                    "clickable",
+                    "editable"
+                ],
+                "description": "Represents the input field for searching projects"
+            },
+            {
+                "name": "projectsCountText",
+                "selector": {
+                    "css": ".slds-col.slds-size_1-of-2 > div > span:first-child"
+                },
+                "description": "Represents the text displaying the count of filtered projects"
+            },
+            {
+                "name": "sortByText",
+                "selector": {
+                    "css": ".slds-col.slds-size_1-of-2 > div > span:last-child"
+                },
+                "description": "Represents the text displaying the sorting order of the projects"
+            },
+            {
+                "name": "cardViewList",
+                "selector": {
+                    "css": "dev_workspace-card-view-list"
+                },
+                "type": "utam-dev-workspace/pageObjects/cardViewList",
+                "description": "Represents the custom component that displays the list of projects in card view format",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "stateScreen",
+                "selector": {
+                    "css": "dev_workspace-state-screen"
+                },
+                "type": "utam-dev-workspace/pageObjects/stateScreen",
+                "description": "Represents the custom component that displays a state message when there are no projects or an error occurred",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "enterSearchTerm",
+            "description": {
+                "text": [
+                    "Clears the search input field and types a new search term"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clear"
+                },
+                {
+                    "element": "searchInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getProjectsCountText",
+            "description": {
+                "text": [
+                    "Returns the text of the projects count element"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "projectsCountText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSortByText",
+            "description": {
+                "text": [
+                    "Returns the text of the sort by element"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sortByText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isSearchInputFocused",
+            "description": {
+                "text": [
+                    "Checks if the search input field is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isSearchInputPresent",
+            "description": {
+                "text": [
+                    "Checks if the search input field is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

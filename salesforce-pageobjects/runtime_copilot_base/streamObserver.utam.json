@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component designed to handle and display streamable messages, which can be either in markdown format or as attributes resolved through a streaming service. It can dynamically render a child component based on the streamed data and allows interaction with slots.",
+            "Selector: src-stream-observer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "slotContainer",
+                "selector": {
+                    "css": ":scope > *:first-child"
+                },
+                "type": "container",
+                "description": "Represents the default slot for the component which may contain a dynamic component.",
+                "public": true
+            },
+            {
+                "name": "baseMarkdown",
+                "selector": {
+                    "css": "runtime_copilot_base-base-markdown-text"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseMarkdownText",
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "dynamicComponent",
+                "selector": {
+                    "css": "[data-streaming-component]"
+                },
+                "type": "container",
+                "description": "Represents the dynamic component which is loaded based on the streamable data.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getChatText",
+            "description": {
+                "text": [
+                    "Check if the recommendation container is visible"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "baseMarkdown",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

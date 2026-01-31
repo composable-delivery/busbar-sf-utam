@@ -1,0 +1,133 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a welcome message, an image, and a dynamic section which might include additional information or action definitions. A spinner is shown while the initial message is being loaded.",
+            "Selector: src-welcome-view"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "welcomeContainer",
+                "selector": {
+                    "css": ".welcome-container"
+                },
+                "description": "Represents the main container of the welcome component.",
+                "elements": [
+                    {
+                        "name": "dynamicImage",
+                        "selector": {
+                            "css": "runtime_copilot_base-dynamic-image"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/dynamicImage",
+                        "description": "Represents the dynamic image component within the welcome container.",
+                        "public": true
+                    },
+                    {
+                        "name": "welcomeHeading",
+                        "selector": {
+                            "css": ".copilot-welcome-heading"
+                        },
+                        "type": "actionable",
+                        "description": "Represents the heading element that is focusable."
+                    },
+                    {
+                        "name": "spinner",
+                        "selector": {
+                            "css": ".welcome-spinner-holder lightning-spinner"
+                        },
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "description": "Represents the spinner shown while content is loading.",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "welcomeText",
+                        "selector": {
+                            "css": ".copilot-welcome-text runtime_copilot_base-view-more-less"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewMoreLess",
+                        "description": "Represents the text section with a view-more-less component.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "viewComponentContainer",
+                        "selector": {
+                            "css": ".view-component-container"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "description": "Represents the container for the dynamic view component.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isWelcomeContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the welcome container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "welcomeContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "focusOnWelcomeHeading",
+            "description": {
+                "text": [
+                    "Move focus to the welcome heading"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "welcomeHeading",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "isViewComponentContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the view component container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "viewComponentContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyViewComponentContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"viewComponentContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "viewComponentContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

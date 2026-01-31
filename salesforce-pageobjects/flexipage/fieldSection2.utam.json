@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-field-section2.",
+            "Represents the flexipage-field-section2 Lightning web component. ",
+            "Get the section content using the container element."
+        ]
+    },
+    "elements": [
+        {
+            "name": "inputSlot",
+            "selector": {
+                "css": "[slot='columns']"
+            },
+            "elements": [
+                {
+                    "name": "content",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope *",
+                        "returnAll": true
+                    },
+                    "public": true
+                }
+            ]
+        }
+    ]
+}

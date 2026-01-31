@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Service Report section of a Work Order."
+        ]
+    },
+    "interface": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "openServiceReport"
+        }
+    ]
+}

@@ -1,0 +1,97 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/container\").className(\"android.widget.FrameLayout\").",
+            "Represents the Android frame layout of favorite cells.",
+            "Find a record and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/favoriteList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "visibleFavoriteRecords",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/favorite_title\")",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "recordWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"com.salesforce.chatter:id/favorite_title\").text(\"%s\"))",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "visibleFavoriteRecordWithTitle",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "classchain": "resourceId(\"com.salesforce.chatter:id/favorite_title\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasRecord",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "recordWithTitle",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickRecordWithTitle",
+            "compose": [
+                {
+                    "element": "recordWithTitle",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

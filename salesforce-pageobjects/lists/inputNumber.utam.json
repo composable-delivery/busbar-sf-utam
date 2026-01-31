@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-input-number.",
+            "Represents the lists input number Lightning web component.",
+            "Access the inner input component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/input",
+                "name": "input",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input"
+                }
+            }
+        ]
+    }
+}

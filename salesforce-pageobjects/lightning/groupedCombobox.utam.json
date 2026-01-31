@@ -1,0 +1,381 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-grouped-combobox",
+            "Represents the lightning-grouped-combobox Lightning web component. Retrieve the lightning-base-combobox component.",
+            "Get the label text or check if it's a required field."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "label[data-main-label]"
+                },
+                "elements": [
+                    {
+                        "name": "required",
+                        "selector": {
+                            "css": ".slds-required"
+                        },
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "helpmessage",
+                "selector": {
+                    "css": "[data-help-message]"
+                },
+                "public": false,
+                "nullable": true
+            },
+            {
+                "name": "helptext",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "public": true
+            },
+            {
+                "name": "baseCombobox",
+                "type": "utam-lightning/pageObjects/baseCombobox",
+                "selector": {
+                    "css": "lightning-base-combobox[data-lookup]"
+                },
+                "public": true
+            },
+            {
+                "name": "filteredCombo",
+                "type": "utam-lightning/pageObjects/baseCombobox",
+                "selector": {
+                    "css": "lightning-base-combobox[data-filter]"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "filterLabel",
+                "selector": {
+                    "css": "label[data-filter-label]"
+                },
+                "nullable": true
+            },
+            {
+                "name": "pillContainer",
+                "type": "utam-lightning/pageObjects/pillContainer",
+                "selector": {
+                    "css": "lightning-pill-container"
+                },
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getHelpMessageText",
+            "description": {
+                "text": [
+                    "Get help message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "helpmessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get grouped combobox main label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getFilterLabelText",
+            "description": {
+                "text": [
+                    "Get filter label text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "filterLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Checks if the combobox is required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "required",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "typeText",
+            "description": {
+                "text": [
+                    "Type a text into the combobox input"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "setTriggerText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputText",
+            "description": {
+                "text": [
+                    "Gets the input text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "baseCombobox",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "pickItemByLabel",
+            "description": {
+                "text": [
+                    "Performs click action on the combobox list item based on the text value"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "expand",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                },
+                {
+                    "element": "baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "pickItemByLabel",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputPillLabel",
+            "description": {
+                "text": [
+                    "Gets the label of the item selected in the input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputAttribute",
+                    "args": [
+                        {
+                            "value": "value"
+                        }
+                    ],
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "isDisabled",
+            "description": {
+                "text": [
+                    "Checks if groupedCombobox is disabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "baseCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "isDisabled",
+                    "returnType": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "deletePill",
+            "description": {
+                "text": [
+                    "Delete pill by index (starts at 1)."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "pillContainer",
+                    "apply": "deleteByIndex",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "deleteAllPills",
+            "description": {
+                "text": [
+                    "Delete all the selected records from the pill container."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "pillContainer",
+                    "apply": "deleteAllPills"
+                }
+            ]
+        },
+        {
+            "name": "getAllPillLabels",
+            "description": {
+                "text": [
+                    "Get all the pill labels from the pill container."
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "pillContainer",
+                    "apply": "getAllPillLabels",
+                    "returnAll": true,
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "clearSelection",
+            "description": {
+                "text": [
+                    "Clears the selection (inputPill)."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "baseCombobox",
+                    "apply": "clearSelection"
+                }
+            ]
+        },
+        {
+            "name": "expandFilterCombobox",
+            "description": {
+                "text": [
+                    "Expands the filter combobox."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "filteredCombo",
+                    "apply": "expand"
+                }
+            ]
+        },
+        {
+            "name": "selectItemInFilterComboboxByValue",
+            "description": {
+                "text": [
+                    "Selects an item in the filter combobox by value."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "filteredCombo",
+                    "apply": "selectItemByValue",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isFilteredComboboxPresent",
+            "description": {
+                "text": [
+                    "Determine if the filter combobox is present in the DOM or not."
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "filteredCombo",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

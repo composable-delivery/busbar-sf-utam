@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-template-list-field.",
+            "Represents the template list item factory Lightning web component.",
+            "Access supported field components."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/outputLookup",
+                "name": "outputLookup",
+                "public": true,
+                "selector": {
+                    "css": "lst-output-lookup"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formattedNumber",
+                "name": "formattedNumber",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-number"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "name": "formattedRichText",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/formattedText",
+                "name": "formattedText",
+                "public": true,
+                "selector": {
+                    "css": "lst-formatted-text"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formattedUrl",
+                "name": "formattedUrl",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-url"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formattedPhone",
+                "name": "formattedPhone",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-phone"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formattedEmail",
+                "name": "formattedEmail",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-email"
+                }
+            },
+            {
+                "type": "container",
+                "public": true,
+                "name": "container"
+            }
+        ]
+    }
+}

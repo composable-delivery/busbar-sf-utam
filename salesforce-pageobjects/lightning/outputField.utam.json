@@ -1,0 +1,485 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-output-field",
+            "Represents the lightning-output-field Lightning web component.",
+            "Get the output field's label text.",
+            "Get the string value of the name, text, phone, rich text, lookup, email, number, location, url, or address based on the component type."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "outputFieldLabel",
+                "selector": {
+                    "css": ".slds-form-element__label"
+                }
+            },
+            {
+                "name": "formattedLocation",
+                "type": "utam-lightning/pageObjects/formattedLocation",
+                "selector": {
+                    "css": "lightning-formatted-location"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedName",
+                "type": "utam-lightning/pageObjects/formattedName",
+                "selector": {
+                    "css": "lightning-formatted-name"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedNumber",
+                "type": "utam-lightning/pageObjects/formattedNumber",
+                "selector": {
+                    "css": "lightning-formatted-number"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedPhone",
+                "type": "utam-lightning/pageObjects/formattedPhone",
+                "selector": {
+                    "css": "lightning-formatted-phone"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedAddress",
+                "type": "utam-lightning/pageObjects/formattedAddress",
+                "selector": {
+                    "css": "lightning-formatted-address"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedLookup",
+                "type": "utam-lightning/pageObjects/formattedLookup",
+                "selector": {
+                    "css": "lightning-formatted-lookup"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedEmail",
+                "type": "utam-lightning/pageObjects/formattedEmail",
+                "selector": {
+                    "css": "lightning-formatted-email"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedRichText",
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedText",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                },
+                "public": true
+            },
+            {
+                "name": "formattedUrl",
+                "type": "utam-lightning/pageObjects/formattedUrl",
+                "selector": {
+                    "css": "lightning-formatted-url"
+                },
+                "public": true
+            },
+            {
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get output field label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "outputFieldLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getNameString",
+            "description": {
+                "text": [
+                    "Get name output field formatted display value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedName"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedName",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getTextString",
+            "description": {
+                "text": [
+                    "Get text output field formatted display value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedText"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedText",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getComboboxString",
+            "description": {
+                "text": [
+                    "Get combobox output field formatted display value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedText"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedText",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getNumberString",
+            "description": {
+                "text": [
+                    "Get number output field formatted display value number or double"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedNumber"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedNumber",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getEmailString",
+            "description": {
+                "text": [
+                    "Get email output field display email address value with the mailto: URL scheme"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedEmail"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedEmail",
+                    "apply": "getLinkInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getLocationString",
+            "description": {
+                "text": [
+                    "Get location latitude and longitude display values in decimal degrees format: 90.0000, 180.0000"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "formattedLocation",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getPhoneString",
+            "description": {
+                "text": [
+                    "Get phone output field display phone number with the tel: URL scheme"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedPhone"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedPhone",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getUrlString",
+            "description": {
+                "text": [
+                    "Get the URL value from the href attribute of lightning-formatted-url link"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedUrl"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedUrl",
+                    "apply": "getUrl",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getRichtextString",
+            "description": {
+                "text": [
+                    "Get the rich text content value of lightning-formatted-rich-text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "formattedRichText",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getLookupString",
+            "description": {
+                "text": [
+                    "Get the lightning-formatted-lookup display value as text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedLookup"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "formattedLookup",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getAddressString",
+            "description": {
+                "text": [
+                    "Get the formatted address display value as text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "formattedAddress"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "returnType": "string",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/outputFieldUtils",
+                        "invoke": "getAddress"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getFieldValue",
+            "description": {
+                "text": [
+                    "Get the field value based on it's field type"
+                ],
+                "return": "string | null",
+                "throws": "Error if field type is unknown"
+            },
+            "compose": [
+                {
+                    "returnType": "string",
+                    "applyExternal": {
+                        "type": "utam-lightning/utils/outputFieldUtils",
+                        "invoke": "getFieldValue",
+                        "args": [
+                            {
+                                "name": "fieldType",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getClassName",
+            "description": {
+                "text": [
+                    "Get output field class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetInput",
+            "description": {
+                "text": [
+                    "wait for input element to load"
+                ],
+                "return": "utam-lightning/pageObjects/input"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "input"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

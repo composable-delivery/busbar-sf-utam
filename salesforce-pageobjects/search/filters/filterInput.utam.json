@@ -1,0 +1,80 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: search_filters-filter-input",
+            "Represents a filter input component to filter search results",
+            "Access the underlying type specific filter input such as single-select"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getFilterLabel",
+            "description": {
+                "text": [
+                    "Get label text for filter"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-search-filters/utils/filterInputUtils",
+                        "invoke": "getFilterLabel"
+                    },
+                    "returnType": "string"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "filterSingleSelect",
+                "selector": {
+                    "css": "search_filters-filter-input-single-select"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "combobox",
+                            "type": "utam-lightning/pageObjects/combobox",
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-combobox"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "range",
+                "type": "utam-search-filters/pageObjects/range",
+                "public": true,
+                "selector": {
+                    "css": "search_filters-range"
+                },
+                "nullable": true
+            },
+            {
+                "name": "select",
+                "type": "utam-search-filters/pageObjects/select",
+                "public": true,
+                "selector": {
+                    "css": "search_filters-select"
+                },
+                "nullable": true
+            },
+            {
+                "name": "text",
+                "type": "utam-search-filters/pageObjects/text",
+                "public": true,
+                "selector": {
+                    "css": "search_filters-text"
+                },
+                "nullable": true
+            }
+        ]
+    }
+}

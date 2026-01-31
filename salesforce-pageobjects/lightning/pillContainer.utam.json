@@ -1,0 +1,106 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-pill-container",
+            "Represents the lightning-pill-container Lightning web component.",
+            "Get all the pills from the container."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "allPills",
+                "type": "utam-lightning/pageObjects/pill",
+                "selector": {
+                    "css": "lightning-pill",
+                    "returnAll": true
+                },
+                "public": true
+            },
+            {
+                "name": "moreButton",
+                "nullable": true,
+                "type": "clickable",
+                "public": true,
+                "selector": {
+                    "css": ".slds-listbox-toggle .slds-button"
+                }
+            },
+            {
+                "name": "pillByIndex",
+                "type": "utam-lightning/pageObjects/pill",
+                "selector": {
+                    "css": "lightning-pill:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "public": false,
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAllPillLabels",
+            "description": {
+                "text": [
+                    "Get all the pill labels from the pill container."
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "allPills",
+                    "apply": "getLabelText",
+                    "returnType": "string",
+                    "returnAll": true
+                }
+            ]
+        },
+        {
+            "name": "deleteAllPills",
+            "description": {
+                "text": [
+                    "Delete all the selected records from the pill container."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "allPills",
+                    "apply": "remove"
+                }
+            ]
+        },
+        {
+            "name": "deleteByIndex",
+            "description": {
+                "text": [
+                    "Delete the selected record from the pill container."
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "pillByIndex",
+                    "returnType": "utam-lightning/pageObjects/pill",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "apply": "remove"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,69 @@
+{
+    "root": true,
+    "selector": {
+        "css": "devops_center-base-component"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a navigation bar with buttons, organization information, view changes, a dropdown menu, notifications, and a sliding panel for application development.",
+            "Selector: src-base-component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "panelButton",
+                "selector": {
+                    "css": "devops_center-panel-button"
+                },
+                "type": "utam-devops-center/pageObjects/panelButton",
+                "description": "Represents the button that toggles the side panel",
+                "public": true
+            },
+            {
+                "name": "orgInfo",
+                "selector": {
+                    "css": "devops_center-org-info"
+                },
+                "description": "Represents the display of organization information",
+                "public": true
+            },
+            {
+                "name": "viewChangesButton",
+                "selector": {
+                    "css": "devops_center-view-changes"
+                },
+                "description": "Represents the button to view changes",
+                "public": true
+            },
+            {
+                "name": "panelDropdown",
+                "selector": {
+                    "css": "devops_center-panel-dropdown"
+                },
+                "description": "Represents the dropdown menu on the navigation bar",
+                "public": true
+            },
+            {
+                "name": "notificationPopover",
+                "selector": {
+                    "css": "devops_center-notification-popover"
+                },
+                "description": "Represents the notification popover element",
+                "public": true
+            },
+            {
+                "name": "appDevPanel",
+                "selector": {
+                    "css": "devops_center-appdev-panel"
+                },
+                "type": "utam-devops-center/pageObjects/appdevPanel",
+                "description": "Represents the sliding panel for application development",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

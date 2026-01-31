@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_sales_pathassistant-path-body",
+            "Represents the runtime_sales_pathassistant-path-body component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_sales_pathassistant-path-body"
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "clickable"
+    ]
+}

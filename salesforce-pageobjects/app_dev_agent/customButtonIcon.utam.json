@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally displays a button with a label or an icon button based on the presence of a label.",
+            "Selector: app_dev_agent-custom-button-icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonWithLabel",
+                "selector": {
+                    "css": "lightning-button"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the button component with a label, displayed when the label property is provided.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "iconButton",
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the icon button component, displayed when the label property is not provided.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

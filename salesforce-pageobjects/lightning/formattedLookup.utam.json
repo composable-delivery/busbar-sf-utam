@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-lookup",
+            "Represents the lightning-formatted-lookup Lightning web component.",
+            "Get the text value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "description": {
+                "text": [
+                    "Get the formatted lookup display value as text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

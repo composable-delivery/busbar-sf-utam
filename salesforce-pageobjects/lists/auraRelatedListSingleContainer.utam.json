@@ -1,0 +1,11 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRelatedListSingleContainer.",
+            "Represents the Aura related list single container component.",
+            "Interface only."
+        ]
+    },
+    "interface": true
+}

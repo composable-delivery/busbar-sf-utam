@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-view-form",
+            "Represents the lightning-record-view-form Lightning web component.",
+            "Get the output fields and wait for view form to load"
+        ]
+    },
+    "elements": [
+        {
+            "name": "spinner",
+            "type": "utam-lightning/pageObjects/spinner",
+            "nullable": true,
+            "selector": {
+                "css": "lightning-spinner"
+            }
+        },
+        {
+            "name": "outputFields",
+            "type": "utam-lightning/pageObjects/outputField",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "css": "lightning-output-field",
+                "returnAll": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "waitUntilReady",
+            "description": "Wait for view form to load",
+            "compose": [
+                {
+                    "element": "spinner",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        }
+    ]
+}

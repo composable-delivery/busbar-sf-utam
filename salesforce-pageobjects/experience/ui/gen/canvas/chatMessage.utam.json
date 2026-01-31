@@ -1,0 +1,121 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a chat message with associated metadata such as the sender and timestamp within a chat interface. The message can be of different types, including inbound, outbound, event, or bookend.",
+            "Selector: experience_ui_gen_canvas-chat-message"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "chatItem",
+                "selector": {
+                    "css": ".slds-chat-listitem"
+                },
+                "description": "Represents the chat item that contains the message and meta information.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "chatMessage",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the rich text formatted chat message.",
+                        "public": true
+                    },
+                    {
+                        "name": "messageMeta",
+                        "selector": {
+                            "css": ".slds-chat-message__meta"
+                        },
+                        "description": "Represents the metadata associated with the chat message, such as user name and timestamp.",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isChatItemVisible",
+            "description": {
+                "text": [
+                    "Check if the chat item is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatItem",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageMetaVisible",
+            "description": {
+                "text": [
+                    "Check if the message metadata is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageMeta",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageMetaText",
+            "description": {
+                "text": [
+                    "Retrieve the text content of the message metadata"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageMeta",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyChatItemPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"chatItem\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatItem",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMessageMetaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"messageMeta\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageMeta",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

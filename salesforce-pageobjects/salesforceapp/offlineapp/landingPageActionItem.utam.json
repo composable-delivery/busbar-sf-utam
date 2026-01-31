@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Action item inside of Action Row.",
+            "Verify the action and its name."
+        ]
+    },
+    "interface": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getActionName",
+            "returnType": "string"
+        },
+        {
+            "name": "getAction",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ]
+        }
+    ]
+}

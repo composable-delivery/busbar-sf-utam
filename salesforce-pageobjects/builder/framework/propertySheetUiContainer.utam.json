@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_framework-property-sheet-ui-container"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "breadcrumbs",
+                "type": "utam-lightning/pageObjects/breadcrumbs",
+                "selector": {
+                    "css": "lightning-breadcrumbs"
+                }
+            },
+            {
+                "public": true,
+                "name": "componentEditorUi",
+                "type": "utam-builder-framework/pageObjects/componentEditorUi",
+                "selector": {
+                    "css": "builder_framework-component-editor-ui"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertySheetUi",
+                "type": "utam-builder-framework/pageObjects/propertySheetUi",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "propertySheetHeaderContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='propertySheetHeader']"
+            }
+        }
+    ]
+}

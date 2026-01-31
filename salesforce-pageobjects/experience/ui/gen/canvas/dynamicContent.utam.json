@@ -1,0 +1,175 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that can display either rich text or a data table based on the provided type, with the ability to load more data for the table.",
+            "Selector: experience_ui_gen_canvas-dynamic-content"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "richTextCard",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the card containing rich text.",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "iconInRichText",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the icon in the rich text card title.",
+                        "public": true
+                    },
+                    {
+                        "name": "richTextTitle",
+                        "selector": {
+                            "css": "[slot='title']"
+                        },
+                        "description": "Represents the title in the rich text card."
+                    },
+                    {
+                        "name": "formattedRichText",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the formatted rich text content.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "dataTableCard",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the card containing data table.",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "iconInDataTable",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the icon in the data table card title.",
+                        "public": true
+                    },
+                    {
+                        "name": "dataTableTitle",
+                        "selector": {
+                            "css": "[slot='title']"
+                        },
+                        "description": "Represents the title in the data table card."
+                    },
+                    {
+                        "name": "dataTable",
+                        "selector": {
+                            "css": "lightning-datatable"
+                        },
+                        "type": "utam-lightning/pageObjects/datatable",
+                        "description": "Represents the data table with infinite loading.",
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "noResultMessage",
+                        "selector": {
+                            "css": ".slds-box.slds-var-m-around_smallxx.slds-var-m-bottom_small"
+                        },
+                        "description": "Represents the message displayed when there is no data.",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getRichTextTitle",
+            "description": {
+                "text": [
+                    "Get the title text of the rich text card"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "richTextTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getDataTableTitle",
+            "description": {
+                "text": [
+                    "Get the title text of the data table card"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "dataTableTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isNoResultMessageVisible",
+            "description": {
+                "text": [
+                    "Check if the no result message is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isNoResultMessagePresent",
+            "description": {
+                "text": [
+                    "Check if the no result message is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyNoResultMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"noResultMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

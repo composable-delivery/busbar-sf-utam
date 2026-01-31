@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .flexipageComponent.",
+            "Represents the flexipage:component Aura component.",
+            "Get force:highlightsPanel, flexipage:stackedTabset and force:relatedListContainer components."
+        ]
+    },
+    "elements": [
+        {
+            "name": "content",
+            "type": "container",
+            "public": true
+        },
+        {
+            "name": "highlights",
+            "public": true,
+            "type": "utam-force/pageObjects/highlightsPanel",
+            "selector": {
+                "css": ".forceHighlightsPanel"
+            }
+        },
+        {
+            "name": "tabset",
+            "selector": {
+                "css": ".flexipageStackedTabset"
+            },
+            "public": true,
+            "type": "utam-flexipage/pageObjects/tabSet"
+        },
+        {
+            "name": "relatedListContainer",
+            "selector": {
+                "css": ".forceRelatedListContainer"
+            },
+            "public": true,
+            "type": "utam-lists/pageObjects/auraRelatedListContainer"
+        }
+    ]
+}

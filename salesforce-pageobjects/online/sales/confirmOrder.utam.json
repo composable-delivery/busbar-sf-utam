@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: confirmOrder"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "label"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "checkboxGroup",
+                        "type": "utam-lightning/pageObjects/checkboxGroup",
+                        "selector": {
+                            "css": "lightning-checkbox-group"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "nextButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='catalog_cart_next_btn']"
+                }
+            },
+            {
+                "public": true,
+                "name": "fraudBanner",
+                "wait": true,
+                "selector": {
+                    "css": ".fraud-banner"
+                }
+            },
+            {
+                "public": true,
+                "name": "plusTaxDiv",
+                "selector": {
+                    "css": ".plusTax"
+                }
+            }
+        ]
+    }
+}

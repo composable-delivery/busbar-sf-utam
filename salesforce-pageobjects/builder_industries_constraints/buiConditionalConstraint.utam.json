@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-conditional-constraint",
+            "Constraint Builder Business UI Conditional Constraint"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buiConstraintExpressions",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintExpressions",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraint-expressions"
+                }
+            },
+            {
+                "public": true,
+                "name": "badge",
+                "type": "utam-lightning/pageObjects/badge",
+                "selector": {
+                    "css": "lightning-badge"
+                }
+            },
+            {
+                "public": true,
+                "name": "buiConstraintExpressions1",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintExpressions",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraint-expressions:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[name='RuntimeMessage']"
+                }
+            },
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a disclaimer with or without a survey link based on the variant provided.",
+            "Selector: src-copilot-disclaimer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "disclaimerBase",
+                "selector": {
+                    "css": "feeds_chat-base-disclaimer"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseDisclaimer",
+                "description": "Represents the base disclaimer component which may include a survey link depending on the variant.",
+                "public": true
+            }
+        ]
+    }
+}

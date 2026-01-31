@@ -1,0 +1,169 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-highlights2",
+            "Represents the records-highlights2 Lightning web component.",
+            "Get the secondary field text or the runtime_platform_actions:actions-ribbon component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "primaryFieldContent",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": "[slot='primaryField']"
+            }
+        },
+        {
+            "name": "iconContent",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": "[slot='icon']"
+            }
+        },
+        {
+            "name": "secondaryFields",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": "[slot='secondaryFields']",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "secondaryTextField",
+            "selector": {
+                "css": "[slot='secondaryFields']:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "fieldIndexStarting1",
+                        "type": "number"
+                    }
+                ]
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "secondaryFieldContent",
+                "type": "container",
+                "public": true,
+                "selector": {
+                    "css": "slot[name='secondaryFields']"
+                }
+            },
+            {
+                "name": "actionsRibbon",
+                "public": true,
+                "type": "utam-action/pageObjects/actionsRibbon",
+                "selector": {
+                    "css": "runtime_platform_actions-actions-ribbon"
+                }
+            },
+            {
+                "name": "actionsContent",
+                "type": "container",
+                "public": true,
+                "selector": {
+                    "css": ".actionsContainer > * :first-child"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the secondary field text"
+                ],
+                "return": "String value"
+            },
+            "name": "getSecondaryFieldText",
+            "compose": [
+                {
+                    "element": "secondaryTextField",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Wait for primary field to be loaded"
+                ],
+                "return": "Self"
+            },
+            "name": "waitForLoad",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "[slot='primaryField']"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "apply": "returnSelf"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Wait for actions content to be loaded"
+                ],
+                "return": "Self"
+            },
+            "name": "waitForActionsContent",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".actionsContainer > * :first-child"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "returnSelf"
+                }
+            ]
+        }
+    ]
+}

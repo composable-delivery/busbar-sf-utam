@@ -1,0 +1,137 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that dynamically displays an image based on a given name, with the ability to customize the image's CSS class.",
+            "Selector: src-dynamic-image"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dynamicImage",
+                "selector": {
+                    "css": "img"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the image element that is dynamically sourced based on the provided name"
+            },
+            {
+                "name": "dynamicImageClassName",
+                "selector": {
+                    "css": ".className"
+                },
+                "description": "Represents the CSS class applied to the image element, which is dynamic based on the image name",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickDynamicImage",
+            "description": {
+                "text": [
+                    "Simulate a click on the dynamic image"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "dynamicImage",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isDynamicImageVisible",
+            "description": {
+                "text": [
+                    "Check if the dynamic image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dynamicImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDynamicImagePresent",
+            "description": {
+                "text": [
+                    "Check if the dynamic image is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dynamicImage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getDynamicImageSource",
+            "description": {
+                "text": [
+                    "Get the 'src' attribute of the dynamic image to validate the image source"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "dynamicImage",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getDynamicImageClassName",
+            "description": {
+                "text": [
+                    "Get the class attribute of the dynamic image for validation"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "dynamicImageClassName",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "verifyDynamicImageClassNamePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"dynamicImageClassName\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dynamicImageClassName",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

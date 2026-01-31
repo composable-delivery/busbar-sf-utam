@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the draft row inside of the draft list.",
+            "Verify the draft row and its fields."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "editDraft"
+        },
+        {
+            "name": "getErrorMsg",
+            "returnType": "string"
+        },
+        {
+            "name": "getObjectName",
+            "returnType": "string"
+        },
+        {
+            "name": "getTitle",
+            "returnType": "string"
+        },
+        {
+            "name": "hasDraftsErrorIcon",
+            "returnType": "boolean"
+        },
+        {
+            "name": "hasDraftsIcon",
+            "returnType": "boolean"
+        },
+        {
+            "name": "hasEditButton",
+            "returnType": "boolean"
+        },
+        {
+            "name": "hasUndoButton",
+            "returnType": "boolean"
+        },
+        {
+            "name": "undoDraft"
+        }
+    ]
+}

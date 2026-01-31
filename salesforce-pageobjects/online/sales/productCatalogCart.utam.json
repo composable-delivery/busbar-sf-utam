@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: productCatalogCart"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "label"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "checkboxGroup",
+                        "type": "utam-lightning/pageObjects/checkboxGroup",
+                        "selector": {
+                            "css": "lightning-checkbox-group"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "nextBtn",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='next_btn']"
+                }
+            },
+            {
+                "public": true,
+                "name": "confirmOrder",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/confirmOrder",
+                "selector": {
+                    "css": "runtime_online_sales-confirm-order"
+                }
+            },
+            {
+                "public": true,
+                "name": "checkoutSuccess",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/checkoutSuccess",
+                "selector": {
+                    "css": "runtime_online_sales-checkout-success"
+                }
+            }
+        ]
+    }
+}

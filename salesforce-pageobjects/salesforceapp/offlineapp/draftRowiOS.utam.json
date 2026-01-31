@@ -1,0 +1,163 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: draft_row.",
+            "Represents the iOS draft row inside of the draft list.",
+            "Verify the draft row and its fields."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/draftRow",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "elements": [
+        {
+            "name": "draftsIcon",
+            "selector": {
+                "accessid": "drafts-icon"
+            }
+        },
+        {
+            "name": "draftObject",
+            "selector": {
+                "accessid": "draft_objectName"
+            }
+        },
+        {
+            "name": "editButton",
+            "nullable": true,
+            "selector": {
+                "accessid": "draft_edit_button"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "errorIcon",
+            "nullable": true,
+            "selector": {
+                "accessid": "draft-error-badge"
+            }
+        },
+        {
+            "name": "errorMessage",
+            "nullable": true,
+            "selector": {
+                "accessid": "draft_error_message"
+            }
+        },
+        {
+            "name": "title",
+            "selector": {
+                "accessid": "draft_title"
+            }
+        },
+        {
+            "name": "undoButton",
+            "selector": {
+                "accessid": "draft_undo_button"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "editDraft",
+            "compose": [
+                {
+                    "element": "editButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getObjectName",
+            "compose": [
+                {
+                    "element": "draftObject",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMsg",
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasDraftsIcon",
+            "compose": [
+                {
+                    "element": "draftsIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasDraftsErrorIcon",
+            "compose": [
+                {
+                    "element": "errorIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasUndoButton",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "undoButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasEditButton",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "editButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "undoDraft",
+            "compose": [
+                {
+                    "element": "undoButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

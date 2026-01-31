@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-fileupload",
+            "Represents the lightning-fileupload Lightning web component.",
+            "Get  the lightning-input component related to the file upload."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/input",
+                "name": "input",
+                "public": true,
+                "selector": {
+                    "css": "lightning-input"
+                }
+            }
+        ]
+    }
+}

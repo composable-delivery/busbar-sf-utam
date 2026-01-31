@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Selector: dxp_records-section",
+            "Represents dxp_records section component.",
+            "Get all sectionRows"
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "sectionRows",
+            "public": true,
+            "selector": {
+                "css": "dxp_records-section-row",
+                "returnAll": true
+            },
+            "type": "utam-dxp_records/pageObjects/sectionRow"
+        }
+    ]
+}

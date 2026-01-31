@@ -1,0 +1,182 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: errorPopover"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "button",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "icon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "section",
+                "type": [],
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "button1",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "button"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "icon1",
+                                "type": "utam-lightning/pageObjects/icon",
+                                "selector": {
+                                    "css": "lightning-icon"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "spanContent",
+                                "type": [],
+                                "selector": {
+                                    "css": "span"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "header",
+                        "type": [],
+                        "selector": {
+                            "css": "header"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "icon2",
+                                "type": "utam-lightning/pageObjects/icon",
+                                "selector": {
+                                    "css": "lightning-icon"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "h2Content",
+                                "type": [],
+                                "selector": {
+                                    "css": "h2"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "div",
+                        "type": [],
+                        "selector": {
+                            "css": "div"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "div1s",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "div",
+                                    "returnAll": true
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "divByIndex",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "div:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "strongContent",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "strong"
+                                        }
+                                    },
+                                    {
+                                        "name": "list",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "ul"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "listItems",
+                                                "type": [
+                                                    "actionable",
+                                                    "clickable"
+                                                ],
+                                                "selector": {
+                                                    "css": "li",
+                                                    "returnAll": true
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "listItemByIndex",
+                                                "type": [
+                                                    "actionable",
+                                                    "clickable"
+                                                ],
+                                                "selector": {
+                                                    "css": "li:nth-of-type(%d)",
+                                                    "args": [
+                                                        {
+                                                            "name": "index1",
+                                                            "type": "number"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-message-constraint",
+            "Constraint Builder Business UI Message Constraint"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "badge",
+                "type": "utam-lightning/pageObjects/badge",
+                "selector": {
+                    "css": "lightning-badge"
+                }
+            },
+            {
+                "public": true,
+                "name": "buiConstraintExpressions",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintExpressions",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraint-expressions"
+                }
+            },
+            {
+                "public": true,
+                "name": "badge1",
+                "type": "utam-lightning/pageObjects/badge",
+                "selector": {
+                    "css": "lightning-badge:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox[name='messageType']"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            }
+        ]
+    }
+}

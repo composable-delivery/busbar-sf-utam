@@ -1,0 +1,543 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that allows users to input text, send messages, and displays error messages for excessive input length. It includes a spinner while loading, a textarea for input, a send button, error messages, and a disclaimer message.",
+            "Selector: app_dev_agent_base-base-chat-input"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "app_dev_agent_base-base-chat-input"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a spinner that indicates loading state",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "inputContainer",
+                "selector": {
+                    "css": ".textarea-container"
+                },
+                "description": "Container for text input and send button",
+                "elements": [
+                    {
+                        "name": "messageTextarea",
+                        "selector": {
+                            "css": "textarea"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Textarea for user to input message"
+                    },
+                    {
+                        "name": "sendButtonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon[data-send-button]"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Send button to submit the message",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "errorTooManyChars",
+                "selector": {
+                    "css": "#textarea-input-error"
+                },
+                "description": "Error message displayed when input exceeds maximum character limit",
+                "nullable": true
+            },
+            {
+                "name": "errorCharCount",
+                "selector": {
+                    "css": ".chat-box-error-message-count"
+                },
+                "description": "Character count message displayed when input exceeds maximum character limit",
+                "nullable": true
+            },
+            {
+                "name": "disclaimerText",
+                "selector": {
+                    "css": ".disclaimer-text"
+                },
+                "description": "Disclaimer text displayed conditionally",
+                "nullable": true
+            },
+            {
+                "name": "relativeContainer",
+                "selector": {
+                    "css": ".slds-is-relative"
+                },
+                "description": "Main relative positioned container for the component",
+                "public": true
+            },
+            {
+                "name": "sendButtonContainer",
+                "selector": {
+                    "css": ".send-button-container"
+                },
+                "description": "Container for the send button with grid layout",
+                "public": true
+            },
+            {
+                "name": "errorMessageContainer",
+                "selector": {
+                    "css": ".chat-box-error"
+                },
+                "description": "Container for error messages when input validation fails",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "disclaimerRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "description": "Rich text component for displaying formatted disclaimer",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "extendedHeightContainer",
+                "selector": {
+                    "css": ".extended-height"
+                },
+                "description": "Container with extended height for enhanced project creation mode",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "fixedHeightTextarea",
+                "selector": {
+                    "css": "textarea.fixed-height"
+                },
+                "description": "Textarea with fixed height when fixedTextArea is enabled",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "autoExpandTextarea",
+                "selector": {
+                    "css": "textarea.auto-expand"
+                },
+                "description": "Textarea with auto-expand functionality",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "disabledTextarea",
+                "selector": {
+                    "css": "textarea.disabled"
+                },
+                "description": "Textarea in disabled state",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "typeMessage",
+            "description": {
+                "text": [
+                    "Clears the message textarea and types a new message"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "messageTextarea",
+                    "apply": "clear"
+                },
+                {
+                    "element": "messageTextarea",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Returns the text content of the message textarea"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageTextarea",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isErrorMessageVisible",
+            "description": {
+                "text": [
+                    "Checks if the error message for too many characters is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorTooManyChars",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessageText",
+            "description": {
+                "text": [
+                    "Returns the text content of the error message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorTooManyChars",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isErrorCharCountVisible",
+            "description": {
+                "text": [
+                    "Checks if the character count error message is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorCharCount",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getCharCountText",
+            "description": {
+                "text": [
+                    "Returns the text content of the character count message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorCharCount",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isDisclaimerVisible",
+            "description": {
+                "text": [
+                    "Checks if the disclaimer text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDisclaimerText",
+            "description": {
+                "text": [
+                    "Returns the text content of the disclaimer"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorTooManyCharsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorTooManyChars\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorTooManyChars",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorCharCountPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorCharCount\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorCharCount",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyDisclaimerTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"disclaimerText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isRelativeContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the main relative container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "relativeContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSendButtonContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the send button container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "sendButtonContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isErrorMessageContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the error message container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorMessageContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isErrorMessageContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the error message container is present in DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorMessageContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isDisclaimerRichTextVisible",
+            "description": {
+                "text": [
+                    "Check if the disclaimer rich text component is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerRichText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isExtendedHeightContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the extended height container is visible for enhanced mode"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "extendedHeightContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isExtendedHeightContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the extended height container is present in DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "extendedHeightContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isFixedHeightTextareaVisible",
+            "description": {
+                "text": [
+                    "Check if the fixed height textarea is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "fixedHeightTextarea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isAutoExpandTextareaVisible",
+            "description": {
+                "text": [
+                    "Check if the auto-expand textarea is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "autoExpandTextarea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDisabledTextareaVisible",
+            "description": {
+                "text": [
+                    "Check if the disabled textarea is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "disabledTextarea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "focusTextarea",
+            "description": {
+                "text": [
+                    "Focus on the message textarea"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "messageTextarea",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "clearTextarea",
+            "description": {
+                "text": [
+                    "Clear the message textarea content"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "messageTextarea",
+                    "apply": "clear"
+                }
+            ]
+        },
+        {
+            "name": "isInputContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the input container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLoadingSpinnerPresent",
+            "description": {
+                "text": [
+                    "Check if the loading spinner is present in DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingSpinner",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

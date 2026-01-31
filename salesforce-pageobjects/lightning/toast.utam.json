@@ -1,0 +1,152 @@
+{
+    "root": true,
+    "selector": {
+        "css": "lightning-toast"
+    },
+    "exposeRootElement": true,
+    "type": "clickable",
+    "description": {
+        "text": [
+            "Selector: lightning-toast",
+            "Represents the lightning-toast Lightning web component,",
+            "Access the Label and optional Message text. Allow clicking of close button if it exists."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "close",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "clickButton"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "getLabelText",
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasLabelLink",
+            "compose": [
+                {
+                    "element": "labelRichContent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "compose": [
+                {
+                    "element": "message",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasMessageLink",
+            "compose": [
+                {
+                    "element": "messageRichContent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getVariant",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "variant"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMode",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "mode"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": ".slds-text-heading_small > *"
+                }
+            },
+            {
+                "name": "labelRichContent",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": ".slds-text-heading_small lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText"
+            },
+            {
+                "name": "message",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "slot[name='message']"
+                }
+            },
+            {
+                "name": "messageRichContent",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "slot[name='message'] > lightning-formatted-rich-text"
+                },
+                "type": "utam-lightning/pageObjects/formattedRichText"
+            },
+            {
+                "name": "closeButton",
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon"
+            },
+            {
+                "name": "icon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-icon"
+                },
+                "type": "utam-lightning/pageObjects/icon"
+            }
+        ]
+    }
+}

@@ -1,0 +1,217 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeOther[$type == 'XCUIElementTypeTable' AND name == 'table.profileMenu'$][-1].",
+            "Represents the iOS profile menu view.",
+            "Get logged in info, navigate to an item in the list, or logout."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/profileMenuNav",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeTable' AND name == 'table.profileMenu'$][-1]"
+    },
+    "elements": [
+        {
+            "name": "userName",
+            "selector": {
+                "accessid": "ProfileMenuUserName"
+            }
+        },
+        {
+            "name": "orgName",
+            "selector": {
+                "accessid": "ProfileMenuUserDomain"
+            }
+        },
+        {
+            "name": "profileLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Profile"
+            }
+        },
+        {
+            "name": "favoritesLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Favorites"
+            }
+        },
+        {
+            "name": "changeAcctLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Change Account"
+            }
+        },
+        {
+            "name": "pendingChangesLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Pending Changes"
+            }
+        },
+        {
+            "name": "syncPendingImg",
+            "selector": {
+                "classchain": "**/XCUIElementTypeImage[`name == 'SFOfflineDraftSashImageViewPendingSyncAccessibilityId'`]"
+            }
+        },
+        {
+            "name": "feedbackLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Feedback"
+            }
+        },
+        {
+            "name": "settingsLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Settings"
+            }
+        },
+        {
+            "name": "helpLink",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Help"
+            }
+        },
+        {
+            "name": "logoutLink",
+            "selector": {
+                "accessid": "ProfileMenuUtilityCellLabel_Log Out"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "getUserName",
+            "compose": [
+                {
+                    "element": "userName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getOrgName",
+            "compose": [
+                {
+                    "element": "orgName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "openProfile",
+            "compose": [
+                {
+                    "element": "profileLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openFavorites",
+            "compose": [
+                {
+                    "element": "favoritesLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "changeAccount",
+            "compose": [
+                {
+                    "element": "changeAcctLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openPendingChanges",
+            "compose": [
+                {
+                    "element": "pendingChangesLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasPendingChangesToSync",
+            "compose": [
+                {
+                    "element": "syncPendingImg",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "openFeedback",
+            "compose": [
+                {
+                    "element": "feedbackLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openSettings",
+            "compose": [
+                {
+                    "element": "settingsLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openHelp",
+            "compose": [
+                {
+                    "element": "helpLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "logout",
+            "compose": [
+                {
+                    "element": "logoutLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}
