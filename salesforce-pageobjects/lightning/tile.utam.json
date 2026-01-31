@@ -1,0 +1,114 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-tile",
+            "Represents the lightning-tile Lightning web component.",
+            "Get the tile title. Click the title link. Gets lightning-avatar, and lightning-icon."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitle",
+            "description": {
+                "text": [
+                    "Get title label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "clickTitle",
+            "description": "Click title element link",
+            "compose": [
+                {
+                    "element": "titleLink",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "avatar",
+            "type": "utam-lightning/pageObjects/avatar",
+            "selector": {
+                "css": "lightning-avatar"
+            },
+            "public": true
+        },
+        {
+            "name": "icon",
+            "type": "utam-lightning/pageObjects/icon",
+            "selector": {
+                "css": "lightning-icon"
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "title",
+                "selector": {
+                    "css": ".slds-tile__title"
+                },
+                "elements": [
+                    {
+                        "name": "titleLink",
+                        "type": [
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "a"
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "actionsMenu",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            },
+            {
+                "name": "actionByLabel",
+                "type": "utam-lightning/pageObjects/menuItem",
+                "selector": {
+                    "css": "lightning-button-menu lightning-menu-item",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getItemText",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "public": true
+            },
+            {
+                "name": "body",
+                "type": "container",
+                "selector": {
+                    "css": ":scope *"
+                },
+                "public": true
+            }
+        ]
+    }
+}

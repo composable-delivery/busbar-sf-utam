@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: InvoicePaymentMethodSection",
+            "Selector : runtime_online_sales-invoice-payment-method-section"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": false,
+                "name": "paymentDetailCard",
+                "type": "utam-lightning/pageObjects/card",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "paymentTerms",
+                        "selector": {
+                            "css": "span[data-name=\"payment-terms\"]"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "paymentType",
+                        "selector": {
+                            "css": "span[data-name=\"payment-type\"]"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

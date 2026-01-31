@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-aura-wrapper.",
+            "Represents the flexipage-aura-wrapper Lightning web component.",
+            "Get the runtime_sales:pathassistantCollapsibleDrawer component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "collapsibleDrawer",
+                "type": "utam-runtime_sales/pageObjects/pathassistantCollapsibleDrawer",
+                "selector": {
+                    "css": ".runtime_sales_pathassistantCollapsibleDrawer"
+                },
+                "public": true
+            },
+            {
+                "name": "auraRelatedListContainer",
+                "type": "utam-lists/pageObjects/auraRelatedListContainer",
+                "selector": {
+                    "css": ".forceRelatedListContainer"
+                },
+                "public": true
+            },
+            {
+                "name": "activityPanel",
+                "type": "utam-activities/pageObjects/activityPanelComposer",
+                "selector": {
+                    "css": "runtime_sales_activities-activity-panel-composer"
+                },
+                "public": true
+            },
+            {
+                "name": "activityTimelineFixedLayout",
+                "type": "utam-activities/pageObjects/activityTimelineFixedLayout",
+                "selector": {
+                    "css": "div.skip-timeline-wrapper"
+                },
+                "public": true
+            },
+            {
+                "name": "contentWrapper",
+                "selector": {
+                    "css": "div"
+                },
+                "elements": [
+                    {
+                        "name": "content",
+                        "type": "container",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

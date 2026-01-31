@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The component serves as a untime_copilot_base-property-layout",
+            "Selector: runtime_copilot_base-property-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewComponent",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the chat view component resolved dynamically based on message content",
+                "public": true
+            },
+            {
+                "name": "viewComponents",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component",
+                    "returnAll": true
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the chat view components resolved dynamically based on message content",
+                "public": true
+            }
+        ]
+    }
+}

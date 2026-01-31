@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceActionsDropDownMenuList.",
+            "Represents the force:actionsDropDownMenuList Aura component.",
+            "Get the force:actionButton, force:actionLabel or one:actionsDropDown components by label."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceActionsDropDownMenuList.visible"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "menuItem",
+            "type": "utam-aura/pageObjects/menuItem",
+            "selector": {
+                "css": ".uiMenuItem",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getMenuItemText",
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getMenuItem",
+            "description": {
+                "text": [
+                    "Waits for and gets the menu item with the specified text"
+                ],
+                "return": "the menu item (utam-aura/pageObjects/menuItem)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "menuItem"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,194 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of topics for a Copilot, allowing users to add new topics, filter, sort, and perform various actions on existing topics.",
+            "Selector: src-list-copilot-topics"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a loading spinner indicating data is being fetched or processed.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "addButton",
+                "selector": {
+                    "css": "lightning-button-icon[data-id='addNewTopic']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents an actionable button to add a new topic.",
+                "nullable": true
+            },
+            {
+                "name": "addMenuButton",
+                "selector": {
+                    "css": "lightning-button-menu"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents a dropdown menu to add a new topic from the library or create a new one.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "addMenuItem",
+                        "selector": {
+                            "css": "lightning-menu-item",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/menuItem",
+                        "description": "Represents menu items within the add menu button.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "searchInput",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-base-input-filter"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/baseInputFilter",
+                "description": "Represents a search input field to filter topics.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "statusList",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-base-list-status"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/baseListStatus",
+                "description": "Represents a status list to display filtered topics.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "datatable",
+                "selector": {
+                    "css": "chatbots-extended-datatable"
+                },
+                "type": "utam-ui-chatbots-components/pageObjects/extendedDatatable",
+                "description": "Represents a datatable to display and interact with the list of topics.",
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "guidanceSlot",
+            "selector": {
+                "css": "[slot='guidance']"
+            },
+            "type": "container",
+            "description": "Represents a named slot for guidance content.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickAddButton",
+            "description": {
+                "text": [
+                    "Simulate a click action on the add new topic button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "addButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectAddMenuOption",
+            "description": {
+                "text": [
+                    "Simulate a selection action on the add menu dropdown"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "addMenuButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isAddButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the add new topic button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isAddMenuButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the add menu dropdown button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addMenuButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyAddButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"addButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyAddMenuButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"addMenuButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addMenuButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

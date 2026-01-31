@@ -1,0 +1,211 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays organization details such as name, and provides navigation links to the home and setup pages of the organization.",
+            "Selector: setup_platform_unifiedapp-org-details"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-org-details"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "orgDetailsCard",
+                "selector": {
+                    "css": ".org-details-card"
+                },
+                "description": "Represents the card containing organization details.",
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "orgLabel",
+                        "selector": {
+                            "css": ".org-label"
+                        },
+                        "description": "Represents the label for the organization section.",
+                        "wait": true
+                    },
+                    {
+                        "name": "orgName",
+                        "selector": {
+                            "css": ".org-name"
+                        },
+                        "description": "Represents the name of the organization.",
+                        "wait": true
+                    },
+                    {
+                        "name": "homeLink",
+                        "selector": {
+                            "css": "a[data-type='home']"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the navigation link to the home page.",
+                        "wait": true
+                    },
+                    {
+                        "name": "setupLink",
+                        "selector": {
+                            "css": "a[data-type='setup']"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the navigation link to the setup page.",
+                        "wait": true
+                    },
+                    {
+                        "name": "linkSeparator",
+                        "selector": {
+                            "css": ".separator"
+                        },
+                        "description": "Represents the visual separator between navigation links.",
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickHomeLink",
+            "description": {
+                "text": [
+                    "Click on the home page link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "homeLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSetupLink",
+            "description": {
+                "text": [
+                    "Click on the setup page link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "setupLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getOrgNameText",
+            "description": {
+                "text": [
+                    "Get the text of the organization name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "orgName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isOrgDetailsCardVisible",
+            "description": {
+                "text": [
+                    "Check if the organization details card is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "orgDetailsCard",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isOrgLabelVisible",
+            "description": {
+                "text": [
+                    "Check if the organization label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "orgLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isOrgNameVisible",
+            "description": {
+                "text": [
+                    "Check if the organization name is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "orgName",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHomeLinkVisible",
+            "description": {
+                "text": [
+                    "Check if the home page link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "homeLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSetupLinkVisible",
+            "description": {
+                "text": [
+                    "Check if the setup page link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "setupLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLinkSeparatorVisible",
+            "description": {
+                "text": [
+                    "Check if the link separator is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "linkSeparator",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

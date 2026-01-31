@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows the user to select a single record from a list of options, with a loading state indicated by a spinner.",
+            "Selector: feeds_chat-select-single-record-id"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the spinner displayed while loading.",
+                "public": true
+            },
+            {
+                "name": "recordPicklist",
+                "selector": {
+                    "css": "feeds_chat-record-picklist"
+                },
+                "type": "utam-feeds-chat/pageObjects/recordPicklist",
+                "description": "Represents the custom picklist for selecting a record.",
+                "public": true
+            }
+        ]
+    }
+}

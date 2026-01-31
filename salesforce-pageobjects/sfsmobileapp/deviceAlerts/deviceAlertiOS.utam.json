@@ -1,0 +1,97 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents a device alert (such as allowing notifications) usually when logging into the app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/deviceAlerts/deviceAlert",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeAlert[`label CONTAINS 'Would Like to'`]"
+    },
+    "elements": [
+        {
+            "name": "allowNotificationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "Allow"
+            }
+        },
+        {
+            "name": "allowNotificationWhenusingTheAppBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "Allow_temp"
+            }
+        },
+        {
+            "name": "okBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "OK"
+            }
+        },
+        {
+            "name": "denyNotificationBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "Don't Allow"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickAllowNotification",
+            "compose": [
+                {
+                    "element": "allowNotificationBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickAllowNotificationWhenUsingTheApp",
+            "compose": [
+                {
+                    "element": "allowNotificationWhenusingTheAppBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickOK",
+            "compose": [
+                {
+                    "element": "okBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDenyNotification",
+            "compose": [
+                {
+                    "element": "denyNotificationBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

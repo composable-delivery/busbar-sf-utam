@@ -1,0 +1,45 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "setAsDefaultCheckbox",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "div[id='btPermissionElevatorPage:inputForm:inputs:rememberChoicesCheckboxSection'] input"
+            },
+            "public": true
+        },
+        {
+            "name": "adminQaCheckbox",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "div[id='btPermissionElevatorPage:inputForm:inputs:adminQaChooser'] input"
+            },
+            "public": true
+        },
+        {
+            "name": "continueButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "input.btn[value='Continue']"
+            },
+            "public": true
+        }
+    ]
+}

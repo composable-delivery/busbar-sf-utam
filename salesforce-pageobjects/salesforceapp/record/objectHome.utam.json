@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the object home view.",
+            "Find a list or record and navigate to it, or verify records are still syncing."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "clickRecord",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasRecord",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "getRecordCards",
+            "returnType": [
+                "clickable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "clickList",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasList",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "getListCells",
+            "returnType": [
+                "clickable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "clickAllLists"
+        },
+        {
+            "name": "hasRecordWithChangesToBeSynced",
+            "returnType": "boolean"
+        },
+        {
+            "name": "getSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/searchBar"
+        },
+        {
+            "name": "pullToRefresh"
+        }
+    ]
+}

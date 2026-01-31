@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Asset Service History section of a Work Order."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/record/assetServiceHistoryObject",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeScrollView[$type == 'XCUIElementTypeOther'$]"
+    },
+    "elements": [
+        {
+            "name": "fieldText",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[`label CONTAINS '%s'`][7]",
+                "args": [
+                    {
+                        "name": "fieldText",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getFieldByText",
+            "compose": [
+                {
+                    "element": "fieldText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,76 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-editor",
+            "Represents the block builder UI component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_block_builder-editor"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "es_block_builder-editor-resolver"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "htmlHeader",
+                "selector": {
+                    "css": ".editor-header"
+                },
+                "elements": [
+                    {
+                        "name": "toolbar",
+                        "type": "utam-es_block_builder/pageObjects/toolbar",
+                        "public": true,
+                        "selector": {
+                            "css": "es_block_builder-toolbar"
+                        }
+                    },
+                    {
+                        "name": "header",
+                        "type": "utam-es_block_builder/pageObjects/header",
+                        "public": true,
+                        "selector": {
+                            "css": "es_block_builder-header"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "resolver",
+                "type": "utam-es_block_builder/pageObjects/editorResolver",
+                "public": true,
+                "selector": {
+                    "css": "es_block_builder-editor-resolver"
+                }
+            }
+        ]
+    }
+}

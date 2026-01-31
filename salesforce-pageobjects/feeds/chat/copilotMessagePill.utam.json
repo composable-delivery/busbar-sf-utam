@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a badge with a label, typically used to indicate a beta feature.",
+            "Selector: src-copilot-message-pill"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "betaBadge",
+                "selector": {
+                    "css": ".slds-badge.copilot-beta-badge"
+                },
+                "description": "Represents a badge element with a beta label text."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getBetaBadgeText",
+            "description": {
+                "text": [
+                    "Get the text from the beta badge"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "betaBadge",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-picklist",
+            "Represents the lightning-picklist Lightning web component.",
+            "Gets the lightning-base-combobox or dual-list-box or select component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "comboBox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "dualListBox",
+                "type": "utam-lightning/pageObjects/dualListbox",
+                "selector": {
+                    "css": "lightning-dual-listbox"
+                },
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "select",
+                "type": "utam-lightning/pageObjects/select",
+                "selector": {
+                    "css": "lightning-select"
+                },
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the baseCombobox component from the picklist"
+                ],
+                "return": "baseCombobox page object"
+            },
+            "name": "getBaseCombobox",
+            "compose": [
+                {
+                    "element": "comboBox"
+                },
+                {
+                    "chain": true,
+                    "element": "base",
+                    "returnType": "utam-lightning/pageObjects/baseCombobox"
+                }
+            ]
+        }
+    ]
+}

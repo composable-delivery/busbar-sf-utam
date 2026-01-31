@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-number",
+            "Represents the lightning-formatted-number Lightning web component.",
+            "Get the text value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "description": {
+                "text": [
+                    "Get the formatted number display value of integer or double as text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

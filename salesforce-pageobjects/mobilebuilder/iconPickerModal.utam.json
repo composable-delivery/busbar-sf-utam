@@ -1,0 +1,289 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a modal dialog for selecting an icon from a searchable list. Users can search for icons, select one, and either confirm the selection or cancel the operation.",
+            "Selector: mobilebuilder-icon-picker-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalContainer",
+                "selector": {
+                    "css": "mobilebuilder-icon-picker-modal"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "modalSection",
+                            "selector": {
+                                "css": "section[role='dialog']"
+                            },
+                            "description": "Represents the main container of the modal dialog.",
+                            "elements": [
+                                {
+                                    "name": "closeButton",
+                                    "selector": {
+                                        "css": "button.slds-modal__close"
+                                    },
+                                    "type": [
+                                        "actionable",
+                                        "clickable"
+                                    ],
+                                    "description": "Represents the button used to close the dialog and cancel the operation."
+                                },
+                                {
+                                    "name": "searchInput",
+                                    "selector": {
+                                        "css": "lightning-input[type='search']"
+                                    },
+                                    "type": "utam-lightning/pageObjects/input",
+                                    "description": "Represents the search input field for filtering icons.",
+                                    "public": true
+                                },
+                                {
+                                    "name": "iconByIndex",
+                                    "selector": {
+                                        "css": ".icon_box:nth-of-type(%d)",
+                                        "args": [
+                                            {
+                                                "name": "itemIndex",
+                                                "type": "number"
+                                            }
+                                        ]
+                                    },
+                                    "type": [
+                                        "actionable",
+                                        "clickable"
+                                    ],
+                                    "description": "Represents the selectable options for icons in the search result."
+                                },
+                                {
+                                    "name": "iconByLabel",
+                                    "selector": {
+                                        "css": ".icon_box .fit_label",
+                                        "returnAll": true
+                                    },
+                                    "filter": {
+                                        "apply": "getText",
+                                        "matcher": {
+                                            "type": "stringEquals",
+                                            "args": [
+                                                {
+                                                    "name": "text",
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        },
+                                        "findFirst": true
+                                    },
+                                    "type": [
+                                        "actionable",
+                                        "clickable"
+                                    ],
+                                    "description": "Represents the selectable options for icons in the search result."
+                                },
+                                {
+                                    "name": "iconLabel",
+                                    "selector": {
+                                        "css": "label[for]",
+                                        "returnAll": true
+                                    },
+                                    "description": "Represents the labels for icon options, used for assertions."
+                                },
+                                {
+                                    "name": "iconVisualPicker",
+                                    "selector": {
+                                        "css": ".slds-visual-picker",
+                                        "returnAll": true
+                                    },
+                                    "description": "Represents the visual presentation of the icon selection."
+                                },
+                                {
+                                    "name": "noSearchResultsMessage",
+                                    "selector": {
+                                        "css": ".no_search_results"
+                                    },
+                                    "description": "Represents the message displayed when no search results are found.",
+                                    "nullable": true
+                                },
+                                {
+                                    "name": "cancelButton",
+                                    "selector": {
+                                        "css": ".slds-modal__footer .slds-button_neutral"
+                                    },
+                                    "type": [
+                                        "actionable",
+                                        "clickable"
+                                    ],
+                                    "description": "Represents the cancel button in the footer of the modal."
+                                },
+                                {
+                                    "name": "selectIconButton",
+                                    "selector": {
+                                        "css": ".slds-modal__footer .slds-button_brand"
+                                    },
+                                    "type": [
+                                        "actionable",
+                                        "clickable"
+                                    ],
+                                    "description": "Represents the select button in the footer of the modal, which confirms the selection of an icon."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCloseButton",
+            "description": {
+                "text": [
+                    "Click the close button to close the modal and cancel the operation"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickIconByIndex",
+            "description": {
+                "text": [
+                    "Click an icon to select it by index"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "iconByIndex",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickIconByLabel",
+            "description": {
+                "text": [
+                    "Click an icon to select it by label"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "iconByLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isIconLabelVisible",
+            "description": {
+                "text": [
+                    "Check if the icon label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isIconVisualPickerVisible",
+            "description": {
+                "text": [
+                    "Check if the icon visual picker is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconVisualPicker",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isNoSearchResultsMessageVisible",
+            "description": {
+                "text": [
+                    "Check if the no search results message is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noSearchResultsMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Click the cancel button to cancel the operation"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSelectIconButton",
+            "description": {
+                "text": [
+                    "Click the select icon button to confirm the selection"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "selectIconButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isSelectIconButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the select icon button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "selectIconButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "verifyNoSearchResultsMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"noSearchResultsMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noSearchResultsMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

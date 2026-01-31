@@ -1,0 +1,172 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-form",
+            "Represents the lightning-record-form Lightning web component.",
+            "Gets input and output fields, wait for form to load, makes save and cancel action and make click action on output field edit icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "cancelButton",
+                "type": "clickable",
+                "nullable": true,
+                "selector": {
+                    "css": ".lightning-record-form-cancel"
+                }
+            },
+            {
+                "name": "saveButton",
+                "type": "clickable",
+                "nullable": true,
+                "selector": {
+                    "css": ".lightning-record-form-submit"
+                }
+            },
+            {
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "name": "inputFields",
+                "type": "utam-lightning/pageObjects/inputField",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "lightning-input-field",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "outputFields",
+                "type": "utam-lightning/pageObjects/outputField",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "lightning-output-field",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "outputFieldByIndex",
+                "type": "utam-lightning/pageObjects/outputField",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "lightning-output-field:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "editIconByIndex",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "lightning-output-field:nth-of-type(%d) lightning-button-icon",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "save",
+            "description": "Click on the save button",
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "cancel",
+            "description": "Click on the cancel button",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Wait for form to load"
+                ],
+                "throws": "TimeoutError"
+            },
+            "compose": [
+                {
+                    "element": "spinner",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetOutputFields",
+            "description": {
+                "text": [
+                    "Wait for output fields to load"
+                ],
+                "throws": "TimeoutError"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "outputFields"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "editIconClick",
+            "description": "Click on edit icon inside output field by index",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "editIconByIndex"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "chain": true,
+                    "apply": "clickButton"
+                }
+            ]
+        }
+    ]
+}

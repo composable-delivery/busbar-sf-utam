@@ -1,0 +1,111 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a message block in a chat interface, with the ability to display an icon for inbound messages and different styles based on message type and content.",
+            "Selector: app_dev_agent-panel-message-block"
+        ]
+    },
+    "selector": {
+        "css": "app_dev_agent-panel-message-block"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "chatContainer",
+                "selector": {
+                    "css": "div[tabindex='0']"
+                },
+                "description": "Represents the container of the chat message.",
+                "elements": [
+                    {
+                        "name": "chatIcon",
+                        "selector": {
+                            "css": ".chat-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the chat icon for inbound messages.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "messageBody",
+                        "selector": {
+                            "css": ".slds-chat-message__body"
+                        },
+                        "description": "Represents the body of the chat message.",
+                        "elements": [
+                            {
+                                "name": "messageContent",
+                                "selector": {
+                                    "css": "div"
+                                },
+                                "description": "Represents the content area of the message.",
+                                "elements": [
+                                    {
+                                        "name": "messageSlot",
+                                        "selector": {
+                                            "css": ":scope > *:first-child"
+                                        },
+                                        "type": "container",
+                                        "description": "Represents the default slot for message content.",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isChatContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the chat container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageBodyVisible",
+            "description": {
+                "text": [
+                    "Check if the message body is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageBody",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageContentText",
+            "description": {
+                "text": [
+                    "Get the text content of the message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageContent",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

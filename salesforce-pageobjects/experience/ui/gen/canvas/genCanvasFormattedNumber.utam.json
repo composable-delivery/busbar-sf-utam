@@ -1,0 +1,87 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally formats a number, using a plain text display for large numbers and a `lightning-formatted-number` component for others.",
+            "Selector: experience_ui_gen_canvas-gen-canvas-formatted-number"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "largeNumberText",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents a text node for large numbers",
+                "nullable": true
+            },
+            {
+                "name": "formattedNumber",
+                "selector": {
+                    "css": "lightning-formatted-number"
+                },
+                "type": "utam-lightning/pageObjects/formattedNumber",
+                "description": "Represents a formatted number component for smaller numbers",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLargeNumberText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the large number when it is displayed"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "largeNumberText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isLargeNumberTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the large number text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "largeNumberText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyLargeNumberTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"largeNumberText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "largeNumberText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

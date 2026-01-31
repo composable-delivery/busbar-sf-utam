@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a status message with an icon indicating the type of message (e.g., error), along with assistive text for accessibility.",
+            "Selector: src-message-status"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".message-status_container"
+                },
+                "description": "Represents the container for the status message and icon.",
+                "elements": [
+                    {
+                        "name": "statusIcon",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon.message-status_icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon associated with the message status.",
+                        "public": true
+                    },
+                    {
+                        "name": "statusText",
+                        "selector": {
+                            "css": ".message-status_text"
+                        },
+                        "description": "Represents the text container for the status message.",
+                        "elements": [
+                            {
+                                "name": "statusTextContent",
+                                "selector": {
+                                    "css": ".message-status-text_small"
+                                },
+                                "description": "Represents the actual text content of the status message."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the status container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getStatusTextContent",
+            "description": {
+                "text": [
+                    "Get the text content from the status message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "statusTextContent",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

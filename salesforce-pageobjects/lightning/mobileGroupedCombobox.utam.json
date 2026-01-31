@@ -1,0 +1,239 @@
+{
+    "root": true,
+    "selector": {
+        "css": "lightning-mobile-grouped-combobox"
+    },
+    "description": {
+        "text": [
+            "Selector: lightning-mobile-grouped-combobox",
+            "Represents the lightning-mobile-grouped-combobox Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "hasFocus",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "setInputText",
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getIconAttribute",
+            "compose": [
+                {
+                    "element": "icon",
+                    "apply": "getIconAttribute",
+                    "args": [
+                        {
+                            "name": "attribute",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isClearButtonPresent",
+            "description": "checks if the lightning-input's clear button is visible",
+            "compose": [
+                {
+                    "element": "input"
+                },
+                {
+                    "chain": true,
+                    "element": "clearButton",
+                    "returnType": "utam-lightning/pageObjects/primitiveIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "clickClear",
+            "description": "clicks on lightning-input's text clear button",
+            "compose": [
+                {
+                    "element": "input"
+                },
+                {
+                    "chain": true,
+                    "apply": "clickClearButton"
+                }
+            ]
+        },
+        {
+            "name": "clickAction",
+            "compose": [
+                {
+                    "element": "actionButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getFilterLabelText",
+            "description": {
+                "text": [
+                    "Get filter label text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "filterLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getFilterItems",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "filterItems"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getFilterInputText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "filterInputText"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getFilterLabel",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "filterLabel"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "input",
+                "public": true,
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-lookup]"
+                }
+            },
+            {
+                "name": "filteredCombo",
+                "public": true,
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/baseCombobox",
+                "selector": {
+                    "css": "lightning-base-combobox[data-filter]"
+                }
+            },
+            {
+                "name": "filterLabel",
+                "selector": {
+                    "css": "label[data-filter-label]"
+                },
+                "nullable": true
+            },
+            {
+                "name": "heading",
+                "type": [
+                    "clickable",
+                    "editable",
+                    "actionable"
+                ],
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "div.slds-mobile-lookup__listbox-option_heading"
+                }
+            },
+            {
+                "name": "listbox",
+                "public": true,
+                "nullable": true,
+                "type": [
+                    "clickable",
+                    "editable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "lightning-button.slds-mobile-lookup__listbox_trigger"
+                }
+            },
+            {
+                "name": "options",
+                "public": true,
+                "nullable": true,
+                "type": "clickable",
+                "selector": {
+                    "css": "li[data-value]",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "actionButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button.slds-mobile-lookup__listbox_trigger"
+                }
+            },
+            {
+                "name": "label",
+                "type": "clickable",
+                "public": true,
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-mobile-combobox__addon lightning-icon"
+                }
+            }
+        ]
+    }
+}

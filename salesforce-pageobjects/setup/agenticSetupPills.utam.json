@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of recommended utterances and allows user interaction with these utterances.",
+            "Selector: setup-agentic-setup-pills"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "utterancesList",
+                "selector": {
+                    "css": "setup-agentic-setup-recommended-utterances"
+                },
+                "type": "utam-setup/pageObjects/agenticSetupRecommendedUtterances",
+                "description": "Represents the custom component displaying the recommended utterances",
+                "public": true
+            }
+        ]
+    }
+}

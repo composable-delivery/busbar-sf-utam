@@ -1,0 +1,337 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that manages input fields with dynamic loading of components, mode selection, and right panel overlay.",
+            "Selector: src-field-input"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "container",
+                "selector": {
+                    "css": ".container"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the main container of the component",
+                "elements": [
+                    {
+                        "name": "rightPanelOverlay",
+                        "selector": {
+                            "css": "builder_platform_interaction-right-panel-overlay"
+                        },
+                        "type": "utam-builder_platform_interaction/pageObjects/rightPanelOverlay",
+                        "description": "Represents the right panel overlay component",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "dynamicPanel",
+                                "selector": {
+                                    "css": "[value='%s']",
+                                    "args": [
+                                        {
+                                            "name": "selectorStr",
+                                            "type": "string",
+                                            "description": "CSS selector parameter"
+                                        }
+                                    ]
+                                },
+                                "type": "container",
+                                "description": "Represents the dynamic panel component inside the right panel overlay",
+                                "wait": true,
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ariaLabelSpan",
+                        "selector": {
+                            "css": "span.slds-assistive-text"
+                        },
+                        "description": "Represents the span element for aria label"
+                    },
+                    {
+                        "name": "inputFieldContainer",
+                        "selector": {
+                            "css": ".slds-form-element"
+                        },
+                        "description": "Represents the container for input fields",
+                        "elements": [
+                            {
+                                "name": "inputLabel",
+                                "selector": {
+                                    "css": "label.slds-form-element__label"
+                                },
+                                "description": "Represents the label for input fields",
+                                "nullable": true
+                            },
+                            {
+                                "name": "helpText",
+                                "selector": {
+                                    "css": "lightning-helptext"
+                                },
+                                "type": "utam-lightning/pageObjects/helptext",
+                                "description": "Represents the help text component",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "modeSelector",
+                                "selector": {
+                                    "css": "lightning-button-menu.mode-selector"
+                                },
+                                "type": "utam-lightning/pageObjects/buttonMenu",
+                                "description": "Represents the mode selector button menu",
+                                "nullable": true,
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "modeSelectorOptions",
+                                        "selector": {
+                                            "css": "lightning-menu-item",
+                                            "returnAll": true
+                                        },
+                                        "type": "utam-lightning/pageObjects/menuItem",
+                                        "description": "Represents the options within the mode selector",
+                                        "public": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "loadingModeAndComponent",
+                                "selector": {
+                                    "css": "div[data-testid=\"loadingModeAndComponent\"]"
+                                },
+                                "description": "Represents the loading state for mode and component",
+                                "nullable": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "loadingComponent",
+                                "selector": {
+                                    "css": "div[data-testid=\"loadingComponent\"]"
+                                },
+                                "description": "Represents the loading state for component",
+                                "nullable": true,
+                                "wait": true
+                            },
+                            {
+                                "name": "inputComponent",
+                                "selector": {
+                                    "css": ".field-input-dynamic-input-component"
+                                },
+                                "type": "container",
+                                "description": "Represents the dynamic input component",
+                                "wait": true,
+                                "public": true
+                            },
+                            {
+                                "name": "errorMessage",
+                                "selector": {
+                                    "css": "div.slds-form-element__help"
+                                },
+                                "description": "Represents the error message div",
+                                "nullable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickContainer",
+            "description": {
+                "text": [
+                    "Simulate clicking on the container"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "container",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "container",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isAriaLabelSpanVisible",
+            "description": {
+                "text": [
+                    "Check that the span for aria label is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabelSpan",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInputFieldContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the input field container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputFieldContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInputLabelVisible",
+            "description": {
+                "text": [
+                    "Check that the input label is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLoadingModeAndComponentVisible",
+            "description": {
+                "text": [
+                    "Check that the loading mode and component div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingModeAndComponent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLoadingComponentVisible",
+            "description": {
+                "text": [
+                    "Check that the loading component div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingComponent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isErrorMessageVisible",
+            "description": {
+                "text": [
+                    "Check that the error message div is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyInputLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"inputLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingModeAndComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingModeAndComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingModeAndComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

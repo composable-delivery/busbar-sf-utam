@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: toolbar"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "toolBoxContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='toolBox']"
+            }
+        },
+        {
+            "public": true,
+            "name": "canvasConfigContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='canvasConfig']"
+            }
+        },
+        {
+            "public": true,
+            "name": "errorsContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='errors']"
+            }
+        },
+        {
+            "public": true,
+            "name": "actionsContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='actions']"
+            }
+        }
+    ]
+}

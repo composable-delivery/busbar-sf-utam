@@ -1,0 +1,82 @@
+{
+    "root": true,
+    "selector": {
+        "css": "records-record-edit-error"
+    },
+    "exposeRootElement": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-edit-error.",
+            "Represents the records-record-edit-error Lightning web component.",
+            "Access linkable field errors or the reload button. Get all generic error messages or page errors."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "genericNotifications",
+                "selector": {
+                    "css": ".genericNotification",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "pageErrors",
+                "selector": {
+                    "css": ".pageLevelErrors .errorsList li",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "linkableFieldErrors",
+                "type": "utam-force/pageObjects/pageError",
+                "public": true,
+                "selector": {
+                    "css": ".fieldLevelErrors .errorsList",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "reloadButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the generic error messages"
+                ],
+                "return": "String value"
+            },
+            "name": "getGenericErrorMessages",
+            "compose": [
+                {
+                    "element": "genericNotifications",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the page errors"
+                ],
+                "return": "String value"
+            },
+            "name": "getPageErrors",
+            "compose": [
+                {
+                    "element": "pageErrors",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: dataProviderConfigurationListUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "formattedText",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[name='Search']"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "datatable",
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                }
+            }
+        ]
+    }
+}

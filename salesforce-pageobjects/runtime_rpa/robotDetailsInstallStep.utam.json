@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Robot Details Install Step"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "downloadButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "robotInstallationInfos",
+                "selector": {
+                    "css": "div[class~='rpa-robot-details-install-step-credential-content-entry-item']",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "robotInstallationInfo",
+                "selector": {
+                    "css": "div[class~='rpa-robot-details-install-step-credential-content-entry-item']:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

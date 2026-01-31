@@ -1,0 +1,48 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that encapsulates a metadata name cell with navigation and keyboard interaction capabilities.",
+            "Selector: lgpt-utam-explorer-tree-grid"
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "lightning-datatable"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "datatable",
+                "public": true,
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                }
+            }
+        ]
+    }
+}

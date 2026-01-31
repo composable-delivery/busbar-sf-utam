@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-tree",
+            "Represents the lightning-tree Lightning web component.",
+            "Get the lightning-tree-item component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "treeRoot",
+                "public": true,
+                "type": "utam-lightning/pageObjects/treeItem",
+                "selector": {
+                    "css": ".slds-tree_container lightning-tree-item[role='tree']"
+                }
+            }
+        ]
+    }
+}

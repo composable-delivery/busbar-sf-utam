@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .flexipagePage.",
+            "Represents the flexipage:page Aura component.",
+            "Get the flexipageComponent by ID."
+        ]
+    },
+    "elements": [
+        {
+            "name": "componentById",
+            "type": "utam-flexipage/pageObjects/component",
+            "selector": {
+                "css": ".flexipageComponent[data-component-id='%s']",
+                "args": [
+                    {
+                        "name": "id",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

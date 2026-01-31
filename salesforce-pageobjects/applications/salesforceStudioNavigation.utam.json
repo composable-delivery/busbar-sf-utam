@@ -1,0 +1,286 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A navigation component that provides a vertical list of main navigation items, each potentially containing a submenu that can be expanded. It supports keyboard navigation and interaction through mouse clicks, and updates the selected state based on user interaction.",
+            "Selector: setup_platform_unifiedapp-salesforce-studio-navigation"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-salesforce-studio-navigation"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "studioLogoImage",
+                "selector": {
+                    "css": "img[alt=\"Salesforce Studio Logo\"]"
+                },
+                "description": "Represents the Salesforce Studio logo image."
+            },
+            {
+                "name": "mainNavItemLinks",
+                "selector": {
+                    "css": "a[role=\"menuitem\"]",
+                    "returnAll": true
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the clickable links for main navigation items.",
+                "wait": true
+            },
+            {
+                "name": "homeNavItem",
+                "selector": {
+                    "css": "a[role=\"menuitem\"][data-id=\"home\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the Home navigation item."
+            },
+            {
+                "name": "projectsNavItem",
+                "selector": {
+                    "css": "a[role=\"menuitem\"][data-id=\"projects\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the Projects navigation item."
+            },
+            {
+                "name": "changesNavItem",
+                "selector": {
+                    "css": "a[role=\"menuitem\"][data-id=\"changes\"]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the Changes navigation item."
+            },
+            {
+                "name": "submenuSection",
+                "selector": {
+                    "css": "div.submenu-section",
+                    "returnAll": true
+                },
+                "description": "Represents the container for submenu sections, which may be conditionally rendered.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "submenuItemLinks",
+                        "selector": {
+                            "css": "ul[role=\"menu\"] a[role=\"menuitem\"]",
+                            "returnAll": true
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the clickable links for submenu items."
+                    }
+                ]
+            },
+            {
+                "name": "navItemByDataId",
+                "selector": {
+                    "css": "a[role=\"menuitem\"][data-id=\"%s\"]",
+                    "args": [
+                        {
+                            "name": "dataId",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents a navigation item by its data-id attribute."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickMainNavItem",
+            "description": {
+                "text": [
+                    "Click on a main navigation item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "mainNavItemLinks",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickHome",
+            "description": {
+                "text": [
+                    "Click on the Home navigation item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "homeNavItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickProjects",
+            "description": {
+                "text": [
+                    "Click on the Projects navigation item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "projectsNavItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickChanges",
+            "description": {
+                "text": [
+                    "Click on the Changes navigation item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "changesNavItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickNavItemById",
+            "description": "Click on a navigation item by its ID",
+            "compose": [
+                {
+                    "element": "navItemByDataId",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSubmenuItem",
+            "description": {
+                "text": [
+                    "Click on a submenu item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "submenuItemLinks",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getMainNavItemText",
+            "description": {
+                "text": [
+                    "Get the text of a main navigation item"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "mainNavItemLinks",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isSubmenuSectionVisible",
+            "description": {
+                "text": [
+                    "Check if a submenu section is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "submenuSection",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isStudioLogoImageVisible",
+            "description": {
+                "text": [
+                    "Check if the Salesforce Studio logo image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "studioLogoImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifySubmenuSectionPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"submenuSection\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "submenuSection",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isNavItemVisible",
+            "description": {
+                "text": [
+                    "Check if a specific navigation item is visible by its ID"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "navItemByDataId",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isNavItemSelected",
+            "description": {
+                "text": [
+                    "Check if a specific navigation item is selected by its ID",
+                    "This checks for the 'selected' class on the element"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "navItemByDataId",
+                    "apply": "getClassAttribute"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a right panel overlay with a header and a slot for additional content.",
+            "Selector: src-right-panel-overlay"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "rightPanelOverlay",
+                "selector": {
+                    "css": "builder_platform_interaction-right-panel.right-panel-overlay"
+                },
+                "type": "utam-builder_platform_interaction/pageObjects/rightPanel",
+                "description": "Represents the right panel overlay component.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "panelHeader",
+                        "selector": {
+                            "css": "builder_platform_interaction-panel-header"
+                        },
+                        "type": "utam-builder_platform_interaction/pageObjects/panelHeader",
+                        "description": "Represents the panel header component.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "backButton",
+                                "selector": {
+                                    "css": "[show-back-button]"
+                                },
+                                "type": "utam-builder_platform_interaction/pageObjects/panelHeader",
+                                "description": "Represents the back button in the panel header.",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "slotContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the default slot for additional content.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

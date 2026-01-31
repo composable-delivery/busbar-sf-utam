@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forcePageBlockSectionView.",
+            "Represents the force:pageBlockSectionView Aura component.",
+            "Get the force:pageBlockItemView component or the inline edit button."
+        ]
+    },
+    "elements": [
+        {
+            "name": "pageBlockSectionRow",
+            "selector": {
+                "css": ".forcePageBlockSectionRow:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true,
+            "elements": [
+                {
+                    "name": "itemView",
+                    "type": "utam-force/pageObjects/pageBlockItemView",
+                    "public": true,
+                    "selector": {
+                        "css": ".forcePageBlockItemView"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "inlineEditButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button[title*='%s']",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

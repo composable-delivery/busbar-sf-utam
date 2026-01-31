@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: paletteItem",
+            "Selector: span"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            }
+        ]
+    }
+}

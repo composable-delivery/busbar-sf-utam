@@ -1,0 +1,139 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a panel header with optional back icon, title text, and slots for help text, warnings, and actions.",
+            "Selector: src-panel-header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "backButton",
+                "selector": {
+                    "css": "lightning-button-icon.slds-p-right_x-small"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the back button to navigate to the previous list",
+                "nullable": true
+            },
+            {
+                "name": "headerTitle",
+                "selector": {
+                    "css": ".slds-panel__header-title"
+                },
+                "description": "Represents the title text of the panel header"
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "helpTextContent",
+            "selector": {
+                "css": "[slot='helptext']"
+            },
+            "type": "container",
+            "description": "Represents the content of the help text slot",
+            "public": true
+        },
+        {
+            "name": "warningContent",
+            "selector": {
+                "css": "[slot='warning']"
+            },
+            "type": "container",
+            "description": "Represents the content of the warning slot",
+            "public": true
+        },
+        {
+            "name": "actionsContent",
+            "selector": {
+                "css": "[slot='actions']"
+            },
+            "type": "container",
+            "description": "Represents the content of the actions slot",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickBackButton",
+            "description": {
+                "text": [
+                    "Clicks the back button if it is present"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "backButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderText",
+            "description": {
+                "text": [
+                    "Returns the text of the header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isBackButtonVisible",
+            "description": {
+                "text": [
+                    "Checks if the back button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "backButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isHeaderTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the header title is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyBackButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"backButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "backButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

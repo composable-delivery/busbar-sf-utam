@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .visualEditorPropertyEditorItem.",
+            "Represents the visualEditor:propertyEditorItem component.",
+            "Get item content by index."
+        ]
+    },
+    "elements": [
+        {
+            "name": "itemContentByIndex",
+            "type": "container",
+            "selector": {
+                "css": ":scope > :nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-highlights-details-item-group",
+            "Represents the records-highlights-details-item-group Lightning web component.",
+            "Get the records-highlights-details-item component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "highlightsDetailsItems",
+            "public": true,
+            "type": "utam-records/pageObjects/highlightsDetailsItem",
+            "selector": {
+                "css": "records-highlights-details-item",
+                "returnAll": true
+            }
+        }
+    ]
+}

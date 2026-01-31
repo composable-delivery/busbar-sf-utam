@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "NewRobotButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "NewFlowButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "card",
+                "type": "utam-lightning/pageObjects/card",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "robotList",
+                        "selector": {
+                            "css": "runtime_rpa-data-table"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "manageRobots",
+                        "selector": {
+                            "css": "runtime_rpa-manage-robots"
+                        },
+                        "type": "utam-runtime_rpa/pageObjects/manageRobots"
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "robotDetailsWrapper",
+                "type": "utam-runtime_rpa/pageObjects/robotDetailsWrapper",
+                "selector": {
+                    "css": "runtime_rpa-page-header"
+                }
+            }
+        ]
+    }
+}

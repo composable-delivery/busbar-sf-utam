@@ -1,0 +1,44 @@
+{
+    "description": {
+        "text": [
+            "Selector: one-app-nav-bar.",
+            "Represents the one-app-nav-bar Lightning web component.",
+            "Access a nav item by text."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "showMoreMenuButton",
+                "type": "utam-global/pageObjects/appNavBarMenuButton",
+                "public": true,
+                "selector": {
+                    "css": "one-app-nav-bar-menu-button"
+                }
+            },
+            {
+                "name": "navItem",
+                "type": "utam-global/pageObjects/appNavBarItemRoot",
+                "public": true,
+                "selector": {
+                    "css": "one-app-nav-bar-item-root",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getItemText",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "findFirst": true
+                }
+            }
+        ]
+    }
+}

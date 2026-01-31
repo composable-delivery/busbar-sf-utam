@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-palette-popover",
+            "Constraint Builder Business UI Palette Popover"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "selectConstraintsContent",
+                "type": [],
+                "selector": {
+                    "css": "h2#selectconstraints"
+                }
+            },
+            {
+                "name": "section",
+                "type": [],
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "focusTrap",
+                        "type": "utam-lightning/pageObjects/focusTrap",
+                        "selector": {
+                            "css": "lightning-focus-trap"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "listItemsByIndex",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number"
+                                        }
+                                    ]
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "buiPaletteItem",
+                                        "type": "utam-builder_industries_constraints/pageObjects/buiPaletteItem",
+                                        "selector": {
+                                            "css": "builder_industries_constraints-bui-palette-item"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "public": true,
+                                "name": "listItems",
+                                "selector": {
+                                    "css": "li",
+                                    "returnAll": true
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

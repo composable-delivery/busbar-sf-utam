@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the single Chatter post fragment.",
+            "Interact with an individual Chatter post."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "getPostDetail",
+            "returnType": "utam-salesforceapp/pageObjects/chatter/chatterPostCell"
+        },
+        {
+            "name": "clickMentionIcon"
+        },
+        {
+            "name": "clickAttachIcon"
+        },
+        {
+            "name": "clickPostButton"
+        },
+        {
+            "name": "clickOnLinkInPost",
+            "args": [
+                {
+                    "name": "link",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "typeText",
+            "args": [
+                {
+                    "name": "textToType",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

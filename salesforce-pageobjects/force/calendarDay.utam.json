@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceCalendarDay.",
+            "Represents the force:calendarDay Aura component.",
+            "Get the event list container."
+        ]
+    },
+    "elements": [
+        {
+            "name": "eventListContainer",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "css": ".eventListContainer"
+            }
+        }
+    ]
+}

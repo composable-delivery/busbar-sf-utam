@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A button component that allows the user to navigate to a specified URL in a new tab when clicked, with the button being disabled if no URL is provided.",
+            "Selector: app_dev_agent-metadata-navigation"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "navigateButton",
+                "selector": {
+                    "css": "lightning-button.slds-p-around_medium.slds-float_right"
+                },
+                "type": "actionable",
+                "description": "Represents the navigation button with an icon and label."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isNavigateButtonDisabled",
+            "description": {
+                "text": [
+                    "Return the disabled state of the navigate button"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "navigateButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

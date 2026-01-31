@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-datatable. Represents the available list of Slack apps that notifications can be sent to."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "datatable",
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                },
+                "public": true
+            }
+        ]
+    }
+}

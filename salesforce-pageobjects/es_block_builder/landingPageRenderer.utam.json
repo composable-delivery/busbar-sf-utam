@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the renderer for a landing page in the CMS builder runtime"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_block_builder-landing-page-renderer"
+    },
+    "elements": [
+        {
+            "name": "contents",
+            "public": true,
+            "selector": {
+                "css": ":first-child"
+            },
+            "type": "container"
+        }
+    ]
+}

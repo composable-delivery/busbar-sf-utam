@@ -1,0 +1,73 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/nav_host_fragment\").",
+            "Represents the Android fragment for the Einstein analytics home page.",
+            "Find 'Browse' and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/analyticsHome",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/nav_host_fragment\")"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "uiautomator": "className(\"android.widget.ProgressBar\")"
+                                    }
+                                }
+                            ],
+                            "matcher": {
+                                "type": "isFalse"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "browse",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/home_nav_item_browse\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "navigateToBrowse",
+            "compose": [
+                {
+                    "element": "browse",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

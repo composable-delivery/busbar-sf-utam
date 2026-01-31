@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-input-picklist.",
+            "Represents the lists input picklist Lightning web component.",
+            "Access the inner picklist component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/picklist",
+                "name": "picklist",
+                "public": true,
+                "selector": {
+                    "css": "lightning-picklist"
+                }
+            }
+        ]
+    }
+}

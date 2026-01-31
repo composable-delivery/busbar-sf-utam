@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-date-time",
+            "Represents the lightning-formatted-date-time Lightning web component.",
+            "Get the text value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "description": {
+                "text": [
+                    "Get the formatted data time value based on the user's locale"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

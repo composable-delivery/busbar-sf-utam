@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceInputPicklist.",
+            "Represents the force:inputPicklist Aura component.",
+            "Get the selected element."
+        ]
+    },
+    "elements": [
+        {
+            "name": "selectedItem",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.select"
+            }
+        }
+    ]
+}

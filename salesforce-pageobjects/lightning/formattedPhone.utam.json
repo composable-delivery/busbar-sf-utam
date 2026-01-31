@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-phone",
+            "Represents the lightning-formatted-phone Lightning web component.",
+            "Get the text value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "description": {
+                "text": [
+                    "Get the formatted phone number display value with tel: URL scheme as text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

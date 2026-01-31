@@ -1,0 +1,25 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the SFS app login screen."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "login",
+            "args": [
+                {
+                    "name": "userNameStr",
+                    "type": "string"
+                },
+                {
+                    "name": "passwordStr",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

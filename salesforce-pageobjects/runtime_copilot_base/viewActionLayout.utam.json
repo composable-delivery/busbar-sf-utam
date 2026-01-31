@@ -1,0 +1,82 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides an action bar with a set of actions. Some of the actions are directly visible, and the others are available in a dropdown menu if there are more actions than the specified visible count.",
+            "Selector: src-view-action-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "actionContainer",
+                "selector": {
+                    "css": "div[data-id='action-container']"
+                },
+                "description": "Represents the container that holds the action buttons and dropdown menu."
+            },
+            {
+                "name": "buttonGroup",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button-group"
+                },
+                "description": "Represents the group of action buttons.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "visibleActionComponents",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component",
+                            "returnAll": true
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "description": "Represents the action components that are visible without the dropdown.",
+                        "public": true
+                    },
+                    {
+                        "name": "dropdownButtonMenu",
+                        "selector": {
+                            "css": "lightning-button-menu"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the dropdown button that contains additional actions.",
+                        "nullable": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "dropdownMenuItems",
+                                "selector": {
+                                    "css": "lightning-menu-item",
+                                    "returnAll": true
+                                },
+                                "type": "utam-lightning/pageObjects/menuItem",
+                                "description": "Represents the items within the dropdown menu.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isActionContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the action container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "actionContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

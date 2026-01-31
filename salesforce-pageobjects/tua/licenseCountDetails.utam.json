@@ -1,0 +1,27 @@
+{
+    "shadow": {
+        "elements": [
+            {
+                "name": "totalLicenses",
+                "public": true,
+                "selector": {
+                    "css": ".tua-total-license-count-box"
+                }
+            },
+            {
+                "name": "licenses",
+                "public": true,
+                "wait": true,
+                "selector": {
+                    "css": ".tua-license-count-box:not(.tua-total-license-count-box)"
+                }
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

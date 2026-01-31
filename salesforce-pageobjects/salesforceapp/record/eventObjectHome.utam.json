@@ -1,0 +1,11 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the event object home view.",
+            "Verify the event object home has loaded."
+        ]
+    },
+    "interface": true,
+    "root": true
+}

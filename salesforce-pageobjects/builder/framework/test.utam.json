@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: test"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        }
+    ]
+}

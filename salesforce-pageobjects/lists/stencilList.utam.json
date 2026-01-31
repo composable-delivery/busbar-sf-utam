@@ -1,0 +1,14 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-stencil-list.",
+            "Represents the stencil list Lightning web component.",
+            "Used for verifying loading."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable"
+    ]
+}

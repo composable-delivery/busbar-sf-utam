@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Record List used in Offline App.",
+            "Verify the list and its rows."
+        ]
+    },
+    "interface": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "touchable"
+    ],
+    "methods": [
+        {
+            "name": "getRecordRows",
+            "returnAll": true,
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow"
+        },
+        {
+            "name": "getRecordRowByText",
+            "args": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow"
+        },
+        {
+            "name": "getRecordRowByTitle",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ],
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow"
+        },
+        {
+            "name": "scrollUp"
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-dynamic-related-list",
+            "Represents the dynamic related list single app builder Lightning web component.",
+            "Access the related list view manager.",
+            "Has two possible child components: dynamicRelatedListViewWithUserPrefs and dynamicRelatedListViewWithResolvedFields."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/dynamicRelatedListWithResolvedFields",
+                "name": "dynamicRelatedListWithResolvedFields",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-dynamic-related-list-with-resolved-fields"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/errorState",
+                "name": "errorState",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-error-state"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getRelatedListViewManager",
+            "description": {
+                "text": [
+                    "Gets the related list view manager from the resolved fields component"
+                ],
+                "return": "the related list view manager component"
+            },
+            "compose": [
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListViewManager",
+                    "element": "dynamicRelatedListWithResolvedFields",
+                    "apply": "getRelatedListViewManager"
+                }
+            ]
+        }
+    ]
+}

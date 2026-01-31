@@ -1,0 +1,157 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a form to display and edit record details, with dynamic layout capabilities and custom event handling for changes and save operations.",
+            "Selector: src-base-record-form"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordHeader",
+                "selector": {
+                    "css": "runtime_copilot_base-record-header"
+                },
+                "description": "Represents the header of the record form with title and icon.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "recordTitleLink",
+                        "selector": {
+                            "css": "a.form-header-link"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the link to the record title that navigates to the record page."
+                    }
+                ]
+            },
+            {
+                "name": "detailForm",
+                "selector": {
+                    "css": "dxp_records-detail-form"
+                },
+                "description": "Represents the main form for record details, which is conditionally rendered and contains event handlers for lookup queries and form save.",
+                "nullable": true,
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "rowFields",
+                        "selector": {
+                            "css": "dxp_records-section-row",
+                            "returnAll": true
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "wait": true,
+                        "description": "List of fields in dxp form"
+                    },
+                    {
+                        "public": true,
+                        "name": "rowFieldByIndex",
+                        "wait": true,
+                        "nullable": true,
+                        "selector": {
+                            "css": "dxp_records-section-row:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "name": "lightningFormField",
+                                "selector": {
+                                    "css": "lightning-form-field"
+                                },
+                                "public": true,
+                                "nullable": true,
+                                "wait": true,
+                                "shadow": {
+                                    "elements": [
+                                        {
+                                            "name": "lightningFormFieldOutput",
+                                            "selector": {
+                                                "css": "lightning-form-field-output"
+                                            },
+                                            "public": true,
+                                            "nullable": true,
+                                            "wait": true
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRecordTitleLink",
+            "description": {
+                "text": [
+                    "Click on the record title link to navigate to the record page"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordTitleLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isRecordTitleLinkVisible",
+            "description": {
+                "text": [
+                    "Check if the record title link is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordTitleLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRecordTitleLinkEnabled",
+            "description": {
+                "text": [
+                    "Check if the record title link is enabled and clickable"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordTitleLink",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "getRecordTitleLinkText",
+            "description": {
+                "text": [
+                    "Get the text of the record title link"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordTitleLink",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_sales_adt-setup-feature",
+            "Represents setup_sales_adt-setup-feature Lightening web component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "adp360ToggleButton",
+                "public": true,
+                "selector": {
+                    "css": "label > input[name='Turn On APD360 for Einstein Conversation Insights'] + span"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            }
+        ]
+    }
+}

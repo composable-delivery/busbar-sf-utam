@@ -1,0 +1,103 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a record form with the ability to view and edit details. It supports dynamic layouts and metadata-driven UI, and can handle lookups and picklist values.",
+            "Selector: src-view-record-form"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "avatar",
+                "selector": {
+                    "css": "feeds_chat-base-avatar"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseAvatar",
+                "description": "Represents the avatar image in the component header.",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "headerLink",
+                "selector": {
+                    "css": "a.form-header-link"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the link in the component header that navigates to the record."
+            },
+            {
+                "name": "detailForm",
+                "selector": {
+                    "css": "dxp_records-detail-form"
+                },
+                "description": "Represents the detail form for editing record data.",
+                "nullable": true,
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "formFields",
+                        "selector": {
+                            "css": "lightning-form-field",
+                            "returnAll": true
+                        },
+                        "type": "utam-lightning/pageObjects/formField",
+                        "description": "Represents all form fields within the detail form.",
+                        "public": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickHeaderLink",
+            "description": {
+                "text": [
+                    "Perform a click action on the header link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "headerLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "assertHeaderLinkIsVisible",
+            "description": {
+                "text": [
+                    "Check that the header link is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "headerLink",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "assertHeaderLinkText",
+            "description": {
+                "text": [
+                    "Get text from the header link to assert its value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerLink",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-dependent-field-data-primer.",
+            "Represents the force-dependent-field-data-primer Lightning web component.",
+            "Get the records-dependent-field-tree-root component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "force-dependent-field-data-primer"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "records-dependent-field-tree-root"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "treeRoot",
+                "public": true,
+                "type": "container",
+                "selector": {
+                    "css": "records-dependent-field-tree-root"
+                }
+            }
+        ]
+    }
+}

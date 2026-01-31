@@ -1,0 +1,231 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that simulates a typing animation with steps and optionally displays action buttons based on provided actions.",
+            "Selector: src-status-typing"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".status-container"
+                },
+                "description": "Represents the container for the typing animation.",
+                "elements": [
+                    {
+                        "name": "stepItem",
+                        "selector": {
+                            "css": ".status-container > div",
+                            "returnAll": true
+                        },
+                        "description": "Represents each step in the typing animation."
+                    },
+                    {
+                        "name": "stepText",
+                        "selector": {
+                            "css": ".text"
+                        },
+                        "description": "Represents the text message for each step."
+                    },
+                    {
+                        "name": "checkmarkIcon",
+                        "selector": {
+                            "css": "svg[viewBox=\"0 0 16 16\"]"
+                        },
+                        "description": "Represents the checkmark icon indicating step completion.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "starIcon",
+                        "selector": {
+                            "css": ".star-container > .stars",
+                            "returnAll": true
+                        },
+                        "description": "Represents the star icons displayed when a step is not completed.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "assistiveText",
+                        "selector": {
+                            "css": ".slds-assistive-text"
+                        },
+                        "description": "Represents assistive text for screen readers.",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "footerArea",
+                "selector": {
+                    "css": ".status-typing_footer"
+                },
+                "description": "Represents the footer area that may contain action buttons.",
+                "elements": [
+                    {
+                        "name": "actionButton",
+                        "selector": {
+                            "css": "feeds_chat-view-component[data-action-region]"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/viewComponent",
+                        "description": "Represents the action button that triggers an event handler when clicked.",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getStatusContainerTitle",
+            "description": {
+                "text": [
+                    "Retrieves the title attribute of the status container"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getStepMessage",
+            "description": {
+                "text": [
+                    "Retrieves the text message of a specific step"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stepText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isCheckmarkIconVisible",
+            "description": {
+                "text": [
+                    "Checks if the checkmark icon is visible (indicating step completion)"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checkmarkIcon",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isStarIconPresent",
+            "description": {
+                "text": [
+                    "Checks if the star icon is present (indicating step not completed)"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "starIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Retrieves the assistive text for screen readers"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isFooterAreaVisible",
+            "description": {
+                "text": [
+                    "Checks if the footer area is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "footerArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyCheckmarkIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"checkmarkIcon\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checkmarkIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyStarIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"starIcon\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "starIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyAssistiveTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"assistiveText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

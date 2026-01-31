@@ -1,0 +1,37 @@
+{
+    "description": {
+        "text": [
+            "Selector: one-appnav.",
+            "Represents the one-appnav Lightning web component.",
+            "Access the app nav bar, app launcher header, or app name."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "appNavBar",
+                "type": "utam-global/pageObjects/appNavBar",
+                "public": true,
+                "selector": {
+                    "css": "one-app-nav-bar"
+                }
+            },
+            {
+                "name": "appLauncherHeader",
+                "type": "utam-global/pageObjects/appLauncherHeader",
+                "public": true,
+                "selector": {
+                    "css": "one-app-launcher-header"
+                }
+            },
+            {
+                "name": "appName",
+                "public": true,
+                "selector": {
+                    "css": ".appName span"
+                }
+            }
+        ]
+    }
+}

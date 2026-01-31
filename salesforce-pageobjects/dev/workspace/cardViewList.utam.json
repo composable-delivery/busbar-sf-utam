@@ -1,0 +1,54 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of workspace cards with project details. The list can be limited by a maximum number of cards.",
+            "Selector: dev_workspace-card-view-list"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-card-view-list"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "workspaceCardsContainer",
+                "selector": {
+                    "css": "div.slds-grid.slds-wrap"
+                },
+                "description": "Represents the container for workspace cards.",
+                "elements": [
+                    {
+                        "name": "workspaceCard",
+                        "selector": {
+                            "css": "dev_workspace-card-view",
+                            "returnAll": true
+                        },
+                        "type": "utam-dev-workspace/pageObjects/cardView",
+                        "description": "Represents individual workspace cards within the container.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isWorkspaceCardsContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the workspace cards container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "workspaceCardsContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

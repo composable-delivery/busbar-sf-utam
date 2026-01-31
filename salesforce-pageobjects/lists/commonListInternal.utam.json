@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-common-list-internal.",
+            "Represents the common list internal Lightning web component.",
+            "Access the list header, as well as the primary and secondary display managers."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/listViewManagerHeader",
+                "name": "header",
+                "public": true,
+                "selector": {
+                    "css": "lst-list-view-manager-header"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/primaryDisplayManager",
+                "name": "displayManager",
+                "public": true,
+                "selector": {
+                    "css": "lst-primary-display-manager"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/secondaryDisplayManager",
+                "name": "secondaryDisplayManager",
+                "public": true,
+                "selector": {
+                    "css": "lst-secondary-display-manager"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/commonListFooter",
+                "name": "commonListFooter",
+                "public": true,
+                "wait": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-common-list-footer"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "navigateToListViewIdViaPicker",
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "navigateToListViewIdViaPicker",
+                    "args": [
+                        {
+                            "type": "string",
+                            "name": "text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getListViewTitleViaPicker",
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getListViewTitleViaPicker",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ]
+}

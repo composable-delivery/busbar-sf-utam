@@ -1,0 +1,76 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-primitive-coordinate-item",
+            "Represents the coordinate item of lightning-map Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "coordinateItem",
+                "type": "clickable",
+                "selector": {
+                    "css": ".slds-coordinates__item"
+                }
+            },
+            {
+                "name": "title",
+                "selector": {
+                    "css": ".slds-text-link"
+                }
+            },
+            {
+                "name": "address",
+                "selector": {
+                    "css": ".slds-media__body span:nth-child(2)"
+                }
+            },
+            {
+                "name": "assistiveText",
+                "selector": {
+                    "css": ".slds-assistive-text"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "compose": [
+                {
+                    "element": "coordinateItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getAddress",
+            "compose": [
+                {
+                    "element": "address",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveText",
+            "compose": [
+                {
+                    "element": "assistiveText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,183 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays an event data provider card with an icon, title, description, and optional action buttons.",
+            "Selector: src-event-data-provider-card"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseCard",
+                "selector": {
+                    "css": "es_block_builder-data-provider-base-card"
+                },
+                "type": "utam-es_block_builder/pageObjects/dataProviderBaseCard",
+                "description": "Represents the base card component that contains all other elements",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "iconSlot",
+                        "selector": {
+                            "css": "[slot='icon']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for the icon",
+                        "public": true
+                    },
+                    {
+                        "name": "lightningIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the lightning icon within the icon slot",
+                        "public": true
+                    },
+                    {
+                        "name": "titleSlot",
+                        "selector": {
+                            "css": "[slot='title']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for the title",
+                        "public": true
+                    },
+                    {
+                        "name": "titleText",
+                        "selector": {
+                            "css": "h4.slds-truncate.slds-text-title_bold"
+                        },
+                        "description": "Represents the title text within the title slot"
+                    },
+                    {
+                        "name": "actionsSlot",
+                        "selector": {
+                            "css": "[slot='actions']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for action buttons",
+                        "public": true
+                    },
+                    {
+                        "name": "emptyActionsDiv",
+                        "selector": {
+                            "css": "div.empty-actions"
+                        },
+                        "description": "Represents the empty actions div when actions are disabled",
+                        "nullable": true
+                    },
+                    {
+                        "name": "descriptionParagraph1",
+                        "selector": {
+                            "css": "p.slds-p-horizontal_small:nth-of-type(1)"
+                        },
+                        "description": "Represents the first description paragraph"
+                    },
+                    {
+                        "name": "descriptionParagraph2",
+                        "selector": {
+                            "css": "p.slds-p-horizontal_small:nth-of-type(2)"
+                        },
+                        "description": "Represents the second description paragraph"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTitleTextVisible",
+            "description": {
+                "text": [
+                    "Check that title text is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Get text from title text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isEmptyActionsDivPresent",
+            "description": {
+                "text": [
+                    "Check that empty actions div is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyActionsDiv",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyEmptyActionsDivPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"emptyActionsDiv\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyActionsDiv",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyDescriptionParagraph1Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"descriptionParagraph1\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionParagraph1",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyDescriptionParagraph2Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"descriptionParagraph2\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionParagraph2",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

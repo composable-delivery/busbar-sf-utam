@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputTextArea.",
+            "Represents the ui:inputTextArea Aura component.",
+            "Get the label and textarea elements."
+        ]
+    },
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "textarea",
+            "public": true,
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "textarea"
+            }
+        }
+    ]
+}

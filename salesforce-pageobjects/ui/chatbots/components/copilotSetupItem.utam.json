@@ -1,0 +1,25 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-copilot-setup-item",
+            "Item within the Setup accordion."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-copilot-setup-item"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "card",
+                "type": "utam-lightning/pageObjects/card",
+                "selector": {
+                    "css": "lightning-card"
+                }
+            }
+        ]
+    }
+}

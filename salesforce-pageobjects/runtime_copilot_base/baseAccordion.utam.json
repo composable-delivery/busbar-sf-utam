@@ -1,0 +1,136 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component representing an accordion item that can be toggled open and closed. It includes a button to expand or collapse the content, an icon indicating the state, and slots for the header, body, and footer content.",
+            "Selector: runtime-copilot-base-base-accordion"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "toggleButton",
+                "selector": {
+                    "css": ".slds-button.accordion-item"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the button used to toggle the accordion item.",
+                "elements": [
+                    {
+                        "name": "iconOpen",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon.arrow-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon indicating the accordion is open.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "iconClosed",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon.arrow-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon indicating the accordion is closed.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "bodyContainer",
+                "selector": {
+                    "css": ".transition-container"
+                },
+                "description": "Represents the container for the body of the accordion.",
+                "elements": [
+                    {
+                        "name": "bodyContent",
+                        "selector": {
+                            "css": "[slot='body']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot for the accordion body.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "headerContent",
+            "selector": {
+                "css": "[slot='header']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for the accordion header.",
+            "public": true
+        },
+        {
+            "name": "footerContent",
+            "selector": {
+                "css": "[slot='footer']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for the accordion footer.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "toggleAccordion",
+            "description": {
+                "text": [
+                    "Simulates a click on the accordion toggle button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "toggleButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isAccordionExpanded",
+            "description": {
+                "text": [
+                    "Returns true if the accordion is expanded, false otherwise"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "toggleButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isBodyVisible",
+            "description": {
+                "text": [
+                    "Checks if the body container of the accordion is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "bodyContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

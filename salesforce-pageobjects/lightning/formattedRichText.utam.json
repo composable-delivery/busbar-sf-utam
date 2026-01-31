@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-rich-text",
+            "Represents the lightning-formatted-rich-text Lightning web component.",
+            "Get the text value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getInnerText",
+            "description": {
+                "text": [
+                    "Get the formatted rich text content value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Field Service app and is used for global actions such as checking toasts on the page."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "waitForSyncToComplete",
+            "returnType": "boolean"
+        },
+        {
+            "name": "areSyncErrorsPresent",
+            "returnType": "boolean"
+        },
+        {
+            "name": "isSyncInProgress",
+            "returnType": "boolean"
+        },
+        {
+            "name": "pullToRefresh"
+        }
+    ]
+}

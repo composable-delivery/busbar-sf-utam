@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-date-time",
+            "Provides access to various lightning components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                }
+            },
+            {
+                "public": true,
+                "name": "labelContent",
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedText",
+                "type": "utam-lightning/pageObjects/formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

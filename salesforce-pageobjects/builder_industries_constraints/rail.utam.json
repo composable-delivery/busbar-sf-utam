@@ -1,0 +1,65 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-rail",
+            "Constraint Builder rail component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "list",
+                "type": [
+                    "actionable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "ul[class='nav-list']"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "icon",
+                                "type": "utam-lightning/pageObjects/icon",
+                                "selector": {
+                                    "css": "lightning-icon"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

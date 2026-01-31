@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-input-title-editor",
+            "Represents the block builder title editor for the dynamic authoring form component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input"
+            }
+        ]
+    }
+}

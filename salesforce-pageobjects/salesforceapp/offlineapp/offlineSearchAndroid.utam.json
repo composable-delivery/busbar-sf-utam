@@ -1,0 +1,88 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/compose_view\").",
+            "Represents the Android Offline search view",
+            "Perform a search and verify results"
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineSearch",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/compose_view\")"
+    },
+    "elements": [
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"search_field\")"
+            }
+        },
+        {
+            "name": "cancelSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"clear_search\")"
+            }
+        },
+        {
+            "name": "searchResultList",
+            "public": true,
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList",
+            "selector": {
+                "uiautomator": "resourceId(\"search_list\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cancelSearch",
+            "compose": [
+                {
+                    "element": "cancelSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clear"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: forceDockingPanelOverflow",
+            "Represents the force:dockingPanelOverflow Aura component",
+            "Get information about overflowed panels."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceDockingPanelOverflow:not(.utiloverflow)"
+    },
+    "elements": [
+        {
+            "name": "overflowTrigger",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".overflow-trigger"
+            }
+        },
+        {
+            "name": "menuItems",
+            "public": true,
+            "selector": {
+                "css": "li.forceDockingPanelOverflowItem",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "menuItemsByClass",
+            "public": true,
+            "selector": {
+                "css": "li.forceDockingPanelOverflowItem",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getClassAttribute",
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "itemText",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "open",
+            "description": {
+                "text": [
+                    "Opens the overflow"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "overflowTrigger"
+                }
+            ]
+        }
+    ]
+}

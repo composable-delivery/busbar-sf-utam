@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-edit-error-header.",
+            "Represents the records-record-edit-error-header Lightning web component.",
+            "Access the close button."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "closeButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-icon.slds-popover__close"
+                }
+            }
+        ]
+    }
+}

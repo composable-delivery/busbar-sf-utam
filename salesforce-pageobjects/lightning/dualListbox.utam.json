@@ -1,0 +1,342 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-dual-listbox",
+            "Represents the lightning-dual-listbox Lightning web component.",
+            "Get the label text, the selected label text, the source label text, or an error message associated with the dual list box.",
+            "Check if there's an error, or if the field is required. Click the source item or the selected item. Get the selected options and the source options.",
+            "Gets the assistive message read by screen readers"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Gets the label of dual list box"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRequired",
+            "description": {
+                "text": [
+                    "Checks if the field is required"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "required",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getSourceLabel",
+            "description": {
+                "text": [
+                    "Gets the label of source list box"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sourceLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveMessage",
+            "description": {
+                "text": [
+                    "Gets the assistive message read by screen readers"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistiveMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSelectedLabel",
+            "description": {
+                "text": [
+                    "Gets the label of selected options list box"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "selectedLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "hasError",
+            "description": {
+                "text": [
+                    "Checks if there is an error"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "error",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessage",
+            "description": {
+                "text": [
+                    "Gets the error message only if there is an error"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "error",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickSourceItem",
+            "description": "Performs an click action on the source list item",
+            "compose": [
+                {
+                    "element": "sourceItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSelectedItem",
+            "description": "Performs an click action on the selected list item",
+            "compose": [
+                {
+                    "element": "selectedItem",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getSelectedOptions",
+            "description": {
+                "text": [
+                    "Gets the label of all items in the selected list box"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "selectedItems",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSourceOptions",
+            "description": {
+                "text": [
+                    "Gets the label of all items in the source list box"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "sourceItems",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getActiveOption",
+            "description": {
+                "text": [
+                    "Gets the label of active item in the dual list box"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "activeItem",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "selector": {
+                    "css": "[id*='group-label']"
+                },
+                "elements": [
+                    {
+                        "name": "required",
+                        "selector": {
+                            "css": ".slds-required"
+                        },
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "helptext",
+                "type": "utam-lightning/pageObjects/helptext",
+                "selector": {
+                    "css": "lightning-helptext"
+                },
+                "public": true
+            },
+            {
+                "name": "sourceLabel",
+                "selector": {
+                    "css": "[id*='source-list-label']"
+                }
+            },
+            {
+                "name": "assistiveMessage",
+                "selector": {
+                    "css": "[id*='assertive-thing']"
+                }
+            },
+            {
+                "name": "sourceItems",
+                "selector": {
+                    "css": "ul[id*='source-list'] li",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "sourceItem",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "ul[id*='source-list'] li",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getText",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "selectBtn",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon:nth-of-type(1)"
+                },
+                "public": true
+            },
+            {
+                "name": "deselectBtn",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon:nth-of-type(2)"
+                },
+                "public": true
+            },
+            {
+                "name": "moveUpButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": ".slds-dueling-list__column:last-child lightning-button-icon:nth-of-type(1)"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "moveDownButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": ".slds-dueling-list__column:last-child lightning-button-icon:nth-of-type(2)"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "selectedLabel",
+                "selector": {
+                    "css": "[id*='selected-list-label']"
+                }
+            },
+            {
+                "name": "selectedItems",
+                "selector": {
+                    "css": "ul[id*='selected-list'] li",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "selectedItem",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "ul[id*='selected-list'] li",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getText",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "activeItem",
+                "type": "clickable",
+                "nullable": true,
+                "selector": {
+                    "css": "ul li .slds-listbox__option.slds-is-selected"
+                }
+            },
+            {
+                "name": "error",
+                "selector": {
+                    "css": "[id*='error-message']"
+                },
+                "nullable": true
+            }
+        ]
+    }
+}

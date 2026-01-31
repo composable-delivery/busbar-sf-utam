@@ -1,0 +1,114 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a group of radio buttons for selecting a single text value and triggers an event when the value changes.",
+            "Selector: runtime_copilot_base-select-single-text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroup",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio button group"
+            },
+            {
+                "name": "picklistOptions",
+                "selector": {
+                    "css": "runtime_copilot_base-primitive-type-picklist",
+                    "returnAll": true
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/primitiveTypePicklist",
+                "description": "Represents all picklist options as radio buttons",
+                "public": true
+            },
+            {
+                "name": "picklistOptionByIndex",
+                "selector": {
+                    "css": "runtime_copilot_base-primitive-type-picklist:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number",
+                            "description": "element index starting from 1"
+                        }
+                    ]
+                },
+                "description": "Represents all picklist options as radio buttons",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "optionLabel",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the label for the picklist option",
+                        "nullable": true
+                    },
+                    {
+                        "name": "formattedText",
+                        "selector": {
+                            "css": "lightning-formatted-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedText",
+                        "description": "Represents the formatted text displayed when there is no label for the picklist option",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupVisible",
+            "description": {
+                "text": [
+                    "Check that the radio button group container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getLabelOfOption",
+            "description": {
+                "text": [
+                    "Get the text of the label for a given picklist option"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyOptionLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"optionLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

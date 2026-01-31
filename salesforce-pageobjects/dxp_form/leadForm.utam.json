@@ -1,0 +1,121 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: dxp_form-lead form",
+            "Represents the dxp_form/leadForm component.",
+            "Get the dxp_form-base-form component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "dxp_form-lead-form"
+    },
+    "elements": [
+        {
+            "name": "baseForm",
+            "selector": {
+                "css": "dxp_form-base-form"
+            },
+            "elements": [
+                {
+                    "name": "dxpFormInputs",
+                    "selector": {
+                        "css": "dxp_form-input",
+                        "returnAll": true
+                    },
+                    "public": true,
+                    "type": "utam-dxp_form/pageObjects/dxpInput"
+                },
+                {
+                    "name": "lightningInputs",
+                    "selector": {
+                        "css": "lightning-input",
+                        "returnAll": true
+                    },
+                    "public": true,
+                    "type": "utam-lightning/pageObjects/input"
+                },
+                {
+                    "name": "submitButton",
+                    "selector": {
+                        "css": "lightning-button"
+                    },
+                    "public": true,
+                    "nullable": true,
+                    "type": "utam-lightning/pageObjects/button"
+                },
+                {
+                    "name": "topErrorElement",
+                    "selector": {
+                        "css": "div[role='alert']"
+                    },
+                    "public": false
+                },
+                {
+                    "name": "allErrorElements",
+                    "selector": {
+                        "css": ".slds-form-element__help",
+                        "returnAll": true
+                    },
+                    "public": false,
+                    "nullable": true
+                }
+            ]
+        },
+        {
+            "name": "statusElement",
+            "selector": {
+                "css": "p[role='status']"
+            },
+            "public": false
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Returns status text"
+                ],
+                "return": "String value"
+            },
+            "name": "getStatusText",
+            "compose": [
+                {
+                    "element": "statusElement",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Returns top error text"
+                ],
+                "return": "String value"
+            },
+            "name": "getTopErrorText",
+            "compose": [
+                {
+                    "element": "topErrorElement",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Returns a list of all error texts"
+                ],
+                "return": "List of string errors"
+            },
+            "name": "getAllErrorTexts",
+            "compose": [
+                {
+                    "element": "allErrorElements",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

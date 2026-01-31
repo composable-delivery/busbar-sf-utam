@@ -1,0 +1,189 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The component assists with task management in Salesforce, allowing users to interact with tools, set objectives, and reflect on task completion.",
+            "Selector: src-experience_ui_gen_canvas-/assistant-templates"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "currentDateDisplay",
+                "selector": {
+                    "css": ".current-date"
+                },
+                "description": "Displays the current system date and may not be immediately available.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "toolList",
+                "selector": {
+                    "css": ".tool-list"
+                },
+                "description": "Lists the tools available for the user to execute commands."
+            },
+            {
+                "name": "intentDescription",
+                "selector": {
+                    "css": ".intent-description"
+                },
+                "description": "Displays the user's current intent."
+            },
+            {
+                "name": "userInfoDisplay",
+                "selector": {
+                    "css": ".user-info"
+                },
+                "description": "Shows information about the user being assisted."
+            },
+            {
+                "name": "objectiveDisplay",
+                "selector": {
+                    "css": ".objective"
+                },
+                "description": "Presents the objective of the user's task."
+            },
+            {
+                "name": "commandButton",
+                "selector": {
+                    "css": ".command-button",
+                    "returnAll": true
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents buttons that trigger commands."
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "dynamicToolOutput",
+            "selector": {
+                "css": "%s",
+                "args": [
+                    {
+                        "name": "selectorStr",
+                        "type": "string",
+                        "description": "CSS selector parameter"
+                    }
+                ]
+            },
+            "type": "container",
+            "description": "Represents dynamic components that output the result of tool execution.",
+            "wait": true,
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "getCurrentDateText",
+            "description": {
+                "text": [
+                    "Get the text of the current date display"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "currentDateDisplay",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isToolListVisible",
+            "description": {
+                "text": [
+                    "Check that the tool list is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "toolList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getIntentDescriptionText",
+            "description": {
+                "text": [
+                    "Get the text of the intent description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "intentDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getUserInfoText",
+            "description": {
+                "text": [
+                    "Get the text of the user information display"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "userInfoDisplay",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getObjectiveText",
+            "description": {
+                "text": [
+                    "Get the text of the objective display"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "objectiveDisplay",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickCommandButton",
+            "description": {
+                "text": [
+                    "Click on a command button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "commandButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "verifyCurrentDateDisplayPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"currentDateDisplay\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "currentDateDisplay",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,144 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-add-item-modal",
+            "Constraint Builder Business UI Add Item Modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "div",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "div"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "pickerProduct",
+                                "type": [
+                                    "actionable",
+                                    "clickable",
+                                    "editable"
+                                ],
+                                "selector": {
+                                    "css": "input"
+                                }
+                            },
+                            {
+                                "name": "label",
+                                "type": [],
+                                "selector": {
+                                    "css": "label"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "spanContent",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "span"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "spanContent1",
+                                        "type": [],
+                                        "selector": {
+                                            "css": "span:nth-of-type(2)"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "public": true,
+                        "name": "pickerProductClass",
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "selector": {
+                            "css": "input[value='visual-picker-ProductClass']"
+                        }
+                    },
+                    {
+                        "name": "label1",
+                        "type": [],
+                        "selector": {
+                            "css": "label"
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "spanContent2",
+                                "type": [],
+                                "selector": {
+                                    "css": "span"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "spanContent3",
+                                "type": [],
+                                "selector": {
+                                    "css": "span:nth-of-type(2)"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "cancelButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "nextButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button:nth-of-type(2)"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

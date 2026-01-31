@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-modstamp.",
+            "Represents the records-modstamp Lightning web component.",
+            "Access the lookup or formatted text."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-force/pageObjects/lookup",
+                "public": true,
+                "name": "lookup",
+                "selector": {
+                    "css": "force-lookup"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/formattedText",
+                "public": true,
+                "name": "formattedText",
+                "selector": {
+                    "css": "lightning-formatted-text"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-type-detail",
+            "Constraint Builder type detail component - Associations tab"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "associationsNavigation",
+            "type": "utam-lightning/pageObjects/verticalNavigation",
+            "selector": {
+                "css": "lightning-vertical-navigation"
+            },
+            "elements": [
+                {
+                    "public": true,
+                    "name": "typeAssociationNavigation",
+                    "type": "utam-lightning/pageObjects/verticalNavigationItem",
+                    "selector": {
+                        "css": "lightning-vertical-navigation-section lightning-vertical-navigation-item:nth-of-type(1)"
+                    }
+                },
+                {
+                    "public": true,
+                    "name": "relationAssociationNavigation",
+                    "type": "utam-lightning/pageObjects/verticalNavigationItem",
+                    "selector": {
+                        "css": "lightning-vertical-navigation-section lightning-vertical-navigation-item:nth-of-type(2)"
+                    }
+                }
+            ]
+        },
+        {
+            "public": true,
+            "name": "existingAssociationsHeading",
+            "type": [],
+            "selector": {
+                "css": "h1[class='slds-text-heading__medium']"
+            }
+        },
+        {
+            "public": true,
+            "name": "searchAssociationsInput",
+            "type": "utam-lightning/pageObjects/input",
+            "selector": {
+                "css": "lightning-input"
+            }
+        },
+        {
+            "public": true,
+            "name": "addAssociationsButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[class='addAssociations']"
+            }
+        },
+        {
+            "public": true,
+            "name": "associationList",
+            "type": "utam-builder_industries_constraints/pageObjects/associationList",
+            "selector": {
+                "css": "builder_industries_constraints-association-list"
+            }
+        },
+        {
+            "public": true,
+            "name": "associationsIllustration",
+            "type": "utam-builder_industries_constraints/pageObjects/illustration",
+            "selector": {
+                "css": "builder_industries_constraints-illustration"
+            }
+        },
+        {
+            "public": true,
+            "name": "createAssociationsButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[class='createAssociations']"
+            }
+        }
+    ]
+}

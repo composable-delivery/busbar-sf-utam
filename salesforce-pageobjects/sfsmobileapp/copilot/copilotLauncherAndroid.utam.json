@@ -1,0 +1,46 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"CopilotActionCard\").",
+            "Represents the Android copilot launcher container."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/copilot/copilotLauncher",
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"CopilotActionCard\")"
+    },
+    "methods": [
+        {
+            "name": "launchCopilot",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasCopilot",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

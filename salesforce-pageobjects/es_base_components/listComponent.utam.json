@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the list element in the CMS builder runtime"
+        ]
+    },
+    "elements": [
+        {
+            "name": "listItems",
+            "selector": {
+                "css": "li",
+                "returnAll": true
+            },
+            "public": false
+        }
+    ],
+    "methods": [
+        {
+            "name": "getListItemText",
+            "description": "Returns the list of text strings in the list",
+            "compose": [
+                {
+                    "element": "listItems",
+                    "apply": "getText",
+                    "returnType": "string",
+                    "returnAll": true
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeOther[$type == 'XCUIElementTypeNavigationBar'$][1].",
+            "Represents the iOS 'Favorites' search bar.",
+            "Do a search or clear the search bar."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/favoriteSearchBar",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSearchField"
+            }
+        },
+        {
+            "name": "cancelSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == 'Cancel'`]"
+            }
+        },
+        {
+            "name": "clearSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSearchField/XCUIElementTypeButton"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cancelSearch",
+            "compose": [
+                {
+                    "element": "cancelSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "clearSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

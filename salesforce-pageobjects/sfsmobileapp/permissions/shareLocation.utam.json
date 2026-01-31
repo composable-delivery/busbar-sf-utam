@@ -1,0 +1,18 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for sharing the user's location when logging into the app."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "clickShareLocation"
+        },
+        {
+            "name": "clickSkip"
+        }
+    ]
+}

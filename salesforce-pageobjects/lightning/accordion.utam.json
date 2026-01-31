@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-accordion.",
+            "Represents the lightning-accordion Lightning web component.",
+            "Access a list of all accordion sections or select a section by its title."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-accordion"
+    },
+    "elements": [
+        {
+            "name": "accordionSections",
+            "public": true,
+            "type": "utam-lightning/pageObjects/accordionSection",
+            "selector": {
+                "css": "lightning-accordion-section",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "accordionSectionByTitle",
+            "public": true,
+            "type": "utam-lightning/pageObjects/accordionSection",
+            "selector": {
+                "css": "lightning-accordion-section",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabel",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "title",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

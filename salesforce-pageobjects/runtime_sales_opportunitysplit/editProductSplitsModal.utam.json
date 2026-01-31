@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .slds-modal__container",
+            "Represents the opportunity split multi edit modal."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".slds-modal__container"
+    },
+    "elements": [
+        {
+            "type": "utam-lightning/pageObjects/tabset",
+            "name": "tabset",
+            "public": true,
+            "selector": {
+                "css": "lightning-tabset"
+            }
+        },
+        {
+            "type": "utam-runtime_sales_opportunitysplit/pageObjects/opportunityLineItemSplitDatatable",
+            "name": "datatable",
+            "public": true,
+            "selector": {
+                "css": "runtime_sales_opportunitysplit-opportunity-line-item-split-datatable"
+            }
+        }
+    ],
+    "type": "actionable"
+}

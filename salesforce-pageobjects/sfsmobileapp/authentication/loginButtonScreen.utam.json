@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the login button screen (not the actual screen for logging in) for the Field Service app."
+        ]
+    },
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "interface": true,
+    "methods": [
+        {
+            "name": "login"
+        }
+    ]
+}

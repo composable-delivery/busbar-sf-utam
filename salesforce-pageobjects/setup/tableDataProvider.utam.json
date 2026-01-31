@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Mixin component that provides utilities for dispatching configuration, data, and error events to a data table.",
+            "Selector: src-table-data-provider"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "rootElement",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "description": "Represents the root element of the mixin component, which is a base class for data provider functionality."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRootElementPresent",
+            "description": {
+                "text": [
+                    "Check that root element is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rootElement",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isRootElementVisible",
+            "description": {
+                "text": [
+                    "Check that root element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rootElement",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

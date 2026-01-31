@@ -1,0 +1,97 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeOther[$type == 'XCUIElementTypeNavigationBar'$][-2].",
+            "Represents the iOS Offline search view",
+            "Perform a search and verify results"
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineSearch",
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeNavigationBar'$][-2]"
+    },
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "searchInput",
+            "type": [
+                "editable",
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSearchField"
+            }
+        },
+        {
+            "name": "cancelSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == 'Cancel'`]"
+            }
+        },
+        {
+            "name": "clearSearchBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeSearchField/XCUIElementTypeButton"
+            }
+        },
+        {
+            "name": "searchResultList",
+            "public": true,
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList",
+            "selector": {
+                "accessid": "search_list"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "compose": [
+                {
+                    "element": "searchInput",
+                    "apply": "clearAndType",
+                    "args": [
+                        {
+                            "name": "itemToSearch",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cancelSearch",
+            "compose": [
+                {
+                    "element": "cancelSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clearSearch",
+            "compose": [
+                {
+                    "element": "clearSearchBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

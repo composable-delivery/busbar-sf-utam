@@ -1,0 +1,129 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-helptext",
+            "Represents the lightning-helptext Lightning web component.",
+            "Get the lightning-primitive-icon component, assistive text, help description and help icon button"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAriaDescribedBy",
+            "description": {
+                "text": [
+                    "Get button aria-describedby attribute value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-describedby"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hover",
+            "description": "Performs hover action on the help icon",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "moveTo"
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "description": "Applies focus on the help icon",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Gets the assistive text of help icon"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "alternativeText",
+                    "apply": "getText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "getHelpDescription",
+            "description": {
+                "text": [
+                    "Gets the help info description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "buttonIcon",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "tooltip"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "buttonIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "button",
+                            "type": [
+                                "clickable",
+                                "actionable"
+                            ],
+                            "public": true,
+                            "selector": {
+                                "css": "button"
+                            }
+                        },
+                        {
+                            "name": "alternativeText",
+                            "selector": {
+                                "css": ".slds-assistive-text"
+                            },
+                            "nullable": true
+                        },
+                        {
+                            "name": "icon",
+                            "type": "utam-lightning/pageObjects/primitiveIcon",
+                            "selector": {
+                                "css": "lightning-primitive-icon"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-rich-text.",
+            "Represents the records-record-layout-rich-text Lightning web component.",
+            "Access the quill."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "quill",
+                "type": "utam-lightning/pageObjects/quill",
+                "selector": {
+                    "css": "lightning-quill"
+                },
+                "public": true
+            }
+        ]
+    }
+}

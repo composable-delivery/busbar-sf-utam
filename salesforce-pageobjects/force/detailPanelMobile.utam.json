@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceDetailPanelMobile.",
+            "Represents the force:detailPanelMobile Aura component.",
+            "Get the force:recordLayout component."
+        ]
+    },
+    "elements": [
+        {
+            "name": "recordView",
+            "type": "utam-force/pageObjects/recordLayout",
+            "public": true,
+            "selector": {
+                "css": ".forceRecordLayout"
+            }
+        }
+    ]
+}

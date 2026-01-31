@@ -1,0 +1,58 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: \"classchain\": \"**/XCUIElementTypeOther[$name == 'reportView'$]\".",
+            "Represents the iOS report home view.",
+            "Interact with report content or navigate back from the report."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/reportHome",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$name == 'reportView'$]"
+    },
+    "elements": [
+        {
+            "name": "reportSummary",
+            "type": "utam-salesforceapp/pageObjects/record/reportSummary",
+            "selector": {
+                "classchain": "**/XCUIElementTypeScrollView"
+            },
+            "public": true
+        },
+        {
+            "name": "reportTable",
+            "type": "utam-salesforceapp/pageObjects/record/reportTable",
+            "selector": {
+                "classchain": "**/XCUIElementTypeOther[$label == 'table'$]"
+            },
+            "public": true
+        }
+    ]
+}

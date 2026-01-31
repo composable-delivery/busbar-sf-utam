@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_sales_adt-oppty-stage-description-form",
+            "Represents setup_sales_adt-oppty-stage-description-form Lightening web component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "opportunityDescriptionTextArea",
+                "selector": {
+                    "css": "lightning-textarea[class*='slds-m-bottom_medium slds-form-element']:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "public": true,
+                "type": "utam-lightning/pageObjects/textarea"
+            },
+            {
+                "name": "opportunityDescriptionTextAreaList",
+                "selector": {
+                    "css": "textarea[name='input']",
+                    "returnAll": true
+                },
+                "public": true,
+                "type": "editable"
+            },
+            {
+                "name": "opportunityDescriptionErrorMessage",
+                "public": true,
+                "wait": true,
+                "selector": {
+                    "css": ".slds-scope-notif-content"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            },
+            {
+                "name": "opportunityDescriptionSaveButton",
+                "public": true,
+                "wait": true,
+                "selector": {
+                    "css": "button[class='slds-button slds-button_brand slds-save-button']"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            },
+            {
+                "name": "opportunityErrorIcon",
+                "public": true,
+                "wait": true,
+                "selector": {
+                    "css": "span[title='Error']"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            },
+            {
+                "name": "opportunityErrorMessageText",
+                "public": true,
+                "wait": true,
+                "selector": {
+                    "css": "p.slds-scope-notif-content"
+                },
+                "type": [
+                    "clickable",
+                    "actionable"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The provided code snippet indicates that the component is a subclass of `CopilotBasePanelBroker`. It does not contain any UI elements or templates, as it appears to be a JavaScript module that exports functionality for other components to consume. Without a template or UI elements, we cannot generate a page object for UI test automation.",
+            "Selector: src-base-panel-broker"
+        ]
+    }
+}

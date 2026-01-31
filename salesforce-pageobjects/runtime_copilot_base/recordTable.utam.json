@@ -1,0 +1,229 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays a list of records in a table format with an optional error UI if there is an issue retrieving the records. It includes a header with the list view title and an icon.",
+            "Selector: src-record-table"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_copilot_base-record-table"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "errorContainer",
+                "selector": {
+                    "css": ".error-container"
+                },
+                "description": "Represents the container for the error UI.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "errorImage",
+                        "selector": {
+                            "css": "img.slds-illustration__svg"
+                        },
+                        "description": "Represents the image shown in the error UI.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "errorHeading",
+                        "selector": {
+                            "css": "h3.slds-text-heading_medium"
+                        },
+                        "description": "Represents the error heading text.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "errorDescription",
+                        "selector": {
+                            "css": "p.slds-text-body_regular"
+                        },
+                        "description": "Represents the error description text.",
+                        "nullable": true
+                    }
+                ]
+            },
+            {
+                "name": "pageHeader",
+                "selector": {
+                    "css": ".slds-page-header"
+                },
+                "description": "Represents the page header container.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "recordHeader",
+                        "selector": {
+                            "css": "runtime_copilot_base-record-header"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/recordHeader",
+                        "description": "Represents the record header component with title and icon.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "recordListInternal",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-list-internal"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordListInternal",
+                "description": "Represents the internal component that displays the list of records.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isErrorContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the error container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorHeadingText",
+            "description": {
+                "text": [
+                    "Get the text of the error heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getErrorDescriptionText",
+            "description": {
+                "text": [
+                    "Get the text of the error description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isPageHeaderPresent",
+            "description": {
+                "text": [
+                    "Check if the page header is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pageHeader",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyPageHeaderPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"pageHeader\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pageHeader",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorImagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorImage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorImage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorHeadingPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorHeading\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorHeading",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorDescriptionPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorDescription\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorDescription",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

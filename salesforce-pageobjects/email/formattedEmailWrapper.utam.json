@@ -1,0 +1,22 @@
+{
+    "description": {
+        "text": [
+            "Selector: emailui-formatted-email-wrapper.",
+            "Represents the  emailui-formatted-email-wrapper Lightning web component.",
+            "Get the aura action wrapper."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/formattedEmail",
+                "name": "formattedEmail",
+                "public": true,
+                "selector": {
+                    "css": "lightning-formatted-email"
+                }
+            }
+        ]
+    }
+}

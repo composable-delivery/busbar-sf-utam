@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Briefcase Object List view.",
+            "Verify the downloaded objects."
+        ]
+    },
+    "interface": true,
+    "methods": [
+        {
+            "name": "getObjectRows",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectRow",
+            "returnAll": true
+        },
+        {
+            "name": "getObjectRowWithTitle",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectRow",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasObjectRowWithTitle",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

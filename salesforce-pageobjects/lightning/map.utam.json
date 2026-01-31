@@ -1,0 +1,64 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-map",
+            "Represents the lightning-map Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "mapIframe",
+                "type": "utam-lightning/pageObjects/primitiveIframe",
+                "selector": {
+                    "css": "lightning-primitive-iframe"
+                }
+            },
+            {
+                "name": "coordinateItems",
+                "type": "utam-lightning/pageObjects/primitiveCoordinateItem",
+                "public": true,
+                "selector": {
+                    "css": "lightning-primitive-coordinate-item",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "coordinateListTitle",
+                "selector": {
+                    "css": ".slds-coordinates__title"
+                }
+            },
+            {
+                "name": "footerLink",
+                "type": "utam-lightning/pageObjects/externalLink",
+                "selector": {
+                    "css": "lightning-external-link"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getCoordinatesTitle",
+            "compose": [
+                {
+                    "element": "coordinateListTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getMapTitle",
+            "compose": [
+                {
+                    "element": "mapIframe",
+                    "apply": "getTitle",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ]
+}

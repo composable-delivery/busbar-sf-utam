@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .listContent.",
+            "Represents the list content component.",
+            "Access the contents of the list view."
+        ]
+    },
+    "elements": [
+        {
+            "name": "listRecords",
+            "type": "utam-lists/pageObjects/auraListRecord",
+            "public": true,
+            "selector": {
+                "css": ".forceListRecord.forceRecordLayout",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "listRecord",
+            "type": "utam-lists/pageObjects/auraListRecord",
+            "public": true,
+            "selector": {
+                "css": ".forceListRecord.forceRecordLayout",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getPrimaryFieldLabel",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "recordName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

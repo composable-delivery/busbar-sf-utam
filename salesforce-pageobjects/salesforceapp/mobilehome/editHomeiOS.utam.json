@@ -1,0 +1,159 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeWindow[$type = 'XCUIElementTypeNavigationBar' AND name == 'Edit Home'$].",
+            "Represents the iOS mobile home editor view controller.",
+            "Add and remove mobile home cards."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/mobilehome/editHome",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeWindow[$type = 'XCUIElementTypeNavigationBar' AND name == 'Edit Home'$]"
+    },
+    "methods": [
+        {
+            "name": "cancelEdit",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "saveEdit",
+            "compose": [
+                {
+                    "element": "saveButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "addCard",
+            "compose": [
+                {
+                    "element": "addCardButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "removeCardWithName",
+            "compose": [
+                {
+                    "element": "deleteCardButtonWithName",
+                    "apply": "click"
+                },
+                {
+                    "element": "confirmDeleteButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "cancelButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == 'cancelBarButtonItem'`]"
+            }
+        },
+        {
+            "name": "saveButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == 'saveBarButtonItem'`]"
+            }
+        },
+        {
+            "name": "addCardButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`name == 'Add Card'`]"
+            }
+        },
+        {
+            "name": "deleteCardButtonWithName",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeCell[$type == 'XCUIElementTypeButton' AND name == '%s'$]/**/XCUIElementTypeButton[`label CONTAINS 'Delete' OR label CONTAINS 'Remove'`]",
+                "args": [
+                    {
+                        "name": "cardName",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "confirmDeleteButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`label == \"Delete\"`]"
+            }
+        },
+        {
+            "name": "deleteCardButtons",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`label CONTAINS 'Delete' OR label CONTAINS 'Remove'`]",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "badgeLabels",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,177 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A card component that displays project details including title, description, and date, with navigation URLs to view project and plan details. It also updates project attributes on click.",
+            "Selector: dev_workspace-card-view"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-card-view"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "cardContainer",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the container for the project card.",
+                "public": true
+            },
+            {
+                "name": "titleLink",
+                "selector": {
+                    "css": "a.project-title"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the clickable project title link."
+            },
+            {
+                "name": "descriptionText",
+                "selector": {
+                    "css": ".description-text"
+                },
+                "description": "Represents the project description text."
+            },
+            {
+                "name": "footerContainer",
+                "selector": {
+                    "css": ".card-footer"
+                },
+                "description": "Represents the footer container of the card.",
+                "elements": [
+                    {
+                        "name": "viewPlanLink",
+                        "selector": {
+                            "css": "lightning-formatted-url"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedUrl",
+                        "description": "Represents the link to view plan details, conditionally rendered.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "formattedDateText",
+                        "selector": {
+                            "css": ".formatted-date"
+                        },
+                        "description": "Represents the formatted date text in the footer."
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickTitleLink",
+            "description": {
+                "text": [
+                    "Simulates a click on the project title link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "titleLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getTitleLink",
+            "description": {
+                "text": [
+                    "Retrieves the text content of the project description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleLink",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getDescriptionText",
+            "description": {
+                "text": [
+                    "Retrieves the text content of the project description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isDescriptionTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the project description text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isFooterContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the footer container of the card is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "footerContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getFormattedDateText",
+            "description": {
+                "text": [
+                    "Retrieves the text content of the formatted date in the footer"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "formattedDateText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isFormattedDateTextVisible",
+            "description": {
+                "text": [
+                    "Checks if the formatted date text is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "formattedDateText",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

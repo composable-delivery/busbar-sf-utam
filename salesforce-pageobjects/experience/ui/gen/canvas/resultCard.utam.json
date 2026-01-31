@@ -1,0 +1,213 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays different types of results based on provided data. It can display text results, record forms, data tables, or confirmation prompts with arguments. It also handles section toggling and confirmation of commands.",
+            "Selector: src-experience_ui_gen_canvas-/result-card"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "accordion",
+                "selector": {
+                    "css": "lightning-accordion"
+                },
+                "type": "utam-lightning/pageObjects/accordion",
+                "description": "Represents the accordion component that contains sections.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "accordionSectionText",
+                        "selector": {
+                            "css": "lightning-accordion-section[name=\"A\"]"
+                        },
+                        "type": "utam-lightning/pageObjects/accordionSection",
+                        "description": "Represents the accordion section for text results.",
+                        "nullable": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "resultCard",
+                                "selector": {
+                                    "css": "lightning-card"
+                                },
+                                "type": "utam-lightning/pageObjects/card",
+                                "description": "Represents the card component used to display results.",
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "iconOutcome",
+                                        "selector": {
+                                            "css": "lightning-icon.icon-name=\"standard:outcome\""
+                                        },
+                                        "type": "utam-lightning/pageObjects/icon",
+                                        "description": "Represents the icon displayed in the result card title.",
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "textResult",
+                                        "selector": {
+                                            "css": "pre.text-result"
+                                        },
+                                        "description": "Represents the preformatted text container for displaying text results."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "accordionSectionTable",
+                        "selector": {
+                            "css": "lightning-accordion-section[name=\"A\"]"
+                        },
+                        "type": "utam-lightning/pageObjects/accordionSection",
+                        "description": "Represents the accordion section for table results.",
+                        "nullable": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "dataTable",
+                                "selector": {
+                                    "css": "lightning-datatable"
+                                },
+                                "type": "utam-lightning/pageObjects/datatable",
+                                "description": "Represents the data table component for displaying tabular data.",
+                                "nullable": true,
+                                "wait": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "recordForm",
+                "selector": {
+                    "css": "lightning-record-form"
+                },
+                "type": "utam-lightning/pageObjects/recordForm",
+                "description": "Represents the form for displaying and editing record data.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "confirmationCard",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Represents the card component used for confirmation prompts.",
+                "nullable": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "confirmButton",
+                        "selector": {
+                            "css": "lightning-button[label=\"Confirm\"]"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the confirm button in the confirmation prompt."
+                    },
+                    {
+                        "name": "argumentList",
+                        "selector": {
+                            "css": "ul.slds-list_dotted"
+                        },
+                        "description": "Represents the list of arguments in the confirmation prompt.",
+                        "elements": [
+                            {
+                                "name": "argumentListItem",
+                                "selector": {
+                                    "css": "li.text-result",
+                                    "returnAll": true
+                                },
+                                "description": "Represents the list items for each argument in the confirmation prompt."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTextResult",
+            "description": {
+                "text": [
+                    "Retrieves the text from the result display"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "textResult",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isTextResultVisible",
+            "description": {
+                "text": [
+                    "Checks if the text result is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textResult",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "clickConfirmButton",
+            "description": {
+                "text": [
+                    "Clicks the confirm button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "confirmButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isConfirmButtonEnabled",
+            "description": {
+                "text": [
+                    "Checks if the confirm button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "confirmButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "getArgumentText",
+            "description": {
+                "text": [
+                    "Retrieves the text from an argument list item"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "argumentListItem",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

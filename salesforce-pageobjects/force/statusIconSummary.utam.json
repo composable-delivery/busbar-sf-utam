@@ -1,0 +1,39 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceStatusIconSummary.",
+            "Represents the status icon summary Aura component.",
+            "Access the generic summary message and the list of status messages."
+        ]
+    },
+    "elements": [
+        {
+            "name": "summary",
+            "selector": {
+                "css": ".genericSummary"
+            },
+            "public": true
+        },
+        {
+            "name": "messages",
+            "selector": {
+                "css": "ul li",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "innerTextParameter",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        }
+    ]
+}

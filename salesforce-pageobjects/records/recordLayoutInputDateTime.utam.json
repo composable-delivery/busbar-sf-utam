@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-input-date-time.",
+            "Represents the records-record-layout-input-date-time Lightning web component.",
+            "Access the input date time."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the label text"
+                ],
+                "return": "String value"
+            },
+            "name": "getLabelText",
+            "compose": [
+                {
+                    "element": "inputDateTime",
+                    "returnType": "utam-lightning/pageObjects/input"
+                },
+                {
+                    "chain": true,
+                    "element": "datetimepicker",
+                    "returnType": "utam-lightning/pageObjects/datetimepicker"
+                },
+                {
+                    "chain": true,
+                    "element": "timepicker",
+                    "returnType": "utam-lightning/pageObjects/timepicker"
+                },
+                {
+                    "chain": true,
+                    "returnType": "string",
+                    "apply": "getLabelText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputDateTime",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "public": true
+            }
+        ]
+    }
+}

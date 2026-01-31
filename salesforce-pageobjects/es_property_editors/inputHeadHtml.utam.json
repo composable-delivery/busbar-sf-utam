@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-head-html"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "labelContent",
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "public": true,
+                "name": "helpTextContent",
+                "selector": {
+                    "css": "lightning-helptext"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

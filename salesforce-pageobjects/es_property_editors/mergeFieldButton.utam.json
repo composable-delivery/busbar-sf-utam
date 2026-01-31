@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-merge-field-button",
+            "Provides access to lightning button, mergeFieldPicker components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "mergeFieldPicker",
+                "type": "utam-builder-framework/pageObjects/mergeFieldPicker",
+                "selector": {
+                    "css": "builder_framework-merge-field-picker"
+                }
+            }
+        ]
+    }
+}

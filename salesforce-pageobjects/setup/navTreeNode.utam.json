@@ -1,0 +1,78 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .onesetupNavTreeNode.",
+            "Represents the onesetup:navTreeNode Aura component.",
+            "Expand or navigate to a leaf node."
+        ]
+    },
+    "elements": [
+        {
+            "name": "expandButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button"
+            }
+        },
+        {
+            "name": "leafNode",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".leaf.onesetupNavTreeNode[aria-label*='%s'] a",
+                "args": [
+                    {
+                        "name": "ariaLabel",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "link",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Expands the given leaf node."
+                ],
+                "return": "none"
+            },
+            "name": "expand",
+            "compose": [
+                {
+                    "element": "expandButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Navigates to the given leaf node."
+                ],
+                "return": "none"
+            },
+            "name": "navigateTo",
+            "compose": [
+                {
+                    "element": "leafNode",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".container"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: commerce_v2-left-nav-item",
+            "Represents the commerce_v2-left-nav-item Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "navTabLink",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getNavTabLink",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "navTabLink"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTabName",
+            "description": {
+                "text": [
+                    "Get tab name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "navTabLink",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

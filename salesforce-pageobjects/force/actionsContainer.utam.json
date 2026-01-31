@@ -1,0 +1,72 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceActionsContainer.",
+            "Represents the force:actionsContainer Aura component.",
+            "Get the force:actionButton, force:actionLabel or one:actionsDropDown components by label."
+        ]
+    },
+    "elements": [
+        {
+            "name": "actionButton",
+            "type": "utam-force/pageObjects/actionButton",
+            "public": true,
+            "selector": {
+                "css": ".forceActionButton",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabel",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        },
+        {
+            "name": "actionLink",
+            "type": "utam-force/pageObjects/actionLink",
+            "public": true,
+            "selector": {
+                "css": ".forceActionLink",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getLabel",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        },
+        {
+            "name": "actionsDropDown",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": ".oneActionsDropDown"
+            }
+        },
+        {
+            "name": "content",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": ".actionsContainer > * :first-child"
+            }
+        }
+    ]
+}

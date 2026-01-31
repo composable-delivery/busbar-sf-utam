@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-dynamic-related-list-with-resolved-fields",
+            "Represents the dynamic related list component with resolved fields.",
+            "Conditionally renders either dynamicRelatedListWithUserPrefs or relatedListViewManager based on mobile content flag.",
+            "Handles field resolution and data transformation for related lists."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/dynamicRelatedListWithUserPrefs",
+                "name": "dynamicRelatedListWithUserPrefs",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-dynamic-related-list-with-user-prefs"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/relatedListViewManager",
+                "name": "relatedListViewManager",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lst-related-list-view-manager"
+                }
+            }
+        ]
+    }
+}

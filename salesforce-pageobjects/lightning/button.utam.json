@@ -1,0 +1,155 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-button.",
+            "Represents the lightning-button Lightning web component.",
+            "Click the button or check if it is disabled or focused. Access the button's name or class attribute."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-button"
+    },
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "click",
+            "description": "Performs a click action on button element",
+            "compose": [
+                {
+                    "apply": "scrollToCenter",
+                    "element": "button"
+                },
+                {
+                    "apply": "click",
+                    "element": "button"
+                }
+            ]
+        },
+        {
+            "name": "mobileClick",
+            "description": {
+                "text": [
+                    "Performs a click action on root element for mobile devices"
+                ],
+                "deprecated": "Since 242 release."
+            },
+            "compose": [
+                {
+                    "apply": "scrollToCenter",
+                    "element": "button"
+                },
+                {
+                    "apply": "click",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "compose": [
+                {
+                    "apply": "focus",
+                    "element": "button"
+                }
+            ]
+        },
+        {
+            "name": "getButtonName",
+            "description": {
+                "text": [
+                    "Gets the button label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "button"
+                }
+            ]
+        },
+        {
+            "name": "getClassAttr",
+            "description": {
+                "text": [
+                    "Gets the class list of button element"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getAttribute",
+                    "element": "button",
+                    "args": [
+                        {
+                            "value": "class"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Check if button element is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isDisabled",
+            "description": {
+                "text": [
+                    "Check if button element is in disabled state"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "disabled"
+                        }
+                    ],
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "true"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "public": true,
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "button"
+                }
+            }
+        ]
+    }
+}

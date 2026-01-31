@@ -1,0 +1,259 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a form for adding and configuring data providers, handling both empty and non-empty states.",
+            "Selector: src-add-data-source"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "emptyStateContainer",
+                "selector": {
+                    "css": ".empty-state"
+                },
+                "description": "Represents the container for the empty state",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "emptyStateImage",
+                        "selector": {
+                            "css": "img.slds-illustration__svg"
+                        },
+                        "description": "Represents the empty state illustration image"
+                    },
+                    {
+                        "name": "emptyStateHeading",
+                        "selector": {
+                            "css": "h3.slds-text-heading_medium"
+                        },
+                        "description": "Represents the heading text in the empty state"
+                    },
+                    {
+                        "name": "emptyStateDescription",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the description text in the empty state",
+                        "public": true
+                    },
+                    {
+                        "name": "emptyStateAddButton",
+                        "selector": {
+                            "css": "lightning-button.empty-state-add-button"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the add button in the empty state",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "nonEmptyStateContainer",
+                "selector": {
+                    "css": ".non-empty-state"
+                },
+                "description": "Represents the container for the non-empty state",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "configureDataSourceHeading",
+                        "selector": {
+                            "css": "p.slds-text-heading_small"
+                        },
+                        "description": "Represents the heading text for configuring data source"
+                    },
+                    {
+                        "name": "addButtonContainer",
+                        "selector": {
+                            "css": "div[data-attribute='%s']",
+                            "args": [
+                                {
+                                    "name": "selectorStr",
+                                    "type": "string",
+                                    "description": "CSS selector parameter"
+                                }
+                            ]
+                        },
+                        "description": "Represents the container for the add button in non-empty state",
+                        "nullable": true,
+                        "elements": [
+                            {
+                                "name": "addButton",
+                                "selector": {
+                                    "css": "lightning-button.add-button"
+                                },
+                                "type": "utam-lightning/pageObjects/button",
+                                "description": "Represents the add button in non-empty state",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "descriptionText",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text"
+                        },
+                        "type": "utam-lightning/pageObjects/formattedRichText",
+                        "description": "Represents the description text in non-empty state",
+                        "public": true
+                    },
+                    {
+                        "name": "dataProviderListContainer",
+                        "selector": {
+                            "css": "es_block_builder-data-provider-list-container"
+                        },
+                        "type": "utam-es_block_builder/pageObjects/dataProviderListContainer",
+                        "description": "Represents the data provider list container",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isEmptyStateVisible",
+            "description": {
+                "text": [
+                    "Check that empty state container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyStateContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getEmptyStateHeadingText",
+            "description": {
+                "text": [
+                    "Get text from the empty state heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "emptyStateHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isNonEmptyStateVisible",
+            "description": {
+                "text": [
+                    "Check that non-empty state container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "nonEmptyStateContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getConfigureDataSourceHeadingText",
+            "description": {
+                "text": [
+                    "Get text from the configure data source heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "configureDataSourceHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isAddButtonContainerVisible",
+            "description": {
+                "text": [
+                    "Check that add button container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addButtonContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyEmptyStateContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"emptyStateContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyStateContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyNonEmptyStateContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"nonEmptyStateContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "nonEmptyStateContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyEmptyStateImagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"emptyStateImage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "emptyStateImage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyAddButtonContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"addButtonContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "addButtonContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}
