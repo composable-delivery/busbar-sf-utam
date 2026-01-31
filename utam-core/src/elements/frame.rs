@@ -49,12 +49,16 @@ impl FrameElement {
     pub async fn enter(&self) -> UtamResult<FrameContext> {
         // Clone the element to enter frame (enter_frame consumes self)
         let element = self.inner.clone();
+        
+        // SAFETY: WebDriver is a simple wrapper around Arc<SessionHandle>.
+        // We're constructing it from the same handle that's already in use by
+        // the WebElement, so this is safe and maintains all existing session state.
         let driver = WebDriver { handle: element.handle.clone() };
         
         // Switch to the frame context
         element.enter_frame().await?;
         
-        Ok(FrameContext { driver })
+        Ok(FrameContext { driver, exited: false })
     }
 }
 
@@ -63,6 +67,18 @@ impl FrameElement {
 /// This guard ensures that when you're done working within a frame,
 /// the WebDriver context automatically switches back to the parent frame.
 ///
+/// # Cleanup Behavior
+///
+/// When `FrameContext` is dropped without calling `exit()`, it spawns a
+/// background task to switch back to the parent frame. This cleanup is
+/// best-effort and has limitations:
+///
+/// - The spawned task may not complete if the program/test exits immediately
+/// - Errors during cleanup cannot be observed or handled
+/// - If the tokio runtime is shutting down, cleanup may not execute at all
+///
+/// **Always prefer calling `exit()` explicitly for reliable cleanup.**
+///
 /// # Safety
 ///
 /// The drop implementation spawns a tokio task to perform the async
@@ -70,6 +86,8 @@ impl FrameElement {
 /// prefer explicitly calling `exit()` when possible.
 pub struct FrameContext {
     driver: WebDriver,
+    // Flag to prevent double-exit when exit() is called explicitly
+    exited: bool,
 }
 
 impl FrameContext {
@@ -104,21 +122,31 @@ impl FrameContext {
     /// // ... work with frame elements ...
     /// ctx.exit().await?;  // Explicit exit
     /// ```
-    pub async fn exit(self) -> UtamResult<()> {
+    pub async fn exit(mut self) -> UtamResult<()> {
+        // Mark as exited before the async operation to prevent double-exit
+        // even if the operation fails
+        self.exited = true;
         self.driver.enter_parent_frame().await?;
-        std::mem::forget(self); // Prevent double-exit in drop
         Ok(())
     }
 }
 
 impl Drop for FrameContext {
     fn drop(&mut self) {
-        // Note: Can't await in drop, so we spawn a task
-        // In practice, prefer explicit exit()
-        let driver = self.driver.clone();
-        tokio::spawn(async move {
-            let _ = driver.enter_parent_frame().await;
-        });
+        // Only run drop cleanup if exit() was not called
+        if !self.exited {
+            // Note: Can't await in drop, so we spawn a task
+            // 
+            // WARNING: The spawned task may not complete before the program exits,
+            // potentially leaving the WebDriver in the wrong frame context.
+            // This is a best-effort cleanup mechanism.
+            // 
+            // For reliable cleanup, always prefer calling exit() explicitly.
+            let driver = self.driver.clone();
+            tokio::spawn(async move {
+                let _ = driver.enter_parent_frame().await;
+            });
+        }
     }
 }
 
