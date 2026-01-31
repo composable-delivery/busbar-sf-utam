@@ -36,13 +36,15 @@ members = ["utam-core", "utam-compiler", "utam-cli"]
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.75"
+rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/composable-delivery/busbar-sf-utam"
+keywords = ["testing", "webdriver", "page-object", "automation"]
+categories = ["development-tools::testing", "web-programming"]
 
 [workspace.dependencies]
 # Runtime
-thirtyfour = "0.32"
+thirtyfour = "0.36.1"
 tokio = { version = "1", features = ["full"] }
 async-trait = "0.1"
 
@@ -51,21 +53,30 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 # Error handling
-thiserror = "1"
+thiserror = "2.0.18"
 miette = { version = "7", features = ["fancy"] }
 
 # Code generation
 quote = "1"
 proc-macro2 = "1"
-syn = { version = "2", features = ["full"] }
+syn = { version = "2", features = ["full", "parsing"] }
 prettyplease = "0.2"
 
 # CLI
 clap = { version = "4", features = ["derive"] }
-console = "0.15"
+console = "0.16.2"
+glob = "0.3"
+notify = "8.2.0"
+
+# Schema validation
+jsonschema = "0.40.1"
 
 # Testing
 insta = { version = "1", features = ["json"] }
+
+# Workspace crates
+utam-core = { path = "utam-core" }
+utam-compiler = { path = "utam-compiler" }
 ```
 
 ### GitHub Actions CI
