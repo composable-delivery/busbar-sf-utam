@@ -8,6 +8,12 @@ use serde_json::Value;
 ///
 /// Validates UTAM JSON files against the official JSON schema before parsing.
 /// The schema is embedded at compile time for performance and reliability.
+///
+/// # Note on Default Implementation
+///
+/// The `Default` implementation will panic if the embedded schema cannot be compiled.
+/// This should never happen in practice since the schema is validated at compile time,
+/// but if it does occur, it indicates a bug in the schema definition itself.
 pub struct SchemaValidator {
     validator: Validator,
 }
