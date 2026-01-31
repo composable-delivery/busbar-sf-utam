@@ -6,6 +6,8 @@ mod common;
 
 use utam_core::prelude::*;
 
+// ========== Error Type Tests ==========
+
 #[test]
 fn test_error_types() {
     // Test that error types can be constructed
@@ -16,10 +18,207 @@ fn test_error_types() {
 }
 
 #[test]
+fn test_error_timeout() {
+    let error = UtamError::Timeout { condition: "element to be visible".to_string() };
+    assert!(format!("{}", error).contains("Timeout"));
+    assert!(format!("{}", error).contains("element to be visible"));
+}
+
+#[test]
+fn test_error_shadow_root_not_found() {
+    let error = UtamError::ShadowRootNotFound { element: "custom-element".to_string() };
+    assert!(format!("{}", error).contains("Shadow root not found"));
+    assert!(format!("{}", error).contains("custom-element"));
+}
+
+#[test]
+fn test_error_invalid_selector() {
+    let error = UtamError::InvalidSelector { selector: ":::invalid".to_string() };
+    assert!(format!("{}", error).contains("Invalid selector"));
+    assert!(format!("{}", error).contains(":::invalid"));
+}
+
+#[test]
+fn test_error_frame_not_found() {
+    let error = UtamError::FrameNotFound { name: "myFrame".to_string() };
+    assert!(format!("{}", error).contains("Frame not found"));
+    assert!(format!("{}", error).contains("myFrame"));
+}
+
+#[test]
+fn test_error_assertion_failed() {
+    let error = UtamError::AssertionFailed {
+        expected: "visible".to_string(),
+        actual: "hidden".to_string(),
+    };
+    assert!(format!("{}", error).contains("Assertion failed"));
+    assert!(format!("{}", error).contains("visible"));
+    assert!(format!("{}", error).contains("hidden"));
+}
+
+// ========== Prelude and API Export Tests ==========
+
+#[test]
 fn test_prelude_exports() {
     // Test that all expected types are exported from prelude
     // This ensures the public API is stable
     let _result: UtamResult<()> = Ok(());
+}
+
+#[test]
+fn test_prelude_exports_base_element() {
+    // Verify BaseElement is exported from prelude
+    fn _check_prelude_has_base_element() {
+        use utam_core::prelude::BaseElement;
+        let _: Option<BaseElement> = None;
+    }
+}
+
+#[test]
+fn test_prelude_exports_element_rectangle() {
+    // Verify ElementRectangle is exported from prelude
+    fn _check_prelude_has_element_rectangle() {
+        use utam_core::prelude::ElementRectangle;
+        let _rect = ElementRectangle::new(0.0, 0.0, 0.0, 0.0);
+    }
+}
+
+#[test]
+fn test_prelude_exports_error_types() {
+    // Verify error types are exported from prelude
+    fn _check_prelude_has_error_types() {
+        use utam_core::prelude::{UtamError, UtamResult};
+        let _err: UtamError = UtamError::Timeout { condition: String::new() };
+        let _res: UtamResult<()> = Ok(());
+    }
+}
+
+// ========== ElementRectangle Tests ==========
+
+#[test]
+fn test_element_rectangle_creation() {
+    // Test ElementRectangle can be created and accessed
+    let rect = ElementRectangle::new(10.0, 20.0, 100.0, 50.0);
+    assert_eq!(rect.x, 10.0);
+    assert_eq!(rect.y, 20.0);
+    assert_eq!(rect.width, 100.0);
+    assert_eq!(rect.height, 50.0);
+}
+
+#[test]
+fn test_element_rectangle_from_thirtyfour_rect() {
+    // Test conversion from thirtyfour's ElementRect
+    use thirtyfour::ElementRect;
+
+    let tf_rect = ElementRect { x: 5.0, y: 10.0, width: 200.0, height: 100.0 };
+
+    let rect = ElementRectangle::from(tf_rect);
+    assert_eq!(rect.x, 5.0);
+    assert_eq!(rect.y, 10.0);
+    assert_eq!(rect.width, 200.0);
+    assert_eq!(rect.height, 100.0);
+}
+
+#[test]
+fn test_element_rectangle_partial_eq() {
+    let rect1 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    let rect2 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    let rect3 = ElementRectangle::new(1.0, 2.0, 3.0, 5.0);
+
+    assert_eq!(rect1, rect2);
+    assert_ne!(rect1, rect3);
+}
+
+#[test]
+fn test_element_rectangle_debug_impl() {
+    let rect = ElementRectangle::new(10.0, 20.0, 30.0, 40.0);
+    let debug = format!("{:?}", rect);
+    assert!(debug.contains("ElementRectangle"));
+}
+
+#[test]
+fn test_element_rectangle_with_floats() {
+    let rect = ElementRectangle::new(10.5, 20.5, 100.25, 50.75);
+    assert_eq!(rect.x, 10.5);
+    assert_eq!(rect.y, 20.5);
+    assert_eq!(rect.width, 100.25);
+    assert_eq!(rect.height, 50.75);
+}
+
+#[test]
+fn test_element_rectangle_copy_trait() {
+    let rect1 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    let rect2 = rect1; // Uses Copy
+
+    // Both can be used after copy
+    assert_eq!(rect1.x, 1.0);
+    assert_eq!(rect2.x, 1.0);
+}
+
+// ========== BaseElement API Tests ==========
+
+#[test]
+fn test_base_element_api_exists() {
+    // Test that BaseElement type is available
+    // This is a compile-time check to ensure the API is exported
+
+    // We can't create an actual BaseElement without a WebDriver,
+    // but we can verify the type exists and is properly exported
+    fn _check_api_exists() {
+        #[allow(unreachable_code)]
+        #[allow(clippy::diverging_sub_expression)]
+        {
+            let _element: BaseElement = panic!("not meant to run");
+            let _ = _element.inner();
+        }
+    }
+}
+
+// ========== UtamResult Tests ==========
+
+#[test]
+fn test_utam_result_ok() {
+    let result: UtamResult<i32> = Ok(42);
+    assert!(result.is_ok());
+    if let Ok(value) = result {
+        assert_eq!(value, 42);
+    }
+}
+
+#[test]
+fn test_utam_result_err() {
+    let result: UtamResult<()> =
+        Err(UtamError::ElementNotFound { name: "test".to_string(), selector: ".test".to_string() });
+    assert!(result.is_err());
+}
+
+#[test]
+fn test_utam_result_with_various_types() {
+    // Test with String
+    let result: UtamResult<String> = Ok("test".to_string());
+    assert!(result.is_ok());
+
+    // Test with bool
+    let result: UtamResult<bool> = Ok(true);
+    assert!(result.is_ok());
+
+    // Test with Option
+    let result: UtamResult<Option<String>> = Ok(Some("value".to_string()));
+    assert!(result.is_ok());
+}
+
+// ========== Error Display Tests ==========
+
+#[test]
+fn test_error_display_element_not_found() {
+    let error = UtamError::ElementNotFound {
+        name: "submitBtn".to_string(),
+        selector: "#submit".to_string(),
+    };
+    let display = format!("{}", error);
+    assert!(display.contains("submitBtn"));
+    assert!(display.contains("#submit"));
+    assert!(display.contains("not found"));
 }
 
 #[test]
@@ -108,4 +307,64 @@ fn test_error_context_preserved() {
         assert!(msg.contains("loginButton"));
         assert!(msg.contains("#login-btn"));
     }
+}
+
+// ========== Additional Error Variant Tests ==========
+
+#[test]
+fn test_all_error_variants_constructible() {
+    // Ensure all error variants can be constructed
+    let _e1 = UtamError::ElementNotFound { name: String::new(), selector: String::new() };
+
+    let _e2 = UtamError::Timeout { condition: String::new() };
+
+    let _e3 = UtamError::ShadowRootNotFound { element: String::new() };
+
+    let _e4 = UtamError::InvalidSelector { selector: String::new() };
+
+    let _e5 = UtamError::FrameNotFound { name: String::new() };
+
+    let _e6 = UtamError::AssertionFailed { expected: String::new(), actual: String::new() };
+}
+
+#[test]
+fn test_error_debug_trait() {
+    let error =
+        UtamError::ElementNotFound { name: "button".to_string(), selector: ".btn".to_string() };
+    let debug = format!("{:?}", error);
+    assert!(debug.contains("ElementNotFound"));
+    assert!(debug.contains("button"));
+    assert!(debug.contains(".btn"));
+}
+
+// ========== ElementRectangle Trait Tests ==========
+
+#[test]
+fn test_element_rectangle_clone_trait() {
+    let rect1 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    #[allow(clippy::clone_on_copy)]
+    let rect2 = rect1.clone();
+    assert_eq!(rect1, rect2);
+}
+
+#[test]
+fn test_element_rectangle_eq_reflexive() {
+    let rect = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    assert_eq!(rect, rect);
+}
+
+#[test]
+fn test_element_rectangle_eq_symmetric() {
+    let rect1 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    let rect2 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    assert_eq!(rect1, rect2);
+    assert_eq!(rect2, rect1);
+}
+
+#[test]
+fn test_element_rectangle_ne_asymmetric() {
+    let rect1 = ElementRectangle::new(1.0, 2.0, 3.0, 4.0);
+    let rect2 = ElementRectangle::new(5.0, 6.0, 7.0, 8.0);
+    assert_ne!(rect1, rect2);
+    assert_ne!(rect2, rect1);
 }
