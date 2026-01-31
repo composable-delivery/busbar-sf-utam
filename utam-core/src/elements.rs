@@ -212,4 +212,73 @@ mod tests {
         assert_eq!(rect.width, 200.0);
         assert_eq!(rect.height, 100.0);
     }
+
+    #[test]
+    fn test_element_rectangle_equality() {
+        let rect1 = ElementRectangle::new(10.0, 20.0, 100.0, 50.0);
+        let rect2 = ElementRectangle::new(10.0, 20.0, 100.0, 50.0);
+        let rect3 = ElementRectangle::new(15.0, 20.0, 100.0, 50.0);
+
+        assert_eq!(rect1, rect2);
+        assert_ne!(rect1, rect3);
+    }
+
+    #[test]
+    fn test_element_rectangle_clone() {
+        let rect1 = ElementRectangle::new(10.0, 20.0, 100.0, 50.0);
+        #[allow(clippy::clone_on_copy)]
+        let rect2 = rect1.clone();
+
+        assert_eq!(rect1, rect2);
+        assert_eq!(rect1.x, rect2.x);
+        assert_eq!(rect1.y, rect2.y);
+        assert_eq!(rect1.width, rect2.width);
+        assert_eq!(rect1.height, rect2.height);
+    }
+
+    #[test]
+    fn test_element_rectangle_debug() {
+        let rect = ElementRectangle::new(10.5, 20.5, 100.0, 50.0);
+        let debug_str = format!("{:?}", rect);
+
+        assert!(debug_str.contains("10.5"));
+        assert!(debug_str.contains("20.5"));
+        assert!(debug_str.contains("100"));
+        assert!(debug_str.contains("50"));
+    }
+
+    #[test]
+    fn test_element_rectangle_copy() {
+        let rect1 = ElementRectangle::new(10.0, 20.0, 100.0, 50.0);
+        let rect2 = rect1; // Uses copy semantics
+
+        // Both should be usable after copy
+        assert_eq!(rect1.x, 10.0);
+        assert_eq!(rect2.x, 10.0);
+    }
+
+    #[test]
+    fn test_element_rectangle_zero_dimensions() {
+        let rect = ElementRectangle::new(0.0, 0.0, 0.0, 0.0);
+        assert_eq!(rect.x, 0.0);
+        assert_eq!(rect.y, 0.0);
+        assert_eq!(rect.width, 0.0);
+        assert_eq!(rect.height, 0.0);
+    }
+
+    #[test]
+    fn test_element_rectangle_negative_coordinates() {
+        let rect = ElementRectangle::new(-10.0, -20.0, 100.0, 50.0);
+        assert_eq!(rect.x, -10.0);
+        assert_eq!(rect.y, -20.0);
+    }
+
+    #[test]
+    fn test_element_rectangle_large_values() {
+        let rect = ElementRectangle::new(10000.5, 20000.5, 3000.0, 4000.0);
+        assert_eq!(rect.x, 10000.5);
+        assert_eq!(rect.y, 20000.5);
+        assert_eq!(rect.width, 3000.0);
+        assert_eq!(rect.height, 4000.0);
+    }
 }
