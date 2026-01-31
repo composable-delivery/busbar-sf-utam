@@ -67,6 +67,22 @@ fn test_deserialize_chained_method() {
     assert_eq!(page.methods.len(), 2);
     assert_eq!(page.methods[0].name, "performSearch");
     assert_eq!(page.methods[1].name, "searchAndGetResults");
+    
+    // Verify the resultsList is correctly parsed as Container
+    if let Some(shadow) = page.shadow {
+        if let Some(results) = shadow.elements.iter().find(|e| e.name == "resultsList") {
+            match &results.element_type {
+                Some(ElementTypeAst::Container) => {
+                    // Correct!
+                }
+                _ => panic!("Expected Container type for resultsList"),
+            }
+        } else {
+            panic!("resultsList element not found");
+        }
+    } else {
+        panic!("Shadow not found");
+    }
 }
 
 #[test]
@@ -153,6 +169,19 @@ fn test_deserialize_salesforce_app() {
     assert!(page.shadow.is_some());
     if let Some(shadow) = page.shadow {
         assert!(!shadow.elements.is_empty());
+        
+        // Verify closeButton type is correctly parsed as ActionTypes (single action type)
+        if let Some(close_btn) = shadow.elements.iter().find(|e| e.name == "closeButton") {
+            match &close_btn.element_type {
+                Some(ElementTypeAst::ActionTypes(types)) => {
+                    assert_eq!(types.len(), 1);
+                    assert_eq!(types[0], "clickable");
+                }
+                _ => panic!("Expected ActionTypes for closeButton"),
+            }
+        } else {
+            panic!("closeButton element not found");
+        }
     }
     
     // Check methods

@@ -86,13 +86,78 @@ pub struct ElementAst {
 }
 
 /// Element type - can be action types, custom component, container, or frame
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
 pub enum ElementTypeAst {
-    /// Basic action types: ["clickable", "editable"]
+    /// Basic action types: ["clickable", "editable"] or "clickable"
     ActionTypes(Vec<String>),
     /// Custom component: "package/pageObjects/component"
     CustomComponent(String),
+    /// Container literal
+    Container,
+    /// Frame literal
+    Frame,
+}
+
+impl<'de> Deserialize<'de> for ElementTypeAst {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        use serde::de::{self, Visitor};
+        use std::fmt;
+
+        struct ElementTypeVisitor;
+
+        impl<'de> Visitor<'de> for ElementTypeVisitor {
+            type Value = ElementTypeAst;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a string or array of strings representing element type")
+            }
+
+            fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+            where
+                E: de::Error,
+            {
+                // Check for literal types first
+                match value {
+                    "container" => return Ok(ElementTypeAst::Container),
+                    "frame" => return Ok(ElementTypeAst::Frame),
+                    _ => {}
+                }
+
+                // Check for known action types
+                const ACTION_TYPES: &[&str] = &[
+                    "clickable",
+                    "editable",
+                    "actionable",
+                    "draggable",
+                ];
+
+                if ACTION_TYPES.contains(&value) {
+                    // Single action type - wrap in ActionTypes
+                    Ok(ElementTypeAst::ActionTypes(vec![value.to_string()]))
+                } else {
+                    // Everything else is a custom component
+                    Ok(ElementTypeAst::CustomComponent(value.to_string()))
+                }
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: de::SeqAccess<'de>,
+            {
+                let mut types = Vec::new();
+                while let Some(value) = seq.next_element::<String>()? {
+                    types.push(value);
+                }
+                Ok(ElementTypeAst::ActionTypes(types))
+            }
+        }
+
+        deserializer.deserialize_any(ElementTypeVisitor)
+    }
 }
 
 /// Selector for locating elements
@@ -263,6 +328,39 @@ mod tests {
                 assert!(path.contains("component"));
             }
             _ => panic!("Expected CustomComponent variant"),
+        }
+    }
+
+    #[test]
+    fn test_element_type_single_action_type() {
+        let json = r#""clickable""#;
+        let elem_type: ElementTypeAst = serde_json::from_str(json).unwrap();
+        match elem_type {
+            ElementTypeAst::ActionTypes(types) => {
+                assert_eq!(types.len(), 1);
+                assert_eq!(types[0], "clickable");
+            }
+            _ => panic!("Expected ActionTypes variant with single type"),
+        }
+    }
+
+    #[test]
+    fn test_element_type_container() {
+        let json = r#""container""#;
+        let elem_type: ElementTypeAst = serde_json::from_str(json).unwrap();
+        match elem_type {
+            ElementTypeAst::Container => {},
+            _ => panic!("Expected Container variant"),
+        }
+    }
+
+    #[test]
+    fn test_element_type_frame() {
+        let json = r#""frame""#;
+        let elem_type: ElementTypeAst = serde_json::from_str(json).unwrap();
+        match elem_type {
+            ElementTypeAst::Frame => {},
+            _ => panic!("Expected Frame variant"),
         }
     }
 
