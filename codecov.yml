@@ -1,0 +1,26 @@
+# Codecov configuration
+# See: https://docs.codecov.io/docs/codecov-yaml
+
+codecov:
+  require_ci_to_pass: true
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: 80%
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: false
+
+fixes:
+  - "/home/runner/work/busbar-sf-utam/busbar-sf-utam/::"
+
+ignore:
+  - "utam-cli/src/main.rs"
