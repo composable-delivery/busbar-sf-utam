@@ -54,6 +54,14 @@ jobs:
       - name: Run doc tests
         run: cargo test --workspace --doc
 
+      - name: Fix coverage paths
+        run: |
+          # cargo-llvm-cov emits absolute CI runner paths in the LCOV file.
+          # Codecov needs repo-relative paths to match source files.
+          sed -i "s|$PWD/||g" lcov.info
+          echo "Source files in report:"
+          grep '^SF:' lcov.info | head -20
+
       - name: Generate summary
         if: always()
         run: |
