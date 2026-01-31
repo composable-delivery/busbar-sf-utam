@@ -141,22 +141,22 @@ fn test_deserialize_salesforce_app() {
     match page.description {
         Some(DescriptionAst::Detailed { text, author, .. }) => {
             assert_eq!(author, Some("Salesforce".to_string()));
-            assert!(text.len() > 0);
+            assert!(!text.is_empty());
         }
         _ => panic!("Expected Detailed description"),
     }
     
     // Check beforeLoad
-    assert!(page.before_load.len() > 0);
+    assert!(!page.before_load.is_empty());
     
     // Check shadow elements
     assert!(page.shadow.is_some());
     if let Some(shadow) = page.shadow {
-        assert!(shadow.elements.len() > 0);
+        assert!(!shadow.elements.is_empty());
     }
     
     // Check methods
-    assert!(page.methods.len() > 0);
+    assert!(!page.methods.is_empty());
 }
 
 #[test]
