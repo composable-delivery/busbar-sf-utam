@@ -58,7 +58,10 @@ jobs:
         run: |
           # cargo-llvm-cov emits absolute CI runner paths in the LCOV file.
           # Codecov needs repo-relative paths to match source files.
-          sed -i "s|$PWD/||g" lcov.info
+          # Use git to get the repo root — works in any environment, unlike
+          # $PWD (can be empty) or $GITHUB_WORKSPACE (CI-only).
+          REPO_ROOT=$(git rev-parse --show-toplevel)
+          sed -i "s|${REPO_ROOT}/||g" lcov.info
           echo "Source files in report:"
           grep '^SF:' lcov.info | head -20
 
