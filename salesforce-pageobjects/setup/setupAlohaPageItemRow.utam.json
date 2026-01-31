@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: form > .pbBody tr.",
+            "Represents the a table row in the setup aloha page Aura component.",
+            "Access the label and data column td elements and their content."
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Return the text contained in label field."
+                ],
+                "return": "String value"
+            },
+            "name": "getLabel",
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "labelInput",
+            "type": [
+                "clickable",
+                "editable"
+            ],
+            "nullable": true,
+            "selector": {
+                "css": "td.labelCol > input"
+            },
+            "public": true
+        },
+        {
+            "name": "label",
+            "nullable": true,
+            "selector": {
+                "css": "td.labelCol > label"
+            }
+        },
+        {
+            "name": "dataInput",
+            "type": [
+                "clickable",
+                "editable"
+            ],
+            "selector": {
+                "css": "td.data2Col input"
+            },
+            "public": true
+        }
+    ]
+}

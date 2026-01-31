@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiAutocompletePanel",
+            "Represents the ui:AutocompletePanel Aura component.",
+            "Retrieve contents using container."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiAutocompletePanel"
+    },
+    "elements": [
+        {
+            "type": "container",
+            "name": "content",
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,296 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiVirtualDataTable.",
+            "Represents the ui:virtualDataTable Aura component. ",
+            "Get header titles, or cell text by row and column, or special cell text in a row. Get row count or column count.",
+            "Click the link in a table cell, or check if a row is selected."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getHeaderTitles",
+            "description": {
+                "text": [
+                    "Get header cell titles"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "headerCells",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "clickHeaderSpecialLink",
+            "description": "Click header cell link",
+            "compose": [
+                {
+                    "element": "headerCellSpecialLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getRowsCount",
+            "description": {
+                "text": [
+                    "Get table rows count"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "element": "tableRows",
+                    "apply": "size"
+                }
+            ]
+        },
+        {
+            "name": "getColumnsCount",
+            "description": {
+                "text": [
+                    "Get table columns count"
+                ],
+                "return": "number"
+            },
+            "compose": [
+                {
+                    "element": "tableCells",
+                    "apply": "size"
+                }
+            ]
+        },
+        {
+            "name": "getCellSpecialText",
+            "description": {
+                "text": [
+                    "Get table special cell text in a row"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "tableCellSpecial",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickCellSpecialLink",
+            "description": "Click table special cell link",
+            "compose": [
+                {
+                    "element": "tableCellSpecialLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getCellText",
+            "description": {
+                "text": [
+                    "Get table cell text of matching column and row number"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "tableCellIndexed",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickCellLink",
+            "description": "Click table cell link",
+            "compose": [
+                {
+                    "element": "tableCellLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isRowSelected",
+            "description": {
+                "text": [
+                    "Checks if a table row is selected"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "selectedRowByIndex",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "header",
+            "selector": {
+                "css": "thead"
+            },
+            "elements": [
+                {
+                    "name": "headerCells",
+                    "selector": {
+                        "css": "tr th",
+                        "returnAll": true
+                    },
+                    "wait": true,
+                    "public": true
+                },
+                {
+                    "name": "headerCellSpecialLink",
+                    "type": [
+                        "clickable"
+                    ],
+                    "selector": {
+                        "css": "thead tr th:nth-of-type(%d) a",
+                        "args": [
+                            {
+                                "name": "column",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "headerCellSortAscending",
+                    "selector": {
+                        "css": "tr th.ascending"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "headerCellSortDescending",
+                    "selector": {
+                        "css": "tr th.descending"
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "body",
+            "selector": {
+                "css": "tbody"
+            },
+            "elements": [
+                {
+                    "name": "tableRows",
+                    "selector": {
+                        "css": "tr",
+                        "returnAll": true
+                    },
+                    "public": true
+                },
+                {
+                    "name": "selectedRowByIndex",
+                    "selector": {
+                        "css": "tr:nth-of-type(%d).selected",
+                        "args": [
+                            {
+                                "name": "row",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "tableCells",
+                    "selector": {
+                        "css": "tr td",
+                        "returnAll": true
+                    }
+                },
+                {
+                    "name": "tableCellSpecial",
+                    "selector": {
+                        "css": "tr:nth-of-type(%d) th",
+                        "args": [
+                            {
+                                "name": "row",
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    "elements": [
+                        {
+                            "name": "cellSpecialComponent",
+                            "type": "container",
+                            "selector": {
+                                "css": ":scope > *:first-child"
+                            },
+                            "public": true
+                        }
+                    ]
+                },
+                {
+                    "name": "tableCellSpecialLink",
+                    "type": [
+                        "clickable"
+                    ],
+                    "selector": {
+                        "css": "tbody tr:nth-of-type(%d) th a",
+                        "args": [
+                            {
+                                "name": "row",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "tableCellIndexed",
+                    "selector": {
+                        "css": "tr:nth-of-type(%d) td:nth-of-type(%d)",
+                        "args": [
+                            {
+                                "name": "row",
+                                "type": "number"
+                            },
+                            {
+                                "name": "column",
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    "elements": [
+                        {
+                            "name": "cellComponent",
+                            "type": "container",
+                            "selector": {
+                                "css": ":scope > *:first-child"
+                            },
+                            "public": true
+                        },
+                        {
+                            "name": "cellOverlayComponent",
+                            "type": "container",
+                            "selector": {
+                                "css": ":scope > *:nth-child(2)"
+                            },
+                            "public": true
+                        },
+                        {
+                            "name": "tableCellLink",
+                            "type": [
+                                "clickable"
+                            ],
+                            "selector": {
+                                "css": "a"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,91 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that represents a dynamic canvas with a card layout, which includes a title, an icon, and a set of actions that can be performed on the canvas such as regenerating, moving, resizing, renaming, removing, and sending feedback. It also has the ability to publish events to a message channel.",
+            "Selector: experience_ui_gen_canvas-dynamic-canvas-wrapper"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "canvasContainer",
+                "selector": {
+                    "css": ".canvas-container"
+                },
+                "description": "Represents the container for the entire component.",
+                "elements": [
+                    {
+                        "name": "lightningCard",
+                        "selector": {
+                            "css": "lightning-card"
+                        },
+                        "type": "utam-lightning/pageObjects/card",
+                        "description": "Represents the card layout that encloses the dynamic canvas.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "actionsSlot",
+                                "selector": {
+                                    "css": "[slot='actions']"
+                                },
+                                "type": "container",
+                                "description": "Represents the named slot for action buttons.",
+                                "public": true
+                            },
+                            {
+                                "name": "actionButtonMenu",
+                                "selector": {
+                                    "css": "lightning-button-menu"
+                                },
+                                "type": "utam-lightning/pageObjects/buttonMenu",
+                                "description": "Represents the button menu for actions.",
+                                "public": true,
+                                "elements": [
+                                    {
+                                        "name": "menuItems",
+                                        "selector": {
+                                            "css": "lightning-menu-item",
+                                            "returnAll": true
+                                        },
+                                        "type": "utam-lightning/pageObjects/menuItem",
+                                        "description": "Represents the menu items within the action button menu, some of which may be conditionally rendered.",
+                                        "nullable": true,
+                                        "public": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "dynamicCanvas",
+                                "selector": {
+                                    "css": "experience_ui_gen_canvas-dynamic-canvas"
+                                },
+                                "type": "utam-experience-ui-gen-canvas/pageObjects/dynamicCanvas",
+                                "description": "Represents the dynamic canvas that is loaded within the card.",
+                                "wait": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isCanvasContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the canvas container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "canvasContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

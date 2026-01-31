@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: record_flexipage-dynamic-highlights2",
+            "Represents the record_flexipage-dynamic-highlights2 Lightning web component.",
+            "Get the highlights-primary-row or secondary fields"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "secondaryFieldContent",
+                "type": "container",
+                "public": true,
+                "selector": {
+                    "css": "slot[name='secondaryFields']"
+                }
+            },
+            {
+                "name": "highlightsPrimaryRow",
+                "type": "utam-record-flexipage/pageObjects/highlightsPrimaryRow",
+                "public": true,
+                "selector": {
+                    "css": "record_flexipage-highlights-primary-row"
+                }
+            }
+        ]
+    }
+}

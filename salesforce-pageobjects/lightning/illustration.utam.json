@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-illustration",
+            "Represents the lightning-illustration Lightning web component.",
+            "Get the illustration container and the sds-figure (lightning-primitive-figure) element, or get the alternative text."
+        ]
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "figure",
+                "selector": {
+                    "css": "lightning-primitive-figure"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAlternativeText",
+            "description": {
+                "text": [
+                    "Get the alternative text (aria-label) of the illustration"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "figure",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getFigureSet",
+            "description": {
+                "text": [
+                    "Get the figure set attribute from lightning-primitive-figure"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "figure",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "set"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getFigureSymbol",
+            "description": {
+                "text": [
+                    "Get the figure symbol attribute from sds-figure"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "figure",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "symbol"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getFigureSets",
+            "description": {
+                "text": [
+                    "Get the figure-sets attribute from sds-figure"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "figure",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "figure-sets"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiPanelManager2",
+            "Represents the ui:panelManager2 Aura component.",
+            "Get the panel component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiPanelManager2"
+    },
+    "elements": [
+        {
+            "name": "panel",
+            "type": "utam-aura/pageObjects/panel",
+            "public": true,
+            "selector": {
+                "css": ".uiPanel"
+            }
+        }
+    ]
+}

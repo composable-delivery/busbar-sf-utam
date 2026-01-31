@@ -1,0 +1,92 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a setup header with a customizable title, icon, and slots for additional content, and provides functionality to refresh or activate setup nodes.",
+            "Selector: src-lwc-setup-component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "setupComponentContainer",
+                "selector": {
+                    "css": "#setupComponent"
+                },
+                "description": "Represents the main container for the setup component.",
+                "elements": [
+                    {
+                        "name": "setupHeader",
+                        "selector": {
+                            "css": "setup-lwc-setup-header"
+                        },
+                        "type": "utam-setup/pageObjects/lwcSetupHeader",
+                        "description": "Represents the custom setup header component with title and icon.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "rightHeaderContent",
+                                "selector": {
+                                    "css": "[slot='rightHeader']"
+                                },
+                                "type": "container",
+                                "description": "Represents the named slot for additional content on the right side of the header.",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "setupContentArea",
+                        "selector": {
+                            "css": ".setupContent"
+                        },
+                        "description": "Represents the main content area of the setup component.",
+                        "elements": [
+                            {
+                                "name": "contentSlot",
+                                "selector": {
+                                    "css": "[slot='content']"
+                                },
+                                "type": "container",
+                                "description": "Represents the named slot for the main content of the setup component.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSetupComponentVisible",
+            "description": {
+                "text": [
+                    "Check if the main container of the setup component is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "setupComponentContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSetupContentAreaVisible",
+            "description": {
+                "text": [
+                    "Check if the main content area of the setup component is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "setupContentArea",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

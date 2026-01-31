@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceOutputLookup.",
+            "Represents the force:outputLookup Aura component.",
+            "Click the output lookup link."
+        ]
+    },
+    "elements": [
+        {
+            "name": "link",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.outputLookupLink"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "click",
+            "description": "Click the output lookup link",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

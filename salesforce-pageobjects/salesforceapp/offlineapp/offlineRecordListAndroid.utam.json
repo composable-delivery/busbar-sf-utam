@@ -1,0 +1,102 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"list\").",
+            "Represents the Android List used in Offline App.",
+            "Verify the list and its rows."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList",
+    "platform": "native",
+    "exposeRootElement": true,
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "clickable",
+        "touchable"
+    ],
+    "elements": [
+        {
+            "name": "recordRows",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"row\"))",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "recordRowByText",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"row\"))",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        },
+        {
+            "name": "recordRowByTitle",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow",
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"row\"))",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getTitle",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "title",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "scrollUp",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "flick",
+                    "args": [
+                        {
+                            "value": 0
+                        },
+                        {
+                            "value": -400
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,306 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a home screen with various sections including a logo, header, tabs, chat input, carousel, and recent items.",
+            "Selector: setup-agentic-setup-home"
+        ]
+    },
+    "selector": {
+        "css": "setup-agentic-setup-home"
+    },
+    "root": true,
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinnerOverlay",
+                "selector": {
+                    "css": ".spinner-overlay"
+                },
+                "description": "Represents the overlay containing the loading spinner",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "loadingSpinner",
+                        "selector": {
+                            "css": "lightning-spinner"
+                        },
+                        "type": "utam-lightning/pageObjects/spinner",
+                        "description": "Represents the loading spinner",
+                        "public": true,
+                        "wait": true
+                    }
+                ]
+            },
+            {
+                "name": "setupLogo",
+                "selector": {
+                    "css": "setup-agentic-setup-logo.logo"
+                },
+                "type": "utam-setup/pageObjects/agenticSetupLogo",
+                "description": "Represents the setup logo component",
+                "public": true
+            },
+            {
+                "name": "pageHeader",
+                "selector": {
+                    "css": "setup-agentic-setup-page-header.topic"
+                },
+                "type": "utam-setup/pageObjects/agenticSetupPageHeader",
+                "description": "Represents the page header component",
+                "public": true
+            },
+            {
+                "name": "componentPanel",
+                "selector": {
+                    "css": "setup-agentic-setup-component-panel.slds-grow"
+                },
+                "type": "utam-setup/pageObjects/agenticSetupComponentPanel",
+                "description": "Represents the component panel",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "chatContainer",
+                "selector": {
+                    "css": ".chat-container"
+                },
+                "description": "Represents the container for chat input or shell",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "homeChatInput",
+                        "selector": {
+                            "css": "setup-agentic-setup-home-chat-input.static-chat"
+                        },
+                        "type": "utam-setup/pageObjects/agenticSetupHomeChatInput",
+                        "description": "Represents the home chat input component",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "description": "Represents the runtime_copilot-agentic-shell component for chat.",
+                        "name": "agenticShell",
+                        "selector": {
+                            "css": "runtime_copilot-agentic-shell"
+                        },
+                        "shadow": {
+                            "elements": [
+                                {
+                                    "name": "agenticSetupBroker",
+                                    "selector": {
+                                        "css": "setup-agentic-setup-broker"
+                                    },
+                                    "type": "utam-setup/pageObjects/agenticSetupBroker",
+                                    "description": "Represents the message input component for chat.",
+                                    "nullable": true,
+                                    "public": true,
+                                    "wait": true
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "pills",
+                "selector": {
+                    "css": "setup-agentic-setup-pills"
+                },
+                "type": "utam-setup/pageObjects/agenticSetupPills",
+                "description": "Represents the pills component",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "lightningCard",
+                "type": "utam-lightning/pageObjects/card",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "recentItemsSection",
+                "selector": {
+                    "css": ".onesetupRecentItems.enhancedSetupHome"
+                },
+                "description": "Represents the Recent Items section on Enhanced Setup Home",
+                "public": true,
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSpinnerOverlayVisible",
+            "description": {
+                "text": [
+                    "Check if spinner overlay is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatContainerVisible",
+            "description": {
+                "text": [
+                    "Check if chat container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifySpinnerOverlayPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"spinnerOverlay\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "spinnerOverlay",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyChatContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"chatContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isRecentItemsVisible",
+            "description": {
+                "text": [
+                    "Check if the Recent Items section is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recentItemsSection",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSplitViewTogglePresent",
+            "description": {
+                "text": [
+                    "Check if the Setup split view toggle exists in the page layout"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "boolean",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": ".navexSplitViewWrapper .splitview-toggle"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isCreateMenuPresent",
+            "description": {
+                "text": [
+                    "Check if the Setup home create menu exists in the page layout"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "boolean",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": ".onesetupCreateMenu"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isFloatingButtonPresent",
+            "description": {
+                "text": [
+                    "Check if the Agentic floating button exists in the page layout"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "boolean",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "setup-agentic-setup-floating-button"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

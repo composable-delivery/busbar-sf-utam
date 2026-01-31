@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a data provider card with a badge and actions.",
+            "Selector: src-unified-individual-data-provider-card"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dataProviderBaseCard",
+                "selector": {
+                    "css": "es_block_builder-data-provider-base-card"
+                },
+                "type": "utam-es_block_builder/pageObjects/dataProviderBaseCard",
+                "description": "Represents the base card for the data provider",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "actionsContent",
+                        "selector": {
+                            "css": "[slot='actions']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot with actions",
+                        "public": true
+                    },
+                    {
+                        "name": "badge",
+                        "selector": {
+                            "css": "lightning-badge"
+                        },
+                        "type": "utam-lightning/pageObjects/badge",
+                        "description": "Represents the badge component inside the data provider card",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

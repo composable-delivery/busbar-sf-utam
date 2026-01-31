@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the report summary in the report home view."
+        ]
+    },
+    "interface": true
+}

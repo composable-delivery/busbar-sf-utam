@@ -1,0 +1,60 @@
+{
+    "description": {
+        "text": [
+            "Selector: .runtime_platform_actionsQuickActionWrapper.",
+            "Represents the runtime_platform_actionsQuickActionWrapper Aura component.",
+            "Get the header text. Get the Actions Panel in wrapper. Get a button by text."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "headerText",
+            "selector": {
+                "css": "h2.slds-modal__title"
+            },
+            "public": true
+        },
+        {
+            "name": "quickActionsPanel",
+            "selector": {
+                "css": ".quick-actions-panel"
+            },
+            "elements": [
+                {
+                    "name": "quickActionPanelContent",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope *"
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "buttonByText",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

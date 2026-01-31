@@ -1,0 +1,183 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows for selecting an agent from a dropdown list. It handles agent selection, updates based on state changes, and provides a loading state and error handling.",
+            "Selector: src-multi-agent-selector"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dropdownComponent",
+                "selector": {
+                    "css": "runtime_copilot_base-base-drop-down"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseDropDown",
+                "description": "Represents the dropdown component for agent selection",
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "closeButton",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-button-icon.close-agent"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseButtonIcon",
+                        "description": "Represents the close button in the dropdown header",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "agentItems",
+                        "selector": {
+                            "css": "section.agent-item",
+                            "returnAll": true
+                        },
+                        "description": "Represents the list of agents in the dropdown",
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "radioButtons",
+                                "selector": {
+                                    "css": "lightning-primitive-radio"
+                                },
+                                "description": "Represents the radio buttons for selecting an agent",
+                                "type": "utam-lightning/pageObjects/primitiveInputRadio",
+                                "wait": true
+                            },
+                            {
+                                "name": "agentLabels",
+                                "selector": {
+                                    "css": "p.agent-label"
+                                },
+                                "description": "Represents the labels for the agents",
+                                "wait": true
+                            },
+                            {
+                                "name": "agentDescriptions",
+                                "selector": {
+                                    "css": "p.agent-desc"
+                                },
+                                "description": "Represents the descriptions for the agents",
+                                "wait": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "submitButton",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-button.submit-agent"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseButton",
+                        "description": "Represents the submit button to confirm the agent selection",
+                        "public": true,
+                        "wait": true
+                    }
+                ]
+            },
+            {
+                "name": "titleHeading",
+                "selector": {
+                    "css": "h2.agent-header"
+                },
+                "description": "Represents the title heading when only the title is displayed",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isAgentItemPresent",
+            "description": {
+                "text": [
+                    "Check if the agent item is present in the list"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "agentItems",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isAgentLabelVisible",
+            "description": {
+                "text": [
+                    "Check if the agent label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "agentLabels",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isAgentDescriptionVisible",
+            "description": {
+                "text": [
+                    "Check if the agent description is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "agentDescriptions",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTitleHeadingVisible",
+            "description": {
+                "text": [
+                    "Check if the title heading is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTitleHeadingTextCorrect",
+            "description": {
+                "text": [
+                    "Check if the title heading text is correct"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyTitleHeadingPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"titleHeading\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "titleHeading",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,44 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component is a basic template for a Lightning Web Component (LWC) without any defined functionality or UI elements. It serves as a starting point for creating new components.",
+            "Selector: src-input-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "None",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "hardcoded CSS selector string"
+                        }
+                    ]
+                },
+                "description": "Description text"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "verifyNonePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"None\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "None",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

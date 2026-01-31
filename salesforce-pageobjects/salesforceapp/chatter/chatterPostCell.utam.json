@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Chatter post cell contained within the feed scrollview.",
+            "Perform actions for social media posts."
+        ]
+    },
+    "interface": true,
+    "methods": [
+        {
+            "name": "getFeedActor",
+            "returnType": "string"
+        },
+        {
+            "name": "openAction"
+        },
+        {
+            "name": "getPostText",
+            "returnType": "string"
+        },
+        {
+            "name": "getPostTime",
+            "returnType": "string"
+        },
+        {
+            "name": "getLikes",
+            "returnType": "string"
+        },
+        {
+            "name": "getCommentsViews",
+            "returnType": "string"
+        },
+        {
+            "name": "like"
+        },
+        {
+            "name": "comment"
+        },
+        {
+            "name": "share"
+        },
+        {
+            "name": "openPostDetail"
+        }
+    ]
+}

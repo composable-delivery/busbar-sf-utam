@@ -1,0 +1,34 @@
+{
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-online-sales-home-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "component",
+                "selector": {
+                    "css": "runtime_online_sales-invoices-and-payments"
+                },
+                "public": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "invoices",
+                            "selector": {
+                                "css": "[data-id='sminvoices']"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

@@ -1,0 +1,121 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-common-list-pagination.",
+            "Represents the optional pagination element of the common list component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "paginationContainer",
+                "selector": {
+                    "css": "div.slds-p-vertical_small"
+                }
+            },
+            {
+                "name": "previousButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.previousPage"
+                }
+            },
+            {
+                "name": "nextButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.nextPage"
+                }
+            },
+            {
+                "name": "firstPageButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.firstPage"
+                }
+            },
+            {
+                "name": "secondPageButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.secondPage"
+                }
+            },
+            {
+                "name": "thirdPageButton",
+                "type": "utam-lightning/pageObjects/button",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button.thirdPage"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPaginationVisible",
+            "description": "Check if pagination is visible",
+            "compose": [
+                {
+                    "element": "paginationContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "clickPreviousButton",
+            "description": "Click the previous page button",
+            "compose": [
+                {
+                    "element": "previousButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickNextButton",
+            "description": "Click the next page button",
+            "compose": [
+                {
+                    "element": "nextButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickFirstPage",
+            "description": "Click the first variable page button",
+            "compose": [
+                {
+                    "element": "firstPageButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSecondPage",
+            "description": "Click the second variable page button",
+            "compose": [
+                {
+                    "element": "secondPageButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickThirdPage",
+            "description": "Click the third variable page button",
+            "compose": [
+                {
+                    "element": "thirdPageButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

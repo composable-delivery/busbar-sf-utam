@@ -1,0 +1,193 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: createLightningTypeForm",
+            "Selector: mcontent_lightning_types-create-lightning-type-form",
+            "Creating a new lightning type form"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "mcontent_lightning_types-create-lightning-type-form"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "labelInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[id*='label'], lightning-input:first-of-type"
+                }
+            },
+            {
+                "public": true,
+                "name": "apiNameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[id*='api-name'], lightning-input:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "descriptionTextarea",
+                "type": "utam-lightning/pageObjects/textarea",
+                "selector": {
+                    "css": "lightning-textarea[id*='description'], lightning-textarea"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "fillBasicInformation",
+            "description": "Fills the basic Lightning Type information",
+            "args": [
+                {
+                    "name": "label",
+                    "type": "string"
+                },
+                {
+                    "name": "apiName",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "labelInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "label",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "element": "apiNameInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "apiName",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "element": "descriptionTextarea",
+                    "apply": "clearAndEnterText",
+                    "args": [
+                        {
+                            "name": "description",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clearAllFields",
+            "description": "Clears all form fields",
+            "compose": [
+                {
+                    "element": "labelInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "value": ""
+                        }
+                    ]
+                },
+                {
+                    "element": "apiNameInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "value": ""
+                        }
+                    ]
+                },
+                {
+                    "element": "descriptionTextarea",
+                    "apply": "clearAndEnterText",
+                    "args": [
+                        {
+                            "value": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForFormVisible",
+            "description": "Waits for the form to become visible",
+            "compose": [
+                {
+                    "element": "labelInput",
+                    "apply": "waitForVisible"
+                }
+            ]
+        },
+        {
+            "name": "waitForAllFieldsVisible",
+            "description": "Waits for all form fields to be visible",
+            "compose": [
+                {
+                    "element": "labelInput",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "apiNameInput",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "descriptionTextarea",
+                    "apply": "waitForVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLabelFieldVisible",
+            "description": "Checks if label field is visible",
+            "compose": [
+                {
+                    "element": "labelInput",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isApiNameFieldVisible",
+            "description": "Checks if API name field is visible",
+            "compose": [
+                {
+                    "element": "apiNameInput",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDescriptionFieldVisible",
+            "description": "Checks if description field is visible",
+            "compose": [
+                {
+                    "element": "descriptionTextarea",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,63 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: diEditorUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox[name='Source']"
+                }
+            },
+            {
+                "public": true,
+                "name": "combobox1",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox[name='Event']"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "button"
+                }
+            },
+            {
+                "public": true,
+                "name": "popup",
+                "type": "utam-lightning/pageObjects/popup",
+                "selector": {
+                    "css": "lightning-popup"
+                }
+            },
+            {
+                "public": true,
+                "name": "combobox2",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox[name='Component']"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertySheetUi",
+                "type": "utam-builder-framework/pageObjects/propertySheetUi",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                }
+            }
+        ]
+    }
+}

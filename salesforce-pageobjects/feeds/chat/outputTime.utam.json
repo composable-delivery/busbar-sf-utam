@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a formatted time value if the value is provided.",
+            "Selector: src-output-time"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedTime",
+                "selector": {
+                    "css": "lightning-formatted-time"
+                },
+                "description": "Represents a formatted time display that is conditionally rendered based on the provided value.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

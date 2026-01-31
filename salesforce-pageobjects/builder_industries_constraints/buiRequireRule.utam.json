@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-require-rule",
+            "Constraint Builder Business UI Require Rule"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buiConstraintExpressions",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintExpressions",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraint-expressions"
+                }
+            },
+            {
+                "public": true,
+                "name": "badge",
+                "type": "utam-lightning/pageObjects/badge",
+                "selector": {
+                    "css": "lightning-badge"
+                }
+            },
+            {
+                "public": true,
+                "name": "buiRequiredExpression",
+                "type": "utam-builder_industries_constraints/pageObjects/buiRequiredExpression",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-required-expression"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[name='RuntimeMessage']"
+                }
+            },
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,200 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a record form with various statuses and an edit button.",
+            "Selector: setup-record-form"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "selector": {
+                    "css": ".record-form-header"
+                },
+                "description": "Represents the header section of the record form",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "headerTitle",
+                        "selector": {
+                            "css": "h2.slds-card__header-title span.slds-truncate"
+                        },
+                        "description": "Represents the title in the header section"
+                    },
+                    {
+                        "name": "actionsContainer",
+                        "selector": {
+                            "css": ".actions-container"
+                        },
+                        "description": "Represents the container for action buttons and badges in the header",
+                        "elements": [
+                            {
+                                "name": "changesSavedBadge",
+                                "selector": {
+                                    "css": "lightning-badge.success-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/badge",
+                                "description": "Represents the badge indicating changes saved",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "draftBadge",
+                                "selector": {
+                                    "css": "lightning-badge.draft-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/badge",
+                                "description": "Represents the badge indicating draft status",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "disabledBadge",
+                                "selector": {
+                                    "css": "lightning-badge.disabled-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/badge",
+                                "description": "Represents the badge indicating disabled status",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "editButton",
+                                "selector": {
+                                    "css": "lightning-button"
+                                },
+                                "type": "utam-lightning/pageObjects/button",
+                                "description": "Represents the edit button",
+                                "nullable": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "setupRecordFormInternal",
+                "selector": {
+                    "css": "setup-record-form-internal"
+                },
+                "type": "utam-setup/pageObjects/recordFormInternal",
+                "description": "Represents the internal setup record form component",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "errorCard",
+                "selector": {
+                    "css": "lightning-card.record-form-layout"
+                },
+                "type": "utam-lightning/pageObjects/card",
+                "description": "Card displaying error messages",
+                "nullable": true,
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "errorIcon",
+                        "selector": {
+                            "css": "lightning-icon.error-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Icon indicating an error",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "errorMessage",
+                        "selector": {
+                            "css": "p.error-text"
+                        },
+                        "description": "Paragraph displaying the error message text",
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isHeaderVisible",
+            "description": {
+                "text": [
+                    "Check that header section is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderTitle",
+            "description": {
+                "text": [
+                    "Get text from header title"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "headerTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isActionsContainerVisible",
+            "description": {
+                "text": [
+                    "Check that actions container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "actionsContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorMessage",
+            "description": {
+                "text": [
+                    "Get text from error message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyHeaderPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"header\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,94 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a data table with dynamic data loading, sorting, and interaction capabilities.",
+            "Selector: src-data-table"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dataTableWrapper",
+                "selector": {
+                    "css": ".setup-data-table-wrapper"
+                },
+                "description": "Represents the wrapper for the data table when configuration is complete.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "setupBaseTable",
+                        "selector": {
+                            "css": "setup-base-table"
+                        },
+                        "type": "utam-setup/pageObjects/baseTable",
+                        "description": "Represents the custom base table component used to display data with sorting and infinite loading capabilities.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "dynamicDataProvider",
+            "selector": {
+                "css": "[data-id='setup-tableDataProvider']"
+            },
+            "type": "container",
+            "description": "Represents the dynamic data provider component used to fetch and manage table data.",
+            "wait": true,
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isDataTableWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that the data table wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dataTableWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDataTableWrapperPresent",
+            "description": {
+                "text": [
+                    "Check if the data table wrapper is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dataTableWrapper",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyDataTableWrapperPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"dataTableWrapper\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dataTableWrapper",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

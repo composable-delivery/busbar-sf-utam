@@ -1,0 +1,123 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"row\").",
+            "Represents the Android row inside of List.",
+            "Verify the row and its fields."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordRow",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "time",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"record_time\"))"
+            }
+        },
+        {
+            "name": "title",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"record_title\"))"
+            }
+        },
+        {
+            "name": "text",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"record_text\"))"
+            }
+        },
+        {
+            "name": "subText",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"record_sub_text\"))"
+            }
+        },
+        {
+            "name": "icon",
+            "type": [
+                "actionable"
+            ],
+            "nullable": true,
+            "public": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"icon\"))"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getTime",
+            "compose": [
+                {
+                    "element": "time",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "text",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSubText",
+            "compose": [
+                {
+                    "element": "subText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickRow",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

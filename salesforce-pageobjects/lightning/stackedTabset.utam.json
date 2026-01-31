@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-stacked-tabset",
+            "Represents the lightning-stacked-tabset Lightning web component.",
+            "Gets the list of all stacked tabs"
+        ]
+    },
+    "elements": [
+        {
+            "name": "tabs",
+            "type": "utam-lightning/pageObjects/stackedTab",
+            "selector": {
+                "css": ".slds-tabs-mobile slot > lightning-stacked-tab",
+                "returnAll": true
+            },
+            "public": true,
+            "nullable": true
+        }
+    ]
+}

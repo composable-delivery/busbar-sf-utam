@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: YaInvoicePaymentAndContact"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-ya-invoice-payment-and-contact"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "wait": true,
+                "name": "invoicePaymentMethodSection",
+                "type": "utam-online-sales/pageObjects/invoicePaymentMethodSection",
+                "selector": {
+                    "css": "runtime_online_sales-invoice-payment-method-section"
+                }
+            },
+            {
+                "public": true,
+                "wait": true,
+                "name": "invoiceContactDetailsSection",
+                "type": "utam-online-sales/pageObjects/invoiceContactDetailsSection",
+                "selector": {
+                    "css": "runtime_online_sales-invoice-contact-details-section"
+                }
+            }
+        ]
+    }
+}

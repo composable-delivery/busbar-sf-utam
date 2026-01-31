@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the navigation bar at the top of a report.",
+            "Get the report name or navigate back from the report."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "getReportName",
+            "returnType": "string"
+        },
+        {
+            "name": "goBack"
+        }
+    ]
+}

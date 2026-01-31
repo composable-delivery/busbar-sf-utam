@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a list of radio buttons to select a single record, with navigation links to view details of the selected record.",
+            "Selector: runtime_copilot_base-multi-record-picklist"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "card",
+                "selector": {
+                    "css": "runtime_copilot_base-base-card"
+                },
+                "description": "Represents the card.",
+                "elements": [
+                    {
+                        "name": "inputRecordSelection",
+                        "selector": {
+                            "css": "runtime_copilot_base-input-record-selection",
+                            "returnAll": true
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/inputRecordSelection",
+                        "description": "Represents the checkboxes for selecting records.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

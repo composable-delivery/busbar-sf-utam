@@ -1,0 +1,88 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-toolbar",
+            "Represents the block builder toolbar component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_block_builder-toolbar"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "div.builder-editor-right"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "lastSaveMessage",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "div.slds-text-body_small.slds-text-color_weak"
+                }
+            },
+            {
+                "name": "actions",
+                "public": true,
+                "type": "utam-es_block_builder/pageObjects/actions",
+                "selector": {
+                    "css": "es_block_builder-actions"
+                }
+            },
+            {
+                "name": "combobox",
+                "public": true,
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForLastSaveMessage",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "lastSaveMessage"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

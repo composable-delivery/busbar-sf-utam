@@ -1,0 +1,364 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .oneRecordActionWrapper.",
+            "Represents the one:recordActionWrapper Aura component.",
+            "Get the body text, force:changeRecordTypeFooter, records-lwc-detail-panel, records-base-record-form, or flexipage-record-home-single-col-no-header-template-desktop2 components.",
+            "Wait for the footer to load. Click a footer button by text."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".oneRecordActionWrapper"
+    },
+    "exposeRootElement": true,
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        },
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": ".actionBody"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "methods": [
+        {
+            "name": "getLcText",
+            "description": {
+                "text": [
+                    "Gets a the text of the component"
+                ],
+                "return": "the text of the component"
+            },
+            "compose": [
+                {
+                    "element": "body",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "waitForFooter",
+            "description": {
+                "text": [
+                    "Waits for the footer to be present"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "footer",
+                                    "matcher": {
+                                        "type": "notNull"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForChangeRecordFooter",
+            "description": {
+                "text": [
+                    "Waits for the change record footer to be present and gets the footer"
+                ],
+                "return": "the change record footer (utam-force/pageObjects/changeRecordTypeFooter)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "footer"
+                                },
+                                {
+                                    "returnType": "utam-force/pageObjects/changeRecordTypeFooter",
+                                    "element": "footerContent",
+                                    "args": [
+                                        {
+                                            "type": "pageObject",
+                                            "value": "utam-force/pageObjects/changeRecordTypeFooter"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getDetailPanel",
+            "description": {
+                "text": [
+                    "Waits for and gets the record detail panel"
+                ],
+                "return": "the record detail panel (utam-records/pageObjects/lwcDetailPanel)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "detailsPanelContainer",
+                                    "args": [
+                                        {
+                                            "type": "pageObject",
+                                            "value": "utam-records/pageObjects/modalLwcDetailPanelWrapper"
+                                        }
+                                    ],
+                                    "returnType": "utam-records/pageObjects/modalLwcDetailPanelWrapper"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "lwcDetailPanel",
+                    "chain": true,
+                    "returnType": "utam-records/pageObjects/lwcDetailPanel"
+                }
+            ]
+        },
+        {
+            "name": "getRecordForm",
+            "description": {
+                "text": [
+                    "Waits for and gets the record form"
+                ],
+                "return": "the record form (utam-records/pageObjects/baseRecordForm)"
+            },
+            "compose": [
+                {
+                    "apply": "getDetailPanel",
+                    "returnType": "utam-records/pageObjects/lwcDetailPanel"
+                },
+                {
+                    "element": "baseRecordForm",
+                    "chain": true,
+                    "returnType": "utam-records/pageObjects/baseRecordForm"
+                },
+                {
+                    "apply": "waitForLoad",
+                    "chain": true,
+                    "returnType": "utam-records/pageObjects/baseRecordForm"
+                }
+            ]
+        },
+        {
+            "name": "waitForRecordHomeSingleColNoHeaderTemplateDesktop2",
+            "description": {
+                "text": [
+                    "Waits for and gets the record home desktop"
+                ],
+                "return": "the record home desktop (utam-flexipage/pageObjects/recordHomeSingleColNoHeaderTemplateDesktop2)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordHomeSingleColNoHeaderTemplateDesktop2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForDetailsPanelContainer",
+            "description": {
+                "text": [
+                    "Waits for the details panel container"
+                ],
+                "return": "this record action wrapper"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "body",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ":scope > *:first-child"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "returnSelf"
+                }
+            ]
+        },
+        {
+            "name": "clickFooterButton",
+            "description": {
+                "text": [
+                    "Clicks the action button with the specified text in the footer"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "actionsContainer"
+                                },
+                                {
+                                    "chain": true,
+                                    "returnType": "utam-force/pageObjects/actionButton",
+                                    "element": "actionButton",
+                                    "args": [
+                                        {
+                                            "name": "labelText",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "chain": true,
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "body",
+            "selector": {
+                "css": ".actionBody"
+            },
+            "elements": [
+                {
+                    "name": "detailsPanelContainer",
+                    "type": "container",
+                    "selector": {
+                        "css": ":scope > *:first-child"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "recordHomeSingleColNoHeaderTemplateDesktop2",
+                    "type": "utam-flexipage/pageObjects/recordHomeSingleColNoHeaderTemplateDesktop2",
+                    "selector": {
+                        "css": "flexipage-record-home-single-col-no-header-template-desktop2"
+                    }
+                },
+                {
+                    "name": "mobileRecordPageDecorator",
+                    "type": "utam-record-flexipage/pageObjects/mobileRecordPageDecorator",
+                    "selector": {
+                        "css": "record_flexipage-mobile-record-page-decorator"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "desktopRecordPageDecorator",
+                    "type": "utam-record-flexipage/pageObjects/desktopRecordPageDecorator",
+                    "selector": {
+                        "css": "record_flexipage-desktop-record-page-decorator"
+                    },
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "forceFormFooter",
+            "type": "utam-records/pageObjects/formFooter",
+            "selector": {
+                "css": "records-form-footer"
+            },
+            "public": true
+        },
+        {
+            "name": "footer",
+            "selector": {
+                "css": ".inlineFooter"
+            },
+            "elements": [
+                {
+                    "name": "actions",
+                    "type": "utam-force/pageObjects/recordEditActions",
+                    "selector": {
+                        "css": ".forceRecordEditActions"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "actionsContainer",
+                    "type": "utam-force/pageObjects/actionsContainer",
+                    "selector": {
+                        "css": ".actionsContainer"
+                    },
+                    "public": true
+                },
+                {
+                    "name": "footerContent",
+                    "type": "container",
+                    "public": true
+                }
+            ]
+        },
+        {
+            "name": "lcActionOverride",
+            "selector": {
+                "css": "div[class='overridePresent inlinePanel oneRecordActionWrapper']"
+            }
+        }
+    ]
+}

@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: header"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "link",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "icon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "backButton",
+                "type": [],
+                "selector": {
+                    "css": "div#backButton"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "divContent",
+                        "type": [],
+                        "selector": {
+                            "css": "div"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "icon1",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "divContent1",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "divContent2",
+                "type": [],
+                "selector": {
+                    "css": "div:nth-of-type(2)"
+                }
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "helpContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='help']"
+            }
+        }
+    ]
+}

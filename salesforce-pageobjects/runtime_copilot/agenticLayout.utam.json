@@ -1,0 +1,168 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_copilot-agentic-layout",
+            "Represents the runtime_copilot-agentic-layout Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageError",
+                "selector": {
+                    "css": "runtime_copilot_base-message-error"
+                },
+                "public": true,
+                "nullable": true,
+                "type": "utam-runtime_copilot_base/pageObjects/messageError"
+            },
+            {
+                "name": "viewComponent",
+                "selector": {
+                    "css": "runtime_copilot_base-view-component"
+                },
+                "public": true,
+                "nullable": true,
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent"
+            },
+            {
+                "name": "recommendLabel",
+                "selector": {
+                    "css": ".recommend-label"
+                },
+                "public": true
+            },
+            {
+                "name": "welcomeView",
+                "selector": {
+                    "css": "runtime_copilot_base-welcome-view[data-welcome-region]"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/welcomeView",
+                "description": "Represents the welcome view component with initial messages and actions.",
+                "wait": true,
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "recommendationContainer",
+                "selector": {
+                    "css": ".recommend"
+                },
+                "description": "Represents the container for recommendations.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "recommendationLabel",
+                        "selector": {
+                            "css": ".recommend-label"
+                        },
+                        "description": "Represents the label for recommendations, which can have a loading state.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "recommendationSpinner",
+                        "selector": {
+                            "css": ".recommendation-spinner"
+                        },
+                        "description": "Represents the loading spinner for recommendations.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "recommendationViewComponent",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "description": "Represents the view component for recommended actions.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRecommendationContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the recommendation container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRecommendationSpinnerVisible",
+            "description": {
+                "text": [
+                    "Check if the recommendation spinner is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationSpinner",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRecommendationContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recommendationContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRecommendationLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recommendationLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRecommendationSpinnerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recommendationSpinner\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationSpinner",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

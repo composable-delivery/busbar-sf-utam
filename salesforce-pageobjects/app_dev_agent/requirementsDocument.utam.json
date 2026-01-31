@@ -1,0 +1,217 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a requirements document with sections such as executive summary, use cases, and custom sections, and includes a loading state.",
+            "Selector: app_dev_agent-requirements-document"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "markdownCard",
+                "selector": {
+                    "css": ".markdown-card"
+                },
+                "description": "Represents the root container for the requirements document",
+                "elements": [
+                    {
+                        "name": "loadingIcon",
+                        "selector": {
+                            "css": "lightning-icon.loading-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the loading icon displayed during the loading state",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "loadingMessage",
+                        "selector": {
+                            "css": "span.loading-message"
+                        },
+                        "description": "Represents the loading message text displayed alongside the loading icon",
+                        "nullable": true
+                    },
+                    {
+                        "name": "loadingIconElement",
+                        "selector": {
+                            "css": "lightning-icon.loading-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the loading icon element to verify loader visibility",
+                        "nullable": true
+                    },
+                    {
+                        "name": "executiveSummarySection",
+                        "selector": {
+                            "css": "app_dev_agent-executive-summary-section"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/executiveSummarySection",
+                        "description": "Represents the executive summary section of the document",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "useCasesSection",
+                        "selector": {
+                            "css": "app_dev_agent-use-cases-section"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/useCasesSection",
+                        "description": "Represents the use cases section of the document",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "customSectionsSection",
+                        "selector": {
+                            "css": "app_dev_agent-custom-sections-section"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/customSectionsSection",
+                        "description": "Represents the custom sections section of the document",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "markdownSeperators",
+                        "selector": {
+                            "css": "div.markdown-seperator",
+                            "returnAll": true
+                        },
+                        "description": "Represents separator dividers between sections of the document",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isMarkdownCardVisible",
+            "description": {
+                "text": [
+                    "Check that the root container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownCard",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLoaderVisible",
+            "description": {
+                "text": [
+                    "Check that the loader (icon) is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingIconElement",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLoadingMessageVisible",
+            "description": {
+                "text": [
+                    "Check that the loading message is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getLoadingMessageText",
+            "description": {
+                "text": [
+                    "Retrieve the text content of the loading message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "loadingMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "areSeparatorsPresent",
+            "description": {
+                "text": [
+                    "Check that the separators are present and visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "markdownSeperators",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isSeparatorVisible",
+            "description": {
+                "text": [
+                    "Check that at least one separator is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "markdownSeperators",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMarkdownSeperatorsPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"markdownSeperators\" present on the page"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "markdownSeperators",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

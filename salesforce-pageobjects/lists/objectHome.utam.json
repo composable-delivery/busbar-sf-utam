@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-object-home.",
+            "Represents the lighting object home component.",
+            "Access the list view manager."
+        ]
+    },
+    "selector": {
+        "css": "lst-object-home"
+    },
+    "root": true,
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/listViewManager",
+                "name": "listViewManager",
+                "public": true,
+                "selector": {
+                    "css": "lst-list-view-manager"
+                }
+            }
+        ]
+    }
+}

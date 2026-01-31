@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: listRenderer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "componentRenderers",
+                "type": "utam-builder-framework/pageObjects/componentRenderer",
+                "selector": {
+                    "css": "builder_framework-component-renderer",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "componentRendererByIndex",
+                "type": "utam-builder-framework/pageObjects/componentRenderer",
+                "selector": {
+                    "css": "builder_framework-component-renderer:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

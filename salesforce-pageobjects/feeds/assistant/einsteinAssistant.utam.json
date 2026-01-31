@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as an interactive Einstein Assistant panel, handling user input, sending messages, and displaying responses from an AI provider.",
+            "Selector: src-einstein-assistant"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "assistantPanelContext",
+                "selector": {
+                    "css": "feeds_assistant-assistant-panel-context"
+                },
+                "type": "utam-feeds-assistant/pageObjects/assistantPanelContext",
+                "description": "Represents the context container for the assistant panel",
+                "public": true
+            },
+            {
+                "name": "homeViewComponent",
+                "selector": {
+                    "css": "feeds_assistant-assistant-panel-home-view"
+                },
+                "type": "utam-feeds-assistant/pageObjects/assistantPanelHomeView",
+                "description": "Represents the home view component of the assistant panel",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "headerSlotContent",
+                        "selector": {
+                            "css": "[slot='header']"
+                        },
+                        "type": "container",
+                        "description": "Represents the content of the named slot for the header",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "methods": [
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

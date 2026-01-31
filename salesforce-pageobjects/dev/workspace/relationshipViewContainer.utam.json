@@ -1,0 +1,60 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component representing a panel that displays relationship view information. It includes a header with a heading and a close button, and a body containing a custom explorer view component. The panel can be toggled open or closed.",
+            "Selector: dev_workspace-relationship-view-container"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-relationship-view-container"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "panelContainer",
+                "selector": {
+                    "css": ".relationship-view-panel"
+                },
+                "description": "Represents the container for the relationship view panel"
+            },
+            {
+                "name": "headerCloseButton",
+                "selector": {
+                    "css": "lightning-button-icon[icon-name='utility:close']"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the close button in the panel header",
+                "public": true
+            },
+            {
+                "name": "explorerView",
+                "selector": {
+                    "css": "setup_platform_unifiedapp-explorer-view"
+                },
+                "type": "utam-applications/pageObjects/explorerView",
+                "description": "Represents the custom component used to display the explorer view",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPanelContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the panel container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "panelContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

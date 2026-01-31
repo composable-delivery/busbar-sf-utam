@@ -1,0 +1,148 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-menu-item",
+            "Represents the lightning-menu-item Lightning web component..",
+            "Get the item's text, or get the matching attribute of the menu item."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-menu-item"
+    },
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "methods": [
+        {
+            "name": "getAttribute",
+            "description": {
+                "text": [
+                    "Get lightning-menu-item text attribute value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Checks if menu item link is in focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "hover",
+            "description": "Wait for mouse to move to the middle of the link element and checks if the element has focus at the moment",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "link",
+                                    "apply": "moveTo"
+                                },
+                                {
+                                    "element": "link",
+                                    "apply": "isFocused"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isSelected",
+            "description": {
+                "text": [
+                    "Checks if lightning-menu-item is selected by checking if the element contains the class slds-is-selected"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getClassAttribute",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-selected"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getItemText",
+            "description": {
+                "text": [
+                    "Get item link text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickLink",
+            "description": {
+                "text": [
+                    "Clicks the link of the menu item"
+                ],
+                "return": "void"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "public": true,
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    }
+}

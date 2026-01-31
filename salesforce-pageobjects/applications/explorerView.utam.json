@@ -1,0 +1,369 @@
+{
+    "root": true,
+    "selector": {
+        "css": "src-explorer-view"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a tree view of items when data is ready, or shows various error or loading states based on the component's state.",
+            "Selector: src-explorer-view"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "itemsLabel",
+                "selector": {
+                    "css": ".slds-text-color_inverse-weak"
+                },
+                "description": "Represents the label for the items when data is ready.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "treeContainer",
+                "selector": {
+                    "css": ".container.slds-p-bottom_x-small"
+                },
+                "description": "Represents the container for the tree view.",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "treeView",
+                        "selector": {
+                            "css": "lightning-tree"
+                        },
+                        "type": "utam-lightning/pageObjects/tree",
+                        "description": "Represents the tree view component.",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "invalidMetadataIdImage",
+                "selector": {
+                    "css": ".img-container img"
+                },
+                "description": "Represents the image for the invalid metadata ID error state.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "invalidMetadataIdMessage",
+                "selector": {
+                    "css": ".no-connection-text"
+                },
+                "description": "Represents the message for the invalid metadata ID error state.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "serviceErrorImage",
+                "selector": {
+                    "css": ".img-container img"
+                },
+                "description": "Represents the image for the service error state.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "serviceErrorMessage",
+                "selector": {
+                    "css": ".no-connection-text"
+                },
+                "description": "Represents the message for the service error state.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "loadingStateImage",
+                "selector": {
+                    "css": ".img-container img"
+                },
+                "description": "Represents the image for the loading state.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "loadingStateMessage",
+                "selector": {
+                    "css": ".no-connection-text"
+                },
+                "description": "Represents the message for the loading state.",
+                "nullable": true,
+                "wait": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTreeRoot",
+            "compose": [
+                {
+                    "element": "treeView",
+                    "apply": "getTreeRoot"
+                }
+            ]
+        },
+        {
+            "name": "isItemsLabelVisible",
+            "description": {
+                "text": [
+                    "Check if the items label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "itemsLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isTreeContainerPresent",
+            "description": {
+                "text": [
+                    "Check if the tree container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "treeContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isInvalidMetadataIdImageVisible",
+            "description": {
+                "text": [
+                    "Check if the invalid metadata ID image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "invalidMetadataIdImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getInvalidMetadataIdMessageText",
+            "description": {
+                "text": [
+                    "Get the message text for invalid metadata ID"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "invalidMetadataIdMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isServiceErrorImageVisible",
+            "description": {
+                "text": [
+                    "Check if the service error image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "serviceErrorImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getServiceErrorMessageText",
+            "description": {
+                "text": [
+                    "Get the message text for service error"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "serviceErrorMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isLoadingStateImageVisible",
+            "description": {
+                "text": [
+                    "Check if the loading state image is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingStateImage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getLoadingStateMessageText",
+            "description": {
+                "text": [
+                    "Get the message text for loading state"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "loadingStateMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyItemsLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"itemsLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "itemsLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyTreeContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"treeContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "treeContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyInvalidMetadataIdImagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"invalidMetadataIdImage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "invalidMetadataIdImage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyInvalidMetadataIdMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"invalidMetadataIdMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "invalidMetadataIdMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyServiceErrorImagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"serviceErrorImage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "serviceErrorImage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyServiceErrorMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"serviceErrorMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "serviceErrorMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingStateImagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingStateImage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingStateImage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLoadingStateMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"loadingStateMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loadingStateMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

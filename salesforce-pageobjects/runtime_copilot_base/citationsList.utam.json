@@ -1,0 +1,124 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of citations within an accordion, with the ability to highlight a specific reference.",
+            "Selector: runtime_copilot_base-citations-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "accordion",
+                "selector": {
+                    "css": "runtime_copilot_base-base-accordion"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseAccordion",
+                "description": "Represents the accordion component containing the citations list",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "headerSlot",
+                        "selector": {
+                            "css": "[slot='header']"
+                        },
+                        "type": "container",
+                        "description": "Represents the header slot of the accordion",
+                        "public": true
+                    },
+                    {
+                        "name": "citationsHeading",
+                        "selector": {
+                            "css": "h3.citations-heading"
+                        },
+                        "description": "Represents the heading for the citations list"
+                    },
+                    {
+                        "name": "bodySlot",
+                        "selector": {
+                            "css": "[slot='body']"
+                        },
+                        "type": "container",
+                        "description": "Represents the body slot of the accordion",
+                        "public": true
+                    },
+                    {
+                        "name": "citationsList",
+                        "selector": {
+                            "css": "ol.citations-list"
+                        },
+                        "description": "Represents the ordered list of citations",
+                        "elements": [
+                            {
+                                "name": "citationListItems",
+                                "selector": {
+                                    "css": "li.citation-list-item",
+                                    "returnAll": true
+                                },
+                                "description": "Represents the list items within the citations list",
+                                "elements": [
+                                    {
+                                        "name": "citationItems",
+                                        "selector": {
+                                            "css": "runtime_copilot_base-citation-item"
+                                        },
+                                        "type": "utam-runtime_copilot_base/pageObjects/citationItem",
+                                        "description": "Represents the citation items within each list item",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getCitationsHeadingText",
+            "description": {
+                "text": [
+                    "Get the text of the citations heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "citationsHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isCitationsListVisible",
+            "description": {
+                "text": [
+                    "Check if the citations list is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "citationsList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getCitationListItemText",
+            "description": {
+                "text": [
+                    "Get the text from a specific citation list item"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "citationListItems",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

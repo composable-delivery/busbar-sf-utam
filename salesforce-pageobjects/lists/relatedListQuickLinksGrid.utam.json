@@ -1,0 +1,73 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-quick-links-grid.",
+            "Represents the related list quick links grid Lightning web component.",
+            "Access the related list quick links."
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleShowAll",
+            "compose": [
+                {
+                    "element": "rlqlToggle",
+                    "apply": "click"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Show all of the related list quick links"
+                ],
+                "return": "void"
+            }
+        },
+        {
+            "name": "getLink",
+            "compose": [
+                {
+                    "returnType": "utam-lists/pageObjects/relatedListQuickLink",
+                    "applyExternal": {
+                        "type": "utam-lists/utils/relatedListQuickLinksGridUtils",
+                        "invoke": "getLink",
+                        "args": [
+                            {
+                                "name": "relatedListName",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the link for a related list by its name"
+                ],
+                "return": "String value"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedListQuickLink",
+                "name": "quickLinks",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-list-quick-link",
+                    "returnAll": true
+                }
+            },
+            {
+                "type": [
+                    "clickable"
+                ],
+                "name": "rlqlToggle",
+                "selector": {
+                    "css": ".rlql-toggle a"
+                }
+            }
+        ]
+    }
+}

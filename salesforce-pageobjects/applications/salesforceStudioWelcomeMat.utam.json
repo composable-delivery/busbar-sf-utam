@@ -1,0 +1,238 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A welcome mat modal component that provides users with information and options. It can be dismissed and includes an option to not show the modal again.",
+            "Selector: setup_platform_unifiedapp-salesforce-studio-welcome-mat"
+        ]
+    },
+    "selector": {
+        "css": "setup_platform_unifiedapp-salesforce-studio-welcome-mat"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalContainer",
+                "selector": {
+                    "css": "section[role='dialog']"
+                },
+                "description": "Represents the modal container for the welcome mat.",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "closeButton",
+                        "selector": {
+                            "css": "button.slds-modal__close"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the close button on the modal.",
+                        "wait": true
+                    },
+                    {
+                        "name": "welcomeMatHeader",
+                        "selector": {
+                            "css": "h2.slds-welcome-mat__info-title"
+                        },
+                        "description": "Represents the header title of the welcome mat.",
+                        "wait": true
+                    },
+                    {
+                        "name": "welcomeMatInfoText",
+                        "selector": {
+                            "css": ".slds-welcome-mat__info-description p"
+                        },
+                        "description": "The info text under the header"
+                    },
+                    {
+                        "name": "welcomeMatInfoDetailsText",
+                        "selector": {
+                            "css": ".slds-welcome-mat__info-description-details p"
+                        },
+                        "description": "The detailed info description for SalesforceStudio"
+                    },
+                    {
+                        "name": "dontShowAgainCheckbox",
+                        "selector": {
+                            "css": "lightning-checkbox-group"
+                        },
+                        "type": "utam-lightning/pageObjects/checkboxGroup",
+                        "description": "Represents the \"Don't show this again\" checkbox group.",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "welcomeMatTileDescription",
+                        "selector": {
+                            "css": ".slds-welcome-mat__tile-description",
+                            "returnAll": true
+                        },
+                        "description": "The descriptions for each tile"
+                    },
+                    {
+                        "name": "welcomeMatTiles",
+                        "selector": {
+                            "css": "ul.slds-welcome-mat__tiles"
+                        },
+                        "description": "Represents the list that contains welcome mat tiles.",
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "welcomeMatTile",
+                                "selector": {
+                                    "css": "li.slds-welcome-mat__tile",
+                                    "returnAll": true
+                                },
+                                "description": "Represents individual tiles within the welcome mat.",
+                                "wait": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCloseButton",
+            "description": {
+                "text": [
+                    "Clicks the close button to dismiss the welcome mat"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isWelcomeMatHeaderVisible",
+            "description": {
+                "text": [
+                    "Checks if the welcome mat header is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatHeader",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getWelcomeMatInfoText",
+            "description": {
+                "text": [
+                    "Retrieves the info text under the welcome mat header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatInfoText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getWelcomeMatInfoDetailsText",
+            "description": {
+                "text": [
+                    "Retrieves the info text under the welcome mat header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatInfoDetailsText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getWelcomeMatHeaderText",
+            "description": {
+                "text": [
+                    "Retrieves the text of the welcome mat header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatHeader",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isWelcomeMatTileVisible",
+            "description": {
+                "text": [
+                    "Checks if a welcome mat tile is visible"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatTile",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getWelcomeMatTileText",
+            "description": {
+                "text": [
+                    "Retrieves the text from a welcome mat tile"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatTile",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getWelcomeMatTileDescriptions",
+            "description": {
+                "text": [
+                    "Retrieves the descriptions from all welcome mat tiles"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "welcomeMatTileDescription",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyModalContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"modalContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "modalContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

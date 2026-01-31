@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Offline search view.",
+            "Perform a search and verify results."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "args": [
+                {
+                    "name": "itemToSearch",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "cancelSearch"
+        },
+        {
+            "name": "clearSearch"
+        },
+        {
+            "name": "getSearchResultList",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineRecordList"
+        }
+    ]
+}

@@ -1,0 +1,137 @@
+{
+    "description": {
+        "text": [
+            "Selector: div#content.",
+            "Represents the login page.",
+            "Access the user name, password, or submit button. Perform a login or a login redirecting to the home page."
+        ],
+        "author": "Salesforce"
+    },
+    "selector": {
+        "css": "div#content"
+    },
+    "root": true,
+    "methods": [
+        {
+            "name": "login",
+            "description": "login to the environment: enter login credentials, submit",
+            "compose": [
+                {
+                    "element": "userName",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "userName",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "description": "username to the environment",
+                            "name": "userNameStr",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "element": "password",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "password",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "description": "password to the environment",
+                            "name": "passwordStr",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "element": "submitBtn",
+                    "apply": "waitForVisible"
+                },
+                {
+                    "element": "submitBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "loginToHomePage",
+            "description": "login to the environment: enter login credentials, submit, wait for landing page url",
+            "compose": [
+                {
+                    "apply": "login",
+                    "args": [
+                        {
+                            "description": "user name (email) for the environment",
+                            "name": "userNameStr",
+                            "type": "string"
+                        },
+                        {
+                            "description": "password to the environment",
+                            "name": "passwordStr",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "document",
+                                    "apply": "getUrl",
+                                    "matcher": {
+                                        "type": "stringContains",
+                                        "args": [
+                                            {
+                                                "description": "partial url of landing page to wait for after login",
+                                                "name": "partialLandingUrl",
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "userName",
+            "public": true,
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input[type='email']"
+            }
+        },
+        {
+            "name": "password",
+            "public": true,
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input[type='password']"
+            }
+        },
+        {
+            "name": "submitBtn",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "input[type='submit']"
+            }
+        }
+    ]
+}

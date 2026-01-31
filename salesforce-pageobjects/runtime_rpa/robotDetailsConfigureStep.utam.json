@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Robot Details Config Step"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "robotDetailsConfigureStepHeader",
+                "selector": {
+                    "css": "div[class~='rpa-robot-details-configure-step-header']"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "header",
+                        "selector": {
+                            "css": "h1"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "robotDetailsConfigureStepContent",
+                "selector": {
+                    "css": "div[class~='rpa-robot-details-configure-step-content']"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "configureButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

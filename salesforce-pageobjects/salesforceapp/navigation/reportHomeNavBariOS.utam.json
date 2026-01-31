@@ -1,0 +1,78 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeNavigationBar.",
+            "Represents the iOS navigation bar at the top of a report.",
+            "Get the report name or navigate back from the report."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/reportHomeNavBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeNavigationBar"
+    },
+    "elements": [
+        {
+            "name": "reportName",
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText"
+            }
+        },
+        {
+            "name": "backButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[$label == 'Reports'$]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getReportName",
+            "compose": [
+                {
+                    "element": "reportName",
+                    "apply": "getText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "goBack",
+            "compose": [
+                {
+                    "element": "backButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

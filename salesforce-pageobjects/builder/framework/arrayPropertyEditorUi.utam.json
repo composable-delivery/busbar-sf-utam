@@ -1,0 +1,119 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: arrayPropertyEditorUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "icon",
+                                "type": "utam-lightning/pageObjects/icon",
+                                "selector": {
+                                    "css": "lightning-icon"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "link",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "a"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "buttonIcon",
+                                "type": "utam-lightning/pageObjects/buttonIcon",
+                                "selector": {
+                                    "css": "lightning-button-icon"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "buttonIcon1",
+                                "type": "utam-lightning/pageObjects/buttonIcon",
+                                "selector": {
+                                    "css": "lightning-button-icon:nth-of-type(2)"
+                                }
+                            },
+                            {
+                                "public": true,
+                                "name": "buttonIcon2",
+                                "type": "utam-lightning/pageObjects/buttonIcon",
+                                "selector": {
+                                    "css": "lightning-button-icon:nth-of-type(3)"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "divContent1",
+                "type": [],
+                "selector": {
+                    "css": "div:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

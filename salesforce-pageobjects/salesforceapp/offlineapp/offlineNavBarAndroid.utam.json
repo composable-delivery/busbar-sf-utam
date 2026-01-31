@@ -1,0 +1,108 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/toolbar\").",
+            "Represents the Android navigation bar for the Offline App.",
+            "Click items, open the profile menu."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineNavBar",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/toolbar\")"
+    },
+    "elements": [
+        {
+            "name": "briefcaseSyncButton",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/briefcase_sync\")"
+            }
+        },
+        {
+            "name": "createRecordButton",
+            "type": [
+                "clickable"
+            ],
+            "nullable": true,
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/action_create\")"
+            }
+        },
+        {
+            "name": "icon",
+            "selector": {
+                "uiautomator": "className(\"android.widget.ImageButton\").description(\"%s\")",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "menuButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "className(\"android.widget.ImageButton\").description(\"Menu\")"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickBriefcaseSync",
+            "compose": [
+                {
+                    "element": "briefcaseSyncButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickCreateRecord",
+            "compose": [
+                {
+                    "element": "createRecordButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickItem",
+            "compose": [
+                {
+                    "element": "icon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "openProfileMenu",
+            "compose": [
+                {
+                    "element": "menuButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

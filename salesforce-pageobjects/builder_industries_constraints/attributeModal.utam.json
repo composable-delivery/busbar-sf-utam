@@ -1,0 +1,169 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-attribute-modal",
+            "Constraint Builder attribute modal component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "formTypeRadioGroup",
+                        "type": "utam-lightning/pageObjects/radioGroup",
+                        "selector": {
+                            "css": "lightning-radio-group[class*='formType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "variableNameInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "dataTypeCombobox",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox[class*='dataType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "dataTypeScaleInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='dataTypeScale']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "valueTypeCombobox",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox[class*='valueType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "domainValueInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='domainValue']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "proxyVariableTypeCombobox",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox[class*='proxyVariableType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "proxyVariableArgumentsInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='proxyVariableArguments']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "expressionValueInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='expressionValue']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "functionValueInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='functionValue']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "referenceLibraryPicker",
+                        "type": "utam-builder_industries_constraints/pageObjects/referenceLibraryPicker",
+                        "selector": {
+                            "css": "builder_industries_constraints-reference-library-picker"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "variableSelectionLabel",
+                        "type": [],
+                        "selector": {
+                            "css": "label"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "variableList",
+                        "type": "utam-builder_industries_constraints/pageObjects/attributeList",
+                        "selector": {
+                            "css": "builder_industries_constraints-attribute-list"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "noVariablesLabel",
+                        "type": [],
+                        "selector": {
+                            "css": "div[class='slds-p-top_medium']"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "cancelButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button[class='cancel']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "saveButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button[class*='save']"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

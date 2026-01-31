@@ -1,0 +1,42 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the tab bar.",
+            "Check for a tab bar item and navigate to it, or open the menu tab."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "openMenuSection"
+        },
+        {
+            "name": "clickTabBarItem",
+            "args": [
+                {
+                    "name": "item",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "hasTabBarItem",
+            "returnType": "boolean",
+            "args": [
+                {
+                    "name": "item",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getTabBarItems",
+            "returnType": [
+                "clickable"
+            ],
+            "returnAll": true
+        }
+    ]
+}

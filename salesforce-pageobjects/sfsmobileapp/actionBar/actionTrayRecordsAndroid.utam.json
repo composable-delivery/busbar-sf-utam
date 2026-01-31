@@ -1,0 +1,80 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the list of actions once the action tray is expanded."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/actionBar/actionTrayRecords",
+    "platform": "native",
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "clickable"
+    ],
+    "selector": {
+        "uiautomator": "new UiSelector().resourceId(\"ACTION_LAUNCHER_CONTAINER\")"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "actionName",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "new UiSelector().className(\"android.widget.TextView\").text(\"%s\")",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "selectActionByName",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "actionName",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

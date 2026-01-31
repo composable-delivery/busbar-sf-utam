@@ -1,0 +1,147 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListViewManagerHeader.",
+            "Represents the list view manager header Aura component.",
+            "Access the list view name, list view picker, list view status, action bar, and button bar."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getSelectedListViewName",
+            "description": {
+                "text": [
+                    "Gets the name of the selected list view"
+                ],
+                "return": "the name of the selected list view"
+            },
+            "compose": [
+                {
+                    "element": "selected",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "waitForAction",
+            "description": {
+                "text": [
+                    "Waits for an action link with the specified text to be present"
+                ],
+                "return": "the link to the action link with the specified text (utam-force/pageObjects/actionLink)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "actions"
+                                },
+                                {
+                                    "chain": true,
+                                    "returnType": "utam-force/pageObjects/actionLink",
+                                    "element": "actionLink",
+                                    "args": [
+                                        {
+                                            "name": "labelText",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getActions",
+            "description": {
+                "text": [
+                    "Gets the container containing the actions for the list view"
+                ],
+                "return": "the container containing the actions for the list view"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "actions"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "picker",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".forceListViewPicker"
+            },
+            "elements": [
+                {
+                    "name": "selected",
+                    "selector": {
+                        "css": ".selectedListView"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "actions",
+            "type": "utam-force/pageObjects/actionsContainer",
+            "selector": {
+                "css": ".forceActionsContainer"
+            }
+        },
+        {
+            "name": "breadcrumbs",
+            "type": "container",
+            "selector": {
+                "css": "lst-breadcrumbs"
+            },
+            "public": true
+        },
+        {
+            "name": "listViewManagerButtonBar",
+            "type": "utam-force/pageObjects/listViewManagerButtonBar",
+            "public": true,
+            "selector": {
+                "css": "force-list-view-manager-button-bar"
+            }
+        },
+        {
+            "name": "statusInfo",
+            "type": "utam-force/pageObjects/listViewManagerStatusInfo",
+            "public": true,
+            "selector": {
+                "css": "force-list-view-manager-status-info"
+            }
+        },
+        {
+            "public": true,
+            "name": "lwcToggle",
+            "type": [
+                "actionable",
+                "clickable"
+            ],
+            "selector": {
+                "css": "button[name='lwcToggle']"
+            }
+        }
+    ]
+}

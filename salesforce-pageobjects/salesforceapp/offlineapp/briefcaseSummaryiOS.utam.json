@@ -1,0 +1,94 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: briefcase_summary",
+            "Represents the iOS Briefcase summary view on Landing page.",
+            "Verify the briefcase priming summary."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/briefcaseSummary",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "elements": [
+        {
+            "name": "summaryTitle",
+            "selector": {
+                "accessid": "briefcase_summary_title"
+            }
+        },
+        {
+            "name": "summaryText",
+            "selector": {
+                "accessid": "briefcase_summary_text"
+            }
+        },
+        {
+            "name": "progressRing",
+            "nullable": true,
+            "selector": {
+                "accessid": "briefcase_summary_progress_ring"
+            }
+        },
+        {
+            "name": "downloadingText",
+            "nullable": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label CONTAINS 'Downloading'`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getSummaryTitle",
+            "compose": [
+                {
+                    "element": "summaryTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSummaryText",
+            "compose": [
+                {
+                    "element": "summaryText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "waitForDownloadToComplete",
+            "compose": [
+                {
+                    "element": "progressRing",
+                    "apply": "waitForAbsence"
+                },
+                {
+                    "element": "downloadingText",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "drillIn",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

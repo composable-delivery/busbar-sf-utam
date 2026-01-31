@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-badge.",
+            "Represents the lightning-badge Lightning web component.",
+            "Access the badge's label text."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-primitive-icon"
+                }
+            },
+            {
+                "name": "iconText",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-icon_container"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get badge label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getIconText",
+            "description": {
+                "text": [
+                    "Get icon text container title attribute value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "iconText",
+                    "apply": "getTitle"
+                }
+            ]
+        }
+    ]
+}

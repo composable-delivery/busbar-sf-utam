@@ -1,0 +1,202 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A toggleable button component that can represent an active or inactive state, indicated by different labels and icons. It can be interacted with by clicking and can be disabled.",
+            "Selector: src-base-button-stateful"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statefulButton",
+                "selector": {
+                    "css": "feeds_chat-base-button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the main button that can be toggled.",
+                "elements": [
+                    {
+                        "name": "checkedIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the icon shown when the button is in the pressed state.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "pressedLabel",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the label text when the button is in the pressed state.",
+                        "nullable": true
+                    },
+                    {
+                        "name": "addIcon",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the icon shown when the button is in the unpressed state.",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "buttonLabel",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "description": "Represents the label text when the button is in the unpressed state.",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickStatefulButton",
+            "description": {
+                "text": [
+                    "Simulate a click on the stateful button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "statefulButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isStatefulButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the stateful button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statefulButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "isStatefulButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the stateful button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statefulButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPressedLabel",
+            "description": {
+                "text": [
+                    "Get the text of the pressed label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "pressedLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getButtonLabel",
+            "description": {
+                "text": [
+                    "Get the text of the button label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "buttonLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isPressedLabelVisible",
+            "description": {
+                "text": [
+                    "Check if the pressed label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pressedLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isButtonLabelVisible",
+            "description": {
+                "text": [
+                    "Check if the button label is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "buttonLabel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyPressedLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"pressedLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pressedLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyButtonLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"buttonLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "buttonLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

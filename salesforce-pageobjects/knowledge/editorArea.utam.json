@@ -1,0 +1,34 @@
+{
+    "description": {
+        "text": [
+            "Selector: .mce-content-body ."
+        ],
+        "author": "Salesforce"
+    },
+    "selector": {
+        "css": ".mce-content-body"
+    },
+    "root": true,
+    "elements": [
+        {
+            "type": [
+                "editable",
+                "actionable"
+            ],
+            "name": "editor",
+            "public": true,
+            "selector": {
+                "css": "p"
+            }
+        },
+        {
+            "name": "editorTextContent",
+            "public": true,
+            "selector": {
+                "css": "p",
+                "returnAll": true
+            },
+            "description": "Returns all the p tags inside editor area"
+        }
+    ]
+}

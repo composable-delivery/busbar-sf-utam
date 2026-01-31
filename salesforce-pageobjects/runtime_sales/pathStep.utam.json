@@ -1,0 +1,140 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_sales_pathassistant-path-step",
+            "Represents the runtime_sales_pathassistant-path-step component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "runtime_sales_pathassistant-path-step"
+    },
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "clickable"
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "link",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".slds-path__link",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "label",
+                "type": [],
+                "selector": {
+                    "css": ".slds-path__title[data-label]"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "description": "Click on step",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "description": "Focus on step",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Is step in focus"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Get step label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "label",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "\"data-label\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getClassName",
+            "description": {
+                "text": [
+                    "Get step class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getClassAttribute"
+                }
+            ]
+        },
+        {
+            "name": "getAttribute",
+            "description": {
+                "text": [
+                    "Get step attribute by name"
+                ],
+                "return": "string"
+            },
+            "args": [
+                {
+                    "name": "attributeName",
+                    "type": "string"
+                }
+            ],
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attributeName",
+                            "type": "argumentReference"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

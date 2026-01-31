@@ -1,0 +1,110 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a radio group for time selection, with options that can be checked, unchecked, and navigated through keyboard interactions.",
+            "Selector: src-select-single-time"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroupContainer",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio group with the role of radiogroup"
+            },
+            {
+                "name": "radioOptions",
+                "selector": {
+                    "css": "feeds_chat-primitive-type-picklist",
+                    "returnAll": true
+                },
+                "description": "Represents all radio button options inside the radio group",
+                "public": true
+            },
+            {
+                "name": "optionLabel",
+                "selector": {
+                    "css": ":scope > *:first-child"
+                },
+                "description": "Represents the label for an individual radio option",
+                "nullable": true
+            },
+            {
+                "name": "timeFormatted",
+                "selector": {
+                    "css": "lightning-formatted-time"
+                },
+                "description": "Represents the formatted time display when no label is provided for an individual radio option",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupContainerVisible",
+            "description": {
+                "text": [
+                    "Check that radio group container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroupContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRadioOptionLabel",
+            "description": {
+                "text": [
+                    "Get text from the label of a radio option if present"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRadioOptionLabelPresent",
+            "description": {
+                "text": [
+                    "Check if the label for a radio option is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyOptionLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"optionLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

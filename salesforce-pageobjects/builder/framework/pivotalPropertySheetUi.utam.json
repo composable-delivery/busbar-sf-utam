@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: pivotalPropertySheetUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "picklistUi",
+                "type": "utam-builder-framework/pageObjects/picklistUi",
+                "selector": {
+                    "css": "builder_framework-picklist-ui"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertySheetUi",
+                "type": "utam-builder-framework/pageObjects/propertySheetUi",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                }
+            }
+        ]
+    }
+}

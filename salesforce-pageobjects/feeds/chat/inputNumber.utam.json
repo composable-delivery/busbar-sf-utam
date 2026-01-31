@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a numeric input field with a label, which can be required, and emits a custom event when the value changes.",
+            "Selector: src-input-number"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "numericInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents a numeric input field with a label.",
+                "public": true
+            }
+        ]
+    }
+}

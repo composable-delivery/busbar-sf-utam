@@ -1,0 +1,289 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: forceChangeRecordType.",
+            "Represents the force:changeRecordType Aura component.",
+            "Get selectable ChangeRecordType radio buttons, get selected item message, tag line, record types, select record.",
+            "Get count of top-down record types. Check if a record type is selected."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceChangeRecordType"
+    },
+    "methods": [
+        {
+            "name": "getSelectableChangeRecordTypeRadioButtons",
+            "description": {
+                "text": [
+                    "Waits for the change record type radio buttons to be present",
+                    "and returns the list of radio buttons"
+                ],
+                "return": "the list of change record type radio buttons"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".changeRecordTypeRow .slds-radio--faux"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "selectableChangeRecordTypeRadioButtons"
+                }
+            ]
+        },
+        {
+            "name": "getSelectMessage",
+            "description": {
+                "text": [
+                    "Gets the text of the message for selecting the record type"
+                ],
+                "return": "the text of the message for selecting the record type"
+            },
+            "compose": [
+                {
+                    "element": "recordTypeSelectMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCount",
+            "description": {
+                "text": [
+                    "Gets the count of record types"
+                ],
+                "return": "the count of record types"
+            },
+            "compose": [
+                {
+                    "element": "changeRecordTypeRowLabels",
+                    "apply": "size"
+                }
+            ]
+        },
+        {
+            "name": "getRecordTypes",
+            "description": {
+                "text": [
+                    "Gets a list containing the text of record types"
+                ],
+                "return": "the list containing the text of record types"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".changeRecordTypeRow .changeRecordTypeRightColumn .changeRecordTypeOptionRightColumn"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "element": "changeRecordTypeRowLabels",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getCountTopDown",
+            "description": {
+                "text": [
+                    "Gets the count of \"top down\" record types"
+                ],
+                "return": "the count of \"top down\" record types"
+            },
+            "compose": [
+                {
+                    "element": "changeRecordTypeTopDownLabels",
+                    "apply": "size"
+                }
+            ]
+        },
+        {
+            "name": "getRecordTypesTopDown",
+            "description": {
+                "text": [
+                    "Gets a list of the text of \"top down\" record types"
+                ],
+                "return": "a list of the text of \"top down\" record types"
+            },
+            "compose": [
+                {
+                    "element": "changeRecordTypeTopDownLabels",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTagLine",
+            "description": {
+                "text": [
+                    "Gets the record type tag line"
+                ],
+                "return": "the record type tag line"
+            },
+            "compose": [
+                {
+                    "element": "recordTypeTagLine",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "selectRecordType",
+            "description": {
+                "text": [
+                    "Selects a record type with the specified text"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "radioButtonWithText",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isRecordTypeSelected",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the record type with the specified text is selected"
+                ],
+                "return": "true if the record type with the specified type is selected; otherwise, false"
+            },
+            "compose": [
+                {
+                    "element": "radioButtonWithText",
+                    "apply": "containsElement",
+                    "args": [
+                        {
+                            "type": "locator",
+                            "value": {
+                                "css": "input[checked='checked']"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "recordTypeSelectMessage",
+            "selector": {
+                "css": ".changeRecordTypeRow:first-child"
+            }
+        },
+        {
+            "name": "recordTypeTagLine",
+            "selector": {
+                "css": ".changeRecordTypeTagLine"
+            }
+        },
+        {
+            "name": "changeRecordTypeRowLabels",
+            "selector": {
+                "css": ".changeRecordTypeRow .changeRecordTypeRightColumn .changeRecordTypeOptionRightColumn",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "changeRecordTypeTopDownLabels",
+            "selector": {
+                "css": ".changeRecordTypeRow .changeRecordTypeTopDownOneColumn .slds-form-element__label",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "changeRecordTypeTopDownRadioButtons",
+            "type": "utam-aura/pageObjects/inputRadio",
+            "public": true,
+            "selector": {
+                "css": ".changeRecordTypeRow .changeRecordTypeTopDownOneColumn .topdown-radio-container",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "changeRecordTypeRadioButtons",
+            "type": "utam-aura/pageObjects/inputRadio",
+            "public": true,
+            "selector": {
+                "css": ".changeRecordTypeRow .changeRecordTypeRightColumn .changeRecordTypeOptionLeftColumn input[type=radio].uiInputRadio",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "selectableChangeRecordTypeRadioButtons",
+            "type": "utam-aura/pageObjects/inputRadio",
+            "selector": {
+                "css": ".changeRecordTypeRow .slds-radio--faux",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "changeRecordRadioButtons",
+            "type": "utam-aura/pageObjects/inputRadio",
+            "public": true,
+            "selector": {
+                "css": ".changeRecordTypeRow [class*='changeRecord'] .uiInputRadio",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "radioButtonWithText",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".changeRecordTypeRow [class*='changeRecord'] .slds-radio",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

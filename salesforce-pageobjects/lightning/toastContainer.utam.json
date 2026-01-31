@@ -1,0 +1,151 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-toast-container",
+            "Represents the lightning-toast-container Lightning web component",
+            "Access a list of toast messages"
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "name": "isShown",
+            "compose": [
+                {
+                    "element": "toastContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "isToastDisappeared",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "toastContainer",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "value": {
+                                                "css": "lightning-toast:nth-of-type(%d)",
+                                                "args": [
+                                                    {
+                                                        "name": "index",
+                                                        "type": "number"
+                                                    }
+                                                ]
+                                            },
+                                            "type": "locator"
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ],
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMaxToasts",
+            "compose": [
+                {
+                    "element": "toastContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "maxToasts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getContainerPosition",
+            "compose": [
+                {
+                    "element": "toastContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "containerPosition"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getToastPosition",
+            "compose": [
+                {
+                    "element": "toastContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "toastPosition"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "toastContainer",
+                "selector": {
+                    "css": "lightning-toast-container"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "toast",
+                            "nullable": true,
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-toast:nth-of-type(%d)",
+                                "args": [
+                                    {
+                                        "name": "index",
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "type": "utam-lightning/pageObjects/toast"
+                        },
+                        {
+                            "name": "toasts",
+                            "nullable": true,
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-toast",
+                                "returnAll": true
+                            },
+                            "type": "utam-lightning/pageObjects/toast"
+                        },
+                        {
+                            "name": "container",
+                            "public": true,
+                            "selector": {
+                                "css": ".toast-container"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

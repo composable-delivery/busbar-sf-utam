@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_property_editors-input-brand",
+            "Represents the brand input property editor."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "brandLabel",
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "name": "editBrand",
+                "type": [],
+                "selector": {
+                    "css": "div#editBrand"
+                }
+            },
+            {
+                "public": true,
+                "name": "button",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "showDefaultBrand",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "compactPreview",
+                "selector": {
+                    "css": "es_brand-brand-compact-preview"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForPreview",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "compactPreview"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

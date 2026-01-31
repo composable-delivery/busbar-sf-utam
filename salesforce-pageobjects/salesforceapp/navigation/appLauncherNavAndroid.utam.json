@@ -1,0 +1,66 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"com.salesforce.chatter:id/frag\").",
+            "Represents the Android 'App Launcher' fragment.",
+            "Start a search or interact with the existing list of apps."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/navigation/appLauncherNav",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "resourceId(\"com.salesforce.chatter:id/frag\")"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "uiautomator": "resourceId(\"com.salesforce.chatter:id/app_label\")"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "searchBar",
+            "type": "utam-salesforceapp/pageObjects/navigation/searchBar",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/app_launcher_search_bar\")"
+            },
+            "public": true
+        },
+        {
+            "name": "appItemsList",
+            "type": "utam-salesforceapp/pageObjects/navigation/appItemsList",
+            "selector": {
+                "uiautomator": "resourceId(\"com.salesforce.chatter:id/view_appLauncher\")"
+            },
+            "public": true
+        }
+    ]
+}

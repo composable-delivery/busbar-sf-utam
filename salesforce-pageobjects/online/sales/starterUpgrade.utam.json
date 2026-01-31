@@ -1,0 +1,33 @@
+{
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-starter-upgrade"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Starter Upgrade"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "genericPageHeader",
+                "type": [],
+                "wait": true,
+                "selector": {
+                    "css": "runtime_online_sales-generic-page-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "handRaiseBtn",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            }
+        ]
+    }
+}

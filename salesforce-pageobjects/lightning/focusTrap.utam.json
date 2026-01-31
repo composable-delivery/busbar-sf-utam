@@ -1,0 +1,36 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-focus-trap",
+            "Represents the lightning-focus-trap Lightning web component."
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "type": "actionable",
+    "selector": {
+        "css": "lightning-focus-trap"
+    },
+    "methods": [
+        {
+            "name": "focusRoot",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "focus"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "focusTrapContent",
+            "type": "container",
+            "selector": {
+                "css": "slot > *",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

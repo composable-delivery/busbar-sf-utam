@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_thp_cms-input-section",
+            "Represents the inputSection component of CMS runtime Trailhead modules",
+            "Returns key concept and lesson section text"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "keyConcept",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "public": true,
+                "type": "utam-lightning/pageObjects/input"
+            },
+            {
+                "name": "lessonTextRichTextEditor",
+                "selector": {
+                    "css": "es_property_editors-input-rich-text"
+                },
+                "public": true,
+                "type": "utam-es_property_editors/pageObjects/inputRichText"
+            }
+        ]
+    }
+}

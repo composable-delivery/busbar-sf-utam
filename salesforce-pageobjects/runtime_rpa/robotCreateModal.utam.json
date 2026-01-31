@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "public": true,
+                            "name": "headerText",
+                            "selector": {
+                                "css": "h1"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "RobotNameInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "buttons",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "buttonByIndex",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

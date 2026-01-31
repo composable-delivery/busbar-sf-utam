@@ -1,0 +1,215 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a chat interface with input, suggestions, and actions.",
+            "Selector: experience_ui_gen_canvas-gen-ui-footer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recommendationPanel",
+                "selector": {
+                    "css": ".suggested-prompts-grid"
+                },
+                "description": "Represents the panel that shows suggested prompts",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "recommendationItems",
+                        "selector": {
+                            "css": ".suggested-prompt-item",
+                            "returnAll": true
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents individual suggested prompt items"
+                    }
+                ]
+            },
+            {
+                "name": "promptField",
+                "selector": {
+                    "css": "lightning-input[data-prompt-input]"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the question input field for user text",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "comboboxField",
+                "selector": {
+                    "css": "lightning-combobox[name=\"staticPrompts\"]"
+                },
+                "type": "utam-lightning/pageObjects/combobox",
+                "description": "Represents the combobox for selecting static prompts",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "sendButtonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the send button",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "disclaimerText",
+                "selector": {
+                    "css": ".disclaimer"
+                },
+                "description": "Represents the disclaimer text"
+            },
+            {
+                "name": "limitErrorAddTile",
+                "selector": {
+                    "css": ".limit-error.disclaimer[data-id=\"limitErrorAddTile\"]"
+                },
+                "description": "Represents the error message for add tile limit reached",
+                "nullable": true
+            },
+            {
+                "name": "limitErrorAddCanvas",
+                "selector": {
+                    "css": ".limit-error.disclaimer[data-id=\"limitErrorAddCanvas\"]"
+                },
+                "description": "Represents the error message for add canvas limit reached",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRecommendationItem",
+            "description": {
+                "text": [
+                    "Click on a recommendation item"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recommendationItems",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isRecommendationPanelVisible",
+            "description": {
+                "text": [
+                    "Check if the recommendation panel is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationPanel",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDisclaimerText",
+            "description": {
+                "text": [
+                    "Get the disclaimer text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "disclaimerText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isLimitErrorAddTileVisible",
+            "description": {
+                "text": [
+                    "Check if the limit error for add tile is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "limitErrorAddTile",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isLimitErrorAddCanvasVisible",
+            "description": {
+                "text": [
+                    "Check if the limit error for add canvas is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "limitErrorAddCanvas",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyRecommendationPanelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recommendationPanel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationPanel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLimitErrorAddTilePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"limitErrorAddTile\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "limitErrorAddTile",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLimitErrorAddCanvasPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"limitErrorAddCanvas\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "limitErrorAddCanvas",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

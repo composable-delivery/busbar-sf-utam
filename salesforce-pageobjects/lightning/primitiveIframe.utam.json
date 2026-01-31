@@ -1,0 +1,34 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-primitive-iframe",
+            "Represents the iframe Lightning web component.",
+            "Get iframe element"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "iframe",
+                "type": "frame",
+                "public": true,
+                "selector": {
+                    "css": "iframe"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "iframe",
+                    "apply": "getTitle",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ]
+}

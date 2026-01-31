@@ -1,0 +1,141 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of recent projects with a header and a \"View All\" link. It also handles an error state by displaying an error message.",
+            "Selector: dev_workspace-home-page-list"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-home-page-list"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "headerArea",
+                "selector": {
+                    "css": ".slds-grid"
+                },
+                "description": "Represents the header area with title and View All link",
+                "elements": [
+                    {
+                        "name": "titleText",
+                        "selector": {
+                            "css": "span"
+                        },
+                        "description": "Represents the title text within the header area"
+                    },
+                    {
+                        "name": "viewAllLink",
+                        "selector": {
+                            "css": "a.slds-card__header-link"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the View All link in the header area"
+                    }
+                ]
+            },
+            {
+                "name": "errorBox",
+                "selector": {
+                    "css": ".slds-text-color_error"
+                },
+                "description": "Represents the error message box shown when there's an error loading projects",
+                "nullable": true
+            },
+            {
+                "name": "cardViewList",
+                "selector": {
+                    "css": "dev_workspace-card-view-list"
+                },
+                "type": "utam-dev-workspace/pageObjects/cardViewList",
+                "description": "Represents the custom component that displays a list of project cards",
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitleText",
+            "description": {
+                "text": [
+                    "Retrieves the title text of the header area"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickViewAllLink",
+            "description": {
+                "text": [
+                    "Clicks on the View All link in the header area"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "viewAllLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isErrorBoxVisible",
+            "description": {
+                "text": [
+                    "Checks if the error message box is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorBox",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorBoxText",
+            "description": {
+                "text": [
+                    "Retrieves the text from the error message box"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorBox",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorBoxPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorBox\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorBox",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

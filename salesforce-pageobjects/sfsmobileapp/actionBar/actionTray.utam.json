@@ -1,0 +1,27 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the action tray at the bottom of some pages.",
+            "Provides methods for opening and interacting with the action tray."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "type": [
+        "actionable",
+        "clickable"
+    ],
+    "methods": [
+        {
+            "name": "openActionTray"
+        },
+        {
+            "name": "maximizeActionTray"
+        },
+        {
+            "name": "closeActionTray"
+        }
+    ]
+}

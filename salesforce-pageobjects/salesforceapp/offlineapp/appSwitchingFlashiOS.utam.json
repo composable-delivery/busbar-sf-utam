@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: ChatterWindow.",
+            "Represents the Android App Switching page for the Offline App.",
+            "Make sure App switching to be completed."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/appSwitchingFlash",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "ChatterWindow"
+    },
+    "elements": [
+        {
+            "name": "appSwitchingMessage",
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Switching apps...\"`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "waitForAppSwitchingToComplete",
+            "compose": [
+                {
+                    "element": "appSwitchingMessage",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        }
+    ]
+}

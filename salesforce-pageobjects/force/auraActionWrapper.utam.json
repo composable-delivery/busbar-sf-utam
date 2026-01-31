@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-aura-action-wrapper.",
+            "Represents the  force-aura-action-wrapper Lightning web component.",
+            "Get content or the email action link"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "container",
+                "public": true,
+                "name": "container"
+            },
+            {
+                "public": true,
+                "type": [
+                    "clickable"
+                ],
+                "name": "emailAction",
+                "selector": {
+                    "css": "a.emailuiFormattedEmail"
+                }
+            }
+        ]
+    }
+}

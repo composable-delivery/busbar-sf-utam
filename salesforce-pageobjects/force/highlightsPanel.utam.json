@@ -1,0 +1,124 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceHighlightsStencil.",
+            "Represents the force:highlightsStencil Aura component.",
+            "Get the primary field and secondary field by index. Wait for the expected primary field to be displayed."
+        ]
+    },
+    "elements": [
+        {
+            "name": "primaryField",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".primaryField"
+            }
+        },
+        {
+            "name": "secondaryFields",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".secondaryFields li.slds-item",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "secondaryFieldByIndex",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": ".secondaryFields li.slds-item:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "mobileListRecordItems",
+            "public": true,
+            "type": "utam-force/pageObjects/highlightsMobileListRecordItem",
+            "selector": {
+                "css": ".forceHighlightsMobileListRecordItem, .slds-page-header__detail-block",
+                "returnAll": true
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getPrimaryField",
+            "description": {
+                "text": [
+                    "Gets the text of the primary field for the highlights panel"
+                ],
+                "return": "the text of the primary field for the highlights panel"
+            },
+            "compose": [
+                {
+                    "element": "primaryField",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSecondaryField",
+            "description": {
+                "text": [
+                    "Gets the text of the secondary field with the given index for the highlights panel"
+                ],
+                "return": "the text of the secondary field with the given index for the highlights panel"
+            },
+            "compose": [
+                {
+                    "element": "secondaryFieldByIndex",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "waitForExpectedPrimaryField",
+            "description": {
+                "text": [
+                    "Waits for and gets the primary field for the highlights panel",
+                    "with the specified header text"
+                ],
+                "return": "the primary field for the highlights panel with the specified header text"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "primaryField",
+                                    "apply": "getText",
+                                    "matcher": {
+                                        "type": "stringContains",
+                                        "args": [
+                                            {
+                                                "name": "headerText",
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

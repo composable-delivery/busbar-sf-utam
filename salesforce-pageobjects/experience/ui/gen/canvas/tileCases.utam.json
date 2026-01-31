@@ -1,0 +1,159 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that displays a list of cases with details and provides navigation to the case or account record when clicked.",
+            "Selector: src-experience_ui_gen_canvas-/tile-cases"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "casesContainer",
+                "selector": {
+                    "css": ".cases-container"
+                },
+                "description": "The main container for the list of cases.",
+                "elements": [
+                    {
+                        "name": "caseItems",
+                        "selector": {
+                            "css": "ol.case-item > div",
+                            "returnAll": true
+                        },
+                        "description": "Represents the list items for each case.",
+                        "elements": [
+                            {
+                                "name": "caseIndex",
+                                "selector": {
+                                    "css": ".case-index"
+                                },
+                                "description": "Displays the index number of the case in the list."
+                            },
+                            {
+                                "name": "caseNumber",
+                                "selector": {
+                                    "css": "p.slds-truncate"
+                                },
+                                "description": "Displays the case number and subject."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "noResultMessage",
+                "selector": {
+                    "css": ".slds-var-m-around_smallxx"
+                },
+                "description": "Message displayed when there are no cases to show.",
+                "nullable": true
+            },
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner when cases are being fetched.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isCasesContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the cases container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "casesContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getCaseItemText",
+            "description": {
+                "text": [
+                    "Get the text from a case item"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "caseItems",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isCaseIndexVisible",
+            "description": {
+                "text": [
+                    "Check if the case index is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "caseIndex",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCaseNumberVisible",
+            "description": {
+                "text": [
+                    "Check if the case number is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "caseNumber",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isNoResultMessageVisible",
+            "description": {
+                "text": [
+                    "Check if the no result message is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyNoResultMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"noResultMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noResultMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

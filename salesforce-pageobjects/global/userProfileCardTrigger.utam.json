@@ -1,0 +1,84 @@
+{
+    "description": {
+        "text": [
+            "Selector: .userProfileCardTriggerRoot",
+            "Represents the one:header Aura component.",
+            "Access the display density, switch the user to a classic experience, log the user out or profile settings"
+        ],
+        "author": "Salesforce"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "button"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "profileBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "button"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Click view profile button and wait for profile card"
+                ],
+                "return": "none"
+            },
+            "name": "viewProfile",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "profileBtn",
+                                    "apply": "click"
+                                },
+                                {
+                                    "element": "document",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".oneUserProfileCard"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

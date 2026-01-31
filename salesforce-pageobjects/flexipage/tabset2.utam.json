@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-tabset2.",
+            "Represents the flexipage-tabset2 Lightning web component. ",
+            "et the tabset2 component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lightning/pageObjects/tabset",
+                "name": "tabset",
+                "public": true,
+                "selector": {
+                    "css": "lightning-tabset"
+                }
+            }
+        ]
+    }
+}

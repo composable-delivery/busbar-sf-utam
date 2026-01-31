@@ -1,0 +1,59 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .onesetupBreadcrumbs.",
+            "Represents the onesetup:breadcrumbs Aura component.",
+            "Access its title text or a breadcrumb by name."
+        ]
+    },
+    "elements": [
+        {
+            "name": "title",
+            "selector": {
+                "css": "span.breadcrumbDetail"
+            }
+        },
+        {
+            "name": "breadcrumbByText",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.breadcrumb",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Retrieve the title text of the component."
+                ],
+                "return": "String value"
+            },
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

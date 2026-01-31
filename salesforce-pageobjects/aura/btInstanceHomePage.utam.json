@@ -1,0 +1,82 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "systemAdminTab",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "li[id='SysAdmin_Tab'] a"
+            },
+            "public": true
+        },
+        {
+            "name": "activeLinks",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a.activeLink",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "searchField",
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input[id='search']"
+            },
+            "public": true
+        },
+        {
+            "name": "searchButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".bodyDiv input[value='Search']"
+            },
+            "public": true
+        },
+        {
+            "name": "searchResultsHeaderColumns",
+            "selector": {
+                "css": "tr.headerRow th",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "searchResultsDataColumns",
+            "selector": {
+                "css": "tr.dataRow td",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "searchResultLinks",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".listRelatedObject a[target='_blank']"
+            },
+            "public": true
+        }
+    ]
+}

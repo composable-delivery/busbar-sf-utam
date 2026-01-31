@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-stacked-tabset2",
+            "Represents the stackedTabset LWC component.",
+            "Click a tab by label."
+        ]
+    },
+    "elements": [
+        {
+            "name": "tabByLabel",
+            "type": "utam-force/pageObjects/stackedTab2",
+            "selector": {
+                "css": "force-stacked-tab2",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getTabText",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "titleString",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            },
+            "public": true
+        }
+    ]
+}

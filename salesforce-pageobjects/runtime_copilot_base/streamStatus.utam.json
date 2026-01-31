@@ -1,0 +1,167 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a typing animation with status messages and decorative stars.",
+            "Selector: src-stream-status"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".status-container"
+                },
+                "description": "Represents the container for the typing animation and status message",
+                "elements": [
+                    {
+                        "name": "loadingText",
+                        "selector": {
+                            "css": ".text"
+                        },
+                        "description": "Represents the element that displays the loading text"
+                    },
+                    {
+                        "name": "star1",
+                        "selector": {
+                            "css": ".star1"
+                        },
+                        "description": "Represents the first decorative star"
+                    },
+                    {
+                        "name": "star2",
+                        "selector": {
+                            "css": ".star2"
+                        },
+                        "description": "Represents the second decorative star"
+                    },
+                    {
+                        "name": "star3",
+                        "selector": {
+                            "css": ".star3"
+                        },
+                        "description": "Represents the third decorative star"
+                    },
+                    {
+                        "name": "assistiveTextElement",
+                        "selector": {
+                            "css": ".slds-assistive-text"
+                        },
+                        "description": "Represents the assistive text for accessibility purposes",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getStatusText",
+            "description": {
+                "text": [
+                    "Retrieves the current status text from the component"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "loadingText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the status container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isAssistiveTextPresent",
+            "description": {
+                "text": [
+                    "Checks if the assistive text is present (for accessibility)"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistiveTextElement",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyStar1Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"star1\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "star1",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyStar2Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"star2\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "star2",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyStar3Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"star3\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "star3",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyAssistiveTextElementPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"assistiveTextElement\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistiveTextElement",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

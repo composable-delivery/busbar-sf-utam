@@ -1,0 +1,321 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-base-filter-panel.",
+            "Represents the list secondary display Lightning web component.",
+            "Access the lst-base-filter-panel-expression component, the add filter button, and the button for saving all filter changes."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "addFilterButton",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": ".addFilter"
+                }
+            },
+            {
+                "name": "removeAll",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".removeAllFiltersButton"
+                }
+            },
+            {
+                "name": "filterPanelError",
+                "type": "clickable",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-panel__body .slds-text-color_error[role='alert']"
+                }
+            },
+            {
+                "name": "filterScope",
+                "type": "utam-lists/pageObjects/baseFilterPanelScope",
+                "public": true,
+                "selector": {
+                    "css": "lst-base-filter-panel-scope"
+                }
+            },
+            {
+                "name": "filterExpressionByIndex",
+                "type": "utam-lists/pageObjects/baseFilterExpression",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": "lst-base-filter-expression[data-id='%d']",
+                    "args": [
+                        {
+                            "name": "filterIndex",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "filterExpressionsList",
+                "type": [],
+                "selector": {
+                    "css": "ol"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "filterExpressions",
+                        "type": "utam-lists/pageObjects/baseFilterExpression",
+                        "nullable": true,
+                        "selector": {
+                            "css": "lst-base-filter-expression",
+                            "returnAll": true
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "link",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "name": "closeFilterPanelButton",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": ".id-filterPanelClose"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/baseFilterExpressionEditor",
+                "name": "baseFilterExpressionEditor",
+                "public": true,
+                "selector": {
+                    "css": "lst-base-filter-expression-editor"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/baseFilterPanelScopeEditor",
+                "name": "baseFilterPanelScopeEditor",
+                "public": true,
+                "selector": {
+                    "css": "lst-base-filter-panel-scope-editor"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/button",
+                "name": "saveFilterChangesButton",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='saveButton']"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/button",
+                "name": "cancelFilterChangesButton",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='cancelButton']"
+                }
+            },
+            {
+                "name": "filterLogic",
+                "public": true,
+                "selector": {
+                    "css": "lst-filter-logic"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "type": "clickable",
+                            "name": "addFilterLogic",
+                            "public": true,
+                            "selector": {
+                                "css": ".addFilterLogic"
+                            }
+                        },
+                        {
+                            "type": "utam-lightning/pageObjects/button",
+                            "name": "removeFilterLogic",
+                            "nullable": true,
+                            "selector": {
+                                "css": ".removeFilterLogic"
+                            }
+                        },
+                        {
+                            "type": "utam-lightning/pageObjects/textarea",
+                            "name": "filterLogicText",
+                            "public": true,
+                            "nullable": true,
+                            "selector": {
+                                "css": ".filterLogicText"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "name": "saveDropdownButton",
+                "public": true,
+                "selector": {
+                    "css": "lightning-button-menu"
+                }
+            },
+            {
+                "name": "menuItemByText",
+                "type": "utam-lightning/pageObjects/menuItem",
+                "selector": {
+                    "css": "lightning-menu-item",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getItemText",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "name": "text",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "findFirst": true
+                },
+                "public": true,
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickEditFilterScope",
+            "compose": [
+                {
+                    "apply": "clickEditFilterScope",
+                    "element": "filterScope"
+                }
+            ]
+        },
+        {
+            "name": "clickRemoveAll",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "removeAll"
+                }
+            ]
+        },
+        {
+            "name": "clickAddFilter",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "addFilterButton"
+                }
+            ]
+        },
+        {
+            "name": "clickRemoveFilterLogic",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "removeFilterLogic"
+                }
+            ]
+        },
+        {
+            "name": "clickAddFilterLogic",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "addFilterLogic"
+                }
+            ]
+        },
+        {
+            "name": "setFilterLogic",
+            "compose": [
+                {
+                    "apply": "clearAndEnterText",
+                    "element": "filterLogicText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getErrorText",
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "filterPanelError"
+                }
+            ]
+        },
+        {
+            "name": "hasError",
+            "compose": [
+                {
+                    "apply": "isVisible",
+                    "element": "filterPanelError"
+                }
+            ]
+        },
+        {
+            "name": "waitForSaveButtonClick",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "saveFilterChangesButton",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickCancelButton",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "cancelFilterChangesButton",
+                                    "apply": "click"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

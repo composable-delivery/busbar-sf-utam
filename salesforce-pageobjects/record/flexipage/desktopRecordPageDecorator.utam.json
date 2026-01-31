@@ -1,0 +1,91 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: record_flexipage-desktop-record-page-decorator",
+            "Represents the record_flexipage-desktop-record-page-decorator Lightning web component.",
+            "Get the flexipage-record-home-template-desktop2, flexipage-record-home-with-subheader-template-desktop2,",
+            "flexipage-record-home-left-sidebar-template-desktop2, records-record-layout-event-broker, or records-form-footer components."
+        ]
+    },
+    "elements": [
+        {
+            "type": "utam-flexipage/pageObjects/recordHomeTemplateDesktop2",
+            "name": "templateDesktop2",
+            "selector": {
+                "css": "flexipage-record-home-template-desktop2"
+            },
+            "public": true
+        },
+        {
+            "type": "utam-flexipage/pageObjects/recordHomeWithSubheaderTemplateDesktop2",
+            "name": "withSubheaderTemplateDesktop2",
+            "selector": {
+                "css": "flexipage-record-home-with-subheader-template-desktop2"
+            },
+            "public": true
+        },
+        {
+            "type": "utam-flexipage/pageObjects/recordHomeLeftSidebarTemplateDesktop2",
+            "name": "leftSidebarTemplateDesktop2",
+            "selector": {
+                "css": "flexipage-record-home-left-sidebar-template-desktop2"
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-records/pageObjects/recordLayoutEventBroker",
+                "name": "eventBroker",
+                "selector": {
+                    "css": "records-record-layout-event-broker"
+                },
+                "public": true
+            },
+            {
+                "name": "aiAssistantToggleButton",
+                "selector": {
+                    "css": ".ai-assistant-toggle"
+                },
+                "nullable": true
+            },
+            {
+                "type": "utam-records/pageObjects/formFooter",
+                "name": "formFooter",
+                "selector": {
+                    "css": "records-form-footer"
+                },
+                "public": true
+            },
+            {
+                "name": "einsteinAssistantBroker",
+                "selector": {
+                    "css": "feeds_assistant-einstein-assistant-broker"
+                },
+                "type": "utam-feeds-assistant/pageObjects/einsteinAssistantBroker",
+                "description": "Represents the Einstein Assistant broker component which handles AI actions and readiness.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isAiAssistantToggleButtonExist",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the ai header toggle button exist"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "aiAssistantToggleButton",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

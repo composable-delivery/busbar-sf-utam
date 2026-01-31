@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-button-group.",
+            "Represents the lightning-button-group Lightning web component.",
+            "Retrieve a button page object by index from its list of buttons."
+        ]
+    },
+    "elements": [
+        {
+            "name": "buttonByIndex",
+            "type": "container",
+            "selector": {
+                "css": "slot > *:nth-child(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "allChildren",
+            "type": "container",
+            "selector": {
+                "css": "slot > *",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

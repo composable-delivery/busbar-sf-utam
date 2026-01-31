@@ -1,0 +1,272 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that presents a typing animation with messages and allows interaction with actions.",
+            "Selector: src-status-typing"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".status-container"
+                },
+                "description": "Represents the container for the typing animation messages",
+                "elements": [
+                    {
+                        "name": "typingStep",
+                        "selector": {
+                            "css": "div[role='status']",
+                            "returnAll": true
+                        },
+                        "description": "Represents each step in the typing animation"
+                    },
+                    {
+                        "name": "typingStepByIndex",
+                        "selector": {
+                            "css": "div[role='status']:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "description": "element index starting from 1"
+                                }
+                            ]
+                        },
+                        "description": "Represents each step in the typing animation",
+                        "elements": [
+                            {
+                                "name": "typingMessage",
+                                "selector": {
+                                    "css": ".text"
+                                },
+                                "description": "Represents the message text for each typing step"
+                            },
+                            {
+                                "name": "checkmarkContainer",
+                                "selector": {
+                                    "css": "div.slds-p-left_xx-small"
+                                },
+                                "description": "Represents the container for the checkmark indicating step completion",
+                                "nullable": true
+                            },
+                            {
+                                "name": "starContainer",
+                                "selector": {
+                                    "css": ".star-container"
+                                },
+                                "description": "Represents the container for the stars indicating step not completed",
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "assistiveTextElement",
+                                        "selector": {
+                                            "css": ".slds-assistive-text"
+                                        },
+                                        "description": "Represents the assistive text element for accessibility",
+                                        "nullable": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "statusFooter",
+                "selector": {
+                    "css": ".status-typing_footer"
+                },
+                "description": "Represents the footer area of the status typing component",
+                "elements": [
+                    {
+                        "name": "actionComponent",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component[data-action-region]"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "description": "Represents the action component that can be interacted with",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getStatusContainerVisibility",
+            "description": {
+                "text": [
+                    "Checks if the status container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getTypingStepText",
+            "description": {
+                "text": [
+                    "Retrieves the text of a specific typing step"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "typingStep",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isCheckmarkContainerPresent",
+            "description": {
+                "text": [
+                    "Checks if the checkmark container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checkmarkContainer",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isStarContainerVisible",
+            "description": {
+                "text": [
+                    "Checks if the star container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "starContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getAssistiveText",
+            "description": {
+                "text": [
+                    "Retrieves the assistive text for accessibility"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "assistiveTextElement",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getStatusFooterVisibility",
+            "description": {
+                "text": [
+                    "Checks if the status footer is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusFooter",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyTypingMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"typingMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "typingMessage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyCheckmarkContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"checkmarkContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checkmarkContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyStarContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"starContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "starContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyAssistiveTextElementPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"assistiveTextElement\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "assistiveTextElement",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyTypingStepByIndexPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"typingStepByIndex\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "typingStepByIndex",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

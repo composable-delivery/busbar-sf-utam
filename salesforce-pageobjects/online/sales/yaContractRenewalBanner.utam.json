@@ -1,0 +1,77 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: YA Contract Renewal Banner"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedRichText",
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "link",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            },
+            {
+                "public": true,
+                "name": "link1",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "icon1",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedRichText1",
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "link2",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a:nth-of-type(3)"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: dataProviderConfigurationForm"
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "lightning-input"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-id='dataNameField']"
+                }
+            },
+            {
+                "public": true,
+                "name": "combobox",
+                "type": "utam-lightning/pageObjects/combobox",
+                "selector": {
+                    "css": "lightning-combobox[data-id='availableDataProvidersField']"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertySheetUi",
+                "type": "utam-builder-framework/pageObjects/propertySheetUi",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForPropertySheet",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "propertySheetUi"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

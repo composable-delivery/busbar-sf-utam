@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-template-list.",
+            "Represents the template list Lightning web component.",
+            "Access the item factory."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/templateListItemFactory",
+                "name": "cards",
+                "public": true,
+                "selector": {
+                    "css": "lst-template-list-item-factory",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

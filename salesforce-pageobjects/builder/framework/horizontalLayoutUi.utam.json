@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: horizontalLayoutUi"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "component",
+                "type": "utam-builder-framework/pageObjects/component",
+                "selector": {
+                    "css": "builder_framework-component"
+                }
+            }
+        ]
+    }
+}

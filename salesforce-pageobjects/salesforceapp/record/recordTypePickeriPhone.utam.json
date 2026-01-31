@@ -1,0 +1,88 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: **/XCUIElementTypeAny[`label == \"Select New Record Type\"`][1].",
+            "Represents the iPhone view with the record type actions.",
+            "Find an action and navigate to it;check if record type action exists;get the type actions list."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/recordTypePicker",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeAny[`label == \"Select New Record Type\"`][1]"
+    },
+    "methods": [
+        {
+            "name": "selectRecordTypeWithLabel",
+            "compose": [
+                {
+                    "element": "recordType",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "hasRecordType",
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "recordType",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "recordType",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`label == \"%s\"`]",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "recordTypes",
+            "public": true,
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton",
+                "returnAll": true
+            }
+        }
+    ]
+}

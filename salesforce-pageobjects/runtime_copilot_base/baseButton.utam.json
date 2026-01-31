@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A basic button component with accessibility features that can be clicked by the user.",
+            "Selector: src-base-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseButton",
+                "selector": {
+                    "css": "lightning-primitive-base-button"
+                },
+                "description": "Represents the basic button that can be interacted with by clicking.",
+                "public": true,
+                "type": "clickable"
+            },
+            {
+                "name": "button",
+                "selector": {
+                    "css": "button"
+                },
+                "description": "Represents the basic button that can be interacted with by clicking.",
+                "public": true,
+                "type": "clickable"
+            }
+        ]
+    }
+}

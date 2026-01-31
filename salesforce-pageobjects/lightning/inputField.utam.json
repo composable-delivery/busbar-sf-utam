@@ -1,0 +1,256 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-input-field",
+            "Represents the lightning-input-field Lightning web component.",
+            "Get the lightning input, address, location, name, input rich text, picklist, quill, textarea or lookup components."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "inputAddress",
+                "type": "utam-lightning/pageObjects/inputAddress",
+                "selector": {
+                    "css": "lightning-input-address"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "inputLocation",
+                "type": "utam-lightning/pageObjects/inputLocation",
+                "selector": {
+                    "css": "lightning-input-location"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "inputName",
+                "type": "utam-lightning/pageObjects/inputName",
+                "selector": {
+                    "css": "lightning-input-name"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "inputRichText",
+                "type": "utam-lightning/pageObjects/inputRichText",
+                "selector": {
+                    "css": "lightning-input-rich-text"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "picklist",
+                "type": "utam-lightning/pageObjects/picklist",
+                "selector": {
+                    "css": "lightning-picklist"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "quill",
+                "type": "utam-lightning/pageObjects/quill",
+                "selector": {
+                    "css": "lightning-quill"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "textArea",
+                "type": "utam-lightning/pageObjects/textarea",
+                "selector": {
+                    "css": "lightning-textarea"
+                },
+                "public": true,
+                "nullable": true
+            },
+            {
+                "name": "lookup",
+                "type": "utam-lightning/pageObjects/lookup",
+                "selector": {
+                    "css": "lightning-lookup"
+                },
+                "public": true,
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getClassName",
+            "description": {
+                "text": [
+                    "Get input field class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetInput",
+            "description": {
+                "text": [
+                    "wait for input field element to load"
+                ],
+                "return": "utam-lightning/pageObjects/input"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "input"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetLookup",
+            "description": {
+                "text": [
+                    "wait for lookup field element to load"
+                ],
+                "return": "utam-lightning/pageObjects/lookup"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "lookup"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetTextarea",
+            "description": {
+                "text": [
+                    "wait for text area element to load"
+                ],
+                "return": "utam-lightning/pageObjects/textarea"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "textArea"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetPicklist",
+            "description": {
+                "text": [
+                    "wait for picklist element to load"
+                ],
+                "return": "utam-lightning/pageObjects/picklist"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "picklist"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetInputAddress",
+            "description": {
+                "text": [
+                    "wait for input address element to load"
+                ],
+                "return": "utam-lightning/pageObjects/inputAddress"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "inputAddress"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitAndGetInputName",
+            "description": {
+                "text": [
+                    "wait for input name element to load"
+                ],
+                "return": "utam-lightning/pageObjects/inputName"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "inputName"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

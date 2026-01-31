@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-constraint-expressions",
+            "Constraint Builder Business UI Constraint Expressions"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "list",
+                "type": [],
+                "selector": {
+                    "css": "ul"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "listItems",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listItemByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "buiExpressionRowContainer",
+                                "type": "utam-builder_industries_constraints/pageObjects/buiExpressionRowContainer",
+                                "selector": {
+                                    "css": "builder_industries_constraints-bui-expression-row-container"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "buttonMenu",
+                "type": "utam-lightning/pageObjects/buttonMenu",
+                "selector": {
+                    "css": "lightning-button-menu"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "menuItem",
+                        "type": "utam-lightning/pageObjects/menuItem",
+                        "selector": {
+                            "css": "lightning-menu-item#action-id"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

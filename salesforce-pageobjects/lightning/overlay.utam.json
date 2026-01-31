@@ -1,0 +1,74 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-overlay-container",
+            "Represents the lightning-overlay-container Lightning web component. Get the lightning-modal-base component by index."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "body"
+    },
+    "elements": [
+        {
+            "name": "container",
+            "selector": {
+                "css": "lightning-overlay-container"
+            },
+            "shadow": {
+                "elements": [
+                    {
+                        "name": "modalByIndex",
+                        "type": "utam-lightning/pageObjects/modal",
+                        "selector": {
+                            "css": "lightning-modal-base:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "description": "Index here is elements position among siblings of the same type. The index of the first child is 1"
+                                }
+                            ]
+                        },
+                        "public": true,
+                        "nullable": true
+                    },
+                    {
+                        "name": "overlayByIndex",
+                        "description": "Internal use only.",
+                        "selector": {
+                            "css": "lightning-overlay:nth-child(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "public": true,
+                        "nullable": true,
+                        "shadow": {
+                            "elements": [
+                                {
+                                    "name": "overlayContent",
+                                    "type": "container",
+                                    "selector": {
+                                        "css": "%s",
+                                        "args": [
+                                            {
+                                                "name": "selector",
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "public": true
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the fragment for the Einstein analytics home page.",
+            "Find 'Browse' and navigate to it."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "navigateToBrowse"
+        }
+    ]
+}

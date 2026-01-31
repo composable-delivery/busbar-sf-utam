@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a button with an icon, with customizable variant, icon symbol, and size. The button can also be marked as selected.",
+            "Selector: src-base-button-icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseButton",
+                "selector": {
+                    "css": "feeds_chat-base-button"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseButton",
+                "description": "Represents the custom button component that can be interacted with.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "iconInsideButton",
+                        "selector": {
+                            "css": "feeds_chat-base-icon"
+                        },
+                        "type": "utam-feeds-chat/pageObjects/baseIcon",
+                        "description": "Represents the icon inside the button, not directly interactable but important for assertions.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

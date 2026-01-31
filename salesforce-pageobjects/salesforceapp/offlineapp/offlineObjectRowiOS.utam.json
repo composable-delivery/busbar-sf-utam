@@ -1,0 +1,68 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: briefcase_object_row.",
+            "Represents the iOS Briefcase Object row view.",
+            "Verify the downloaded object."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectRow",
+    "exposeRootElement": true,
+    "type": [
+        "clickable",
+        "actionable"
+    ],
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "title",
+            "selector": {
+                "accessid": "briefcase_object_row_label/title"
+            }
+        },
+        {
+            "name": "text",
+            "selector": {
+                "accessid": "briefcase_object_row_text"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "text",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickRow",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

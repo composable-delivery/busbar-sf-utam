@@ -1,0 +1,146 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-button-icon-stateful",
+            "Represents the lightning-button-icon-stateful Lightning web component.",
+            " Click a button, or click a button with a given title. Get the class attribute, or check if it's selected."
+        ],
+        "author": "Salesforce"
+    },
+    "type": [
+        "clickable"
+    ],
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "button",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "button"
+                }
+            },
+            {
+                "name": "buttonWithTitle",
+                "type": [
+                    "clickable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": "button[title='%s']",
+                    "args": [
+                        {
+                            "name": "buttonTitle",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/primitiveIcon",
+                "public": true,
+                "selector": {
+                    "css": "lightning-primitive-icon"
+                }
+            },
+            {
+                "name": "alternativeText",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-assistive-text"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAlternateTitle",
+            "description": {
+                "text": [
+                    "Get button alternative text"
+                ],
+                "return": "string|null"
+            },
+            "compose": [
+                {
+                    "element": "alternativeText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickButton",
+            "description": "Clicks button",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickButtonWithTitle",
+            "description": "Clicks button with title",
+            "compose": [
+                {
+                    "element": "buttonWithTitle",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getClassAttr",
+            "description": {
+                "text": [
+                    "Gets button class name"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "button"
+                }
+            ]
+        },
+        {
+            "name": "hover",
+            "description": "Scroll and hover on the button element",
+            "compose": [
+                {
+                    "element": "button",
+                    "apply": "scrollToCenter"
+                },
+                {
+                    "element": "button",
+                    "apply": "moveTo"
+                }
+            ]
+        },
+        {
+            "name": "isSelected",
+            "description": {
+                "text": [
+                    "Checks if the button is selected if button has aria-pressed attribute"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getAttribute",
+                    "element": "button",
+                    "args": [
+                        {
+                            "value": "aria-pressed"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

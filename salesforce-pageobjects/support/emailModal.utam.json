@@ -1,0 +1,92 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".uiModal.active"
+    },
+    "methods": [
+        {
+            "name": "close",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickOnButton",
+            "compose": [
+                {
+                    "element": "activeButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "activeButton",
+            "type": [
+                "clickable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "button[title='%s']",
+                "args": [
+                    {
+                        "name": "activeButtonName",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "public": true,
+            "name": "closeButton",
+            "selector": {
+                "css": ".slds-modal__close"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "inputEmail",
+            "public": true,
+            "selector": {
+                "css": "input[id='recipients-list-input-dom-id']"
+            },
+            "type": "utam-aura/pageObjects/inputText"
+        },
+        {
+            "name": "inputSubject",
+            "public": true,
+            "selector": {
+                "css": "input[role='combobox']"
+            },
+            "type": "utam-aura/pageObjects/inputText"
+        },
+        {
+            "type": "utam-aura/pageObjects/inputTextForAutocomplete",
+            "name": "inputTextForAutocomplete",
+            "public": true,
+            "selector": {
+                "css": ".uiInputTextForAutocomplete"
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/autocompleteOption",
+            "name": "inputLookupDesktopOptionList",
+            "public": true,
+            "selector": {
+                "css": ".uiAutocompleteOption"
+            }
+        }
+    ],
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

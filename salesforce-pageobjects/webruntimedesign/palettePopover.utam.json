@@ -1,0 +1,102 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: webruntimedesign-palette-popover",
+            "On the way to triggering a palette popover modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "labelContent",
+                "type": [],
+                "selector": {
+                    "css": "h2#popover-label"
+                }
+            },
+            {
+                "public": true,
+                "name": "searchInput",
+                "type": "utam-webruntimedesign/pageObjects/searchInput",
+                "selector": {
+                    "css": "webruntimedesign-search-input"
+                }
+            },
+            {
+                "name": "section",
+                "type": [],
+                "selector": {
+                    "css": "section"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "pContent",
+                        "type": [],
+                        "selector": {
+                            "css": "p"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "accordion",
+                        "type": "utam-lightning/pageObjects/accordion",
+                        "selector": {
+                            "css": "lightning-accordion"
+                        }
+                    },
+                    {
+                        "name": "lists",
+                        "type": [],
+                        "selector": {
+                            "css": "ul",
+                            "returnAll": true
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "listByIndex",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "li:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "elements": [
+                            {
+                                "public": true,
+                                "name": "listItem",
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "selector": {
+                                    "css": "li"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "paletteItem",
+                                        "type": "utam-webruntimedesign/pageObjects/paletteItem",
+                                        "selector": {
+                                            "css": "webruntimedesign-palette-item"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

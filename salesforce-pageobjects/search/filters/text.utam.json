@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: search_filters-text",
+            "Represents a text filter"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get label text for filter"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "input",
+                    "apply": "getLabelText",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            }
+        ]
+    }
+}

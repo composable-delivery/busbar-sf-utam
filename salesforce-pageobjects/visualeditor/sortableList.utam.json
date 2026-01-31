@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .visualEditorSortableList.",
+            "Represents the visualEditor:sortableList Aura component.",
+            "Get all the visualEditor:sortableListItem components."
+        ]
+    },
+    "elements": [
+        {
+            "name": "listItems",
+            "type": "utam-visualeditor/pageObjects/sortableListItem",
+            "selector": {
+                "css": ".visualEditorSortableListItem",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ]
+}

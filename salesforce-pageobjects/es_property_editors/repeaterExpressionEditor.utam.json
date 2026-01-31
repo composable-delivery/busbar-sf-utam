@@ -1,0 +1,184 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a section with a header, a notification message, a description, and a button to edit an expression.",
+            "Selector: src-repeater-expression-editor"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "selector": {
+                    "css": "h3.slds-text-heading_small"
+                },
+                "description": "Represents the header of the section."
+            },
+            {
+                "name": "notificationContainer",
+                "selector": {
+                    "css": "div.slds-scoped-notification"
+                },
+                "description": "Represents the notification container.",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "notificationIcon",
+                        "selector": {
+                            "css": "span.slds-icon_container"
+                        },
+                        "description": "Represents the icon within the notification container."
+                    },
+                    {
+                        "name": "notificationMessage",
+                        "selector": {
+                            "css": "div.slds-media__body p"
+                        },
+                        "description": "Represents the message within the notification container."
+                    }
+                ]
+            },
+            {
+                "name": "description",
+                "selector": {
+                    "css": "p.slds-text-body_small"
+                },
+                "description": "Represents the description text."
+            },
+            {
+                "name": "editButton",
+                "selector": {
+                    "css": "lightning-button"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the button to edit the expression.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isHeaderVisible",
+            "description": {
+                "text": [
+                    "Check that header is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderText",
+            "description": {
+                "text": [
+                    "Get text from the header"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isNotificationContainerVisible",
+            "description": {
+                "text": [
+                    "Check that notification container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "notificationContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getNotificationMessage",
+            "description": {
+                "text": [
+                    "Get text from notification message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "notificationMessage",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isDescriptionVisible",
+            "description": {
+                "text": [
+                    "Check that description is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "description",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getDescriptionText",
+            "description": {
+                "text": [
+                    "Get text from description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "description",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyNotificationContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"notificationContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "notificationContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyNotificationIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"notificationIcon\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "notificationIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,146 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal-base",
+            "Represents the lightning-modal-base Lightning web component.",
+            "Click the close button, or get the aria-label. Get the modal-header, modal-body and modal-footer components."
+        ]
+    },
+    "methods": [
+        {
+            "name": "close",
+            "description": "Click modal close button",
+            "compose": [
+                {
+                    "element": "closeButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderlessLabel",
+            "description": {
+                "text": [
+                    "Get modal aria-label text of headerless variant"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getDescription",
+            "description": {
+                "text": [
+                    "Get modal description text by attribute value of aria-description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ariaDescription",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-description"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getDescribedBy",
+            "description": {
+                "text": [
+                    "Get modal describedBy text by attribute value of data-aria-description"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ariaDescribedBy",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "modal",
+                "selector": {
+                    "css": "lightning-modal"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "header",
+                            "type": "utam-lightning/pageObjects/modalHeader",
+                            "selector": {
+                                "css": "lightning-modal-header"
+                            },
+                            "public": true,
+                            "nullable": true
+                        },
+                        {
+                            "name": "body",
+                            "type": "utam-lightning/pageObjects/modalBody",
+                            "selector": {
+                                "css": "lightning-modal-body"
+                            },
+                            "public": true,
+                            "nullable": true
+                        },
+                        {
+                            "name": "footer",
+                            "type": "utam-lightning/pageObjects/modalFooter",
+                            "selector": {
+                                "css": "lightning-modal-footer"
+                            },
+                            "public": true,
+                            "nullable": true
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "closeButton",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "[data-close-button]"
+                }
+            },
+            {
+                "name": "ariaLabel",
+                "selector": {
+                    "css": "[data-modal]"
+                }
+            },
+            {
+                "name": "ariaDescription",
+                "selector": {
+                    "css": "[data-modal]"
+                }
+            },
+            {
+                "name": "ariaDescribedBy",
+                "selector": {
+                    "css": "[data-aria-description]"
+                }
+            }
+        ]
+    }
+}

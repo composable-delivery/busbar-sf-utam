@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "emptyState",
+                "type": "utam-runtime_rpa/pageObjects/emptyState",
+                "selector": {
+                    "css": "runtime_rpa-empty-state"
+                }
+            }
+        ]
+    }
+}

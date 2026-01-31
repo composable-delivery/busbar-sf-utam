@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component serves as an action block that navigates to a feature page with a list of records. It is not directly interactable by the user but is used in the context of a larger UI where actions are dynamically determined based on record data.",
+            "Selector: runtime-copilot-base-block-view-more-records-action"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "viewComponent",
+            "selector": {
+                "css": "runtime_copilot_base-view-component"
+            },
+            "nullable": true,
+            "wait": true,
+            "type": "utam-runtime_copilot_base/pageObjects/viewComponent"
+        }
+    ]
+}

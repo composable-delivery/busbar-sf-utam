@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: dxp_base-language-selector",
+            "Represents the dxp_base/languageSelector component.",
+            "Get the lightning-button-menu component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "dxp_base-language-selector"
+    },
+    "elements": [
+        {
+            "name": "lightningButtonMenu",
+            "type": "utam-lightning/pageObjects/buttonMenu",
+            "selector": {
+                "css": "lightning-button-menu"
+            },
+            "public": true
+        },
+        {
+            "name": "menuItemByText",
+            "type": "utam-lightning/pageObjects/menuItem",
+            "selector": {
+                "css": "lightning-menu-item",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getItemText",
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            },
+            "public": true,
+            "nullable": true
+        }
+    ]
+}

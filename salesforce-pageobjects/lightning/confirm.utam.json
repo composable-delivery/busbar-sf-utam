@@ -1,0 +1,183 @@
+{
+    "description": {
+        "text": [
+            "Library: LightningConfirm",
+            "Interact with the singular confirm modal created by the LightningConfirm library.",
+            "Click the OK or Cancel buttons. Get the message text, the header label, or the header without the label using the aria-label attribute."
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-overlay-container"
+    },
+    "methods": [
+        {
+            "name": "clickOK",
+            "description": "Clicks confirm OK button and wait for absence of lightning-interactive-dialog-base",
+            "compose": [
+                {
+                    "element": "okButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "base",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "clickCancel",
+            "description": "Clicks Cancel OK button and wait for absence of lightning-interactive-dialog-base",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "base",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderLabel",
+            "description": {
+                "text": [
+                    "Get the confirm prompt header label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderlessLabel",
+            "description": {
+                "text": [
+                    "Gets confirm header aria label of headerless variant"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMessage",
+            "description": {
+                "text": [
+                    "Gets confirm prompt message text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "message",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Checks if the focus is on confirm prompt aria label text"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabel",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isConfirmShown",
+            "description": {
+                "text": [
+                    "Checks if confirm prompt is shown"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "base",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "base",
+                "selector": {
+                    "css": "lightning-interactive-dialog-base"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "message",
+                            "selector": {
+                                "css": "lightning-confirm"
+                            }
+                        },
+                        {
+                            "name": "okButton",
+                            "type": [
+                                "actionable",
+                                "clickable"
+                            ],
+                            "public": true,
+                            "selector": {
+                                "css": "[data-ok-button]"
+                            }
+                        },
+                        {
+                            "name": "cancelButton",
+                            "type": [
+                                "actionable",
+                                "clickable"
+                            ],
+                            "public": true,
+                            "selector": {
+                                "css": "[data-cancel-button]"
+                            }
+                        },
+                        {
+                            "name": "ariaLabel",
+                            "type": "actionable",
+                            "selector": {
+                                "css": "[data-modal]"
+                            }
+                        },
+                        {
+                            "name": "header",
+                            "selector": {
+                                "css": "[data-modal-heading]"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

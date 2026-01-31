@@ -1,0 +1,136 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a navigation button with a tooltip, which can be used in a vertical navigation rail.",
+            "Selector: src-left-rail-tab-item-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "lightningButton",
+                "public": true,
+                "type": "clickable",
+                "selector": {
+                    "css": "button.slds-button.slds-nav-vertical__action.slds-align_absolute-center"
+                }
+            },
+            {
+                "name": "navButton",
+                "selector": {
+                    "css": "li[data-target-selection-name='%s']",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the navigation button with associated tooltip and events",
+                "elements": [
+                    {
+                        "name": "tooltip",
+                        "selector": {
+                            "css": "chatbots-tooltip"
+                        },
+                        "type": "utam-ui-chatbots-components/pageObjects/tooltip",
+                        "description": "Represents the tooltip component associated with the button",
+                        "wait": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "buttonContent",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the clickable button within the tooltip component",
+                                "wait": true,
+                                "elements": [
+                                    {
+                                        "name": "buttonText",
+                                        "selector": {
+                                            "css": ".left-rail-button-text"
+                                        },
+                                        "description": "Represents the text label within the button",
+                                        "wait": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickNavButton",
+            "description": {
+                "text": [
+                    "Simulate a click on the navigation button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "navButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getButtonText",
+            "description": {
+                "text": [
+                    "Retrieve the text from the button label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "buttonText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isNavButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the navigation button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "navButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isNavButtonEnabled",
+            "description": {
+                "text": [
+                    "Check if the navigation button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "navButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-input-location.",
+            "Represents the records-record-layout-input-location Lightning web component.",
+            "Access the input location."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "inputLocation",
+                "type": "utam-lightning/pageObjects/inputLocation",
+                "selector": {
+                    "css": "lightning-input-location"
+                },
+                "public": true
+            }
+        ]
+    }
+}

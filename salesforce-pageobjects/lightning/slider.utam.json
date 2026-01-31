@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Name",
+            "Description"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "sliderLabel",
+                "type": "actionable",
+                "selector": {
+                    "css": ".slds-slider-label__label"
+                }
+            },
+            {
+                "name": "slider",
+                "public": true,
+                "type": [
+                    "actionable",
+                    "editable"
+                ],
+                "selector": {
+                    "css": "input[type='range']"
+                }
+            },
+            {
+                "name": "sliderValue",
+                "type": "actionable",
+                "selector": {
+                    "css": ".slds-slider__value"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Gets the text of the slider label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sliderLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isSliderVisible",
+            "description": {
+                "text": [
+                    "Checks if the slider is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "slider",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getValue",
+            "description": {
+                "text": [
+                    "Gets the value of the slider"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "sliderValue",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

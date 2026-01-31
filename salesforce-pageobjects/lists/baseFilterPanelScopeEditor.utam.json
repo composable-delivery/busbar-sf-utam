@@ -1,0 +1,119 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-base-filter-panel-scope-editor.",
+            "Represents the list filter panel scope editor Lightning web component.",
+            "Access the lst-base-filter-panel-scope-editor component and update the current filter scope."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "allOptions",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input",
+                    "returnAll": true
+                }
+            },
+            {
+                "name": "selectedOption",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[checked]"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "selectedOptionRadio",
+                            "public": true,
+                            "type": "utam-lightning/pageObjects/primitiveInputRadio",
+                            "selector": {
+                                "css": "lightning-primitive-input-radio"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "optionByName",
+                "public": true,
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[data-id='%s']",
+                    "args": [
+                        {
+                            "name": "optionName",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "radio",
+                            "type": "utam-lightning/pageObjects/primitiveInputRadio",
+                            "selector": {
+                                "css": "lightning-primitive-input-radio"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "queueSelector",
+                "type": "utam-lightning/pageObjects/combobox",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='queueSelector']"
+                }
+            },
+            {
+                "name": "campaignSelector",
+                "type": "utam-lightning/pageObjects/recordPicker",
+                "public": true,
+                "selector": {
+                    "css": "[data-id='recordLookupPicker']"
+                }
+            },
+            {
+                "name": "doneButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='DoneButton']"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "selectScopeOption",
+            "compose": [
+                {
+                    "apply": "selectRadio",
+                    "element": "radio"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Selects a specific option in the lst-base-filter-panel-scope-editor."
+                ]
+            }
+        },
+        {
+            "name": "clickSaveScope",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "doneButton"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Clicks the done button in the scope editor."
+                ]
+            }
+        }
+    ]
+}

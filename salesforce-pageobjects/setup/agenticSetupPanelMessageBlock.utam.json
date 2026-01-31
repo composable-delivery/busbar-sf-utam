@@ -1,0 +1,147 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a chat message with an optional agent icon and message content.",
+            "Selector: setup-agentic-setup-panel-message-block"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "chatContainer",
+                "selector": {
+                    "css": "div[tabindex=\"0\"]"
+                },
+                "description": "Represents the main container of the chat message",
+                "elements": [
+                    {
+                        "name": "chatIcon",
+                        "selector": {
+                            "css": ".chat-icon"
+                        },
+                        "description": "Represents the container for the chat icon, visible only for inbound messages",
+                        "nullable": true,
+                        "elements": [
+                            {
+                                "name": "agentIcon",
+                                "selector": {
+                                    "css": "lightning-icon.inbound-message-blue"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Represents the agent icon displayed for inbound messages",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "messageBody",
+                        "selector": {
+                            "css": ".slds-chat-message__body"
+                        },
+                        "description": "Represents the body of the chat message",
+                        "elements": [
+                            {
+                                "name": "messageContent",
+                                "selector": {
+                                    "css": "div[class*='cosmos-message__']"
+                                },
+                                "description": "Represents the content of the chat message",
+                                "elements": [
+                                    {
+                                        "name": "messageSlot",
+                                        "selector": {
+                                            "css": ":scope > *:first-child"
+                                        },
+                                        "type": "container",
+                                        "description": "Represents the slot for dynamic message content",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isChatContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the main chat container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatIconPresent",
+            "description": {
+                "text": [
+                    "Check that the chat icon container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatIcon",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getMessageBodyText",
+            "description": {
+                "text": [
+                    "Get text from the message body"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageBody",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isMessageContentVisible",
+            "description": {
+                "text": [
+                    "Check that the message content is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyChatIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"chatIcon\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

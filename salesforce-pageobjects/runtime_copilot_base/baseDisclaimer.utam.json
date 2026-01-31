@@ -1,0 +1,181 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a disclaimer in a popover or as a message, which can be interacted with to show additional information or to close the disclaimer.",
+            "Selector: src-base-disclaimer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "disclaimerPopover",
+                "selector": {
+                    "css": "runtime_copilot_base-base-tooltip-button"
+                },
+                "description": "Represents the base tooltip button used to trigger the disclaimer popover",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "disclaimerPopoverContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the content slot within the disclaimer popover",
+                        "public": true
+                    },
+                    {
+                        "name": "popoverSection",
+                        "selector": {
+                            "css": "section.popover-disclaimer"
+                        },
+                        "description": "Represents the section containing the disclaimer text and close button",
+                        "elements": [
+                            {
+                                "name": "formattedRichText",
+                                "selector": {
+                                    "css": "lightning-formatted-rich-text.disclaimer-popover-content"
+                                },
+                                "description": "Represents the rich text content of the disclaimer"
+                            },
+                            {
+                                "name": "closeButtonIcon",
+                                "selector": {
+                                    "css": "runtime_copilot_base-base-button-icon.close-disclaimer"
+                                },
+                                "type": "utam-runtime_copilot_base/pageObjects/baseButtonIcon",
+                                "description": "Represents the close icon button within the popover disclaimer",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "messageArea",
+                "selector": {
+                    "css": ".message-disclaimer.disclaimer-show, .disclaimer-hide"
+                },
+                "description": "Represents the message area when the variant is set to 'message'",
+                "nullable": true,
+                "elements": [
+                    {
+                        "name": "messageIcon",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon displayed in the message area",
+                        "nullable": true,
+                        "public": true
+                    },
+                    {
+                        "name": "messageFormattedRichText",
+                        "selector": {
+                            "css": "lightning-formatted-rich-text.disclaimer-content"
+                        },
+                        "description": "Represents the rich text content of the message disclaimer",
+                        "nullable": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isPopoverSectionVisible",
+            "description": {
+                "text": [
+                    "Check if the popover section is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "popoverSection",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getPopoverText",
+            "description": {
+                "text": [
+                    "Get the text content of the disclaimer popover"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "formattedRichText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isMessageAreaVisible",
+            "description": {
+                "text": [
+                    "Check if the message area is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Get the text content of the message disclaimer"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageFormattedRichText",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyMessageAreaPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"messageArea\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageArea",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMessageFormattedRichTextPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"messageFormattedRichText\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageFormattedRichText",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

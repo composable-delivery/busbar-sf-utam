@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-row.",
+            "Represents the records-record-layout-row Lightning web component.",
+            "Access an item by index or a list of all items."
+        ]
+    },
+    "elements": [
+        {
+            "name": "items",
+            "type": "utam-records/pageObjects/recordLayoutItem",
+            "selector": {
+                "css": "records-record-layout-item",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "item",
+            "type": "utam-records/pageObjects/recordLayoutItem",
+            "selector": {
+                "css": "records-record-layout-item:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "indexStartingOne",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ]
+}

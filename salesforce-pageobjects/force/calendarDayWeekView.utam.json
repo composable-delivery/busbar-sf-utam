@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceCalendarDayWeekView.",
+            "Represents the force:CalendarDayWeekView Aura component.",
+            "Get the calendar days."
+        ]
+    },
+    "elements": [
+        {
+            "name": "calendarDays",
+            "type": "utam-force/pageObjects/calendarDay",
+            "public": true,
+            "selector": {
+                "css": ".forceCalendarDay",
+                "returnAll": true
+            }
+        }
+    ]
+}

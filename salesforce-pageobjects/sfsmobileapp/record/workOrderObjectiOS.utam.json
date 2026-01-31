@@ -1,0 +1,128 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the page a user sees when opening a WorkOrder.",
+            "Exposes methods for accessing related lists and details on a WorkOrder."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/record/workOrderObject",
+    "root": true,
+    "exposeRootElement": true,
+    "platform": "native",
+    "type": [
+        "actionable",
+        "touchable"
+    ],
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeOther' AND name == 'ActionBarHeaderView.overlay'$]"
+    },
+    "elements": [
+        {
+            "name": "assetServiceHistorySectionLabel",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"%s\"`]",
+                "args": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "workOrderObjectOverview",
+            "type": "utam-sfsmobileapp/pageObjects/record/workOrderObjectOverview",
+            "selector": {
+                "accessid": "SCFWorkDetailViewController.view"
+            },
+            "public": true
+        },
+        {
+            "name": "visibleCards",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "public": true,
+            "selector": {
+                "classchain": "**/XCUIElementTypeCell[`visible == true`]",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "myCard",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"%s\"`]",
+                "args": [
+                    {
+                        "name": "label",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "contactCard",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label CONTAINS 'CONTACT'`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "getAssetServiceHistorySection",
+            "compose": [
+                {
+                    "element": "assetServiceHistorySectionLabel",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getAssetCard",
+            "compose": [
+                {
+                    "applyExternal": {
+                        "type": "utam-sfsmobileapp/utils/record/WorkOrderObjectiOSUtils",
+                        "invoke": "scroll"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hasCardVisible",
+            "compose": [
+                {
+                    "element": "myCard",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "hasContactCardVisible",
+            "compose": [
+                {
+                    "element": "contactCard",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,168 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A modal component that displays a customizable header, spinner, error popover, and buttons for submitting and closing the modal. The content and footer buttons are customizable via slots.",
+            "Selector: src-base-form-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with a label.",
+                "public": true
+            },
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner that appears conditionally.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": "lightning-button.slds-p-right_x-small"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the cancel button in the footer."
+            },
+            {
+                "name": "submitButton",
+                "selector": {
+                    "css": "button[data-id='btnSubmit']"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the submit button in the footer, which is conditionally hidden.",
+                "nullable": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "defaultContent",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the default slot for the modal body content.",
+            "public": true
+        },
+        {
+            "name": "footerSlot",
+            "selector": {
+                "css": "[slot='footer']"
+            },
+            "type": "container",
+            "description": "Represents the named slot for custom footer content.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickCancelButton",
+            "description": {
+                "text": [
+                    "Clicks the cancel button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSubmitButton",
+            "description": {
+                "text": [
+                    "Clicks the submit button if it's visible"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isCancelButtonEnabled",
+            "description": {
+                "text": [
+                    "Checks if the cancel button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "isSubmitButtonEnabled",
+            "description": {
+                "text": [
+                    "Checks if the submit button is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "isSubmitButtonVisible",
+            "description": {
+                "text": [
+                    "Checks if the submit button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifySubmitButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"submitButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,73 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: homeListView.",
+            "Represents the iOS view for the Einstein analytics home.",
+            "Find 'Browse' and navigate to it."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/record/analyticsHome",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "accessid": "homeListView"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "accessid": "crmaLoadingIndicator"
+                                    }
+                                }
+                            ],
+                            "matcher": {
+                                "type": "isFalse"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "browse",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeButton[`label == 'Browse'`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "navigateToBrowse",
+            "compose": [
+                {
+                    "element": "browse",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

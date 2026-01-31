@@ -1,0 +1,42 @@
+{
+    "selector": {
+        "css": "body"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: body.",
+            "Represents the body in the html DOM"
+        ]
+    },
+    "elements": [
+        {
+            "name": "previewButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".pbBottomButtons input[type='submit']"
+            },
+            "public": true
+        },
+        {
+            "name": "saveLicensesButton",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "input[value='Save Licenses']"
+            },
+            "public": true
+        },
+        {
+            "name": "licensesSavedMessage",
+            "selector": {
+                "css": "td.messageCell"
+            },
+            "public": true
+        }
+    ]
+}

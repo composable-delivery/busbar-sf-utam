@@ -1,0 +1,91 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .runtime_sales_pathassistantPathAssistantTab.",
+            "Represents a path assistant Tab.",
+            "You can see if the tab is current or completed."
+        ]
+    },
+    "type": [
+        "clickable"
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the value of data-name"
+                ],
+                "return": "String value"
+            },
+            "name": "getDataName",
+            "compose": [
+                {
+                    "apply": "getAttribute",
+                    "element": "root",
+                    "args": [
+                        {
+                            "value": "data-name"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if the tab is marked completed"
+                ],
+                "return": "Boolean value"
+            },
+            "name": "isStatusCompleted",
+            "compose": [
+                {
+                    "element": "statusComplete",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Check if the tab is marked current"
+                ],
+                "return": "Boolean value"
+            },
+            "name": "isStatusCurrent",
+            "compose": [
+                {
+                    "element": "statusCurrent",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "statusComplete",
+            "selector": {
+                "css": "span.complete"
+            }
+        },
+        {
+            "name": "statusCurrent",
+            "selector": {
+                "css": "span.current"
+            }
+        },
+        {
+            "type": [
+                "clickable",
+                "actionable",
+                "editable"
+            ],
+            "name": "clickHeader",
+            "public": true,
+            "selector": {
+                "css": ".slds-path__link"
+            }
+        }
+    ]
+}

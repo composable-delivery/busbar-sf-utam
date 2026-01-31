@@ -1,0 +1,128 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that allows users to select a single date or date-time string from a list of options presented as radio buttons.",
+            "Selector: runtime_copilot_base-select-single-date-and-date-time-string"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroup",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio button group",
+                "elements": [
+                    {
+                        "name": "radioOptions",
+                        "selector": {
+                            "css": "runtime_copilot_base-primitive-type-picklist",
+                            "returnAll": true
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/primitiveTypePicklist",
+                        "description": "Represents the radio button options for selection",
+                        "public": true
+                    },
+                    {
+                        "name": "radioOptionByIndex",
+                        "selector": {
+                            "css": "runtime_copilot_base-primitive-type-picklist:nth-of-type(%d)",
+                            "args": [
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "description": "element index starting from 1"
+                                }
+                            ]
+                        },
+                        "description": "Represents the radio button options for selection",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "optionLabel",
+                                "selector": {
+                                    "css": ":scope > *:first-child"
+                                },
+                                "description": "Represents the label for each radio option which may be a simple label or a formatted date/time",
+                                "nullable": true,
+                                "elements": [
+                                    {
+                                        "name": "formattedDate",
+                                        "selector": {
+                                            "css": "lightning-formatted-date-time"
+                                        },
+                                        "type": "utam-lightning/pageObjects/formattedDateTime",
+                                        "description": "Represents the formatted date for the radio option label",
+                                        "nullable": true,
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "formattedDateTime",
+                                        "selector": {
+                                            "css": "lightning-formatted-date-time"
+                                        },
+                                        "type": "utam-lightning/pageObjects/formattedDateTime",
+                                        "description": "Represents the formatted date-time for the radio option label",
+                                        "nullable": true,
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupVisible",
+            "description": {
+                "text": [
+                    "Check that the radio button group is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroup",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRadioOptionLabel",
+            "description": {
+                "text": [
+                    "Get the text of the radio option label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyOptionLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"optionLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "optionLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

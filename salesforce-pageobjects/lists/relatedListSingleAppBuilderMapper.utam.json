@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-single-app-builder-mapper.",
+            "Represents the related list single app builder mapper Lightning web component.",
+            "Access the related list view manager."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "containsElement",
+                            "args": [
+                                {
+                                    "type": "locator",
+                                    "value": {
+                                        "css": "lst-related-list-view-manager"
+                                    }
+                                },
+                                {
+                                    "value": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedListViewManager",
+                "name": "relatedListViewManager",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-list-view-manager"
+                }
+            }
+        ]
+    }
+}

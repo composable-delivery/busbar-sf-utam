@@ -1,0 +1,233 @@
+{
+    "type": [
+        "actionable"
+    ],
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-input-rich-text",
+            "Represents the lightning-input-rich-text Lightning web component.",
+            "Enter or clear text. Get all toolbar button groups or Get all custom toolbars"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-input-rich-text"
+    },
+    "elements": [
+        {
+            "name": "toolbarButtonGroups",
+            "type": "container",
+            "selector": {
+                "css": ".slds-rich-text-editor__toolbar slot > lightning-rich-text-toolbar-button-group",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "customToolbars",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": ".slds-rich-text-editor__toolbar slot > *",
+                "returnAll": true
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "textarea",
+                "type": [
+                    "clickable",
+                    "editable",
+                    "actionable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": ".ql-editor"
+                }
+            },
+            {
+                "name": "linkPopup",
+                "type": "utam-lightning/pageObjects/popup",
+                "public": true,
+                "selector": {
+                    "css": "lightning-popup[data-link-popup]"
+                }
+            },
+            {
+                "name": "customButton",
+                "type": "clickable",
+                "public": true,
+                "selector": {
+                    "css": "button[title=\"%s\"]",
+                    "args": [
+                        {
+                            "type": "string",
+                            "name": "button"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "formatButton",
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "public": true,
+                "selector": {
+                    "css": ".slds-rich-text-editor__toolbar .slds-button-group-list > li > button",
+                    "returnAll": true
+                },
+                "filter": {
+                    "apply": "getTitle",
+                    "findFirst": true,
+                    "matcher": {
+                        "type": "stringEquals",
+                        "args": [
+                            {
+                                "name": "action",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "formatDropdown",
+                "type": "utam-lightning/pageObjects/combobox",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-rich-text-editor__toolbar .slds-rich-text-editor__select lightning-combobox",
+                    "returnAll": true
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getToolbarButtonGroups",
+            "description": {
+                "text": [
+                    "Get all toolbar button groups"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "toolbarButtonGroups",
+                    "returnAll": true,
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-lightning/pageObjects/richTextToolbarButtonGroup"
+                        }
+                    ],
+                    "returnType": "utam-lightning/pageObjects/richTextToolbarButtonGroup"
+                }
+            ]
+        },
+        {
+            "name": "focus",
+            "description": "Applies focus on lightning-input-rich-text element",
+            "compose": [
+                {
+                    "apply": "focus",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "enterText",
+            "description": "Sets text inside textarea which can be passed as paramater",
+            "compose": [
+                {
+                    "element": "textarea",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getHtmlText",
+            "description": {
+                "text": [
+                    "Gets the value of input rich text in html string format"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "getValue"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "description": {
+                "text": [
+                    "Gets the value of input rich text in html string format"
+                ],
+                "deprecated": "This method will be deprecated in future release, use getHtmlText method instead."
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "getValue"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getTextContent",
+            "description": {
+                "text": [
+                    "Get text content inside textarea"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "textarea",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clearContent",
+            "description": "Clears textarea content",
+            "compose": [
+                {
+                    "element": "textarea",
+                    "apply": "clear"
+                }
+            ]
+        }
+    ]
+}

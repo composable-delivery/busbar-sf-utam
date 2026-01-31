@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a formatted date and time based on an input value.",
+            "Selector: runtime_copilot_base-output-date-time-string"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedDateTime",
+                "selector": {
+                    "css": "lightning-formatted-date-time"
+                },
+                "description": "Represents the formatted date and time display component.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

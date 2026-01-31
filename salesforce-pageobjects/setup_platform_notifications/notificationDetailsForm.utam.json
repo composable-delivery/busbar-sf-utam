@@ -1,0 +1,37 @@
+{
+    "description": {
+        "text": [
+            "Represents the details form for a specific notification type. Allows access to the notification's name, API name, and object lookup input."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "nameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input.name"
+                },
+                "public": true
+            },
+            {
+                "name": "apiNameInput",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input.apiName"
+                },
+                "public": true
+            },
+            {
+                "name": "objectLookupInput",
+                "type": "utam-setup_platform_notifications/pageObjects/objectLookupInput",
+                "selector": {
+                    "css": "setup_platform_notifications-object-lookup-input"
+                },
+                "public": true
+            }
+        ]
+    }
+}

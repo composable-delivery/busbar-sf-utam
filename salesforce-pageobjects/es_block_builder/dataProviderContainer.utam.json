@@ -1,0 +1,109 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that conditionally renders different data provider cards based on the type of data provider.",
+            "Selector: src-data-provider-container"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "container",
+                "selector": {
+                    "css": ".slds-col.slds-p-vertical_xx-small"
+                },
+                "description": "Represents the main container for the data provider cards",
+                "elements": [
+                    {
+                        "name": "unifiedIndividualDataProviderCard",
+                        "selector": {
+                            "css": "es_block_builder-unified-individual-data-provider-card"
+                        },
+                        "type": "utam-es_block_builder/pageObjects/unifiedIndividualDataProviderCard",
+                        "description": "Represents the Unified Individual Data Provider card",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "dataGraphDataProviderCard",
+                        "selector": {
+                            "css": "es_block_builder-data-graph-data-provider-card"
+                        },
+                        "type": "utam-es_block_builder/pageObjects/dataGraphDataProviderCard",
+                        "description": "Represents the Data Graph Data Provider card",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "eventDataProviderCard",
+                        "selector": {
+                            "css": "es_block_builder-event-data-provider-card"
+                        },
+                        "type": "utam-es_block_builder/pageObjects/eventDataProviderCard",
+                        "description": "Represents the Event Data Provider card",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "recommendationDataProviderCard",
+                        "selector": {
+                            "css": "es_block_builder-recommendation-data-provider-card"
+                        },
+                        "type": "utam-es_block_builder/pageObjects/recommendationDataProviderCard",
+                        "description": "Represents the Personalization Recommendation Data Provider card",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "defaultDataProviderCard",
+                        "selector": {
+                            "css": "es_block_builder-data-provider-base-card"
+                        },
+                        "type": "utam-es_block_builder/pageObjects/dataProviderBaseCard",
+                        "description": "Represents the default Data Provider card",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the main container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "container",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isContainerPresent",
+            "description": {
+                "text": [
+                    "Check that the main container is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "container",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-formatted-url",
+            "Represents the lightning-formatted-url Lightning web component.",
+            "Get the URL from the href attribute."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": [
+                    "clickable",
+                    "actionable"
+                ],
+                "name": "urlLink",
+                "selector": {
+                    "css": "a"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getUrl",
+            "description": {
+                "text": [
+                    "Get link URL by getting value of attribute href on anchor"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getAttribute",
+                    "element": "urlLink",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "hasFocus",
+            "description": {
+                "text": [
+                    "Check is the URL link element has focus or not"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "isFocused",
+                    "element": "urlLink"
+                }
+            ]
+        }
+    ]
+}

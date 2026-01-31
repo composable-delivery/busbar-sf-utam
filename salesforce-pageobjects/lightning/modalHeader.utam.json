@@ -1,0 +1,53 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal-header",
+            "Represents the lightning-modal-header Lightning web component.",
+            "Get the header label, and header tag line by selector."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLabel",
+            "description": {
+                "text": [
+                    "Get modal header title display value"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "headerTagline",
+            "type": "container",
+            "selector": {
+                "css": "[data-default-slot] %s",
+                "args": [
+                    {
+                        "name": "selector",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "title",
+                "selector": {
+                    "css": "[data-label]"
+                }
+            }
+        ]
+    }
+}

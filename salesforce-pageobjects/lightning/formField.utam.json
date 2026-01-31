@@ -1,0 +1,87 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-form-field",
+            "Represents lightning-form-field Lightning web component.",
+            "Get output field, input field or perform inline edit"
+        ]
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Click the inline edit button and wait for the input field to be loaded"
+                ],
+                "return": "input field element"
+            },
+            "name": "edit",
+            "compose": [
+                {
+                    "element": "inlineEditButton",
+                    "apply": "clickButton"
+                },
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "lightning-form-field-input"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "fieldLabel",
+                "selector": {
+                    "css": ".slds-form-element__label"
+                },
+                "public": true
+            },
+            {
+                "name": "outputField",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-field-output"
+                },
+                "type": "utam-lightning/pageObjects/formFieldOutput"
+            },
+            {
+                "name": "inlineEditButton",
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon"
+            },
+            {
+                "name": "inputField",
+                "public": true,
+                "selector": {
+                    "css": "lightning-form-field-input"
+                },
+                "type": "utam-lightning/pageObjects/formFieldInput"
+            }
+        ]
+    }
+}

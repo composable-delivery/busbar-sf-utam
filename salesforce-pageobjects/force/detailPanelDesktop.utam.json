@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceDetailPanelDesktop.",
+            "Represents the force:detailPanelDesktop Aura component.",
+            "Get the force:recordLayout or force:inlineEdit component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".forceDetailPanelDesktop"
+    },
+    "methods": [
+        {
+            "name": "getRecordLayout",
+            "description": {
+                "text": [
+                    "Waits for the record layout to be present and retrieves it"
+                ],
+                "return": "the record layout (utam-force/pageObjects/recordLayout)"
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "recordLayout"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": "utam-force/pageObjects/recordLayout",
+            "name": "recordLayout",
+            "selector": {
+                "css": ".forceRecordLayout"
+            }
+        },
+        {
+            "name": "inlineEdit",
+            "type": "utam-force/pageObjects/inlineEdit",
+            "public": true,
+            "selector": {
+                "css": ".forceInlineEdit"
+            }
+        }
+    ]
+}

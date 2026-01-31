@@ -1,0 +1,87 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_declarative_card-image",
+            "Represents the runtime_declarative_card-image card component",
+            "This specific Page Object (PO) built for the feature is currently in development and will not be available to customers until Summer '24."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "sldsImage",
+                "type": [],
+                "public": true,
+                "selector": {
+                    "css": ".slds-image"
+                },
+                "elements": [
+                    {
+                        "name": "imageTag",
+                        "type": [],
+                        "public": true,
+                        "selector": {
+                            "css": "img"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "altText",
+                "type": [],
+                "selector": {
+                    "css": ".slds-image span"
+                }
+            },
+            {
+                "name": "title",
+                "type": [],
+                "selector": {
+                    "css": ".slds-image__title"
+                },
+                "elements": [
+                    {
+                        "name": "titleText",
+                        "type": [],
+                        "selector": {
+                            "css": ".slds-image__text"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitleTextContent",
+            "compose": [
+                {
+                    "element": "titleText",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "method getTitleTextContent",
+                    "get text for my field"
+                ]
+            }
+        },
+        {
+            "name": "getAltTextIfNoSrc",
+            "compose": [
+                {
+                    "element": "altText",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "method getAltTextIfNoSrc",
+                    "get alt text when img src is not defined"
+                ]
+            }
+        }
+    ]
+}

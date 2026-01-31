@@ -1,0 +1,287 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A combobox component that allows users to select an option from a dropdown. The component supports keyboard navigation, a placeholder, a disabled state, and custom icons for selected options. It also has a focusout event to close the dropdown if focus moves outside the combobox.",
+            "Selector: app_dev_agent_base-combobox"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "parentContainer",
+                "selector": {
+                    "css": ".slds-form-element"
+                },
+                "description": "Represents the outer container of the combobox, which may be disabled."
+            },
+            {
+                "name": "comboboxContainer",
+                "selector": {
+                    "css": "[data-id='combobox-container']"
+                },
+                "type": "actionable",
+                "description": "Represents the container of the combobox with a focusout event handler.",
+                "elements": [
+                    {
+                        "name": "inputField",
+                        "selector": {
+                            "css": "input#combo-input"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents the input field of the combobox."
+                    },
+                    {
+                        "name": "dropdownIcon",
+                        "selector": {
+                            "css": "lightning-icon[icon-name='utility:down']"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the down arrow icon to toggle the dropdown.",
+                        "public": true
+                    },
+                    {
+                        "name": "dropdownList",
+                        "selector": {
+                            "css": "#dropdown"
+                        },
+                        "description": "Represents the dropdown list container which appears when the dropdown is open.",
+                        "nullable": true,
+                        "elements": [
+                            {
+                                "name": "optionItems",
+                                "selector": {
+                                    "css": "li.slds-listbox__item",
+                                    "returnAll": true
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the selectable options within the dropdown list."
+                            }
+                        ]
+                    },
+                    {
+                        "name": "selectedIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the optional icon displayed next to the selected option.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickInputField",
+            "description": {
+                "text": [
+                    "Click the input field to focus or open the dropdown"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "enterTextInInputField",
+            "description": {
+                "text": [
+                    "Set text in the input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clearInputField",
+            "description": {
+                "text": [
+                    "Clear text in the input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "clear"
+                }
+            ]
+        },
+        {
+            "name": "focusInputField",
+            "description": {
+                "text": [
+                    "Focus on the input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "blurInputField",
+            "description": {
+                "text": [
+                    "Blur the input field to trigger focusout"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "blur"
+                }
+            ]
+        },
+        {
+            "name": "clickOptionItem",
+            "description": {
+                "text": [
+                    "Click an option item in the dropdown list"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "optionItems",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "focusOptionItem",
+            "description": {
+                "text": [
+                    "Focus on an option item in the dropdown list"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "optionItems",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "isDropdownListVisible",
+            "description": {
+                "text": [
+                    "Check if the dropdown list is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isInputFieldFocused",
+            "description": {
+                "text": [
+                    "Check if the input field is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isInputFieldEnabled",
+            "description": {
+                "text": [
+                    "Check if the input field is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "getInputFieldValue",
+            "description": {
+                "text": [
+                    "Get the current value of the input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "inputField",
+                    "apply": "getValue"
+                }
+            ]
+        },
+        {
+            "name": "getParentContainerClass",
+            "description": {
+                "text": [
+                    "Get the class attribute of the parent container"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "parentContainer",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "verifyDropdownListPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"dropdownList\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownList",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

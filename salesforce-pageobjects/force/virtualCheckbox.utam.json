@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceVirtualCheckbox.",
+            "Represents the virtual checkbox Aura component.",
+            "Toggle the corresponding virtual checkbox."
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleCheckbox",
+            "description": {
+                "text": [
+                    "Toggles the checkbox value"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "checkBox",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "checkBox",
+            "selector": {
+                "css": "span.slds-checkbox--faux"
+            }
+        }
+    ]
+}

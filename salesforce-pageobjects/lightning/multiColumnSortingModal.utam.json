@@ -1,0 +1,113 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: multi-column-sorting-modal",
+            "Represents the MultiColumnSortingModal Lightning web component.",
+            "Contains a modal with sorting rules and buttons."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-modal"
+    },
+    "methods": [
+        {
+            "name": "addRule",
+            "description": "Clicks the 'Add Rule' button.",
+            "compose": [
+                {
+                    "element": "addRuleButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clearRules",
+            "description": "Clicks the 'Clear' button to clear all sorting rules.",
+            "compose": [
+                {
+                    "element": "clearButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "cancelRules",
+            "description": "Clicks the 'Cancel' button to close the modal.",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "applyRules",
+            "description": "Clicks the 'Apply' button to apply the sorting rules.",
+            "compose": [
+                {
+                    "element": "applyButton",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "addRuleButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "div[part='columnadder'] .slds-m-left_x-small"
+                },
+                "public": true
+            },
+            {
+                "name": "clearButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-modal-footer lightning-button[variant='neutral']:first-child"
+                },
+                "public": true
+            },
+            {
+                "name": "cancelButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-modal-footer lightning-button[variant='neutral']:last-child"
+                },
+                "public": true
+            },
+            {
+                "name": "applyButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-modal-footer lightning-button[variant='brand']"
+                },
+                "public": true
+            },
+            {
+                "name": "columnSorter",
+                "type": "utam-lightning/pageObjects/primitiveColumnSorter",
+                "selector": {
+                    "css": "lightning-primitive-column-sorter:nth-child(%d)",
+                    "args": [
+                        {
+                            "name": "itemIndex",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "public": true
+            },
+            {
+                "name": "dynamicCmp",
+                "selector": {
+                    "css": ".modalBodyContent"
+                },
+                "public": true
+            }
+        ]
+    }
+}

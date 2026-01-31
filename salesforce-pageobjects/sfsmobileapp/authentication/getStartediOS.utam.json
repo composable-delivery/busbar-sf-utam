@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the initial Get Started Screen for the Field Service app."
+        ]
+    },
+    "exposeRootElement": true,
+    "type": [
+        "clickable"
+    ],
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/getStarted",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "accessid": "Get started - Go to next slide"
+    },
+    "methods": [
+        {
+            "name": "getStarted",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

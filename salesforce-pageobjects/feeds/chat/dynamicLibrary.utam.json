@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that dynamically loads and displays various message components based on the provided definition, such as actionable messages, status messages, or text messages.",
+            "Selector: src-dynamic-library"
+        ]
+    },
+    "elements": [
+        {
+            "name": "dynamicMessageComponent",
+            "selector": {
+                "css": "%s",
+                "args": [
+                    {
+                        "name": "selectorStr",
+                        "type": "string",
+                        "description": "CSS selector parameter"
+                    }
+                ]
+            },
+            "type": "container",
+            "description": "Represents the dynamic component being loaded based on the message type.",
+            "wait": true,
+            "public": true
+        }
+    ]
+}

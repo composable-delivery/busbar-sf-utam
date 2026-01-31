@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-lookup-address",
+            "Represents the lightning-lookup-address Lightning web component.",
+            "Get the address lookup component to control the combobox."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseCombobox",
+                "type": "utam-lightning/pageObjects/baseCombobox",
+                "selector": {
+                    "css": "lightning-base-combobox"
+                },
+                "public": false
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "setTriggerText",
+            "description": "Sets the text as value to the trigger input",
+            "compose": [
+                {
+                    "element": "baseCombobox",
+                    "apply": "setTriggerText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string",
+                            "description": "Text to be entered in the trigger input"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "pickItem",
+            "description": "Performs click action on the combobox list item based on the index starting from one",
+            "compose": [
+                {
+                    "element": "baseCombobox",
+                    "apply": "pickItem",
+                    "args": [
+                        {
+                            "name": "indexStartingOne",
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

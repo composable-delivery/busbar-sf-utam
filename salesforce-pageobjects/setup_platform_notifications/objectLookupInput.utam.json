@@ -1,0 +1,21 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-grouped-combobox. Represents the object lookup input used in the notification details form."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "groupedCombobox",
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                },
+                "public": true
+            }
+        ]
+    }
+}

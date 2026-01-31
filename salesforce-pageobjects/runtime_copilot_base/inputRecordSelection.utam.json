@@ -1,0 +1,94 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: runtime_copilot_base-input-record-selection"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioButtons",
+                "selector": {
+                    "css": "lightning-primitive-radio"
+                },
+                "elements": [
+                    {
+                        "name": "recordLabels",
+                        "selector": {
+                            "css": ".record-label"
+                        },
+                        "description": "Represents label for the radio buttons."
+                    },
+                    {
+                        "name": "viewLink",
+                        "selector": {
+                            "css": "a"
+                        },
+                        "type": "clickable",
+                        "description": "Represents navigation link to view records"
+                    }
+                ],
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "inputRadio",
+                            "selector": {
+                                "css": "input"
+                            },
+                            "type": "clickable",
+                            "description": "Represents navigation link to view records."
+                        }
+                    ]
+                },
+                "description": "Represents the radio buttons for selecting records.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickViewLink",
+            "description": {
+                "text": [
+                    "Click on a record view link to navigate to the record's page."
+                ]
+            },
+            "compose": [
+                {
+                    "element": "viewLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectInputRadio",
+            "description": {
+                "text": [
+                    "Click on a record to select and view card records"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "inputRadio",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getRecordLabel",
+            "description": {
+                "text": [
+                    "Retrieve the label text of a radio button"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordLabels",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

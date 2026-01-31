@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the options present on the login navigation bar."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/authentication/loginNavBarOptions",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone"
+            ]
+        }
+    ],
+    "selector": {
+        "uiautomator": "className(\"android.widget.FrameLayout\").className(\"android.widget.ListView\")"
+    },
+    "methods": [
+        {
+            "name": "changeServer",
+            "compose": [
+                {
+                    "element": "server",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clearCookies",
+            "compose": [
+                {
+                    "element": "cookies",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "reload",
+            "compose": [
+                {
+                    "element": "reload",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "server",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"android:id/title\").text(\"Change Server\")"
+            }
+        },
+        {
+            "name": "cookies",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"android:id/title\").text(\"Clear Cookies\")"
+            }
+        },
+        {
+            "name": "reload",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "uiautomator": "resourceId(\"android:id/title\").text(\"Reload\")"
+            }
+        }
+    ]
+}

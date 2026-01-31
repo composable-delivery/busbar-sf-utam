@@ -1,0 +1,67 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: feeds_chat-base-button-complete",
+            "A button component that indicates a complete state with optional loading and disabled states, and can display custom labels based on its state."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseButton",
+                "selector": {
+                    "css": "feeds_chat-base-button"
+                },
+                "description": "Represents the main button component.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "buttonLabel",
+                        "selector": {
+                            "css": ".button-label"
+                        },
+                        "description": "Represents the label of the button."
+                    }
+                ],
+                "type": "clickable"
+            },
+            {
+                "name": "completedIcon",
+                "selector": {
+                    "css": "feeds_chat-base-icon[slot=\"start\"]"
+                },
+                "description": "Represents the icon indicating the completed state.",
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "loadingSlotContent",
+            "selector": {
+                "css": "[slot='loading']"
+            },
+            "type": "container",
+            "description": "Represents the content of the loading slot.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "getButtonLabel",
+            "description": {
+                "text": [
+                    "Retrieves the text from the button label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "buttonLabel",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

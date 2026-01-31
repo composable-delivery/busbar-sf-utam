@@ -1,0 +1,98 @@
+{
+    "selector": {
+        "css": ".oneStageLeft"
+    },
+    "root": true,
+    "description": {
+        "text": [
+            "Selector: .oneStageLeft.",
+            "Represents the one:stageLeft Aura component.",
+            "Access the action cards by name or click a link by name."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "actionCardsByName",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "css": ".oneActionCardPhone a",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "linkByname",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "css": "a",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Click a link by name"
+                ],
+                "return": "none"
+            },
+            "name": "clickItemByname",
+            "compose": [
+                {
+                    "element": "linkByname",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click action cards by name"
+                ],
+                "return": "none"
+            },
+            "name": "getActionCardByName",
+            "compose": [
+                {
+                    "element": "actionCardsByName",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

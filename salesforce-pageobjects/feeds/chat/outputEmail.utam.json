@@ -1,0 +1,98 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a generated email preview including recipient, subject, and body using Salesforce record data.",
+            "Selector: src-output-email"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "toField",
+                "selector": {
+                    "css": ".generatedEmailToField"
+                },
+                "description": "Represents the email 'To' field displaying the recipient's name and email address.",
+                "wait": true
+            },
+            {
+                "name": "subjectField",
+                "selector": {
+                    "css": ".generatedEmailSubject"
+                },
+                "description": "Represents the email 'Subject' field displaying the subject text."
+            },
+            {
+                "name": "emailBody",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                },
+                "description": "Represents the email 'Body' field displaying the body content in rich text.",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getToFieldText",
+            "description": {
+                "text": [
+                    "Returns the text content of the 'To' field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "toField",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getSubjectFieldText",
+            "description": {
+                "text": [
+                    "Returns the text content of the 'Subject' field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "subjectField",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isToFieldVisible",
+            "description": {
+                "text": [
+                    "Checks if the 'To' field is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "toField",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSubjectFieldVisible",
+            "description": {
+                "text": [
+                    "Checks if the 'Subject' field is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "subjectField",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

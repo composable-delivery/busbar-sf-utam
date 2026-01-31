@@ -1,0 +1,185 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Library: LightningPrompt",
+            "Interact with the singular prompt modal created by the LightningPrompt library.",
+            "Click the OK or Cancel buttons. Get the header text or the aria label when the header isn't present. Get the message text."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-overlay-container"
+    },
+    "methods": [
+        {
+            "name": "clickOK",
+            "description": "Click OK button and wait for lightning-interactive-dialog-base absence",
+            "compose": [
+                {
+                    "element": "okButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "base",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "clickCancel",
+            "description": "Click Cancel button and wait for lightning-interactive-dialog-base absence",
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                },
+                {
+                    "element": "base",
+                    "apply": "waitForAbsence"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderLabel",
+            "description": {
+                "text": [
+                    "Get prompt header text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "header",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getHeaderlessLabel",
+            "description": {
+                "text": [
+                    "Get prompt header aria-label text of headerless variant"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "ariaLabel",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMessage",
+            "description": {
+                "text": [
+                    "Get message text that displays in the prompt"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "message",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isPromptShown",
+            "description": {
+                "text": [
+                    "Checks if the the lightning-prompt is open/shown"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "base",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "base",
+                "selector": {
+                    "css": "lightning-interactive-dialog-base"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "prompt",
+                            "selector": {
+                                "css": "lightning-prompt"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "message",
+                                        "selector": {
+                                            "css": "label"
+                                        }
+                                    },
+                                    {
+                                        "name": "input",
+                                        "selector": {
+                                            "css": "input"
+                                        },
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "okButton",
+                            "type": [
+                                "actionable",
+                                "clickable"
+                            ],
+                            "public": true,
+                            "selector": {
+                                "css": "[data-ok-button]"
+                            }
+                        },
+                        {
+                            "name": "cancelButton",
+                            "type": [
+                                "actionable",
+                                "clickable"
+                            ],
+                            "public": true,
+                            "selector": {
+                                "css": "[data-cancel-button]"
+                            }
+                        },
+                        {
+                            "name": "ariaLabel",
+                            "type": "actionable",
+                            "selector": {
+                                "css": "[data-modal]"
+                            }
+                        },
+                        {
+                            "name": "header",
+                            "selector": {
+                                "css": "[data-modal-heading]"
+                            },
+                            "public": true
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

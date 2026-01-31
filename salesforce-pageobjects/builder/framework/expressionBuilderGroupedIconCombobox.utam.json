@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A Lightning Web Component that acts as a wrapper for the `lightning-grouped-combobox`. It allows users to select an option from a dropdown that filters based on text input. It supports custom icons for options, required field validation, and emits change events for selected values."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                },
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "description": "Represents the grouped combobox with custom options and icons.",
+                "public": true
+            }
+        ]
+    }
+}

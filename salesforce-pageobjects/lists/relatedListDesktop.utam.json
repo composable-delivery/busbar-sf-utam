@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-related-list-desktop.",
+            "Represents the related list desktop LWC component.",
+            "Access the related list view manager component."
+        ]
+    },
+    "selector": {
+        "css": "lst-related-list-desktop"
+    },
+    "root": true,
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedListViewManager",
+                "name": "relatedListViewManager",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-list-view-manager"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/errorState",
+                "name": "errorState",
+                "public": true,
+                "selector": {
+                    "css": "lst-error-state"
+                }
+            }
+        ]
+    }
+}

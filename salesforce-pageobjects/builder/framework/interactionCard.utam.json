@@ -1,0 +1,71 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: interactionCard"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "header",
+                "type": [],
+                "selector": {
+                    "css": "header"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "icon",
+                        "type": "utam-lightning/pageObjects/icon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "templateContent",
+                        "type": [],
+                        "selector": {
+                            "css": "template"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "titleContainer",
+                        "type": "container",
+                        "selector": {
+                            "css": "[slot='title']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "actionsContainer",
+                        "type": "container",
+                        "selector": {
+                            "css": "[slot='actions']"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "rootContainer",
+            "type": "container",
+            "selector": {
+                "css": ":scope > *:first-child"
+            }
+        },
+        {
+            "public": true,
+            "name": "footerContainer",
+            "type": "container",
+            "selector": {
+                "css": "[slot='footer']"
+            }
+        }
+    ]
+}
