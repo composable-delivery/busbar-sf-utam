@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a search input with the ability to trigger a refresh action.",
+            "Selector: src-base-input-filter"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "searchInput",
+                "selector": {
+                    "css": "lightning-input"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the search input field for filtering results.",
+                "public": true
+            },
+            {
+                "name": "refreshButton",
+                "selector": {
+                    "css": "lightning-button-icon"
+                },
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "description": "Represents the refresh button to trigger a refresh action.",
+                "public": true
+            }
+        ]
+    }
+}

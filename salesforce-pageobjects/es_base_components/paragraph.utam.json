@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the paragraph element in the CMS builder runtime"
+        ]
+    },
+    "elements": [
+        {
+            "name": "paragraphText",
+            "public": false,
+            "selector": {
+                "css": "lightning-formatted-rich-text"
+            },
+            "type": "utam-lightning/pageObjects/formattedRichText"
+        }
+    ],
+    "methods": [
+        {
+            "name": "getParagraphText",
+            "description": "returns the text content of the paragraph",
+            "compose": [
+                {
+                    "element": "paragraphText",
+                    "apply": "getInnerText",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ]
+}

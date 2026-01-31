@@ -1,0 +1,138 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-constraints-editor",
+            "Constraint Builder Business UI constraints editor component"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "builder_industries_constraints-bui-constraints-editor"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            },
+            {
+                "public": true,
+                "name": "headerSection",
+                "type": "utam-builder-framework/pageObjects/focusableSection",
+                "selector": {
+                    "css": "builder_framework-focusable-section:nth-of-type(1)"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "header",
+                        "type": "utam-builder_industries_constraints/pageObjects/header",
+                        "selector": {
+                            "css": "builder_industries_constraints-header"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "toolbar",
+                        "type": "utam-builder-framework/pageObjects/toolbar",
+                        "selector": {
+                            "css": "builder_framework-toolbar"
+                        },
+                        "elements": [
+                            {
+                                "name": "toolBox",
+                                "type": [],
+                                "selector": {
+                                    "css": "span[slot='toolBox']"
+                                },
+                                "elements": [
+                                    {
+                                        "public": true,
+                                        "name": "sidebarToggleButton",
+                                        "type": "utam-lightning/pageObjects/buttonIcon",
+                                        "selector": {
+                                            "css": "lightning-button-icon"
+                                        }
+                                    },
+                                    {
+                                        "public": true,
+                                        "name": "uiSelectorButtonGroup",
+                                        "type": "utam-lightning/pageObjects/buttonGroup",
+                                        "selector": {
+                                            "css": "lightning-button-group"
+                                        },
+                                        "elements": [
+                                            {
+                                                "public": true,
+                                                "name": "selectedUIButton",
+                                                "type": "utam-lightning/pageObjects/button",
+                                                "selector": {
+                                                    "css": "lightning-button"
+                                                }
+                                            },
+                                            {
+                                                "public": true,
+                                                "name": "uiSelectorDropdownButton",
+                                                "type": "utam-lightning/pageObjects/buttonMenu",
+                                                "selector": {
+                                                    "css": "lightning-button-menu"
+                                                },
+                                                "elements": [
+                                                    {
+                                                        "public": true,
+                                                        "name": "selectVisualBuilder",
+                                                        "type": "utam-lightning/pageObjects/menuItem",
+                                                        "selector": {
+                                                            "css": "lightning-menu-item:nth-of-type(1)"
+                                                        }
+                                                    },
+                                                    {
+                                                        "public": true,
+                                                        "name": "selectCMLEditor",
+                                                        "type": "utam-lightning/pageObjects/menuItem",
+                                                        "selector": {
+                                                            "css": "lightning-menu-item:nth-of-type(2)"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "buiLeftRail",
+                "type": "utam-builder_industries_constraints/pageObjects/buiLeftRail",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-left-rail"
+                }
+            },
+            {
+                "public": true,
+                "name": "buiTypesRailPanel",
+                "type": "utam-builder_industries_constraints/pageObjects/buiTypesRailPanel",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-types-rail-panel"
+                }
+            },
+            {
+                "public": true,
+                "name": "buiConstraintsList",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintsList",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraints-list"
+                }
+            }
+        ]
+    }
+}

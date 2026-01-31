@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceRelatedListDesktop.",
+            "Represents the related list desktop Aura component.",
+            "Access the list view manager component."
+        ]
+    },
+    "selector": {
+        "css": ".forceRelatedListDesktop"
+    },
+    "root": true,
+    "elements": [
+        {
+            "type": "utam-force/pageObjects/listViewManager",
+            "name": "listView",
+            "public": true,
+            "selector": {
+                "css": ".forceListViewManager"
+            }
+        }
+    ]
+}

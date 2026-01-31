@@ -1,0 +1,55 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-block-builder-canvas",
+            "Represents the block builder canvas component."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "es_block_builder-block-builder-canvas"
+    },
+    "methods": [
+        {
+            "name": "composeEnterFrame",
+            "compose": [
+                {
+                    "element": "document",
+                    "returnType": "utam-es_block_builder/pageObjects/canvasIframe",
+                    "apply": "enterFrameAndLoad",
+                    "args": [
+                        {
+                            "type": "elementReference",
+                            "value": "canvasIframe"
+                        },
+                        {
+                            "type": "rootPageObject",
+                            "value": "utam-es_block_builder/pageObjects/canvasIframe"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "canvasIframe",
+                "type": "frame",
+                "public": true,
+                "selector": {
+                    "css": "iframe"
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

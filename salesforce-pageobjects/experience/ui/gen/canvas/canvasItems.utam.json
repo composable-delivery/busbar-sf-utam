@@ -1,0 +1,149 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A grid-based component that allows users to drag and drop items. It also handles dynamic loading of content and updates based on events. Users can interact with items that can be draggable and contain nested dynamic components with specific titles, icons, and other attributes.",
+            "Selector: experience_ui_gen_canvas-canvas-items"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "gridWrapper",
+                "selector": {
+                    "css": ".grid-wrapper"
+                },
+                "description": "The main wrapper for the grid layout.",
+                "elements": [
+                    {
+                        "name": "gridArea",
+                        "selector": {
+                            "css": ".grid-wrapper > div"
+                        },
+                        "type": "actionable",
+                        "description": "The area where items are displayed and can be interacted with.",
+                        "elements": [
+                            {
+                                "name": "gridItem",
+                                "selector": {
+                                    "css": "div[data-index]",
+                                    "returnAll": true
+                                },
+                                "description": "Represents each draggable item within the grid.",
+                                "elements": [
+                                    {
+                                        "name": "dragButton",
+                                        "selector": {
+                                            "css": "lightning-button-icon"
+                                        },
+                                        "type": "utam-lightning/pageObjects/buttonIcon",
+                                        "description": "The drag and drop icon button within each grid item.",
+                                        "public": true
+                                    },
+                                    {
+                                        "name": "dynamicCanvasWrapper",
+                                        "selector": {
+                                            "css": "experience_ui_gen_canvas-dynamic-canvas-wrapper"
+                                        },
+                                        "type": "utam-experience-ui-gen-canvas/pageObjects/dynamicCanvasWrapper",
+                                        "description": "The dynamic component wrapper that can load different content based on attributes.",
+                                        "wait": true,
+                                        "public": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "loadingTile",
+                                "selector": {
+                                    "css": "experience_ui_gen_canvas-loading-tile"
+                                },
+                                "type": "utam-experience-ui-gen-canvas/pageObjects/loadingTile",
+                                "description": "Represents the loading state of the grid.",
+                                "nullable": true,
+                                "wait": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isGridWrapperVisible",
+            "description": {
+                "text": [
+                    "Check if the grid wrapper is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "gridWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isGridAreaVisible",
+            "description": {
+                "text": [
+                    "Check if the grid area is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "gridArea",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isGridItemPresent",
+            "description": {
+                "text": [
+                    "Check if grid items are present"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "gridItem",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isGridItemFocused",
+            "description": {
+                "text": [
+                    "Check if the grid item is focused"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "gridItem",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "isGridItemEnabled",
+            "description": {
+                "text": [
+                    "Check if the grid item is enabled"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "gridItem",
+                    "apply": "isEnabled"
+                }
+            ]
+        }
+    ]
+}

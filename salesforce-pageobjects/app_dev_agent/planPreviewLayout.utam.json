@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that conditionally displays either a backlog placeholder with a heading and sub-heading or a container view based on the status of a plan or requirements. It handles loading states and updates dynamically based on the provided context.",
+            "Selector: app_dev_agent-plan-preview-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "backlogPlaceholder",
+                "selector": {
+                    "css": "app_dev_agent-plan-backlog"
+                },
+                "type": "utam/app_dev_agent/pageObjects/planBacklog",
+                "description": "Represents a placeholder component shown when data is loading.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

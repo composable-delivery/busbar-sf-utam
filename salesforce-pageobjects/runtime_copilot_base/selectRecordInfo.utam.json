@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a dropdown to select record IDs with optional multi-selection and dispatches an event with the selected value(s) when a change occurs.",
+            "Selector: runtime_copilot_base-select-record-info"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the spinner displayed while loading.",
+                "public": true
+            },
+            {
+                "name": "recordPicklist",
+                "selector": {
+                    "css": "runtime_copilot_base-record-picklist"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/recordPicklist",
+                "description": "Represents the custom picklist for selecting a record.",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "multiRecordPicklist",
+                "selector": {
+                    "css": "runtime_copilot_base-multi-record-picklist"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/multiRecordPicklist",
+                "description": "Represents the custom picklist for selecting multiple records.",
+                "public": true
+            }
+        ]
+    }
+}

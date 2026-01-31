@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputNumber.",
+            "Represents the ui:inputNumber Aura component.",
+            "Get the label and input elements. Clear and enter a value."
+        ]
+    },
+    "methods": [
+        {
+            "name": "clearAndEnterValue",
+            "description": "Clear input and enter a number value passed as param",
+            "compose": [
+                {
+                    "element": "inputValue",
+                    "apply": "clear"
+                },
+                {
+                    "element": "inputValue",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "inputValue",
+            "public": true,
+            "type": [
+                "editable"
+            ],
+            "selector": {
+                "css": "input"
+            }
+        }
+    ]
+}

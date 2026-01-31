@@ -1,0 +1,35 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Window User Account Form"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "inputs",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "inputByIndex",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

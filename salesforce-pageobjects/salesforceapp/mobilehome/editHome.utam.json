@@ -1,0 +1,47 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the mobile home editor activity.",
+            "Add and remove mobile home cards."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "cancelEdit"
+        },
+        {
+            "name": "saveEdit"
+        },
+        {
+            "name": "addCard"
+        },
+        {
+            "name": "removeCardWithName",
+            "args": [
+                {
+                    "name": "cardName",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "getDeleteCardButtons",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        },
+        {
+            "name": "getBadgeLabels",
+            "returnType": [
+                "clickable",
+                "actionable"
+            ],
+            "returnAll": true
+        }
+    ]
+}

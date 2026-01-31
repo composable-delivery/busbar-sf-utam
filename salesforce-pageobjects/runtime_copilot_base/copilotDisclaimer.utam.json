@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a Copilot disclaimer, with content that changes based on the variant. It can show additional survey link text when variant is 'popover'.",
+            "Selector: src-copilot-disclaimer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseDisclaimer",
+                "selector": {
+                    "css": "runtime_copilot_base-base-disclaimer"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/baseDisclaimer",
+                "description": "Represents the base disclaimer component which may contain different text based on the variant.",
+                "public": true
+            }
+        ]
+    }
+}

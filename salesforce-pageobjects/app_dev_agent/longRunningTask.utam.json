@@ -1,0 +1,171 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a long-running task with a heading, subheading, an animated list of messages, and an associated empty-state child component.",
+            "Selector: app_dev_agent-long-running-task"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "imageWrapper",
+                "selector": {
+                    "css": ".image-wrapper"
+                },
+                "description": "Represents the wrapper for the SVG image displayed at the top of the component.",
+                "elements": [
+                    {
+                        "name": "svgImage",
+                        "selector": {
+                            "css": "svg"
+                        },
+                        "description": "Represents the SVG image inside the image wrapper."
+                    }
+                ]
+            },
+            {
+                "name": "emptyStateComponent",
+                "selector": {
+                    "css": "app_dev_agent-empty-state"
+                },
+                "type": "utam/app_dev_agent/pageObjects/emptyState",
+                "description": "Represents the app_dev_agent-empty-state child component with heading and subheading.",
+                "public": true
+            },
+            {
+                "name": "messageContainer",
+                "selector": {
+                    "css": ".message-container"
+                },
+                "description": "Represents the container for the animated messages.",
+                "elements": [
+                    {
+                        "name": "messageSlider",
+                        "selector": {
+                            "css": ".message-slider"
+                        },
+                        "description": "Represents the slider element that animates the progress messages.",
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "messageItems",
+                                "selector": {
+                                    "css": ".message-item",
+                                    "returnAll": true
+                                },
+                                "description": "Represents the individual message items displayed in the slider.",
+                                "wait": true,
+                                "elements": [
+                                    {
+                                        "name": "messageIcons",
+                                        "selector": {
+                                            "css": "lightning-icon",
+                                            "returnAll": true
+                                        },
+                                        "type": "utam-lightning/pageObjects/icon",
+                                        "description": "Represents the lightning-icon components inside each message item.",
+                                        "wait": true,
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isImageWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that the image wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "imageWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSvgImagePresent",
+            "description": {
+                "text": [
+                    "Check that the SVG image is present"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "svgImage",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "isMessageContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the message container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageSliderVisible",
+            "description": {
+                "text": [
+                    "Check that the message slider is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageSlider",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getMessageItemTexts",
+            "description": {
+                "text": [
+                    "Get the text content of all message items"
+                ],
+                "return": "string[]"
+            },
+            "compose": [
+                {
+                    "element": "messageItems",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isMessageItemPresent",
+            "description": {
+                "text": [
+                    "Check that message items are present"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "messageItems",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup-agentic-setup-broker.",
+            "Represents the agentic setup Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "assistantPanelContext",
+                "selector": {
+                    "css": "runtime_copilot-assistant-panel-context"
+                },
+                "elements": [
+                    {
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "name": "viewComponent",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component"
+                        },
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

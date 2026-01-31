@@ -1,0 +1,73 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A chat message panel layout component that includes a disclaimer section and a chat history section, with functionality to handle resizing of the chat history.",
+            "Selector: src-message-layout"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "chatHistory",
+                "selector": {
+                    "css": ".slds-chat-list.chat-history"
+                },
+                "description": "Represents the chat history list that will be observed for resizing.",
+                "wait": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "disclaimerSlot",
+            "selector": {
+                "css": "[slot='disclaimer']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot for disclaimers.",
+            "public": true
+        },
+        {
+            "name": "chatHistorySlot",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the default slot content for chat messages.",
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "isChatHistoryVisible",
+            "description": {
+                "text": [
+                    "Check that chat history area is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatHistory",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isChatHistoryPresent",
+            "description": {
+                "text": [
+                    "Check that chat history area is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "chatHistory",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

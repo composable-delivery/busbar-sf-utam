@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a formatted date and time based on the input value provided.",
+            "Selector: src-output-date-time-string"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "formattedDateTime",
+                "selector": {
+                    "css": "lightning-formatted-date-time"
+                },
+                "description": "Represents a formatted date and time component that displays the value if it is provided.",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    }
+}

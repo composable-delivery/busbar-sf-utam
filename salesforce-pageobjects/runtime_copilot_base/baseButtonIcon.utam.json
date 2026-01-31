@@ -1,0 +1,33 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A button icon component that provides an interactable button with an embedded icon, which can be used for actions like submitting forms or toggling states. The component can be styled with different variants and sizes and can indicate if it is selected.",
+            "Selector: src-base-button-icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseButton",
+                "selector": {
+                    "css": "runtime_copilot_base-base-button"
+                },
+                "description": "Represents the custom button element that users can interact with",
+                "public": true,
+                "type": "clickable",
+                "elements": [
+                    {
+                        "name": "baseIcon",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the custom icon element nested within the button",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "SearchInput: test field for inputing text to filter items in a list",
+            "Selector: webruntimedesign-search-input"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "div",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "div"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "labelContent",
+                        "type": [],
+                        "selector": {
+                            "css": "label"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "input",
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "selector": {
+                            "css": ".slds-input"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "button",
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "selector": {
+                            "css": "button"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

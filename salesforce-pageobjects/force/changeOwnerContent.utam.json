@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceChangeOwnerContent.",
+            "Represents the force:changeOwnerContent Aura component.",
+            "Get force:recordLayout, ui:inputCheckbox, or ui:input components."
+        ]
+    },
+    "elements": [
+        {
+            "type": "utam-force/pageObjects/recordLayout",
+            "name": "recordLayout",
+            "public": true,
+            "selector": {
+                "css": ".forceRecordLayout"
+            }
+        },
+        {
+            "type": "utam-aura/pageObjects/inputCheckbox",
+            "name": "sendNotificationEmailCheckbox",
+            "public": true,
+            "selector": {
+                "css": ".uiInputCheckbox"
+            }
+        },
+        {
+            "type": "utam-forcesearch/pageObjects/inputLookupDesktop",
+            "name": "inputLookupDesktop",
+            "public": true,
+            "selector": {
+                "css": ".uiInput"
+            }
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-ya-contract-payment-and-contact"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: ContractDetails"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "paymentMethodSection",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/paymentMethodSection",
+                "selector": {
+                    "css": "runtime_online_sales-payment-method-section"
+                }
+            },
+            {
+                "public": true,
+                "name": "contactDetailsSection",
+                "wait": true,
+                "type": "utam-online-sales/pageObjects/contactDetailsSection",
+                "selector": {
+                    "css": "runtime_online_sales-contact-details-section"
+                }
+            }
+        ]
+    }
+}

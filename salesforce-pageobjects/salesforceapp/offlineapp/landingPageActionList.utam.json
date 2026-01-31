@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Landing Page Action List.",
+            "Verify the action list rows."
+        ]
+    },
+    "interface": true,
+    "methods": [
+        {
+            "name": "getActionRowAtIndex",
+            "args": [
+                {
+                    "name": "index",
+                    "type": "number"
+                }
+            ],
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionRow"
+        },
+        {
+            "name": "getActionByName",
+            "args": [
+                {
+                    "name": "name",
+                    "type": "string"
+                }
+            ],
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem"
+        }
+    ]
+}

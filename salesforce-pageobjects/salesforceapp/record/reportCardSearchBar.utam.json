@@ -1,0 +1,31 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Reports search bar.",
+            "Start a report search and select an item from search results."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "populateSearchReport",
+            "args": [
+                {
+                    "name": "reportName",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "selectReportSearchResult",
+            "args": [
+                {
+                    "name": "reportName",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

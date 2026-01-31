@@ -1,0 +1,139 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that acts as a modal dialog with a left rail for navigation and tabbed content for displaying different components based on the selected tab.",
+            "Selector: src-app-dev-panel"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "backdrop",
+                "selector": {
+                    "css": ".slds-backdrop"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the backdrop that can be clicked to close the modal",
+                "nullable": true
+            },
+            {
+                "name": "modalContainer",
+                "selector": {
+                    "css": ".slds-modal"
+                },
+                "description": "Represents the main container of the modal dialog",
+                "nullable": true
+            },
+            {
+                "name": "leftRail",
+                "selector": {
+                    "css": "devops_center-left-rail"
+                },
+                "description": "Represents the left rail navigation component",
+                "public": true
+            },
+            {
+                "name": "tabExplorer",
+                "selector": {
+                    "css": "app_dev_agent-agent-explorer"
+                },
+                "description": "Represents the \"Agent Explorer\" tab content",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "tabChangesContainer",
+                "selector": {
+                    "css": "devops_center-view-changes-container"
+                },
+                "description": "Represents the \"View Changes\" tab content",
+                "nullable": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickBackdrop",
+            "description": {
+                "text": [
+                    "Simulate a click on the backdrop to close the modal"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "backdrop",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isModalContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the modal container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "modalContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isBackdropVisible",
+            "description": {
+                "text": [
+                    "Check if the backdrop is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "backdrop",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyBackdropPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"backdrop\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "backdrop",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyModalContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"modalContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "modalContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

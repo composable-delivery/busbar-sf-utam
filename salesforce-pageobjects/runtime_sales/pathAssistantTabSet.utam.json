@@ -1,0 +1,109 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .runtime_sales_pathassistantPathAssistantTabSet.",
+            "Represents a path assistant TabSet.",
+            "You can get a tab by index."
+        ]
+    },
+    "elements": [
+        {
+            "name": "tabByName",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantTab",
+            "public": true,
+            "selector": {
+                "css": "li.runtime_sales_pathassistantPathAssistantTab",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getDataName",
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "dataName",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        },
+        {
+            "name": "tabByIndex",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantTab",
+            "selector": {
+                "css": "li.runtime_sales_pathassistantPathAssistantTab:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "activeTab",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantTab",
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantTab.slds-is-active"
+            },
+            "public": true
+        },
+        {
+            "name": "activeTabByName",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantTab",
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantTab.slds-is-active[data-name='%s']",
+                "args": [
+                    {
+                        "name": "tabName",
+                        "type": "string"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "allTabs",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantTab",
+            "selector": {
+                "css": "li.runtime_sales_pathassistantPathAssistantTab",
+                "returnAll": true
+            },
+            "public": true
+        }
+    ],
+    "methods": [
+        {
+            "name": "waitForTabToBeActive",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "activeTab",
+                                    "apply": "getDataName",
+                                    "matcher": {
+                                        "type": "stringContains",
+                                        "args": [
+                                            {
+                                                "type": "string",
+                                                "name": "tabName"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

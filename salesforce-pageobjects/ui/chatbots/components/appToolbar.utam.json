@@ -1,0 +1,38 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Toolbar component with left and right slots for custom content insertion.",
+            "Selector: src-app-toolbar"
+        ]
+    },
+    "elements": [
+        {
+            "name": "leftSlotContent",
+            "selector": {
+                "css": "[slot='left']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot on the left side of the toolbar",
+            "public": true
+        },
+        {
+            "name": "rightSlotContent",
+            "selector": {
+                "css": "[slot='right']"
+            },
+            "type": "container",
+            "description": "Represents the content of the named slot on the right side of the toolbar",
+            "public": true
+        },
+        {
+            "name": "deactivateButton",
+            "selector": {
+                "css": "[data-id='statusBtn']"
+            },
+            "type": "clickable",
+            "description": "Deactivate button in the toolbar",
+            "public": true
+        }
+    ]
+}

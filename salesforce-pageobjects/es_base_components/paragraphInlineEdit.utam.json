@@ -1,0 +1,19 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_base_components-paragraph-inline-edit",
+            "Represents the canvas paragraph-inline-edit component which appears after a click on the paragraph."
+        ]
+    },
+    "elements": [
+        {
+            "name": "inputContentContainer",
+            "type": "editable",
+            "public": true,
+            "selector": {
+                "css": "span.content-container"
+            }
+        }
+    ]
+}

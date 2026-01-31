@@ -1,0 +1,85 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a modal dialog for resetting a session with cancel and reset actions.",
+            "Selector: src-reset-session-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalContainer",
+                "selector": {
+                    "css": ".modal"
+                },
+                "description": "Represents the container for the modal dialog",
+                "elements": [
+                    {
+                        "name": "modalHeader",
+                        "selector": {
+                            "css": "lightning-modal-header"
+                        },
+                        "type": "utam-lightning/pageObjects/modalHeader",
+                        "description": "Represents the header of the modal dialog",
+                        "public": true
+                    },
+                    {
+                        "name": "modalBody",
+                        "selector": {
+                            "css": "lightning-modal-body"
+                        },
+                        "type": "utam-lightning/pageObjects/modalBody",
+                        "description": "Represents the body of the modal dialog containing the content text",
+                        "public": true
+                    },
+                    {
+                        "name": "modalFooter",
+                        "selector": {
+                            "css": "lightning-modal-footer"
+                        },
+                        "description": "Represents the footer of the modal dialog containing action buttons",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "cancelButton",
+                                "selector": {
+                                    "css": "lightning-button.slds-button:nth-of-type(1)"
+                                },
+                                "type": "utam-lightning/pageObjects/button",
+                                "description": "Represents the cancel button in the modal footer",
+                                "public": true
+                            },
+                            {
+                                "name": "resetButton",
+                                "selector": {
+                                    "css": "lightning-button.slds-button:nth-of-type(2)"
+                                },
+                                "type": "utam-lightning/pageObjects/button",
+                                "description": "Represents the reset button in the modal footer",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isModalVisible",
+            "description": {
+                "text": [
+                    "Check if the modal container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "modalContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

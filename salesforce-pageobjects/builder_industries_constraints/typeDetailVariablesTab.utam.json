@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-type-detail",
+            "Constraint Builder type detail component - Variables tab"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "addVariablesButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[class='addAttributes']"
+            }
+        },
+        {
+            "public": true,
+            "name": "variableList",
+            "type": "utam-builder_industries_constraints/pageObjects/attributeList",
+            "selector": {
+                "css": "builder_industries_constraints-attribute-list"
+            }
+        },
+        {
+            "public": true,
+            "name": "variablesIllustration",
+            "type": "utam-builder_industries_constraints/pageObjects/illustration",
+            "selector": {
+                "css": "builder_industries_constraints-illustration"
+            }
+        },
+        {
+            "public": true,
+            "name": "createVariablesButton",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button[class='createAttributes']"
+            }
+        }
+    ]
+}

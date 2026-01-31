@@ -1,0 +1,32 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that provides a radio button with custom label functionality, allowing users to select a given option. It includes the ability to check if the radio button is selected and to interact with the radio element.",
+            "Selector: runtime_copilot_base-primitive-type-picklist"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioContainer",
+                "selector": {
+                    "css": "lightning-primitive-radio.primitive-type-container"
+                },
+                "description": "Represents the custom radio button container.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "radioLabelSlot",
+                        "selector": {
+                            "css": "[slot='label']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for custom label content inside the radio button.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    }
+}

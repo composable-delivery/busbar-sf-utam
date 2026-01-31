@@ -1,0 +1,220 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A chat input component that allows users to type messages, validate character limits, and send messages with a button click. It provides visual feedback when character limits are exceeded and displays a spinner while processing.",
+            "Selector: app_dev_agent-studio-chat-input"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a loading spinner displayed conditionally.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "textareaContainer",
+                "selector": {
+                    "css": ".textarea-container"
+                },
+                "description": "Represents the container for the textarea and send button.",
+                "elements": [
+                    {
+                        "name": "messageTextArea",
+                        "selector": {
+                            "css": "textarea.slds-textarea"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents the textarea input for typing messages."
+                    },
+                    {
+                        "name": "sendButtonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon.send-button"
+                        },
+                        "type": "utam-lightning/pageObjects/buttonIcon",
+                        "description": "Represents the send button to submit the message.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "errorMessageBox",
+                "selector": {
+                    "css": "#textarea-input-error"
+                },
+                "description": "Represents the error message box for character limit validation.",
+                "nullable": true
+            },
+            {
+                "name": "errorCharacterCount",
+                "selector": {
+                    "css": ".chat-box-error-count"
+                },
+                "description": "Represents the character count message when too many characters are typed.",
+                "nullable": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTextareaContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the textarea container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "textareaContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isMessageTextAreaFocused",
+            "description": {
+                "text": [
+                    "Check if the message text area is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageTextArea",
+                    "apply": "isFocused"
+                }
+            ]
+        },
+        {
+            "name": "typeMessage",
+            "description": {
+                "text": [
+                    "Clear the message text area and type a new message"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "messageTextArea",
+                    "apply": "clear"
+                },
+                {
+                    "element": "messageTextArea",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMessageText",
+            "description": {
+                "text": [
+                    "Get the current text from the message text area"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageTextArea",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isErrorMessageBoxVisible",
+            "description": {
+                "text": [
+                    "Check if the error message box is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorMessageBox",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isErrorCharacterCountVisible",
+            "description": {
+                "text": [
+                    "Check if the error character count message is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorCharacterCount",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getErrorCharacterCountText",
+            "description": {
+                "text": [
+                    "Get the text from the error character count message"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "errorCharacterCount",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorMessageBoxPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorMessageBox\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorMessageBox",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyErrorCharacterCountPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"errorCharacterCount\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "errorCharacterCount",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

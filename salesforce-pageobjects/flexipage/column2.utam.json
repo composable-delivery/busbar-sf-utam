@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: flexipage-column2.",
+            "Represents the flexipage-column2 lightning component.",
+            "Get flexipage:field component by ID.",
+            "This specific Page Object (PO) built for the feature is currently in development and will not be available to customers."
+        ]
+    },
+    "elements": [
+        {
+            "name": "fields",
+            "type": "container",
+            "selector": {
+                "css": ":scope *",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "fieldByID",
+            "public": true,
+            "type": "utam-flexipage/pageObjects/field",
+            "selector": {
+                "css": "flexipage-field[data-field-id='%s']",
+                "args": [
+                    {
+                        "name": "dataFieldId",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

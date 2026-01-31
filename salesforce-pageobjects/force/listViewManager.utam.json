@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListViewManager.",
+            "Represents the list view manager Aura component.",
+            "Access the header component or the list view container."
+        ]
+    },
+    "elements": [
+        {
+            "name": "header",
+            "type": "utam-force/pageObjects/listViewManagerHeader",
+            "selector": {
+                "css": ".forceListViewManagerHeader"
+            },
+            "public": true
+        },
+        {
+            "name": "listViewContainer",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": ".listViewContainer *"
+            }
+        }
+    ]
+}

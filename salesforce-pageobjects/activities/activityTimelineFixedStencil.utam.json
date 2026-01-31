@@ -1,0 +1,19 @@
+{
+    "description": {
+        "text": [
+            "Selector: li.row.Event.runtime_sales_activitiesActivityTimelineFixedStencil.",
+            "Represents the runtime_sales_activities:ActivityTimelineFixedStencil Lightning Web Component.",
+            "Get the dueDate."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "dueDate",
+            "public": true,
+            "selector": {
+                "css": "div.slds-var-m-right_small.dueDate.slds-text-color_weak"
+            }
+        }
+    ]
+}

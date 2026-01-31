@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the 'Favorites' fragment.",
+            "Start a search or interact with the existing list of favorites."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "getFavoriteSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/record/favoriteSearchBar"
+        },
+        {
+            "name": "getFavoriteList",
+            "returnType": "utam-salesforceapp/pageObjects/record/favoriteList"
+        }
+    ]
+}

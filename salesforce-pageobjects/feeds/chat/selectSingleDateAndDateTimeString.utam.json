@@ -1,0 +1,66 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a radio group with options for selecting a single date or date-time string.",
+            "Selector: src-select-single-date-and-date-time-string"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "radioGroupContainer",
+                "selector": {
+                    "css": ".primitive-type-radio-group"
+                },
+                "description": "Represents the container for the radio group",
+                "elements": [
+                    {
+                        "name": "radioOption",
+                        "selector": {
+                            "css": "feeds_chat-primitive-type-picklist",
+                            "returnAll": true
+                        },
+                        "description": "Represents individual radio options within the radio group",
+                        "public": true
+                    },
+                    {
+                        "name": "radioOptionLabel",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the label slot within each radio option",
+                        "public": true
+                    },
+                    {
+                        "name": "formattedDateTime",
+                        "selector": {
+                            "css": "lightning-formatted-date-time"
+                        },
+                        "description": "Represents the formatted date-time component for options without a specific label",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRadioGroupContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the radio group container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "radioGroupContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

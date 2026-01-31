@@ -1,0 +1,161 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that allows users to select an object from a dropdown list, choose a record associated with that object, and display selected records as pills for multi-selection scenarios.",
+            "Selector: runtime_copilot_base-base-record-picker"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "objectPicker",
+                "selector": {
+                    "css": "lightning-grouped-combobox.slds-combobox_object-switcher"
+                },
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "description": "Represents the dropdown for selecting an object",
+                "public": true
+            },
+            {
+                "name": "recordPicker",
+                "selector": {
+                    "css": "lightning-record-picker.record-picker"
+                },
+                "type": "utam-lightning/pageObjects/recordPicker",
+                "description": "Represents the record picker component for selecting records",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "recordPickerInput",
+                        "selector": {
+                            "css": "input"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable",
+                            "editable"
+                        ],
+                        "description": "Represents the input field within the record picker"
+                    }
+                ]
+            },
+            {
+                "name": "pillContainer",
+                "selector": {
+                    "css": "lightning-pill-container.pill-container"
+                },
+                "type": "utam-lightning/pageObjects/pillContainer",
+                "description": "Represents the container for the pills that display selected records",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents a spinner displayed while the component is loading.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "focusOnRecordPickerInput",
+            "description": {
+                "text": [
+                    "Focus on the record picker input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerInput",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "clearRecordPickerInput",
+            "description": {
+                "text": [
+                    "Clear the text from the record picker input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerInput",
+                    "apply": "clear"
+                }
+            ]
+        },
+        {
+            "name": "typeIntoRecordPickerInput",
+            "description": {
+                "text": [
+                    "Type text into the record picker input field"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerInput",
+                    "apply": "setText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getRecordPickerInputText",
+            "description": {
+                "text": [
+                    "Get the current text from the record picker input field"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerInput",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isRecordPickerInputEnabled",
+            "description": {
+                "text": [
+                    "Check if the record picker input field is enabled"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerInput",
+                    "apply": "isEnabled"
+                }
+            ]
+        },
+        {
+            "name": "isRecordPickerInputFocused",
+            "description": {
+                "text": [
+                    "Check if the record picker input field is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerInput",
+                    "apply": "isFocused"
+                }
+            ]
+        }
+    ]
+}

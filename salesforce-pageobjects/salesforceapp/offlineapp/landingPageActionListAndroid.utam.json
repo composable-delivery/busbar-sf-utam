@@ -1,0 +1,62 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: resourceId(\"action_grid\").",
+            "Represents the Android Landing Page Action List.",
+            "Verify the action list rows."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionList",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "android_phone",
+                "android_tablet"
+            ]
+        }
+    ],
+    "type": [
+        "actionable"
+    ],
+    "elements": [
+        {
+            "name": "actionRowAtIndex",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionRow",
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"action_row\").index(%d))",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            },
+            "public": true
+        },
+        {
+            "name": "actionByName",
+            "type": "utam-salesforceapp/pageObjects/offlineapp/landingPageActionItem",
+            "public": true,
+            "nullable": true,
+            "selector": {
+                "uiautomator": "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(resourceId(\"action_item\"))",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getActionName",
+                "matcher": {
+                    "type": "stringEquals",
+                    "args": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "findFirst": true
+            }
+        }
+    ]
+}

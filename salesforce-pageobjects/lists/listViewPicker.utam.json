@@ -1,0 +1,142 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-list-view-picker.",
+            "Represents the list view picker Lightning web component.",
+            "Access the list view picker details"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "pickerListViewName",
+                "selector": {
+                    "css": "span.slds-page-header__title"
+                }
+            },
+            {
+                "public": true,
+                "name": "pickerChevron",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon.pickerChevron"
+                }
+            },
+            {
+                "public": true,
+                "name": "popup",
+                "type": "utam-lightning/pageObjects/popup",
+                "selector": {
+                    "css": "lightning-popup"
+                }
+            },
+            {
+                "public": true,
+                "name": "popupContainer",
+                "selector": {
+                    "css": "lightning-popup"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "focusTrap",
+                            "selector": {
+                                "css": "lightning-focus-trap"
+                            },
+                            "elements": [
+                                {
+                                    "public": true,
+                                    "name": "pickerDropdown",
+                                    "type": "utam-lists/pageObjects/listViewPickerDropdown",
+                                    "selector": {
+                                        "css": "lst-list-view-picker-dropdown"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getListViewTitle",
+            "compose": [
+                {
+                    "element": "pickerListViewName",
+                    "apply": "getText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "openPickerDropdown",
+            "description": "Clicks the picker chevron to open the dropdown, and returns the dropdown",
+            "compose": [
+                {
+                    "element": "pickerChevron",
+                    "apply": "clickButton"
+                },
+                {
+                    "element": "pickerDropdown",
+                    "returnType": "utam-lists/pageObjects/listViewPickerDropdown"
+                }
+            ]
+        },
+        {
+            "name": "navigateToListViewId",
+            "description": "Go to a listview given id",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "text"
+                }
+            ],
+            "compose": [
+                {
+                    "apply": "openPickerDropdown"
+                },
+                {
+                    "element": "pickerDropdown",
+                    "apply": "setInputTextAndWaitForItemsToLoad",
+                    "args": [
+                        {
+                            "type": "argumentReference",
+                            "name": "text"
+                        }
+                    ]
+                },
+                {
+                    "element": "pickerDropdown",
+                    "apply": "selectItemByText",
+                    "args": [
+                        {
+                            "type": "argumentReference",
+                            "name": "text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "verifyPickerDropdownPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"pickerDropdown\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "pickerDropdown",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

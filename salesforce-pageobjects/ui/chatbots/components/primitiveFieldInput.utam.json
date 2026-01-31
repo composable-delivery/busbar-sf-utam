@@ -1,0 +1,72 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-primitive-field-input",
+            "Used to display"
+        ]
+    },
+    "root": false,
+    "shadow": {
+        "elements": [
+            {
+                "name": "label",
+                "public": true,
+                "type": [],
+                "selector": {
+                    "css": "label"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "abbrContent",
+                        "type": [],
+                        "selector": {
+                            "css": "abbr"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "labelContainer",
+                        "type": "container",
+                        "selector": {
+                            "css": "[slot='label']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "helptext",
+                        "type": "utam-lightning/pageObjects/helptext",
+                        "selector": {
+                            "css": "lightning-helptext"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "iconContainer",
+                        "type": "container",
+                        "selector": {
+                            "css": "[slot='icon']"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcon",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

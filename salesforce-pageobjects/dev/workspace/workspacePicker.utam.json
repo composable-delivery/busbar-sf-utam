@@ -1,0 +1,276 @@
+{
+    "root": true,
+    "selector": {
+        "css": "dev_workspace-workspace-picker"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A dropdown component that allows users to select a workspace from a list, update the current workspace, create a new workspace, or navigate to the project home page. It also displays a loading state and handles errors.",
+            "Selector: dev_workspace-workspace-picker"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dropdownTrigger",
+                "selector": {
+                    "css": ".slds-dropdown-trigger_click"
+                },
+                "description": "Represents the container for the dropdown trigger button and content",
+                "elements": [
+                    {
+                        "name": "workspacePickerButton",
+                        "selector": {
+                            "css": "button.workspacePicker"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Button to open or close the dropdown menu",
+                        "elements": [
+                            {
+                                "name": "loadingIcon",
+                                "selector": {
+                                    "css": "lightning-icon.loading-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Icon indicating loading state",
+                                "nullable": true,
+                                "wait": true,
+                                "public": true
+                            },
+                            {
+                                "name": "loadingSpinner",
+                                "selector": {
+                                    "css": "lightning-spinner.loading-spinner"
+                                },
+                                "type": "utam-lightning/pageObjects/spinner",
+                                "description": "Spinner indicating loading state",
+                                "nullable": true,
+                                "wait": true,
+                                "public": true
+                            },
+                            {
+                                "name": "workspaceIcon",
+                                "selector": {
+                                    "css": "lightning-icon.workspace-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Icon for the workspace",
+                                "nullable": true,
+                                "public": true
+                            },
+                            {
+                                "name": "workspaceTitle",
+                                "selector": {
+                                    "css": "p.workspace-title"
+                                },
+                                "description": "Title of the current workspace"
+                            },
+                            {
+                                "name": "dropdownIcon",
+                                "selector": {
+                                    "css": "lightning-icon.dropdown-icon"
+                                },
+                                "type": "utam-lightning/pageObjects/icon",
+                                "description": "Icon to indicate dropdown state (open or closed)",
+                                "public": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "dropdownMenu",
+                        "selector": {
+                            "css": ".slds-dropdown"
+                        },
+                        "description": "Dropdown menu containing the list of workspaces and other options",
+                        "nullable": true,
+                        "elements": [
+                            {
+                                "name": "createNewWorkspaceLink",
+                                "selector": {
+                                    "css": "a[data-value='createNewWorkspace']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Link to create a new workspace"
+                            },
+                            {
+                                "name": "workspaceListItems",
+                                "selector": {
+                                    "css": "li.slds-dropdown__item",
+                                    "returnAll": true
+                                },
+                                "description": "List items representing each workspace",
+                                "elements": [
+                                    {
+                                        "name": "selectWorkspaceLink",
+                                        "selector": {
+                                            "css": "a[data-value]"
+                                        },
+                                        "type": [
+                                            "actionable",
+                                            "clickable"
+                                        ],
+                                        "description": "Link to select a workspace",
+                                        "elements": [
+                                            {
+                                                "name": "selectedWorkspaceIcon",
+                                                "selector": {
+                                                    "css": "lightning-icon[icon-name='utility:check']"
+                                                },
+                                                "type": "utam-lightning/pageObjects/icon",
+                                                "description": "Icon indicating the selected workspace",
+                                                "nullable": true,
+                                                "public": true
+                                            },
+                                            {
+                                                "name": "workspaceLabel",
+                                                "selector": {
+                                                    "css": ".workspace-list-menu-label"
+                                                },
+                                                "description": "Label of the workspace in the list"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "public": true
+                            },
+                            {
+                                "name": "studioRedirectIcon",
+                                "selector": {
+                                    "css": "lightning-icon.studio-redirect-icon"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Icon to navigate to the project home page",
+                                "public": true
+                            },
+                            {
+                                "name": "upsertWorkspaceModal",
+                                "selector": {
+                                    "css": "dev_workspace-upsert-workspace-modal"
+                                },
+                                "type": "utam-dev-workspace/pageObjects/upsertWorkspaceModal",
+                                "nullable": true,
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "toggleWorkspacePicker",
+            "description": {
+                "text": [
+                    "Simulate a click on the workspace picker button to open or close the dropdown"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "workspacePickerButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "assertWorkspaceTitle",
+            "description": {
+                "text": [
+                    "Return the text of the workspace title for assertion"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "workspaceTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "clickCreateNewWorkspace",
+            "description": {
+                "text": [
+                    "Simulate a click on the link to create a new workspace"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "createNewWorkspaceLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "selectWorkspace",
+            "description": {
+                "text": [
+                    "Simulate a click on a workspace to select it"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "selectWorkspaceLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "assertWorkspaceLabel",
+            "description": {
+                "text": [
+                    "Return the text of the workspace label for assertion"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "workspaceLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "assertDropdownMenuVisibility",
+            "description": {
+                "text": [
+                    "Check if the dropdown menu is visible for assertion"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownMenu",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyDropdownMenuPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"dropdownMenu\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dropdownMenu",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

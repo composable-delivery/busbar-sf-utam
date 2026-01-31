@@ -1,0 +1,81 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiInputSelect.",
+            "Represents the ui:inputSelect Aura component.",
+            "Get an option by value, or get text from the element."
+        ]
+    },
+    "methods": [
+        {
+            "name": "selectOptionByValue",
+            "description": "Click/Select option with value",
+            "compose": [
+                {
+                    "element": "optionWithValue",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickDropDownButton",
+            "description": "Click dropdown button",
+            "compose": [
+                {
+                    "element": "dropDownButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "description": {
+                "text": [
+                    "Get inputSelect element text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "label",
+            "type": "utam-aura/pageObjects/label",
+            "public": true,
+            "selector": {
+                "css": ".uiLabel"
+            }
+        },
+        {
+            "name": "optionWithValue",
+            "selector": {
+                "css": "option[value='%s']",
+                "args": [
+                    {
+                        "name": "text",
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "dropDownButton",
+            "selector": {
+                "css": "div a"
+            },
+            "type": [
+                "clickable"
+            ]
+        }
+    ]
+}

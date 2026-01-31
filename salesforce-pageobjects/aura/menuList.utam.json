@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiMenuList.",
+            "Represents the ui:menuList Aura component.",
+            "Get menu item components by index or name."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".uiMenuList.visible"
+    },
+    "elements": [
+        {
+            "name": "menuItemByIndex",
+            "type": "utam-aura/pageObjects/menuItem",
+            "public": true,
+            "selector": {
+                "css": ".uiMenuItem:nth-of-type(%d)",
+                "args": [
+                    {
+                        "name": "index",
+                        "type": "number"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "menuItemByName",
+            "type": "utam-aura/pageObjects/menuItem",
+            "public": true,
+            "selector": {
+                "css": ".uiMenuItem",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getMenuItemText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

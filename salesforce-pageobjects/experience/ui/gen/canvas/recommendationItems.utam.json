@@ -1,0 +1,26 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name",
+            "Root element: html"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "promptWithIcon",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".suggested-prompt-item",
+                    "returnAll": true
+                },
+                "nullable": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,168 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-pill",
+            "Represents the lightning-pill Lightning web component.",
+            "Get the label text. Click the pill, or remove the pill by clicking the remove button.",
+            "Wait for the pill to load."
+        ],
+        "author": "Salesforce"
+    },
+    "elements": [
+        {
+            "name": "iconSlot",
+            "public": true,
+            "type": "container",
+            "selector": {
+                "css": ".slds-pill__icon_container slot > *"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "pill",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".slds-pill"
+                }
+            },
+            {
+                "name": "remove",
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".slds-pill__remove"
+                }
+            },
+            {
+                "name": "label",
+                "selector": {
+                    "css": ".slds-pill__label"
+                }
+            },
+            {
+                "name": "link",
+                "nullable": true,
+                "selector": {
+                    "css": ".slds-pill__action"
+                }
+            },
+            {
+                "name": "iconContainer",
+                "nullable": true,
+                "public": true,
+                "selector": {
+                    "css": ".slds-pill__icon_container"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "click",
+            "description": "Click the pill",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "pill"
+                }
+            ]
+        },
+        {
+            "name": "isFocused",
+            "description": {
+                "text": [
+                    "Check if the pill is focused"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "apply": "isFocused",
+                    "element": "root"
+                }
+            ]
+        },
+        {
+            "name": "remove",
+            "description": "Remove the pill by clicking the remove button",
+            "compose": [
+                {
+                    "apply": "click",
+                    "element": "remove"
+                }
+            ]
+        },
+        {
+            "name": "getLabelText",
+            "description": {
+                "text": [
+                    "Get the label text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "apply": "getText",
+                    "element": "label"
+                }
+            ]
+        },
+        {
+            "name": "getLinkUrl",
+            "description": {
+                "text": [
+                    "Get the link URL"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForPillToLoad",
+            "description": "Wait for the pill to load",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "root",
+                                    "apply": "containsElement",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": ".slds-pill__remove"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

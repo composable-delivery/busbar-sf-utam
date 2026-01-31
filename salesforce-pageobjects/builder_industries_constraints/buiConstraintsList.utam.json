@@ -1,0 +1,112 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-bui-constraints-list",
+            "Constraint Builder Business UI constraints List"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "avatar",
+                "type": "utam-lightning/pageObjects/avatar",
+                "selector": {
+                    "css": "lightning-avatar[slot='media']"
+                }
+            },
+            {
+                "public": true,
+                "name": "h2Content",
+                "type": [],
+                "selector": {
+                    "css": "h2"
+                }
+            },
+            {
+                "public": true,
+                "name": "h3Content",
+                "type": [],
+                "selector": {
+                    "css": "h3"
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIcons",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonIconByIndex",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "buiPalettePopover",
+                "type": "utam-builder_industries_constraints/pageObjects/buiPalettePopover",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-palette-popover"
+                }
+            },
+            {
+                "public": true,
+                "name": "buiConstraintsListItems",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintsListItem",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraints-list-item",
+                    "returnAll": true
+                },
+                "nullable": true
+            },
+            {
+                "public": true,
+                "name": "buiConstraintsListItemByIndex",
+                "type": "utam-builder_industries_constraints/pageObjects/buiConstraintsListItem",
+                "selector": {
+                    "css": "builder_industries_constraints-bui-constraints-list-item:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForConstraintsListItems",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "buiConstraintsListItems"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

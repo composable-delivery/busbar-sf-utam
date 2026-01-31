@@ -1,0 +1,76 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a tree grid for workspace's metadata files and folders, allowing for selection and various actions on the rows.",
+            "Selector: dev_workspace-explorer-body"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "treeGridContainer",
+                "selector": {
+                    "css": ".tree-grid-container"
+                },
+                "description": "Represents the container for the tree grid.",
+                "elements": [
+                    {
+                        "name": "explorerTreeGrid",
+                        "selector": {
+                            "css": "dev_workspace-explorer-tree-grid"
+                        },
+                        "type": "utam-dev-workspace/pageObjects/explorerTreeGrid",
+                        "description": "Represents the custom tree grid component used to display data.",
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "checkboxColumn",
+                                "selector": {
+                                    "css": "[show-checkbox-column]"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the checkbox column within the tree grid for selecting rows."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isTreeGridContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the tree grid container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "treeGridContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyCheckboxColumnPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"checkboxColumn\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "checkboxColumn",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

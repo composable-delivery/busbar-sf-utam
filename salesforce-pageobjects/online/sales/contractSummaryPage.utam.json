@@ -1,0 +1,64 @@
+{
+    "root": true,
+    "selector": {
+        "css": "runtime_online_sales-online-sales-home-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "component",
+                "selector": {
+                    "css": "runtime_online_sales-contract-summary-page"
+                },
+                "public": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "contractList",
+                            "selector": {
+                                "css": "runtime_online_sales-contract-list"
+                            },
+                            "public": true,
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "contractListTable",
+                                        "selector": {
+                                            "css": "runtime_online_sales-contract-list-table"
+                                        },
+                                        "public": true,
+                                        "elements": [
+                                            {
+                                                "name": "table",
+                                                "selector": {
+                                                    "css": ".dt-outer-container"
+                                                },
+                                                "public": true,
+                                                "elements": [
+                                                    {
+                                                        "name": "tableRows",
+                                                        "selector": {
+                                                            "returnAll": true,
+                                                            "css": "[data-row-number]"
+                                                        },
+                                                        "public": true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "description": {
+        "text": [
+            " "
+        ],
+        "author": "Salesforce"
+    }
+}

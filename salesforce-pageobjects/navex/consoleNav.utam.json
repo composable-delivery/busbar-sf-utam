@@ -1,0 +1,104 @@
+{
+    "description": {
+        "text": [
+            "Selector: .oneConsoleNav.",
+            "Represents the one:consoleNav Aura component.",
+            "Access the selected list item text, app nav menu, tab container, or app name."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Get the selected list item text"
+                ],
+                "return": "the selected list item text"
+            },
+            "name": "getSelectedListItem",
+            "compose": [
+                {
+                    "element": "selectedListItem",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Click the selected list item link"
+                ],
+                "return": "none"
+            },
+            "name": "clickSelectedListItem",
+            "compose": [
+                {
+                    "element": "selectedListItemLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Get the app name text"
+                ],
+                "return": "the app name text"
+            },
+            "name": "getAppName",
+            "compose": [
+                {
+                    "element": "appName",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "selectedListItem",
+            "selector": {
+                "css": ".selectedListItem"
+            }
+        },
+        {
+            "name": "selectedListItemLink",
+            "selector": {
+                "css": ".selectedListItem a"
+            },
+            "type": [
+                "clickable"
+            ]
+        },
+        {
+            "name": "appLauncherHeader",
+            "type": "utam-global/pageObjects/appLauncherHeader",
+            "public": true,
+            "selector": {
+                "css": "one-app-launcher-header"
+            }
+        },
+        {
+            "name": "appNavMenu",
+            "type": "utam-navex/pageObjects/appNavMenu",
+            "selector": {
+                "css": ".oneAppNavMenu"
+            },
+            "public": true
+        },
+        {
+            "name": "tabContainer",
+            "type": "utam-navex/pageObjects/consoleTabContainer",
+            "selector": {
+                "css": ".oneConsoleTabContainer"
+            },
+            "public": true
+        },
+        {
+            "name": "appName",
+            "selector": {
+                "css": ".appName"
+            }
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-sidebar",
+            "Constraint Builder sidebar component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "headerTitle",
+                "type": [],
+                "selector": {
+                    "css": "div[class*='slds-panel__header-title']"
+                }
+            },
+            {
+                "public": true,
+                "name": "closeButton",
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "searchBar",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input[class*='search-bar']"
+                }
+            },
+            {
+                "public": true,
+                "name": "addButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "selectElement",
+                "type": "utam-lightning/pageObjects/tree",
+                "selector": {
+                    "css": "lightning-tree"
+                }
+            },
+            {
+                "public": true,
+                "name": "illustration",
+                "type": "utam-builder_industries_constraints/pageObjects/illustration",
+                "selector": {
+                    "css": "builder_industries_constraints-illustration"
+                }
+            }
+        ]
+    }
+}

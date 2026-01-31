@@ -1,0 +1,104 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceAsyncCarousel.",
+            "Represents the force:asyncCarousel Aura component.",
+            "Check if it has a tab, get a tab by name, or get the active tab."
+        ]
+    },
+    "elements": [
+        {
+            "name": "tabs",
+            "public": true,
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "selector": {
+                "css": "ul li a[role='tab']",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "selectedTab",
+            "type": [
+                "actionable"
+            ],
+            "selector": {
+                "css": "ul li a[aria-selected='true']"
+            }
+        },
+        {
+            "name": "tabByName",
+            "type": [
+                "clickable",
+                "actionable"
+            ],
+            "nullable": true,
+            "selector": {
+                "css": "ul li a[role='tab']",
+                "returnAll": true
+            },
+            "filter": {
+                "apply": "getText",
+                "findFirst": true,
+                "matcher": {
+                    "type": "stringContains",
+                    "args": [
+                        {
+                            "name": "tabName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "hasTab",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the carousel has a tab with the specified name"
+                ],
+                "return": "true if the carousel has a tab with the specified name; otherwise, false"
+            },
+            "compose": [
+                {
+                    "element": "tabByName",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "getTab",
+            "description": {
+                "text": [
+                    "Switches to the tab with the specified name"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "tabByName",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getActiveTabName",
+            "description": {
+                "text": [
+                    "Gets the text of the active tab"
+                ],
+                "return": "the text of the active tab"
+            },
+            "compose": [
+                {
+                    "element": "selectedTab",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,65 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-welcome-copilot",
+            "Welcome part of setup page"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-welcome-copilot"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spanContent",
+                "type": [],
+                "selector": {
+                    "css": "span"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedRichText",
+                "type": "utam-lightning/pageObjects/formattedRichText",
+                "selector": {
+                    "css": "lightning-formatted-rich-text"
+                }
+            },
+            {
+                "public": true,
+                "name": "input",
+                "type": "utam-lightning/pageObjects/input",
+                "selector": {
+                    "css": "lightning-input"
+                }
+            },
+            {
+                "public": true,
+                "name": "spanContent1",
+                "type": [],
+                "selector": {
+                    "css": "span:nth-of-type(2)"
+                }
+            },
+            {
+                "public": true,
+                "name": "formattedUrl",
+                "type": "utam-lightning/pageObjects/formattedUrl",
+                "selector": {
+                    "css": "lightning-formatted-url"
+                }
+            },
+            {
+                "public": true,
+                "name": "copilotVersionListContainer",
+                "type": "utam-ui-chatbots-components/pageObjects/copilotVersionListContainer",
+                "selector": {
+                    "css": "gen_ai_agentbuilder-copilot-version-list-container"
+                }
+            }
+        ]
+    }
+}

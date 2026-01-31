@@ -1,0 +1,95 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a modal with a combobox for selecting a model, and provides Save and Cancel buttons.",
+            "Selector: src-experience_ui_gen_canvas-/llm-settings-modal"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                },
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "description": "Represents the header of the modal with a title.",
+                "public": true
+            },
+            {
+                "name": "modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "type": "utam-lightning/pageObjects/modalBody",
+                "description": "Represents the body of the modal which contains descriptive text and the combobox.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "descriptionText",
+                        "selector": {
+                            "css": "div"
+                        },
+                        "description": "Represents the descriptive text within the modal body."
+                    },
+                    {
+                        "name": "modelCombobox",
+                        "selector": {
+                            "css": "lightning-combobox[name='llmSelect']"
+                        },
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "description": "Represents the combobox for selecting a model.",
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "description": "Represents the footer of the modal which contains action buttons.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "cancelButton",
+                        "selector": {
+                            "css": "lightning-button.slds-var-m-right_x-small"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the Cancel button in the modal footer.",
+                        "public": true
+                    },
+                    {
+                        "name": "saveButton",
+                        "selector": {
+                            "css": "lightning-button.variant-brand"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the Save button in the modal footer.",
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getDescriptionText",
+            "description": {
+                "text": [
+                    "Returns the descriptive text from the modal body"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "descriptionText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

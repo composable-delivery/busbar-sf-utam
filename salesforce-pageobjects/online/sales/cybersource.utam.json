@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Cybersource"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-online-sales/pageObjects/spinner",
+                "selector": {
+                    "css": "runtime_online_sales-spinner",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

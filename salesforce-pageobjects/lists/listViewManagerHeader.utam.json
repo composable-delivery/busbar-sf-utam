@@ -1,0 +1,170 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-list-view-manager-header.",
+            "Represents the list view manager header Lightning web component.",
+            "Access the list view name, list view picker, list view status, action bar, and button bar."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getAuraActionsContainer",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "auraActionsContainer"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the Aura actions container"
+                ],
+                "return": "ActionsContainer value"
+            }
+        },
+        {
+            "name": "navigateToListViewIdViaPicker",
+            "compose": [
+                {
+                    "element": "listViewPicker",
+                    "apply": "navigateToListViewId",
+                    "args": [
+                        {
+                            "type": "string",
+                            "name": "text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getListViewTitleViaPicker",
+            "compose": [
+                {
+                    "element": "listViewPicker",
+                    "apply": "getListViewTitle",
+                    "returnType": "string"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "title",
+                "public": true,
+                "type": [
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".listViewTitle, h2.slds-card__header-title span.slds-truncate"
+                }
+            },
+            {
+                "name": "listViewPicker",
+                "public": true,
+                "type": "utam-lists/pageObjects/listViewPicker",
+                "selector": {
+                    "css": "lst-list-view-picker"
+                }
+            },
+            {
+                "name": "subtitle",
+                "public": true,
+                "selector": {
+                    "css": "h2.slds-card__header-title span.slds-shrink-none"
+                }
+            },
+            {
+                "name": "actionsRibbon",
+                "public": true,
+                "type": "utam-action/pageObjects/actionsRibbon",
+                "selector": {
+                    "css": "runtime_platform_actions-actions-ribbon"
+                }
+            },
+            {
+                "name": "auraActionsContainer",
+                "type": "utam-force/pageObjects/actionsContainer",
+                "selector": {
+                    "css": ".forceActionsContainer"
+                }
+            },
+            {
+                "name": "buttonBar",
+                "type": "utam-force/pageObjects/listViewManagerButtonBar",
+                "public": true,
+                "selector": {
+                    "css": "force-list-view-manager-button-bar"
+                }
+            },
+            {
+                "name": "managerButtonBar",
+                "type": "utam-lists/pageObjects/listViewManagerButtonBar",
+                "public": true,
+                "selector": {
+                    "css": "lst-list-view-manager-button-bar"
+                }
+            },
+            {
+                "name": "pinButton",
+                "selector": {
+                    "css": "lst-list-view-manager-pin-button"
+                },
+                "type": "utam-lists/pageObjects/listViewManagerPinButton",
+                "description": "Represents the pin button to pin a list view",
+                "public": true
+            },
+            {
+                "name": "settingsMenu",
+                "type": "utam-lists/pageObjects/listViewManagerSettingsMenu",
+                "public": true,
+                "selector": {
+                    "css": "lst-list-view-manager-settings-menu"
+                }
+            },
+            {
+                "name": "displaySwitcher",
+                "type": "utam-lists/pageObjects/listViewManagerDisplaySwitcher",
+                "public": true,
+                "selector": {
+                    "css": "lst-list-view-manager-display-switcher"
+                }
+            },
+            {
+                "name": "statusInfo",
+                "type": "utam-force/pageObjects/listViewManagerStatusInfo",
+                "public": true,
+                "selector": {
+                    "css": "force-list-view-manager-status-info"
+                }
+            },
+            {
+                "name": "breadcrumbs",
+                "type": "utam-lists/pageObjects/breadcrumbs",
+                "public": true,
+                "selector": {
+                    "css": "lst-breadcrumbs"
+                }
+            },
+            {
+                "name": "searchBar",
+                "type": "utam-force/pageObjects/listViewManagerSearchBar",
+                "public": true,
+                "selector": {
+                    "css": "force-list-view-manager-search-bar"
+                }
+            }
+        ]
+    }
+}

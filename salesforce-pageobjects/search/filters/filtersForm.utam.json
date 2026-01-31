@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: search_filters-filters-form",
+            "Represents a filter form component to filter search results",
+            "Access the collection of filter inputs"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "filterInputs",
+                "type": "utam-search-filters/pageObjects/filterInput",
+                "public": true,
+                "selector": {
+                    "css": "search_filters-filter-input",
+                    "returnAll": true
+                }
+            }
+        ]
+    }
+}

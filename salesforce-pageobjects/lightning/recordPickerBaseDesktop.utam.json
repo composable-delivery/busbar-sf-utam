@@ -1,0 +1,137 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-picker-base-desktop",
+            "Represents the lightning-record-picker-base-desktop Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "groupedCombobox",
+                "public": false,
+                "type": "utam-lightning/pageObjects/groupedCombobox",
+                "selector": {
+                    "css": "lightning-grouped-combobox"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "typeText",
+            "description": {
+                "text": [
+                    "Type a text into the combobox input"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "typeText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputText",
+            "description": {
+                "text": [
+                    "Gets the input text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox",
+                    "returnType": "utam-lightning/pageObjects/groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "pickSuggestionItemByLabel",
+            "description": {
+                "text": [
+                    "Performs click action on the suggestion item based on the record label"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "pickItemByLabel",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getSelectionAsText",
+            "description": {
+                "text": [
+                    "Gets the label of the item selected in the input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "groupedCombobox"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputPillLabel",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Waits for the record picker to be ready"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "groupedCombobox",
+                                    "apply": "isDisabled",
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

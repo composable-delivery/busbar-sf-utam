@@ -1,0 +1,65 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceSplitViewListSelectableRecord",
+            "Access the options in the dropdown menu."
+        ]
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "css": ".forceSplitViewListSelectableRecord"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": [
+                    "clickable"
+                ],
+                "name": "listItemUsingDataRecordId",
+                "public": true,
+                "selector": {
+                    "css": ".slds-split-view__list-item-action[data-recordid='%s']",
+                    "args": [
+                        {
+                            "name": "dataRecordId",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": [
+                    "clickable"
+                ],
+                "name": "listOverdueItemUsingDataRecordId",
+                "public": true,
+                "selector": {
+                    "css": ".slds-split-view__list-item-action[data-recordid='%s'] .overdueTaskDate",
+                    "args": [
+                        {
+                            "name": "dataRecordId",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

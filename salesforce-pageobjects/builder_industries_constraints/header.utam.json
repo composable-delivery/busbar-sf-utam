@@ -1,0 +1,37 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-header",
+            "Constraint Builder header component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "icon",
+                "type": "utam-lightning/pageObjects/icon",
+                "selector": {
+                    "css": "lightning-icon"
+                }
+            },
+            {
+                "public": true,
+                "name": "title",
+                "type": [],
+                "selector": {
+                    "css": "h1"
+                }
+            },
+            {
+                "public": true,
+                "name": "helpContainer",
+                "type": "container",
+                "selector": {
+                    "css": "slot[name='help']"
+                }
+            }
+        ]
+    }
+}

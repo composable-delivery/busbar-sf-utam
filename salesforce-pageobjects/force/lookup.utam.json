@@ -1,0 +1,79 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-lookup.",
+            "Represents the force-lookup Lightning web component.",
+            "Get force-record-avatar, records-hoverable-link components and lookup link element, lookup element text"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLookupText",
+            "description": {
+                "text": [
+                    "Gets the lookup text"
+                ],
+                "return": "the lookup text"
+            },
+            "compose": [
+                {
+                    "element": "lookupText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-force/pageObjects/recordAvatar",
+                "name": "avatar",
+                "public": true,
+                "selector": {
+                    "css": "force-record-avatar"
+                }
+            },
+            {
+                "type": "container",
+                "name": "hoverLink",
+                "public": true,
+                "selector": {
+                    "css": "records-hoverable-link"
+                }
+            },
+            {
+                "public": true,
+                "nullable": true,
+                "type": [
+                    "clickable"
+                ],
+                "name": "lookupLink",
+                "selector": {
+                    "css": "force-lookup div a"
+                }
+            },
+            {
+                "public": true,
+                "nullable": true,
+                "type": [
+                    "clickable"
+                ],
+                "name": "lookupLinkAlternative",
+                "selector": {
+                    "css": "div a"
+                }
+            },
+            {
+                "nullable": true,
+                "name": "lookupText",
+                "type": [
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "div > span > slot"
+                }
+            }
+        ]
+    }
+}

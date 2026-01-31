@@ -1,0 +1,129 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: builder_industries_constraints-relation-modal",
+            "Constraint Builder relation modal component"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "modalHeader",
+                "type": "utam-lightning/pageObjects/modalHeader",
+                "selector": {
+                    "css": "lightning-modal-header"
+                }
+            },
+            {
+                "public": true,
+                "name": "modalBody",
+                "type": "utam-lightning/pageObjects/modalBody",
+                "selector": {
+                    "css": "lightning-modal-body"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "formTypeRadioGroup",
+                        "type": "utam-lightning/pageObjects/radioGroup",
+                        "selector": {
+                            "css": "lightning-radio-group[class*='formType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "dataTypeCombobox",
+                        "type": "utam-lightning/pageObjects/combobox",
+                        "selector": {
+                            "css": "lightning-combobox[class*='dataType']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "relationNameInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='relationName']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "minQuantityInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='minCardinality']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "maxQuantityInput",
+                        "type": "utam-lightning/pageObjects/input",
+                        "selector": {
+                            "css": "lightning-input[class*='maxCardinality']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "referenceLibraryPicker",
+                        "type": "utam-builder_industries_constraints/pageObjects/referenceLibraryPicker",
+                        "selector": {
+                            "css": "builder_industries_constraints-reference-library-picker"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "relationSelectionLabel",
+                        "type": [],
+                        "selector": {
+                            "css": "label"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "relationList",
+                        "type": "utam-builder_industries_constraints/pageObjects/relationList",
+                        "selector": {
+                            "css": "builder_industries_constraints-relation-list"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "noRelationsLabel",
+                        "type": [],
+                        "selector": {
+                            "css": "div[class='slds-p-top_medium']"
+                        }
+                    }
+                ]
+            },
+            {
+                "public": true,
+                "name": "modalFooter",
+                "type": "utam-lightning/pageObjects/modalFooter",
+                "selector": {
+                    "css": "lightning-modal-footer"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "cancelButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button[class='cancel']"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "saveButton",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button[class*='save']"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

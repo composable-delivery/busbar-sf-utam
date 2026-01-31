@@ -1,0 +1,30 @@
+{
+    "description": {
+        "text": [
+            "Selector: support-lwc-related-record.",
+            "Represents the support-lwc-related-record Lightning web component.",
+            "Access the lookup or the quick action layout."
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "Lightninglookup",
+                "public": true,
+                "type": "utam-lightning/pageObjects/lookup",
+                "selector": {
+                    "css": "lightning-lookup"
+                }
+            },
+            {
+                "type": "utam-action/pageObjects/lwcQuickActionLayout",
+                "name": "lwcQuickActionLayout",
+                "selector": {
+                    "css": "runtime_platform_actions-lwc-quick-action-layout"
+                },
+                "public": true
+            }
+        ]
+    }
+}

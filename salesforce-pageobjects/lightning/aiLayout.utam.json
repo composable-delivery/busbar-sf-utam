@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-ai-layout",
+            "Represents the lightning-ai-layout Lightning web component.",
+            "Get the diffent exposed slots exposed"
+        ]
+    },
+    "elements": [
+        {
+            "name": "startSlot",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='start'] > *"
+            },
+            "public": true
+        },
+        {
+            "name": "bodySlot",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='body'] > *"
+            },
+            "public": true
+        },
+        {
+            "name": "endSlot",
+            "type": "container",
+            "selector": {
+                "css": "slot[name='end'] > *"
+            },
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component represents a customizable icon component, where the icon rendered can be dynamically determined by the `symbol` property. It allows setting the icon variant and size, and it appends the SVG node to the icon element in the DOM upon rendering.",
+            "Selector: src-base-icon"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "iconElement",
+                "selector": {
+                    "css": "[part='icon']"
+                },
+                "description": "Represents the icon element where the SVG content is appended"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getIconElementVisibility",
+            "description": {
+                "text": [
+                    "Check if the icon element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconElement",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getIconElementPresence",
+            "description": {
+                "text": [
+                    "Check if the icon element is present in the DOM"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "iconElement",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

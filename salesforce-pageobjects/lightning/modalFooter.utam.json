@@ -1,0 +1,34 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-modal-footer",
+            "Represents the lightning-modal-footer Lightning web component.",
+            "Gets all footer contents and specific footer content by selector"
+        ]
+    },
+    "elements": [
+        {
+            "name": "contents",
+            "selector": {
+                "css": ":scope *",
+                "returnAll": true
+            },
+            "public": true
+        },
+        {
+            "name": "footerContent",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": "[data-footer-slot] %s",
+                "args": [
+                    {
+                        "name": "selector",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

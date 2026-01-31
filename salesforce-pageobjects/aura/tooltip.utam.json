@@ -1,0 +1,54 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .uiTooltip.",
+            "Represents the ui:tooltip Aura component.",
+            "Get tooltip text, or delete a list item."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTooltipText",
+            "description": {
+                "text": [
+                    "Get tooltip text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "tooltipTxt",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "deleteListItem",
+            "description": "Delete a list item",
+            "compose": [
+                {
+                    "element": "listItemDelete",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "listItemDelete",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": "a"
+            }
+        },
+        {
+            "name": "tooltipTxt",
+            "selector": {
+                "css": "span[role='tooltip']"
+            }
+        }
+    ]
+}

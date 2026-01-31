@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: records-record-layout-lookup.",
+            "Represents the records-record-layout-lookup Lightning web component.",
+            "Access the lookup."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "lookup",
+                "public": true,
+                "type": "utam-lightning/pageObjects/lookup",
+                "selector": {
+                    "css": "lightning-lookup"
+                }
+            }
+        ]
+    }
+}

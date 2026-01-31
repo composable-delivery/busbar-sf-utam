@@ -1,0 +1,64 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: InvoiceContactDetailsSection",
+            "Selector : runtime_online_sales-invoice-contact-details-section"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": false,
+                "name": "contactDetailsCard",
+                "type": "utam-lightning/pageObjects/card",
+                "selector": {
+                    "css": "lightning-card"
+                },
+                "elements": [
+                    {
+                        "public": true,
+                        "name": "companyName",
+                        "selector": {
+                            "css": ".companyTitle"
+                        }
+                    },
+                    {
+                        "public": true,
+                        "name": "formattedAddress",
+                        "type": "utam-lightning/pageObjects/formattedAddress",
+                        "selector": {
+                            "css": "lightning-formatted-address",
+                            "returnAll": true
+                        },
+                        "shadow": {
+                            "elements": [
+                                {
+                                    "public": true,
+                                    "name": "billingStreet",
+                                    "selector": {
+                                        "css": "div:nth-of-type(1)"
+                                    }
+                                },
+                                {
+                                    "public": true,
+                                    "name": "billingCity",
+                                    "selector": {
+                                        "css": "div:nth-of-type(2)"
+                                    }
+                                },
+                                {
+                                    "public": true,
+                                    "name": "billingCountry",
+                                    "selector": {
+                                        "css": "div:nth-of-type(3)"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

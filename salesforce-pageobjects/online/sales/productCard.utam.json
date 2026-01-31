@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: productCard"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "addButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='add_button']"
+                }
+            },
+            {
+                "public": true,
+                "name": "productDetailsLink",
+                "nullable": true,
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a[data-id='product_details_link']"
+                }
+            },
+            {
+                "public": true,
+                "name": "promoBanner",
+                "type": "utam-online-sales/pageObjects/promoBanner",
+                "selector": {
+                    "css": "runtime_online_sales-promo-banner"
+                }
+            },
+            {
+                "public": true,
+                "name": "compareEditionsButton",
+                "nullable": true,
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-testing-id='compare_editions']"
+                }
+            }
+        ]
+    }
+}

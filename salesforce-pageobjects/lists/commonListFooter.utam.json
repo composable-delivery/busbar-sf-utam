@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-common-list-footer.",
+            "Represents the footer element of the common list component.",
+            "Access the common list pagination component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "commonListPagination",
+                "type": "utam-lists/pageObjects/commonListPagination",
+                "public": true,
+                "selector": {
+                    "css": "lst-common-list-pagination"
+                }
+            }
+        ]
+    }
+}

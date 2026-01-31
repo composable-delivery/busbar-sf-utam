@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the generic search bar.",
+            "Do a search or clear the search bar."
+        ]
+    },
+    "interface": true,
+    "methods": [
+        {
+            "name": "typeToSearch",
+            "args": [
+                {
+                    "name": "itemToSearch",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "clearSearch"
+        }
+    ]
+}

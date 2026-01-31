@@ -1,0 +1,61 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the dialog for allowing camera access when logging into the app."
+        ]
+    },
+    "implements": "utam-sfsmobileapp/pageObjects/permissions/cameraAccess",
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone"
+            ]
+        }
+    ],
+    "root": true,
+    "selector": {
+        "classchain": "**/XCUIElementTypeOther[$type == 'XCUIElementTypeButton' AND name == 'Go to previous slide'$]"
+    },
+    "elements": [
+        {
+            "name": "enableCameraBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Enable Camera Access\"`]"
+            }
+        },
+        {
+            "name": "skipBtn",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "classchain": "**/XCUIElementTypeStaticText[`label == \"Skip for now\"`]"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "clickEnableCamera",
+            "compose": [
+                {
+                    "element": "enableCameraBtn",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSkip",
+            "compose": [
+                {
+                    "element": "skipBtn",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

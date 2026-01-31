@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_block_builder-schema-driven-content-editor",
+            "Represents the block builder schema-driven content editor component, providing",
+            "access to the Builder Framework property sheet UI."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "propertySheet",
+                "selector": {
+                    "css": "builder_framework-property-sheet-ui"
+                },
+                "type": "utam-builder-framework/pageObjects/propertySheetUi"
+            }
+        ]
+    }
+}

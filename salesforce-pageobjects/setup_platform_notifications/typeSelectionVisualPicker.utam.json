@@ -1,0 +1,37 @@
+{
+    "description": {
+        "text": [
+            "Represents the type selection picker, and exposes both the legacy and advanced input options."
+        ],
+        "author": "Salesforce"
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "legacyChoice",
+                "public": true,
+                "type": [
+                    "clickable",
+                    "editable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "input.legacy-choice"
+                }
+            },
+            {
+                "name": "advancedChoice",
+                "public": true,
+                "type": [
+                    "clickable",
+                    "editable",
+                    "actionable"
+                ],
+                "selector": {
+                    "css": "input.advanced-choice"
+                }
+            }
+        ]
+    }
+}

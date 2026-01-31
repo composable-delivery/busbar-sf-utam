@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-tree-grid",
+            "Represents the lightning-tree-grid Lightning web component.",
+            "Get the lightning-tree-grid component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "datatable",
+                "public": true,
+                "type": "utam-lightning/pageObjects/datatable",
+                "selector": {
+                    "css": "lightning-datatable"
+                }
+            }
+        ]
+    }
+}

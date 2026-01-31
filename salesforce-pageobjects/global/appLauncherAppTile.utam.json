@@ -1,0 +1,101 @@
+{
+    "type": [
+        "clickable"
+    ],
+    "description": {
+        "text": [
+            "Selector: one-app-launcher-app-tile.",
+            "Represents the one-app-launcher-app-tile Lightning web component.",
+            "Access the name, description text, or select a tile."
+        ],
+        "author": "Salesforce"
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Gets the name of the app tile"
+                ],
+                "return": "name of the app tile"
+            },
+            "name": "getName",
+            "compose": [
+                {
+                    "element": "appTile",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "data-name"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Selects the app tile"
+                ],
+                "return": "none"
+            },
+            "name": "select",
+            "compose": [
+                {
+                    "element": "appTile",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Gets the description of the app tile"
+                ],
+                "return": "the description of the app tile"
+            },
+            "name": "getDescription",
+            "compose": [
+                {
+                    "element": "tileDescription",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "appTile",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": ".slds-app-launcher__tile"
+                },
+                "elements": [
+                    {
+                        "name": "tileBody",
+                        "type": [
+                            "actionable"
+                        ],
+                        "selector": {
+                            "css": ".slds-app-launcher__tile-body"
+                        },
+                        "elements": [
+                            {
+                                "name": "tileDescription",
+                                "type": [
+                                    "actionable"
+                                ],
+                                "selector": {
+                                    "css": "p.al-app-tile-description"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

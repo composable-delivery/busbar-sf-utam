@@ -1,0 +1,29 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: es_brand-color-scheme-property-editor",
+            "Provides access to propertyEditorFlyout as well as lightning layout components"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "layout",
+                "type": "utam-lightning/pageObjects/layout",
+                "selector": {
+                    "css": "lightning-layout"
+                }
+            },
+            {
+                "public": true,
+                "name": "propertyEditorFlyout",
+                "type": "utam-es_property_editors/pageObjects/propertyEditorFlyout",
+                "selector": {
+                    "css": "es_property_editors-property-editor-flyout"
+                }
+            }
+        ]
+    }
+}

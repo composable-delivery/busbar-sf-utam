@@ -1,0 +1,122 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A button component styled as a card that displays a recommendation text and triggers an event when clicked or when the enter key is pressed.",
+            "Selector: src-recommendation-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recommendationCard",
+                "selector": {
+                    "css": "runtime_copilot_base-base-card.recommendation-card"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the card that can be interacted with by clicking or keyboard.",
+                "elements": [
+                    {
+                        "name": "recommendationCardContent",
+                        "selector": {
+                            "css": ".recommendation-card-body"
+                        },
+                        "description": "Represents the content area of the recommendation card.",
+                        "elements": [
+                            {
+                                "name": "recommendationText",
+                                "selector": {
+                                    "css": ".recommendation-text"
+                                },
+                                "description": "Represents the container for the recommendation text.",
+                                "elements": [
+                                    {
+                                        "name": "recommendationFormattedText",
+                                        "selector": {
+                                            "css": "lightning-formatted-rich-text"
+                                        },
+                                        "type": "utam-lightning/pageObjects/formattedRichText",
+                                        "description": "Represents the component that displays the formatted recommendation text.",
+                                        "public": true
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "sendIcon",
+                                "selector": {
+                                    "css": "runtime_copilot_base-base-icon.recommendation-send-icon"
+                                },
+                                "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                                "description": "Represents the send icon within the recommendation card.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRecommendationCard",
+            "description": {
+                "text": [
+                    "Simulate a click on the recommendation card"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recommendationCard",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "pressEnterOnRecommendationCard",
+            "description": {
+                "text": [
+                    "Simulate pressing the enter key on the recommendation card"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recommendationCard",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "isRecommendationCardContentVisible",
+            "description": {
+                "text": [
+                    "Check if the recommendation card content is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recommendationCardContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRecommendationText",
+            "description": {
+                "text": [
+                    "Get the text content of the recommendation text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recommendationText",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

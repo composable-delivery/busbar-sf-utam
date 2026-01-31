@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that dynamically imports and renders another LWC based on a given module descriptor and sets attributes on the dynamically loaded component.",
+            "Selector: experience_ui_gen_canvas-dynamic-canvas"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dynamicCanvasTile",
+                "selector": {
+                    "css": ".dynamicCanvas"
+                },
+                "type": "container",
+                "description": "Represents the dynamically loaded component container tile",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "meetingGoalsComposer",
+                "public": true,
+                "description": "The Meeting Goals Composer tile component",
+                "selector": {
+                    "css": "sales_gencanvas-tile-meeting-goals-composer"
+                },
+                "type": "utam-sales-gencanvas/pageObjects/tileMeetingGoalsComposer"
+            },
+            {
+                "name": "opportunityCardTile",
+                "public": true,
+                "description": "The Opportunity Card tile component",
+                "selector": {
+                    "css": "sales_gencanvas-tile-opportunity-card"
+                },
+                "type": "utam-sales-gencanvas/pageObjects/tileOpportunityCard"
+            }
+        ]
+    }
+}

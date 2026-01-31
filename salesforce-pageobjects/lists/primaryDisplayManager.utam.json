@@ -1,0 +1,78 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-primary-display-manager.",
+            "Represents the list primary display manager Lightning web component.",
+            "Access the empty states and primary displays."
+        ]
+    },
+    "methods": [
+        {
+            "name": "waitForEmptyState",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "emptyState"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "waitForLoad",
+                    "chain": true,
+                    "returnType": "utam-lists/pageObjects/emptyState"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Wait until the component shows an empty state."
+                ],
+                "return": "emptyState"
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/primaryDisplay",
+                "name": "display",
+                "public": true,
+                "selector": {
+                    "css": "lst-primary-display"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/emptyState",
+                "public": true,
+                "name": "emptyState",
+                "selector": {
+                    "css": "lst-empty-state"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/errorState",
+                "name": "errorState",
+                "public": true,
+                "selector": {
+                    "css": "lst-error-state"
+                }
+            },
+            {
+                "type": "utam-lightning/pageObjects/spinner",
+                "name": "spinner",
+                "public": true,
+                "nullable": true,
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

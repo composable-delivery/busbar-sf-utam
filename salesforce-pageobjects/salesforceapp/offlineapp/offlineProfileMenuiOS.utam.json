@@ -1,0 +1,82 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: profileMenu.",
+            "Represents the iOS offline profile menu view.",
+            "Switch apps, user accounts, logout."
+        ]
+    },
+    "implements": "utam-salesforceapp/pageObjects/offlineapp/offlineProfileMenu",
+    "root": true,
+    "platform": "native",
+    "profile": [
+        {
+            "platform": [
+                "ios_phone",
+                "ios_tablet"
+            ]
+        }
+    ],
+    "selector": {
+        "accessid": "profileMenu"
+    },
+    "elements": [
+        {
+            "name": "appLauncherCell",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "profileMenuCell_App Launcher"
+            }
+        },
+        {
+            "name": "changeAccountCell",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "profileMenuCell_Change Account"
+            }
+        },
+        {
+            "name": "logOutCell",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "accessid": "profileMenuCell_Log Out"
+            }
+        }
+    ],
+    "methods": [
+        {
+            "name": "openAppLauncher",
+            "compose": [
+                {
+                    "element": "appLauncherCell",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "changeAccount",
+            "compose": [
+                {
+                    "element": "changeAccountCell",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "logout",
+            "compose": [
+                {
+                    "element": "logOutCell",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

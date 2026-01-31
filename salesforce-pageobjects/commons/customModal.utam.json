@@ -1,0 +1,226 @@
+{
+    "description": {
+        "text": [
+            "Represents a lightning modal dialog with custom content"
+        ],
+        "author": "Salesforce"
+    },
+    "root": true,
+    "selector": {
+        "css": "lightning-overlay-container"
+    },
+    "beforeLoad": [
+        {
+            "apply": "waitFor",
+            "args": [
+                {
+                    "type": "function",
+                    "predicate": [
+                        {
+                            "element": "root",
+                            "apply": "isPresent"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "modalBaseContainer",
+                "selector": {
+                    "css": "lightning-modal-base"
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "public": true,
+                            "name": "closeButtonIcon",
+                            "type": "utam-lightning/pageObjects/buttonIcon",
+                            "selector": {
+                                "css": "lightning-button-icon"
+                            }
+                        },
+                        {
+                            "name": "customModalContent",
+                            "type": "container",
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-modal"
+                            }
+                        },
+                        {
+                            "name": "modal",
+                            "selector": {
+                                "css": "lightning-modal"
+                            },
+                            "shadow": {
+                                "elements": [
+                                    {
+                                        "name": "scopedModalContent",
+                                        "description": {
+                                            "text": [
+                                                "DO NOT USE THIS METHOD! If you find you must use this",
+                                                "method, it is a sign your lightning-modal is customized",
+                                                "incorrectly, and should be modified. Once all instances",
+                                                "of this method's use are eliminated, this method will be",
+                                                "removed."
+                                            ]
+                                        },
+                                        "public": true,
+                                        "type": "container",
+                                        "selector": {
+                                            "css": ":scope %s",
+                                            "args": [
+                                                {
+                                                    "name": "selector",
+                                                    "type": "string",
+                                                    "description": "Selector within the container"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "modalBaseContainerByIndex",
+                "selector": {
+                    "css": "lightning-modal-base:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                },
+                "nullable": true,
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "customModalContentByIndex",
+                            "type": "container",
+                            "public": true,
+                            "selector": {
+                                "css": "lightning-modal"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isModalOpen",
+            "description": {
+                "text": [
+                    "Gets a value indicating whether the modal is open"
+                ],
+                "return": "true if the modal is open; otherwise, false"
+            },
+            "compose": [
+                {
+                    "returnType": "boolean",
+                    "element": "modalBaseContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "waitForModal",
+            "description": {
+                "text": [
+                    "Waits for the modal to be open"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isModalOpen",
+                                    "matcher": {
+                                        "type": "isTrue"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "containsElement",
+                                    "element": "modalBaseContainer",
+                                    "args": [
+                                        {
+                                            "type": "locator",
+                                            "value": {
+                                                "css": "lightning-modal"
+                                            }
+                                        },
+                                        {
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "waitForModalToClose",
+            "description": {
+                "text": [
+                    "Waits for the modal to close"
+                ]
+            },
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "apply": "isModalOpen",
+                                    "matcher": {
+                                        "type": "isFalse"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clickCloseButtonIcon",
+            "description": "Clicks on the close button icon",
+            "compose": [
+                {
+                    "element": "closeButtonIcon",
+                    "apply": "clickButton"
+                }
+            ]
+        }
+    ]
+}

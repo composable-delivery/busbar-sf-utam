@@ -1,0 +1,156 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays feedback options with thumbs up and thumbs down buttons and allows users to submit feedback with reasons.",
+            "Selector: src-feedback-tooltip"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "thumbsUpButton",
+                "selector": {
+                    "css": "feeds_chat-base-tooltip-button[label=\"like\"]"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseTooltipButton",
+                "description": "Represents the thumbs up button for positive feedback.",
+                "public": true
+            },
+            {
+                "name": "thumbsDownButton",
+                "selector": {
+                    "css": "feeds_chat-base-tooltip-button[label=\"dislike\"]"
+                },
+                "type": "utam-feeds-chat/pageObjects/baseTooltipButton",
+                "description": "Represents the thumbs down button for negative feedback.",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "feedbackForm",
+                "selector": {
+                    "css": "form#lightning-primitive-form-test"
+                },
+                "description": "Represents the form for submitting feedback.",
+                "elements": [
+                    {
+                        "name": "feedbackCheckboxes",
+                        "selector": {
+                            "css": "lightning-primitive-checkbox[name=\"reason\"]",
+                            "returnAll": true
+                        },
+                        "description": "Represents the checkboxes for selecting feedback reasons.",
+                        "public": true
+                    },
+                    {
+                        "name": "feedbackTextarea",
+                        "selector": {
+                            "css": "lightning-primitive-textarea#textarea-1"
+                        },
+                        "description": "Represents the textarea for providing additional feedback.",
+                        "nullable": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "cancelButton",
+                "selector": {
+                    "css": ".cancel-feedback"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the cancel button to dismiss feedback."
+            },
+            {
+                "name": "submitButton",
+                "selector": {
+                    "css": ".submit-feedback"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the submit button to send feedback."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCancelFeedback",
+            "description": {
+                "text": [
+                    "Simulates a click on the cancel button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickSubmitFeedback",
+            "description": {
+                "text": [
+                    "Simulates a click on the submit button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isFeedbackFormVisible",
+            "description": {
+                "text": [
+                    "Checks if the feedback form is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "feedbackForm",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isCancelButtonVisible",
+            "description": {
+                "text": [
+                    "Checks if the cancel button is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "cancelButton",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isSubmitButtonVisible",
+            "description": {
+                "text": [
+                    "Checks if the submit button is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "submitButton",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,259 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This component seems to be a configuration for rendering various types of fields within a Salesforce Lightning Web Component. It includes templates and field mappings that dictate how different field types like lookups, text, checkboxes, numbers, picklists, and more should be displayed in a record list view. The component also handles dynamic transformations based on configuration such as form factor or object API name.",
+            "Selector: src-bundle_act_copilot-record-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "forceLookupComponent",
+                "selector": {
+                    "css": "force-lookup"
+                },
+                "description": "Represents a lookup field component with navigable and previewable attributes.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "lstFormattedTextComponent",
+                "selector": {
+                    "css": "lstFormattedText"
+                },
+                "description": "Represents a text field component that formats the display of text.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lstCheckboxComponent",
+                "selector": {
+                    "css": "lstCheckbox"
+                },
+                "description": "Represents a checkbox field component that is disabled and has a hidden label.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lightningFormattedNumberComponent",
+                "selector": {
+                    "css": "lightningFormattedNumber"
+                },
+                "description": "Represents a number field component that formats the display of numbers with specified fraction digits.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lightningFormattedDateTimeComponent",
+                "selector": {
+                    "css": "lightningFormattedDateTime"
+                },
+                "description": "Represents a date field component that formats the display of date and time.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lstBasicRichTextComponent",
+                "selector": {
+                    "css": "lstBasicRichText"
+                },
+                "description": "Represents a rich text field component with linkify attribute.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "formulaOutputFormulaHtmlComponent",
+                "selector": {
+                    "css": "formulaOutputFormulaHtml"
+                },
+                "description": "Represents a formula field component that displays HTML content.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lightningFormattedPhoneComponent",
+                "selector": {
+                    "css": "lightningFormattedPhone"
+                },
+                "description": "Represents a phone field component that formats the display of phone numbers.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lightningFormattedUrlComponent",
+                "selector": {
+                    "css": "lightningFormattedUrl"
+                },
+                "description": "Represents a URL field component that formats the display of URLs.",
+                "nullable": true,
+                "wait": true
+            },
+            {
+                "name": "lightningFormattedEmailComponent",
+                "selector": {
+                    "css": "lightningFormattedEmail"
+                },
+                "description": "Represents an email field component that formats the display of email addresses.",
+                "nullable": true,
+                "wait": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "verifyLstFormattedTextComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lstFormattedTextComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lstFormattedTextComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLstCheckboxComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lstCheckboxComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lstCheckboxComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLightningFormattedNumberComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lightningFormattedNumberComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lightningFormattedNumberComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLightningFormattedDateTimeComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lightningFormattedDateTimeComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lightningFormattedDateTimeComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLstBasicRichTextComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lstBasicRichTextComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lstBasicRichTextComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyFormulaOutputFormulaHtmlComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"formulaOutputFormulaHtmlComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "formulaOutputFormulaHtmlComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLightningFormattedPhoneComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lightningFormattedPhoneComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lightningFormattedPhoneComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLightningFormattedUrlComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lightningFormattedUrlComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lightningFormattedUrlComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyLightningFormattedEmailComponentPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"lightningFormattedEmailComponent\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "lightningFormattedEmailComponent",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

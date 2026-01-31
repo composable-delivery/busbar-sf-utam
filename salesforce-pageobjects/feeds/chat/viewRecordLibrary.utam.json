@@ -1,0 +1,9 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "This Lightning Web Component (LWC) seems to be a utility library that provides functions for processing and transforming record data for display in a UI, particularly in a list view. It includes functions to unenrich records, get massaged records, generate field information, extract metadata, and determine if a record is enriched. The component does not directly render a user interface but supports other components that do.",
+            "Selector: src-view-record-library"
+        ]
+    }
+}

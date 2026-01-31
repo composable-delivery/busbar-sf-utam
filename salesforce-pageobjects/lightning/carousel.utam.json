@@ -1,0 +1,112 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-carousel",
+            "Represents the lightning-carousel Lightning web component.",
+            "Click the scroll button to autoplay. Get all carousel panels",
+            "Click to autoplay carousel, Get all carousel images, and Wait for carousel autoplay to start"
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickAutoPlay",
+            "description": "Click to autoplay carousel panels",
+            "compose": [
+                {
+                    "element": "autoplay",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getCarouselImages",
+            "description": "Get all carousel images",
+            "compose": [
+                {
+                    "element": "carouselImages",
+                    "args": [
+                        {
+                            "type": "pageObject",
+                            "value": "utam-lightning/pageObjects/carouselImage"
+                        }
+                    ],
+                    "returnAll": true,
+                    "returnType": "utam-lightning/pageObjects/carouselImage"
+                }
+            ]
+        },
+        {
+            "name": "waitForAutoplay",
+            "description": "Wait for carousel autoplay to start",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "autoplay",
+                                    "apply": "isPresent",
+                                    "matcher": {
+                                        "type": "isTrue"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "name": "carouselImages",
+            "type": "container",
+            "selector": {
+                "css": "slot > lightning-carousel-image",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "carouselContainer",
+            "type": "container",
+            "public": true,
+            "selector": {
+                "css": ".slds-carousel__panels slot > *",
+                "returnAll": true
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "autoplay",
+                "selector": {
+                    "css": ".slds-carousel__autoplay button"
+                },
+                "type": "clickable",
+                "nullable": true,
+                "public": true
+            },
+            {
+                "name": "tabItems",
+                "selector": {
+                    "css": ".slds-carousel__indicator .slds-carousel__indicator-action",
+                    "returnAll": true
+                },
+                "type": "clickable",
+                "public": true
+            },
+            {
+                "name": "activeTabItem",
+                "selector": {
+                    "css": ".slds-carousel__indicator .slds-carousel__indicator-action.slds-is-active"
+                },
+                "type": "clickable",
+                "public": true
+            }
+        ]
+    }
+}

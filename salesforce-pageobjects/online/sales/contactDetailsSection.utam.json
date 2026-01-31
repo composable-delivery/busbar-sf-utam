@@ -1,0 +1,43 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: ContactDetailsSection"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "buttons",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "buttonByIndex",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "primaryBillingContact",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button[data-id='editPrimaryBillingContactButton']"
+                }
+            }
+        ]
+    }
+}

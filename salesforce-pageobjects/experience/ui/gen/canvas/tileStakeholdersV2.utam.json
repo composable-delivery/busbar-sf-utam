@@ -1,0 +1,171 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of stakeholders with their details and provides a loading indicator while data is being fetched.",
+            "Selector: experience_ui_gen_canvas-tile-stakeholders"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "stakeholderContainer",
+                "selector": {
+                    "css": ".stakeholder-container"
+                },
+                "description": "Represents the container for the stakeholders list.",
+                "elements": [
+                    {
+                        "name": "stakeholderEntry",
+                        "selector": {
+                            "css": "div.slds-border_bottom",
+                            "returnAll": true
+                        },
+                        "description": "Represents each stakeholder entry in the list.",
+                        "elements": [
+                            {
+                                "name": "stakeholderAvatar",
+                                "selector": {
+                                    "css": "lightning-avatar"
+                                },
+                                "type": "utam-lightning/pageObjects/avatar",
+                                "description": "Represents the avatar of a stakeholder.",
+                                "public": true
+                            },
+                            {
+                                "name": "stakeholderName",
+                                "selector": {
+                                    "css": "div.slds-text-heading_small"
+                                },
+                                "description": "Represents the name of a stakeholder."
+                            },
+                            {
+                                "name": "stakeholderTitle",
+                                "selector": {
+                                    "css": "p.slds-truncate"
+                                },
+                                "description": "Represents the title of a stakeholder."
+                            },
+                            {
+                                "name": "stakeholderPhone",
+                                "selector": {
+                                    "css": "lightning-formatted-phone"
+                                },
+                                "type": "utam-lightning/pageObjects/formattedPhone",
+                                "description": "Represents the phone number of a stakeholder.",
+                                "public": true
+                            },
+                            {
+                                "name": "stakeholderEmail",
+                                "selector": {
+                                    "css": "lightning-formatted-email"
+                                },
+                                "type": "utam-lightning/pageObjects/formattedEmail",
+                                "description": "Represents the email address of a stakeholder.",
+                                "public": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "noStakeholdersMessage",
+                "selector": {
+                    "css": ".slds-p-around_x-small"
+                },
+                "description": "Represents the message displayed when no stakeholders are found.",
+                "nullable": true
+            },
+            {
+                "name": "loadingSpinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                },
+                "type": "utam-lightning/pageObjects/spinner",
+                "description": "Represents the loading spinner shown while data is being fetched.",
+                "nullable": true,
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStakeholderContainerVisible",
+            "description": {
+                "text": [
+                    "Check if the stakeholder container is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "stakeholderContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getStakeholderNames",
+            "description": {
+                "text": [
+                    "Retrieve the names of all stakeholders"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stakeholderName",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getStakeholderTitles",
+            "description": {
+                "text": [
+                    "Retrieve the titles of all stakeholders"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "stakeholderTitle",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isNoStakeholdersMessageDisplayed",
+            "description": {
+                "text": [
+                    "Check if the no stakeholders message is displayed"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noStakeholdersMessage",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyNoStakeholdersMessagePresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"noStakeholdersMessage\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "noStakeholdersMessage",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Briefcase view.",
+            "Verify the downloaded objects."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "getStatus",
+            "returnType": "string"
+        },
+        {
+            "name": "getLastUpdate",
+            "returnType": "string"
+        },
+        {
+            "name": "getObjectList",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/offlineObjectList"
+        },
+        {
+            "name": "getDraftSummary",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/draftSummary"
+        },
+        {
+            "name": "hasDraftSummary",
+            "returnType": "boolean"
+        },
+        {
+            "name": "hasBriefcaseSearch",
+            "returnType": "boolean"
+        },
+        {
+            "name": "clickSearch"
+        }
+    ]
+}

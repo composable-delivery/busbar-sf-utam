@@ -1,0 +1,159 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A toggle button component that displays different icons based on the state of the button (pressed or not pressed). When clicked, it changes the state and updates the icon accordingly.",
+            "Selector: src-panel-button"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "c-panelbutton"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "toggleButton",
+                "selector": {
+                    "css": "button"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the toggle button that changes state when clicked.",
+                "elements": [
+                    {
+                        "name": "toggleButtonIcon",
+                        "selector": {
+                            "css": "lightning-icon"
+                        },
+                        "type": "utam-lightning/pageObjects/icon",
+                        "description": "Represents the icon within the toggle button, which changes based on the button's state.",
+                        "nullable": true,
+                        "public": true,
+                        "elements": [
+                            {
+                                "name": "closeIcon",
+                                "selector": {
+                                    "css": ".appdev-panel-close"
+                                },
+                                "description": "Represents the 'close' icon, visible when the button is in the pressed state.",
+                                "nullable": true
+                            },
+                            {
+                                "name": "rowsIcon",
+                                "selector": {
+                                    "css": ".slds-m-left_x-small:not(.appdev-panel-close)"
+                                },
+                                "description": "Represents the 'rows' icon, visible when the button is not pressed.",
+                                "nullable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickToggleButton",
+            "description": {
+                "text": [
+                    "Simulate a click action on the toggle button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "toggleButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isCloseIconVisible",
+            "description": {
+                "text": [
+                    "Check if the close icon is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "closeIcon",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isRowsIconVisible",
+            "description": {
+                "text": [
+                    "Check if the rows icon is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rowsIcon",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isToggleButtonPressed",
+            "description": {
+                "text": [
+                    "Return the state of the toggle button (pressed or not)"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "toggleButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "verifyCloseIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"closeIcon\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "closeIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRowsIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"rowsIcon\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "rowsIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

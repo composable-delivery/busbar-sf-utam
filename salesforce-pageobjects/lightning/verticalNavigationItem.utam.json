@@ -1,0 +1,64 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-vertical-navigation-item",
+            "Represents the lightning-vertical-navigation-item Lightning web component.",
+            "An item inside the vertical navigation"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "selector": {
+                    "css": "a"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isActive",
+            "description": "Check if item is marked as active",
+            "compose": [
+                {
+                    "apply": "getClassAttribute",
+                    "element": "root",
+                    "matcher": {
+                        "type": "stringContains",
+                        "args": [
+                            {
+                                "value": "slds-is-active"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "getText",
+            "description": "Get the text inside the item",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "Click on the item",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "click"
+                }
+            ]
+        }
+    ]
+}

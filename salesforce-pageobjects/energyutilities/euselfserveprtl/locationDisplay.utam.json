@@ -1,0 +1,36 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: page object name"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "inputRadio",
+                "type": "clickable",
+                "selector": {
+                    "css": "input[type='radio']"
+                }
+            },
+            {
+                "public": true,
+                "name": "labelContent",
+                "type": [],
+                "selector": {
+                    "css": "label"
+                }
+            },
+            {
+                "public": true,
+                "name": "divContent",
+                "type": [],
+                "selector": {
+                    "css": "div"
+                }
+            }
+        ]
+    }
+}

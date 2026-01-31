@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the scrollview that contains the 'All Items' search bar and item list.",
+            "Start a search or interact with the existing list of items."
+        ]
+    },
+    "root": true,
+    "interface": true,
+    "methods": [
+        {
+            "name": "getSearchBar",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/searchBar"
+        },
+        {
+            "name": "getNavItemsList",
+            "returnType": "utam-salesforceapp/pageObjects/navigation/navItemsList"
+        }
+    ]
+}

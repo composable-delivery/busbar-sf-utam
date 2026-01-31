@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .doubleEditorInput",
+            "Represents the visualEditor:doubleEditorInput Aura component.",
+            "Get input elements."
+        ]
+    },
+    "elements": [
+        {
+            "name": "input",
+            "type": [
+                "editable"
+            ],
+            "public": true,
+            "selector": {
+                "css": "input"
+            }
+        }
+    ]
+}

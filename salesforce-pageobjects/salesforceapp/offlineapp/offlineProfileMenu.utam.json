@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the offline profile menu fragment.",
+            "Switch apps, user accounts, logout."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "methods": [
+        {
+            "name": "openAppLauncher"
+        },
+        {
+            "name": "changeAccount"
+        },
+        {
+            "name": "logout"
+        }
+    ]
+}

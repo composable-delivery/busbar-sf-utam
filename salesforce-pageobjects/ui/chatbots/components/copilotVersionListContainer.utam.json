@@ -1,0 +1,45 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: gen_ai_agentbuilder-copilot-version-list-container",
+            "Contains a list of agents with versions turned on"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "gen_ai_agentbuilder-copilot-version-list-container"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "treeGrid",
+                "type": "utam-lightning/pageObjects/treeGrid",
+                "selector": {
+                    "css": "lightning-tree-grid"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "datatable",
+                            "selector": {
+                                "css": "lightning-datatable"
+                            },
+                            "type": "utam-lightning/pageObjects/datatable",
+                            "public": true
+                        }
+                    ]
+                }
+            },
+            {
+                "public": true,
+                "name": "spinner",
+                "type": "utam-lightning/pageObjects/spinner",
+                "selector": {
+                    "css": "lightning-spinner"
+                }
+            }
+        ]
+    }
+}

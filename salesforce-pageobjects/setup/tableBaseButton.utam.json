@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that represents a button within a table cell, allowing interaction and event handling for specific row and column keys.",
+            "Selector: src-table-base-button"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "tableBaseButton",
+                "selector": {
+                    "css": "lightning-button"
+                },
+                "type": "utam-lightning/pageObjects/button",
+                "description": "Represents the button element that triggers the \"privatecellbuttonclicked\" event when clicked",
+                "public": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,114 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a loader with a shimmer effect and allows optional customization via a slot.",
+            "Selector: src-agentic-setup-loader"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "loaderContainer",
+                "selector": {
+                    "css": ".loader-container"
+                },
+                "description": "Represents the root container for the loader, which contains the slot for custom content or default skeleton bars",
+                "elements": [
+                    {
+                        "name": "defaultSlotContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the default or custom content provided inside the slot",
+                        "public": true
+                    },
+                    {
+                        "name": "skeletonBar1",
+                        "selector": {
+                            "css": ".skeleton-bar.skeleton-bar-1"
+                        },
+                        "description": "Represents the first skeleton bar in the default slot content"
+                    },
+                    {
+                        "name": "skeletonBar2",
+                        "selector": {
+                            "css": ".skeleton-bar.skeleton-bar-2"
+                        },
+                        "description": "Represents the second skeleton bar in the default slot content"
+                    },
+                    {
+                        "name": "skeletonBar3",
+                        "selector": {
+                            "css": ".skeleton-bar.skeleton-bar-3"
+                        },
+                        "description": "Represents the third skeleton bar in the default slot content"
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isLoaderContainerVisible",
+            "description": {
+                "text": [
+                    "Check that loader container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "loaderContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifySkeletonBar1Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"skeletonBar1\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "skeletonBar1",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifySkeletonBar2Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"skeletonBar2\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "skeletonBar2",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifySkeletonBar3Presence",
+            "description": {
+                "text": [
+                    "Returns true if element \"skeletonBar3\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "skeletonBar3",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

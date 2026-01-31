@@ -1,0 +1,70 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Robot Page Header"
+        ]
+    },
+    "elements": [
+        {
+            "public": true,
+            "name": "robotDetailsInstallStep",
+            "type": "utam-runtime_rpa/pageObjects/robotDetailsInstallStep",
+            "selector": {
+                "css": "runtime_rpa-robot-details-install-step"
+            }
+        },
+        {
+            "public": true,
+            "name": "robotDetailsConfigureStep",
+            "type": "utam-runtime_rpa/pageObjects/robotDetailsConfigureStep",
+            "selector": {
+                "css": "runtime_rpa-robot-details-configure-step"
+            }
+        },
+        {
+            "public": true,
+            "name": "robotForm",
+            "type": "utam-runtime_rpa/pageObjects/robotForm",
+            "selector": {
+                "css": "runtime_rpa-robot-form"
+            }
+        },
+        {
+            "public": true,
+            "name": "buttons",
+            "type": "utam-lightning/pageObjects/button",
+            "selector": {
+                "css": "lightning-button",
+                "returnAll": true
+            }
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "breadcrumbs",
+                "type": "utam-lightning/pageObjects/breadcrumbs",
+                "selector": {
+                    "css": "lightning-breadcrumbs",
+                    "returnAll": true
+                }
+            },
+            {
+                "public": true,
+                "name": "breadcrumbByIndex",
+                "type": "utam-lightning/pageObjects/breadcrumb",
+                "selector": {
+                    "css": "lightning-breadcrumb:nth-of-type(%d)",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

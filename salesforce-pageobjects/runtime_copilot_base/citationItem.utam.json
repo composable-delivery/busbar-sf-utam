@@ -1,0 +1,207 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a citation with an optional icon, link, and type based on whether it is a record or a link. It can handle clicks on the link.",
+            "Selector: runtime_copilot_base-citation-item"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "citeContainer",
+                "selector": {
+                    "css": "cite.cite-item"
+                },
+                "description": "Represents the container for the entire citation item.",
+                "nullable": true,
+                "wait": true,
+                "elements": [
+                    {
+                        "name": "recordAvatar",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-avatar.record-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseAvatar",
+                        "description": "Represents avatar icon for a record type citation.",
+                        "nullable": true,
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "recordLink",
+                        "selector": {
+                            "css": "a.ellipsis-text"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the clickable link for a record type citation.",
+                        "wait": true
+                    },
+                    {
+                        "name": "recordTypeLabel",
+                        "selector": {
+                            "css": "span.citation-type"
+                        },
+                        "description": "Represents the label indicating the type of the record.",
+                        "nullable": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "webLinkIcon",
+                        "selector": {
+                            "css": "runtime_copilot_base-base-icon.web-link-icon"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                        "description": "Represents the icon for a web link citation.",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "linkWithIcon",
+                        "selector": {
+                            "css": "a.ellipsis-text"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the clickable link for a web link citation.",
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "newWindowIcon",
+                                "selector": {
+                                    "css": "runtime_copilot_base-base-icon.new-window-icon"
+                                },
+                                "type": "utam-runtime_copilot_base/pageObjects/baseIcon",
+                                "description": "Represents the icon indicating the link opens in a new window.",
+                                "public": true,
+                                "wait": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "externalLinkLabel",
+                        "selector": {
+                            "css": "span.citation-type"
+                        },
+                        "description": "Represents the label for an external link citation.",
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickRecordLink",
+            "description": {
+                "text": [
+                    "Simulate a click on the record link"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordLink",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickLinkWithIcon",
+            "description": {
+                "text": [
+                    "Simulate a click on the web link with icon"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "linkWithIcon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "getCiteContainerVisibility",
+            "description": {
+                "text": [
+                    "Check if the citation container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "citeContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getRecordTypeLabelText",
+            "description": {
+                "text": [
+                    "Retrieve the text of the record type label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordTypeLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getExternalLinkLabelText",
+            "description": {
+                "text": [
+                    "Retrieve the text of the external link label"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "externalLinkLabel",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "verifyCiteContainerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"citeContainer\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "citeContainer",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyRecordTypeLabelPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recordTypeLabel\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordTypeLabel",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

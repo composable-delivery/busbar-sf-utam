@@ -1,0 +1,103 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .runtime_sales_pathassistantPathAssistant",
+            "Represents the path assistant collapsible drawer.",
+            "You can access the path tabset and pathbody."
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": ".runtime_sales_pathassistantPathAssistant"
+    },
+    "methods": [
+        {
+            "description": {
+                "text": [
+                    "Check if the drawer is expanded"
+                ],
+                "return": "boolean value"
+            },
+            "name": "isDrawerExpanded",
+            "compose": [
+                {
+                    "element": "buttonWithTitle",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "aria-expanded"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": {
+                "text": [
+                    "Wait and get pathAssistantTabSet"
+                ],
+                "return": "pathAssistantTabSet"
+            },
+            "name": "getPathAssistantTabSet",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "pathAssistantTabSet"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "buttonWithTitle",
+            "public": true,
+            "selector": {
+                "css": ".slds-button[title='%s']",
+                "args": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "pathAssistantTabSet",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantTabSet",
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantTabSet"
+            }
+        },
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "completeStepActionButton",
+            "public": true,
+            "selector": {
+                "css": "button.slds-path__mark-complete"
+            }
+        },
+        {
+            "name": "pathAssistantFields",
+            "type": "utam-runtime_sales/pageObjects/pathAssistantBody",
+            "public": true,
+            "selector": {
+                "css": ".runtime_sales_pathassistantPathAssistantBody"
+            }
+        }
+    ]
+}

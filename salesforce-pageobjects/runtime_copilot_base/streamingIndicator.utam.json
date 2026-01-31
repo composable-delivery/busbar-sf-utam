@@ -1,0 +1,84 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a streaming-based progress indicator message and allows interaction with actions defined in the component.",
+            "Selector: src-streaming-indicator"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "statusContainer",
+                "selector": {
+                    "css": ".status-container"
+                },
+                "description": "Represents the container for the status indicator",
+                "elements": [
+                    {
+                        "name": "streamStatus",
+                        "selector": {
+                            "css": "runtime_copilot_base-stream-status.active-step"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/streamStatus",
+                        "description": "Represents the custom status indicator element",
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            },
+            {
+                "name": "footerArea",
+                "selector": {
+                    "css": ".status-typing_footer"
+                },
+                "description": "Represents the footer area that contains actions",
+                "elements": [
+                    {
+                        "name": "viewActionComponent",
+                        "selector": {
+                            "css": "runtime_copilot_base-view-component"
+                        },
+                        "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                        "description": "Represents the view component for actions",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isStatusContainerVisible",
+            "description": {
+                "text": [
+                    "Check that the status container is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "statusContainer",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isFooterAreaVisible",
+            "description": {
+                "text": [
+                    "Check that the footer area is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "footerArea",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

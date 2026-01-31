@@ -1,0 +1,24 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the page containing an aloha frame"
+        ]
+    },
+    "root": true,
+    "selector": {
+        "css": "force-aloha-page"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "alohaPageFrame",
+                "public": true,
+                "type": "frame",
+                "selector": {
+                    "css": "iframe[name^=vfFrameId]"
+                }
+            }
+        ]
+    }
+}

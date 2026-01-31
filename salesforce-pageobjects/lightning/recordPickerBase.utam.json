@@ -1,0 +1,127 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-record-picker-base",
+            "Represents the lightning-record-picker-base Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "recordPickerBaseDesktop",
+                "public": false,
+                "type": "utam-lightning/pageObjects/recordPickerBaseDesktop",
+                "selector": {
+                    "css": "lightning-record-picker-base-desktop"
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "typeText",
+            "description": {
+                "text": [
+                    "Type a text into the combobox input"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBaseDesktop"
+                },
+                {
+                    "chain": true,
+                    "apply": "typeText",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getInputText",
+            "description": {
+                "text": [
+                    "Gets the input text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBaseDesktop",
+                    "returnType": "utam-lightning/pageObjects/recordPickerBaseDesktop"
+                },
+                {
+                    "chain": true,
+                    "apply": "getInputText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "pickSuggestionItemByLabel",
+            "description": {
+                "text": [
+                    "Performs click action on the suggestion item based on the record label"
+                ],
+                "return": "none"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBaseDesktop"
+                },
+                {
+                    "chain": true,
+                    "apply": "pickSuggestionItemByLabel",
+                    "args": [
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getSelectionAsText",
+            "description": {
+                "text": [
+                    "Gets the label of the item selected in the input"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBaseDesktop"
+                },
+                {
+                    "chain": true,
+                    "apply": "getSelectionAsText",
+                    "returnType": "string"
+                }
+            ]
+        },
+        {
+            "name": "waitUntilReady",
+            "description": {
+                "text": [
+                    "Waits for the record picker to be ready"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "recordPickerBaseDesktop"
+                },
+                {
+                    "chain": true,
+                    "apply": "waitUntilReady"
+                }
+            ]
+        }
+    ]
+}

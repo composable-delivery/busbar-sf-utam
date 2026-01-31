@@ -1,0 +1,75 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-empty-state",
+            "Represents the lightning-empty-state Lightning web component.",
+            "Get the title, description, and illustration."
+        ]
+    },
+    "exposeRootElement": true,
+    "shadow": {
+        "elements": [
+            {
+                "name": "illustration",
+                "selector": {
+                    "css": "lightning-illustration"
+                },
+                "type": "utam-lightning/pageObjects/illustration",
+                "public": true
+            },
+            {
+                "name": "title",
+                "selector": {
+                    "css": ".slds-illustration-title"
+                }
+            },
+            {
+                "name": "description",
+                "selector": {
+                    "css": "p"
+                }
+            },
+            {
+                "name": "ctaSlot",
+                "selector": {
+                    "css": "slot[name='cta'] > *"
+                },
+                "type": "container",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getTitle",
+            "description": {
+                "text": [
+                    "Get the title of the empty state"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "title",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getDescription",
+            "description": {
+                "text": [
+                    "Get the description of the empty state"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "description",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

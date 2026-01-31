@@ -1,0 +1,93 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component designed to display non streamable messages. It can render a child component based on the provided component definition and allows interaction with slots.",
+            "Selector: src-message-observer"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewRecordList",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-list"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordList",
+                "nullable": true,
+                "public": true,
+                "wait": true
+            },
+            {
+                "name": "viewRecordId",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-id"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordId",
+                "description": "Represents the view record ID present under the message Observer component",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "viewRecordForm",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-form"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordForm",
+                "description": "Represents the view record form present under the message Observer component",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "viewRecordIdList",
+                "selector": {
+                    "css": "runtime_copilot_base-view-record-id-list"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewRecordIdList",
+                "description": "Represents the view recordId List present under the message Observer component",
+                "wait": true,
+                "public": true
+            },
+            {
+                "name": "shadowDynamicComponent",
+                "selector": {
+                    "css": "[data-streaming-component]"
+                },
+                "type": "container",
+                "description": "Represents the dynamic component which is loaded based on the component definition.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    },
+    "elements": [
+        {
+            "name": "slotContainer",
+            "selector": {
+                "css": ":scope > *:first-child"
+            },
+            "type": "container",
+            "description": "Represents the default slot for the component which may contain a dynamic component.",
+            "public": true
+        },
+        {
+            "name": "baseMarkdown",
+            "selector": {
+                "css": "runtime_copilot_base-base-markdown-text"
+            },
+            "type": "utam-runtime_copilot_base/pageObjects/baseMarkdownText",
+            "public": true,
+            "wait": true
+        },
+        {
+            "name": "dynamicComponent",
+            "selector": {
+                "css": "[data-streaming-component]"
+            },
+            "type": "container",
+            "description": "Represents the dynamic component which is loaded based on the component definition.",
+            "wait": true,
+            "public": true
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-template-list-item-factory.",
+            "Represents the template list item factory Lightning web component.",
+            "Access supported card components and row-level actions."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "type": "utam-lists/pageObjects/relatedPreviewCard",
+                "name": "relatedPreviewCard",
+                "public": true,
+                "selector": {
+                    "css": "lst-related-preview-card"
+                }
+            },
+            {
+                "type": "utam-lists/pageObjects/historyCard",
+                "name": "historyCard",
+                "public": true,
+                "selector": {
+                    "css": "lst-history-card"
+                }
+            },
+            {
+                "name": "templateListField",
+                "selector": {
+                    "css": "lst-template-list-field[slot='rowLevelActions']"
+                },
+                "shadow": {
+                    "elements": [
+                        {
+                            "name": "listViewRowLevelAction",
+                            "selector": {
+                                "css": "lst-list-view-row-level-action"
+                            },
+                            "public": true,
+                            "type": "utam-lists/pageObjects/listViewRowLevelAction"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "container",
+                "public": true,
+                "name": "container"
+            }
+        ]
+    }
+}

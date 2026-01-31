@@ -1,0 +1,65 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .recordsRecordShare.shareModalContent.",
+            "Represents the records:shareModalContent Aura component.",
+            "Get advancedEditToggle, autocompleteWrapper, lightning-picklist, force-entity-share-datatable and advancedViewManageTrigger components."
+        ]
+    },
+    "elements": [
+        {
+            "type": [
+                "clickable"
+            ],
+            "name": "editButton",
+            "public": true,
+            "selector": {
+                "css": ".advancedEditToggle"
+            }
+        },
+        {
+            "type": "utam-forcesearch/pageObjects/inputLookupDesktop",
+            "name": "inputLookupDesktop",
+            "public": true,
+            "selector": {
+                "css": ".autocompleteWrapper"
+            }
+        },
+        {
+            "type": "utam-lightning/pageObjects/picklist",
+            "name": "picklist",
+            "public": true,
+            "selector": {
+                "css": "lightning-picklist",
+                "returnAll": true
+            }
+        },
+        {
+            "name": "entityShareAdvanced",
+            "selector": {
+                "css": "force-entity-share-advanced"
+            },
+            "shadow": {
+                "elements": [
+                    {
+                        "name": "entityShareDatatable",
+                        "type": "utam-lightning/pageObjects/datatable",
+                        "selector": {
+                            "css": "force-entity-share-datatable"
+                        },
+                        "public": true
+                    },
+                    {
+                        "name": "viewShareHierarchyTrigger",
+                        "type": "utam-lightning/pageObjects/button",
+                        "selector": {
+                            "css": "lightning-button.advancedViewManageTrigger"
+                        },
+                        "public": true
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: force-owner-lookup.",
+            "Represents the force-owner-lookup Lightning web component.",
+            "Get the force-lookup component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "outputLookup",
+                "public": true,
+                "type": "utam-force/pageObjects/lookup",
+                "selector": {
+                    "css": "force-lookup"
+                }
+            },
+            {
+                "name": "changeOwnerIcon",
+                "public": true,
+                "type": "utam-lightning/pageObjects/buttonIcon",
+                "selector": {
+                    "css": "lightning-button-icon"
+                }
+            }
+        ]
+    }
+}

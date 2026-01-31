@@ -1,0 +1,112 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a list of records in read-only mode using a card layout.",
+            "Selector:runtime_copilot_base-view-record-id-list"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "baseCard",
+                "selector": {
+                    "css": "runtime_copilot_base-base-card"
+                },
+                "description": "Represents the card layout that contains the list of records",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "recordItemList",
+                        "selector": {
+                            "css": "ul"
+                        },
+                        "description": "Represents the unordered list that serves as a container for the list items",
+                        "elements": [
+                            {
+                                "name": "recordItems",
+                                "selector": {
+                                    "css": "li.record-item",
+                                    "returnAll": true
+                                },
+                                "description": "Represents the individual list items for each record"
+                            },
+                            {
+                                "name": "recordItemByIndex",
+                                "selector": {
+                                    "css": "li.record-item:nth-of-type(%d)",
+                                    "args": [
+                                        {
+                                            "name": "index",
+                                            "type": "number",
+                                            "description": "element index starting from 1"
+                                        }
+                                    ]
+                                },
+                                "description": "Represents the individual list items for each record",
+                                "elements": [
+                                    {
+                                        "name": "recordForms",
+                                        "selector": {
+                                            "css": "runtime_copilot_base-base-record-form"
+                                        },
+                                        "type": "utam-runtime_copilot_base/pageObjects/baseRecordForm",
+                                        "description": "Represents the read-only form for each individual record",
+                                        "public": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isRecordListVisible",
+            "description": {
+                "text": [
+                    "Check if the record list is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordItemList",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "areRecordItemsPresent",
+            "description": {
+                "text": [
+                    "Check if record items are present in the list"
+                ],
+                "return": "boolean[]"
+            },
+            "compose": [
+                {
+                    "element": "recordItems",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyRecordItemByIndexPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"recordItemByIndex\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "recordItemByIndex",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}

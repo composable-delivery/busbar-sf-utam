@@ -1,0 +1,55 @@
+{
+    "description": {
+        "text": [
+            "Selector: lightning-external-link",
+            "Represents external-link component Lightning web component.",
+            "Get link element and its related attributes"
+        ],
+        "author": "Salesforce"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "link",
+                "selector": {
+                    "css": "forcehelp-link-to-non-salesforce-resource"
+                },
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getText",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "getTitle",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getTitle"
+                }
+            ]
+        },
+        {
+            "name": "getExternalLink",
+            "compose": [
+                {
+                    "element": "link",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "value": "href"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

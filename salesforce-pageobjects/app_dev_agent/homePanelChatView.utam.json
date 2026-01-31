@@ -1,0 +1,50 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that serves as a chat interface for the copilot panel, managing connection state and providing functionality for sending messages.",
+            "Selector: app_dev_agent-home-panel-chat-view"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "copilotLayout",
+                "selector": {
+                    "css": "runtime_copilot-agentic-layout"
+                },
+                "type": "utam-runtime_copilot/pageObjects/agenticLayout",
+                "description": "Represents the layout of the agent panel.",
+                "public": true,
+                "elements": [
+                    {
+                        "name": "messageInputSlot",
+                        "selector": {
+                            "css": "[slot='input']"
+                        },
+                        "type": "container",
+                        "description": "Represents the slot for the message input component.",
+                        "public": true
+                    },
+                    {
+                        "name": "chatInput",
+                        "selector": {
+                            "css": "app_dev_agent-panel-message-input"
+                        },
+                        "type": "utam-app_dev_agent/pageObjects/panelMessageInput",
+                        "description": "Represents the message input component for sending chat messages.",
+                        "public": true
+                    },
+                    {
+                        "name": "statusPanel",
+                        "selector": {
+                            "css": "app_dev_agent-status-panel"
+                        },
+                        "type": "container",
+                        "description": "Represents the status panel component"
+                    }
+                ]
+            }
+        ]
+    }
+}

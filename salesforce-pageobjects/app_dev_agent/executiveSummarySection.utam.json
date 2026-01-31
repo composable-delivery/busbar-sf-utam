@@ -1,0 +1,152 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays the executive summary section with a skeleton loader while loading, and plays an animation when the summary content changes.",
+            "Selector: app_dev_agent-executive-summary-section"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "markdownSectionTitle",
+                "selector": {
+                    "css": ".markdown-section-title"
+                },
+                "description": "Represents the section title area",
+                "elements": [
+                    {
+                        "name": "markdownHeading",
+                        "selector": {
+                            "css": ".markdown-heading"
+                        },
+                        "description": "Represents the heading of the section"
+                    }
+                ]
+            },
+            {
+                "name": "markdownContent",
+                "selector": {
+                    "css": ".markdown-content"
+                },
+                "description": "Represents the main content area",
+                "elements": [
+                    {
+                        "name": "skeletonLoader",
+                        "selector": {
+                            "css": "app_dev_agent-skeleton"
+                        },
+                        "type": "utam/app_dev_agent/pageObjects/skeleton",
+                        "description": "Represents the skeleton loader component",
+                        "nullable": true,
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "contentWrapper",
+                        "selector": {
+                            "css": ".content-wrapper"
+                        },
+                        "type": "actionable",
+                        "description": "Represents the content wrapper with animation",
+                        "nullable": true,
+                        "wait": true
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isSectionTitleVisible",
+            "description": {
+                "text": [
+                    "Check that section title area is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownSectionTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "getSectionTitleText",
+            "description": {
+                "text": [
+                    "Get text from section title heading"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "markdownHeading",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "isContentAreaVisible",
+            "description": {
+                "text": [
+                    "Check that main content area is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "markdownContent",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "focusOnContentWrapper",
+            "description": {
+                "text": [
+                    "Focus on the content wrapper"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "contentWrapper",
+                    "apply": "focus"
+                }
+            ]
+        },
+        {
+            "name": "isContentWrapperVisible",
+            "description": {
+                "text": [
+                    "Check that content wrapper is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "contentWrapper",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyContentWrapperPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"contentWrapper\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "contentWrapper",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

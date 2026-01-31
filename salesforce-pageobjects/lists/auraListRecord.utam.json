@@ -1,0 +1,117 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: .forceListRecord.forceRecordLayout.",
+            "Represents the record layout for a list record.",
+            "Access labels, fields, and open the record."
+        ]
+    },
+    "methods": [
+        {
+            "name": "getPrimaryFieldLabel",
+            "compose": [
+                {
+                    "element": "primaryFieldWithLabel",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the primary field label"
+                ],
+                "return": "String value"
+            }
+        },
+        {
+            "name": "openRecord",
+            "compose": [
+                {
+                    "element": "primaryFieldWithLabel",
+                    "apply": "click"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Open the list record."
+                ],
+                "return": "RecordHome"
+            }
+        },
+        {
+            "name": "getSecondaryField",
+            "compose": [
+                {
+                    "element": "secondaryFieldWithLabel",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the secondary field"
+                ],
+                "return": "String value"
+            }
+        },
+        {
+            "name": "getSecondaryFieldLabels",
+            "compose": [
+                {
+                    "element": "secondaryFields",
+                    "apply": "getText"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Get the secondary field labels"
+                ],
+                "return": "List of String values"
+            }
+        },
+        {
+            "name": "hasSecondaryField",
+            "compose": [
+                {
+                    "element": "secondaryFieldWithLabel",
+                    "apply": "isPresent"
+                }
+            ],
+            "description": {
+                "text": [
+                    "Returns a boolean value indicating whether the secondary field exists"
+                ],
+                "return": "boolean value"
+            }
+        }
+    ],
+    "elements": [
+        {
+            "name": "primaryFieldWithLabel",
+            "type": [
+                "clickable"
+            ],
+            "selector": {
+                "css": ".itemTitle"
+            }
+        },
+        {
+            "name": "secondaryFieldWithLabel",
+            "selector": {
+                "css": "div.slds-item_label[title='%s']+div",
+                "args": [
+                    {
+                        "name": "secondaryFieldLabel",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "secondaryFields",
+            "selector": {
+                "css": "div.slds-item_label",
+                "returnAll": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,76 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A Lightning Web Component that provides a reset button to reset the Copilot session. The reset functionality can be enabled or disabled based on the state of the application.",
+            "Selector: src-reset-session"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "resetButton",
+                "selector": {
+                    "css": "lightning-button-icon[data-button]"
+                },
+                "type": [
+                    "actionable",
+                    "clickable"
+                ],
+                "description": "Represents the reset button which users can interact with to reset the Copilot session."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickResetButton",
+            "description": {
+                "text": [
+                    "Simulate a click on the reset button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "resetButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isResetButtonDisabled",
+            "description": {
+                "text": [
+                    "Check if the reset button is disabled"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "resetButton",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "isResetButtonVisible",
+            "description": {
+                "text": [
+                    "Check if the reset button is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "resetButton",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

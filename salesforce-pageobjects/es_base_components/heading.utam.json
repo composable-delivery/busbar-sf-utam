@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Heading element in the CMS builder runtime"
+        ]
+    },
+    "methods": [
+        {
+            "name": "getHeadingText",
+            "description": "Returns the text value of the heading element",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "getText"
+                }
+            ]
+        }
+    ]
+}

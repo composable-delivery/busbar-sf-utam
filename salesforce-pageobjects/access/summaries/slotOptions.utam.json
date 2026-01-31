@@ -1,0 +1,51 @@
+{
+    "selector": {
+        "css": "setup_access_summaries-slot-options"
+    },
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: setup_access_summaries-slot-options."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "nullable": true,
+                "name": "addButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button.add-button"
+                }
+            },
+            {
+                "public": true,
+                "nullable": true,
+                "name": "removeButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button.remove-button"
+                }
+            },
+            {
+                "public": true,
+                "nullable": true,
+                "name": "editButton",
+                "type": "utam-lightning/pageObjects/button",
+                "selector": {
+                    "css": "lightning-button.edit-button"
+                }
+            },
+            {
+                "public": true,
+                "name": "flsSelector",
+                "type": "utam-access-summaries/pageObjects/flsObjectSelector",
+                "selector": {
+                    "css": "setup_access_summaries-fls-object-selector"
+                }
+            }
+        ]
+    }
+}

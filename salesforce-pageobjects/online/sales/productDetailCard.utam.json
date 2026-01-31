@@ -1,0 +1,20 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Page Object: Product detail card page object"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "public": true,
+                "name": "promoBanner",
+                "type": "utam-online-sales/pageObjects/promoBanner",
+                "selector": {
+                    "css": "runtime_online_sales-promo-banner"
+                }
+            }
+        ]
+    }
+}

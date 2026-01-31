@@ -1,0 +1,45 @@
+{
+    "root": true,
+    "selector": {
+        "css": ".container"
+    },
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: commerce_v2-left-nav",
+            "Represents the commerce_v2-left-nav Lightning web component."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "leftNavItem",
+                "type": "utam-commerce_console/pageObjects/leftNavItem",
+                "selector": {
+                    "css": "commerce_v2-left-nav-item",
+                    "returnAll": true
+                }
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getLeftNavItem",
+            "compose": [
+                {
+                    "apply": "waitFor",
+                    "args": [
+                        {
+                            "type": "function",
+                            "predicate": [
+                                {
+                                    "element": "leftNavItem"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

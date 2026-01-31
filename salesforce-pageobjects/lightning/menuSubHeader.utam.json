@@ -1,0 +1,49 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lightning-menu-sub-header",
+            "Represents the lightning-menu-sub-header Lightning web component.",
+            "Get the header text, Click the lightning-menu-sub-header and Get sub header"
+        ]
+    },
+    "type": "clickable",
+    "methods": [
+        {
+            "name": "getHeaderText",
+            "description": {
+                "text": [
+                    "Get sub header text"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "subHeader",
+                    "apply": "getText"
+                }
+            ]
+        },
+        {
+            "name": "click",
+            "description": "Click on lightning-menu-sub-header element",
+            "compose": [
+                {
+                    "element": "root",
+                    "apply": "click"
+                }
+            ]
+        }
+    ],
+    "shadow": {
+        "elements": [
+            {
+                "name": "subHeader",
+                "public": true,
+                "selector": {
+                    "css": "span"
+                }
+            }
+        ]
+    }
+}

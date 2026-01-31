@@ -1,0 +1,51 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Represents the Landing page for the Offline App.",
+            "Verify the components seen on Landing page."
+        ]
+    },
+    "interface": true,
+    "root": true,
+    "exposeRootElement": true,
+    "methods": [
+        {
+            "name": "getCardWithName",
+            "args": [
+                {
+                    "name": "cardName",
+                    "type": "string"
+                }
+            ],
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/landingPageCard"
+        },
+        {
+            "name": "hasCardWithName",
+            "args": [
+                {
+                    "name": "name",
+                    "type": "string"
+                }
+            ],
+            "returnType": "boolean"
+        },
+        {
+            "name": "getCards",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/landingPageCard",
+            "returnAll": true
+        },
+        {
+            "name": "getBriefcaseSummary",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/briefcaseSummary"
+        },
+        {
+            "name": "getDraftSummary",
+            "returnType": "utam-salesforceapp/pageObjects/offlineapp/draftSummary"
+        },
+        {
+            "name": "hasDraftSummary",
+            "returnType": "boolean"
+        }
+    ]
+}

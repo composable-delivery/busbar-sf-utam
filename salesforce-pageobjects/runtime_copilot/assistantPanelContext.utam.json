@@ -1,0 +1,28 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that provides a context for managing messages and actions within an assistant panel, including handling events, managing message history, and enabling dynamic functionality.",
+            "Selector: src-assistant-panel-context"
+        ]
+    },
+    "elements": [
+        {
+            "name": "defaultSlotContent",
+            "selector": {
+                "css": "*"
+            },
+            "type": "container",
+            "description": "Represents the default slot for rendering dynamic content or child components passed into the assistant panel context.",
+            "public": true
+        },
+        {
+            "name": "viewComponent",
+            "selector": {
+                "css": "runtime_copilot_base-view-component"
+            },
+            "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+            "public": true
+        }
+    ]
+}

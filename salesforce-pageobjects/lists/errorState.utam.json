@@ -1,0 +1,21 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Selector: lst-error-state.",
+            "Represents the error state Lightning web component.",
+            "Access the error message."
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "defaultMessage",
+                "public": true,
+                "selector": {
+                    "css": ".content > p"
+                }
+            }
+        ]
+    }
+}

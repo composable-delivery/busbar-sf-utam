@@ -1,0 +1,23 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A container component that processes messages with type and data, retrieves the associated ES types, and renders the content using a child component based on the message type.",
+            "Selector: app_dev_agent-view-container"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "viewComponent",
+                "selector": {
+                    "css": "[data-view-component]"
+                },
+                "type": "utam-runtime_copilot_base/pageObjects/viewComponent",
+                "description": "Represents the base view component that renders the UI based on the processed messages.",
+                "wait": true,
+                "public": true
+            }
+        ]
+    }
+}

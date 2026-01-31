@@ -1,0 +1,22 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A checkbox component that provides additional form validation and focus management methods, transforming the \"checked\" attribute into the value attribute for compatibility with record layout items.",
+            "Selector: lightning-form-checkbox"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "checkboxInput",
+                "selector": {
+                    "css": "lightning-input[type=\"checkbox\"]'"
+                },
+                "type": "utam-lightning/pageObjects/input",
+                "description": "Represents the checkbox input element",
+                "public": true
+            }
+        ]
+    }
+}

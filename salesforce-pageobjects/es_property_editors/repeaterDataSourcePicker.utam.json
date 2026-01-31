@@ -1,0 +1,77 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "Component that displays a data source picker for content and an expression editor for a repeater component.",
+            "Selector: src-repeater-data-source-picker"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "dataSourceSectionTitle",
+                "selector": {
+                    "css": "h3.slds-text-heading_small"
+                },
+                "description": "Represents the title of the data source section"
+            },
+            {
+                "name": "dataSourceSectionDescription",
+                "selector": {
+                    "css": "p.slds-text-body_small"
+                },
+                "description": "Represents the description of the data source section"
+            },
+            {
+                "name": "dataSourceInput",
+                "selector": {
+                    "css": "builder_platform_interaction-field-input.slds-size_1-of-1"
+                },
+                "type": "utam-builder_platform_interaction/pageObjects/fieldInput",
+                "description": "Represents the custom input field for data source",
+                "public": true
+            },
+            {
+                "name": "expressionEditor",
+                "selector": {
+                    "css": "es_property_editors-repeater-expression-editor"
+                },
+                "type": "utam-es_property_editors/pageObjects/repeaterExpressionEditor",
+                "description": "Represents the custom expression editor component",
+                "public": true
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "isDataSourceSectionTitleVisible",
+            "description": {
+                "text": [
+                    "Check that data source section title is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dataSourceSectionTitle",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "isDataSourceSectionDescriptionVisible",
+            "description": {
+                "text": [
+                    "Check that data source section description is present and visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "dataSourceSectionDescription",
+                    "apply": "isVisible"
+                }
+            ]
+        }
+    ]
+}

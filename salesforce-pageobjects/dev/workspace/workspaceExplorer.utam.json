@@ -1,0 +1,260 @@
+{
+    "exposeRootElement": true,
+    "root": true,
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "A component that allows users to explore different metadata within a workspace, add metadata to a workspace, create solutions, and manage metadata through various actions like adding to an app or removing from the workspace.",
+            "Selector: dev_workspace-workspace-explorer"
+        ]
+    },
+    "selector": {
+        "css": "dev_workspace-workspace-explorer"
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "explorerContainer",
+                "selector": {
+                    "css": "dev_workspace-explorer-container"
+                },
+                "type": "utam-dev-workspace/pageObjects/explorerContainer",
+                "description": "Represents the main container for the workspace explorer",
+                "nullable": true,
+                "wait": true,
+                "public": true,
+                "elements": [
+                    {
+                        "name": "headerRightButtonsContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the content for the header right buttons slot",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "createSolutionButton",
+                        "selector": {
+                            "css": "lightning-button.create-solution-button"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the button to create a new solution",
+                        "nullable": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "addMetadataButton",
+                        "selector": {
+                            "css": "[class='add-metadata-button']"
+                        },
+                        "type": "utam-lightning/pageObjects/button",
+                        "description": "Represents the button to add metadata",
+                        "wait": true,
+                        "public": true
+                    },
+                    {
+                        "name": "bulkActionsButtonsContent",
+                        "selector": {
+                            "css": ":scope > *:first-child"
+                        },
+                        "type": "container",
+                        "description": "Represents the content for the bulk actions buttons slot",
+                        "public": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "moreButtonIcon",
+                        "selector": {
+                            "css": "lightning-button-icon.utility-icon"
+                        },
+                        "type": [
+                            "actionable",
+                            "clickable"
+                        ],
+                        "description": "Represents the button icon to show more actions",
+                        "nullable": true,
+                        "wait": true
+                    },
+                    {
+                        "name": "menuDropdown",
+                        "selector": {
+                            "css": ".menu-dropdown"
+                        },
+                        "description": "Represents the dropdown menu for additional actions",
+                        "nullable": true,
+                        "wait": true,
+                        "elements": [
+                            {
+                                "name": "menuItemAddMetadataToApp",
+                                "selector": {
+                                    "css": "a[role='menuitem']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the menu item for adding metadata to an app",
+                                "wait": true
+                            },
+                            {
+                                "name": "menuItemRemoveMetadata",
+                                "selector": {
+                                    "css": "a[role='menuitem']"
+                                },
+                                "type": [
+                                    "actionable",
+                                    "clickable"
+                                ],
+                                "description": "Represents the menu item for deleting metadata",
+                                "wait": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "clickCreateSolutionButton",
+            "description": {
+                "text": [
+                    "Click the Create Solution button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "createSolutionButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickAddMetadataButton",
+            "description": {
+                "text": [
+                    "Click the Add Metadata button"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "addMetadataButton",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickMoreButtonIcon",
+            "description": {
+                "text": [
+                    "Click the More button icon to toggle the menu"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "moreButtonIcon",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickMenuItemAddMetadataToApp",
+            "description": {
+                "text": [
+                    "Click the menu item to add metadata to an app"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "menuItemAddMetadataToApp",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "clickMenuItemRemoveMetadata",
+            "description": {
+                "text": [
+                    "Click the menu item to remove metadata"
+                ]
+            },
+            "compose": [
+                {
+                    "element": "menuItemRemoveMetadata",
+                    "apply": "click"
+                }
+            ]
+        },
+        {
+            "name": "isMenuDropdownVisible",
+            "description": {
+                "text": [
+                    "Check if the menu dropdown is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "menuDropdown",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyCreateSolutionButtonPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"createSolutionButton\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "createSolutionButton",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMoreButtonIconPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"moreButtonIcon\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "moreButtonIcon",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "verifyMenuDropdownPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"menuDropdown\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "menuDropdown",
+                    "matcher": {
+                        "type": "notNull"
+                    }
+                }
+            ]
+        }
+    ]
+}

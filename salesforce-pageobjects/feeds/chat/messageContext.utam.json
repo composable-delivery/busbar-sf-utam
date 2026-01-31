@@ -1,0 +1,191 @@
+{
+    "description": {
+        "author": "Salesforce",
+        "text": [
+            "The Lightning Web Component (LWC) is designed to manage inter-component communication within a messaging context. It provides the ability to handle value changes, message actions, and component loading errors, and it dispatches custom events to notify other components about data changes. This component is likely used within a larger application where messages or forms need to be processed, validated, and reacted upon, particularly in a chat or feed-like environment.",
+            "Selector: src-message-context"
+        ]
+    },
+    "shadow": {
+        "elements": [
+            {
+                "name": "messageMode",
+                "selector": {
+                    "css": "[data-message-mode]"
+                },
+                "description": "Represents the message mode attribute used for assertions."
+            },
+            {
+                "name": "messageObject",
+                "selector": {
+                    "css": "[data-message-object]"
+                },
+                "description": "Represents the message object attribute used for assertions and possibly interactions."
+            },
+            {
+                "name": "valueChangeHandler",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "actionable",
+                "description": "Represents the handler for value change events."
+            },
+            {
+                "name": "messageActionHandler",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "actionable",
+                "description": "Represents the handler for message action events."
+            },
+            {
+                "name": "componentLoadingErrorHandler",
+                "selector": {
+                    "css": "%s",
+                    "args": [
+                        {
+                            "name": "selectorStr",
+                            "type": "string",
+                            "description": "CSS selector parameter"
+                        }
+                    ]
+                },
+                "type": "actionable",
+                "description": "Represents the handler for component loading error events."
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "getMessageMode",
+            "description": {
+                "text": [
+                    "Returns the message mode of the component"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageMode",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "getMessageObject",
+            "description": {
+                "text": [
+                    "Returns the message object of the component"
+                ],
+                "return": "string"
+            },
+            "compose": [
+                {
+                    "element": "messageObject",
+                    "apply": "getAttribute",
+                    "args": [
+                        {
+                            "name": "attrName",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "assertMessageModeVisibility",
+            "description": {
+                "text": [
+                    "Checks if the message mode element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageMode",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "assertMessageObjectVisibility",
+            "description": {
+                "text": [
+                    "Checks if the message object element is visible"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageObject",
+                    "apply": "isVisible"
+                }
+            ]
+        },
+        {
+            "name": "verifyValueChangeHandlerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"valueChangeHandler\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "valueChangeHandler",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyMessageActionHandlerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"messageActionHandler\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "messageActionHandler",
+                    "apply": "isPresent"
+                }
+            ]
+        },
+        {
+            "name": "verifyComponentLoadingErrorHandlerPresence",
+            "description": {
+                "text": [
+                    "Returns true if element \"componentLoadingErrorHandler\" present on the page"
+                ],
+                "return": "boolean"
+            },
+            "compose": [
+                {
+                    "element": "componentLoadingErrorHandler",
+                    "apply": "isPresent"
+                }
+            ]
+        }
+    ]
+}
