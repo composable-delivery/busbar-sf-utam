@@ -123,10 +123,11 @@ impl FrameContext {
     /// ctx.exit().await?;  // Explicit exit
     /// ```
     pub async fn exit(mut self) -> UtamResult<()> {
-        // Mark as exited before the async operation to prevent double-exit
-        // even if the operation fails
-        self.exited = true;
+        // Switch back to the parent frame first; only mark as exited
+        // after a successful context change so Drop can still attempt
+        // best-effort cleanup if this call fails.
         self.driver.enter_parent_frame().await?;
+        self.exited = true;
         Ok(())
     }
 }
