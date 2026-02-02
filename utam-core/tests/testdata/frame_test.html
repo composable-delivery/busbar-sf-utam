@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        iframe {
+            border: 2px solid #333;
+            margin: 10px 0;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Frame Test Page</h1>
+    <p id="main-content">This is the main page content.</p>
+    <button id="main-button">Main Page Button</button>
+
+    <div class="section">
+        <h2>Simple Iframe</h2>
+        <iframe id="simple-frame" src="frame_content.html" width="600" height="200"></iframe>
+    </div>
+
+    <div class="section">
+        <h2>Nested Iframe</h2>
+        <iframe id="nested-frame" src="frame_nested.html" width="600" height="300"></iframe>
+    </div>
+</body>
+</html>

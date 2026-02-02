@@ -480,6 +480,7 @@ fn test_direct_module_access() {
     use utam_core::elements::DraggableElement;
     use utam_core::elements::EditableElement;
     use utam_core::elements::ElementRectangle;
+    use utam_core::elements::FrameElement;
     use utam_core::error::{UtamError, UtamResult};
     use utam_core::shadow::ShadowRoot;
     use utam_core::traits::{
@@ -491,6 +492,7 @@ fn test_direct_module_access() {
     let _ = std::any::type_name::<ClickableElement>();
     let _ = std::any::type_name::<EditableElement>();
     let _ = std::any::type_name::<DraggableElement>();
+    let _ = std::any::type_name::<FrameElement>();
     let _ = std::any::type_name::<ElementRectangle>();
     let _ = std::any::type_name::<ShadowRoot>();
     let _ = std::any::type_name::<WaitConfig>();
@@ -503,4 +505,42 @@ fn test_direct_module_access() {
     let _ = std::any::type_name::<dyn Draggable>();
     fn _takes_page_object<T: PageObject>() {}
     fn _takes_root_page_object<T: RootPageObject>() {}
+}
+
+// ========== FrameElement Tests ==========
+
+#[test]
+fn test_prelude_exports_frame_element() {
+    fn _check_prelude_has_frame_element() {
+        use utam_core::prelude::FrameElement;
+        let _: Option<FrameElement> = None;
+    }
+}
+
+#[test]
+fn test_prelude_exports_frame_context() {
+    fn _check_prelude_has_frame_context() {
+        use utam_core::prelude::FrameContext;
+        let _ = std::any::type_name::<FrameContext>();
+    }
+}
+
+#[test]
+fn test_frame_element_api_exists() {
+    fn _check_api_exists() {
+        #[allow(unreachable_code)]
+        #[allow(clippy::diverging_sub_expression)]
+        {
+            let _frame: FrameElement = panic!("not meant to run");
+            let _ = _frame.inner();
+        }
+    }
+}
+
+#[test]
+fn test_frame_element_in_direct_module_access() {
+    use utam_core::elements::{FrameContext, FrameElement};
+
+    let _ = std::any::type_name::<FrameElement>();
+    let _ = std::any::type_name::<FrameContext>();
 }
