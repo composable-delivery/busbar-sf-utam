@@ -105,6 +105,7 @@ fn format_validation_errors(errors: &[ValidationError]) -> String {
 /// Error reporter for formatting compiler errors
 ///
 /// Provides both human-readable terminal output and machine-readable JSON format.
+#[allow(dead_code)]
 pub struct ErrorReporter {
     source: String,
     file_path: String,
@@ -131,7 +132,6 @@ impl ErrorReporter {
     /// * `error` - The compiler error to report
     pub fn report(&self, error: &CompilerError) {
         use miette::{GraphicalReportHandler, GraphicalTheme};
-        use std::fmt::Write;
 
         // Create a graphical report handler with fancy theme
         let mut output = String::new();
