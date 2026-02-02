@@ -14,14 +14,16 @@
 //! let rust_code = compile(json)?;
 //! ```
 
-mod ast;
+pub mod ast;
 mod codegen;
 mod error;
 mod parser;
 mod validator;
 
+// Re-export AST types for convenience
+pub use ast::*;
+
 // TODO: Re-enable once modules are implemented
-// pub use ast::*;
 // pub use codegen::generate;
 // pub use error::{CompilerError, CompilerResult};
 // pub use parser::parse;
