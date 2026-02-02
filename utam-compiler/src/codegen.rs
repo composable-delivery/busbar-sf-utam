@@ -699,4 +699,179 @@ mod tests {
         assert_eq!(to_pascal_case("simpleButton"), "SimpleButton");
         assert_eq!(to_pascal_case("component"), "Component");
     }
+
+    #[test]
+    fn test_generate_simple_page_object() {
+        let ast = PageObjectAst {
+            description: Some(DescriptionAst::Simple("Test page".to_string())),
+            root: true,
+            selector: Some(SelectorAst {
+                css: Some(".test".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            expose_root_element: false,
+            action_types: vec![],
+            platform: None,
+            implements: None,
+            is_interface: false,
+            shadow: None,
+            elements: vec![],
+            methods: vec![],
+            before_load: vec![],
+            metadata: None,
+        };
+
+        let config = CodeGenConfig {
+            module_name: Some("TestPage".to_string()),
+        };
+
+        let generator = CodeGenerator::new(ast, config);
+        let code = generator.generate().unwrap();
+
+        assert!(code.contains("pub struct TestPage"));
+        assert!(code.contains("impl PageObject for TestPage"));
+        assert!(code.contains("impl RootPageObject for TestPage"));
+        assert!(code.contains("const ROOT_SELECTOR: &'static str = \".test\""));
+    }
+
+    #[test]
+    fn test_generate_with_elements() {
+        let ast = PageObjectAst {
+            description: None,
+            root: true,
+            selector: Some(SelectorAst {
+                css: Some(".form".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            expose_root_element: false,
+            action_types: vec![],
+            platform: None,
+            implements: None,
+            is_interface: false,
+            shadow: None,
+            elements: vec![ElementAst {
+                name: "submitButton".to_string(),
+                element_type: Some(ElementTypeAst::ActionTypes(vec!["clickable".to_string()])),
+                selector: Some(SelectorAst {
+                    css: Some("button[type='submit']".to_string()),
+                    accessid: None,
+                    classchain: None,
+                    uiautomator: None,
+                    args: vec![],
+                    return_all: false,
+                }),
+                public: true,
+                nullable: false,
+                generate_wait: false,
+                load: false,
+                shadow: None,
+                elements: vec![],
+                filter: None,
+                description: None,
+                list: false,
+            }],
+            methods: vec![],
+            before_load: vec![],
+            metadata: None,
+        };
+
+        let config = CodeGenConfig {
+            module_name: Some("TestForm".to_string()),
+        };
+
+        let generator = CodeGenerator::new(ast, config);
+        let code = generator.generate().unwrap();
+
+        assert!(code.contains("pub async fn get_submit_button"));
+        assert!(code.contains("ClickableElement"));
+    }
+
+    #[test]
+    fn test_generate_with_compose_method() {
+        let ast = PageObjectAst {
+            description: None,
+            root: true,
+            selector: Some(SelectorAst {
+                css: Some(".login".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            expose_root_element: false,
+            action_types: vec![],
+            platform: None,
+            implements: None,
+            is_interface: false,
+            shadow: None,
+            elements: vec![
+                ElementAst {
+                    name: "usernameInput".to_string(),
+                    element_type: Some(ElementTypeAst::ActionTypes(vec!["editable".to_string()])),
+                    selector: Some(SelectorAst {
+                        css: Some("input[name='username']".to_string()),
+                        accessid: None,
+                        classchain: None,
+                        uiautomator: None,
+                        args: vec![],
+                        return_all: false,
+                    }),
+                    public: false,
+                    nullable: false,
+                    generate_wait: false,
+                    load: false,
+                    shadow: None,
+                    elements: vec![],
+                    filter: None,
+                    description: None,
+                    list: false,
+                },
+            ],
+            methods: vec![MethodAst {
+                name: "setUsername".to_string(),
+                description: None,
+                args: vec![],
+                compose: vec![ComposeStatementAst {
+                    element: Some("usernameInput".to_string()),
+                    apply: Some("clearAndType".to_string()),
+                    args: vec![ComposeArgAst::Named {
+                        name: "username".to_string(),
+                        arg_type: "string".to_string(),
+                    }],
+                    chain: false,
+                    return_type: None,
+                    return_all: false,
+                    matcher: None,
+                    apply_external: None,
+                    filter: None,
+                    return_element: false,
+                    predicate: None,
+                }],
+                return_type: None,
+                return_all: false,
+            }],
+            before_load: vec![],
+            metadata: None,
+        };
+
+        let config = CodeGenConfig {
+            module_name: Some("LoginForm".to_string()),
+        };
+
+        let generator = CodeGenerator::new(ast, config);
+        let code = generator.generate().unwrap();
+
+        assert!(code.contains("pub async fn set_username"));
+        assert!(code.contains("username: &str"));
+        assert!(code.contains("clear_and_type"));
+    }
 }
