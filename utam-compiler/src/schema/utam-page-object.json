@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://utam.dev/schema/utam-page-object.json",
+  "title": "UTAM Page Object",
+  "description": "JSON schema for UTAM (UI Test Automation Model) page object definitions",
+  "type": "object",
+  "required": ["root", "selector"],
+  "properties": {
+    "root": {
+      "type": "boolean",
+      "description": "Indicates if this is a root page object"
+    },
+    "selector": {
+      "$ref": "#/definitions/selector"
+    },
+    "description": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "author": { "type": "string" },
+            "text": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "type": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      ]
+    },
+    "exposeRootElement": {
+      "type": "boolean",
+      "description": "Whether to expose the root element in the public API"
+    },
+    "shadow": {
+      "type": "object",
+      "properties": {
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/element"
+          }
+        }
+      }
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/element"
+      }
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/method"
+      }
+    },
+    "beforeLoad": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "apply": { "type": "string" },
+          "args": { "type": "array" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "selector": {
+      "type": "object",
+      "properties": {
+        "css": { "type": "string" },
+        "xpath": { "type": "string" },
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "className": { "type": "string" },
+        "tagName": { "type": "string" }
+      },
+      "minProperties": 1
+    },
+    "element": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+        },
+        "selector": {
+          "$ref": "#/definitions/selector"
+        },
+        "type": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          ]
+        },
+        "public": {
+          "type": "boolean"
+        },
+        "list": {
+          "type": "boolean"
+        },
+        "wait": {
+          "type": "boolean"
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/element"
+          }
+        },
+        "shadow": {
+          "type": "object",
+          "properties": {
+            "elements": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/element"
+              }
+            }
+          }
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+        },
+        "description": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "return": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "compose": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "element": { "type": "string" },
+              "apply": { "type": "string" },
+              "args": { "type": "array" }
+            }
+          }
+        },
+        "args": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}
