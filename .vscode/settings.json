@@ -1,0 +1,64 @@
+{
+  // GitHub Copilot Settings
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": false,
+    "markdown": true,
+    "rust": true
+  },
+  "github.copilot.advanced": {
+    "debug.overrideEngine": "gpt-4",
+    "inlineSuggestEnable": true
+  },
+  
+  // Rust-specific settings
+  "rust-analyzer.checkOnSave.command": "clippy",
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.procMacro.enable": true,
+  
+  // Editor settings for UTAM development
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  
+  // Files to exclude from suggestions
+  "files.exclude": {
+    "**/target": true,
+    "**/.git": true,
+    "**/Cargo.lock": false
+  },
+  
+  // Search settings
+  "search.exclude": {
+    "**/target": true,
+    "**/Cargo.lock": true,
+    "**/*.snap": false
+  },
+  
+  // Language-specific formatting
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "on"
+  },
+  
+  // UTAM-specific file associations
+  "files.associations": {
+    "*.utam.json": "json"
+  },
+  
+  // Workspace recommendations
+  "extensions.ignoreRecommendations": false
+}
