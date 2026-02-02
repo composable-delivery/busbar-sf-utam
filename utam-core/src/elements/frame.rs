@@ -217,8 +217,8 @@ mod tests {
             #[allow(unreachable_code)]
             #[allow(clippy::diverging_sub_expression)]
             {
-                let ctx: FrameContext = panic!("not meant to run");
-                let _ = ctx.exited;
+                let _ctx: FrameContext = panic!("not meant to run");
+                let _ = _ctx.exited;
             }
         }
     }
