@@ -21,7 +21,7 @@ pub mod error;
 mod parser;
 pub mod validator;
 
-pub use error::{CompilerError, CompilerResult, ValidationError};
+pub use error::{CompilerError, CompilerResult, ErrorReporter, ValidationError};
 pub use validator::SchemaValidator;
 
 // Re-export AST types for convenience
