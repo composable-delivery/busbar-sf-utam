@@ -16,7 +16,7 @@
 //! ```
 
 pub mod ast;
-mod codegen;
+pub mod codegen;
 pub mod error;
 mod parser;
 pub mod validator;

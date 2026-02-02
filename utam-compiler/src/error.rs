@@ -29,6 +29,10 @@ pub enum CompilerError {
     /// Generic compilation error
     #[error("Compilation error: {0}")]
     Compilation(String),
+
+    /// Invalid statement in compose method
+    #[error("Invalid statement: {0}")]
+    InvalidStatement(String),
 }
 
 /// Detailed validation error with path and message
