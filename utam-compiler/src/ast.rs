@@ -433,6 +433,131 @@ impl ElementAst {
             Some(ElementTypeAst::Frame) => ElementKind::Frame,
         }
     }
+
+    /// Validate element constraints
+    ///
+    /// Checks:
+    /// - Element name is a valid Rust identifier
+    /// - Frame elements do not have returnAll: true
+    /// - Element names are unique within their scope
+    ///
+    /// # Returns
+    ///
+    /// `Ok(())` if validation passes, otherwise returns error messages
+    pub fn validate(&self) -> Result<(), Vec<String>> {
+        let mut errors = Vec::new();
+
+        // Validate element name is a valid Rust identifier
+        if !is_valid_rust_identifier(&self.name) {
+            errors.push(format!(
+                "Element name '{}' is not a valid Rust identifier. \
+                 Names must start with a letter or underscore and contain only \
+                 alphanumeric characters and underscores.",
+                self.name
+            ));
+        }
+
+        // Frame elements cannot have returnAll: true in their selector
+        if matches!(self.element_kind(), ElementKind::Frame) {
+            if let Some(selector) = &self.selector {
+                if selector.return_all {
+                    errors.push(format!(
+                        "Frame element '{}' cannot have returnAll: true",
+                        self.name
+                    ));
+                }
+            }
+        }
+
+        if errors.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
+    }
+}
+
+/// Check if a string is a valid Rust identifier
+///
+/// Valid Rust identifiers:
+/// - Start with a letter (a-z, A-Z) or underscore (_)
+/// - Contain only letters, digits, and underscores
+/// - Are not Rust keywords (basic check)
+fn is_valid_rust_identifier(name: &str) -> bool {
+    if name.is_empty() {
+        return false;
+    }
+
+    // Check first character
+    let mut chars = name.chars();
+    if let Some(first) = chars.next() {
+        if !first.is_ascii_alphabetic() && first != '_' {
+            return false;
+        }
+    }
+
+    // Check remaining characters
+    for ch in chars {
+        if !ch.is_ascii_alphanumeric() && ch != '_' {
+            return false;
+        }
+    }
+
+    // Check against Rust keywords (basic list)
+    const RUST_KEYWORDS: &[&str] = &[
+        "as", "break", "const", "continue", "crate", "else", "enum", "extern", "false", "fn",
+        "for", "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref",
+        "return", "self", "Self", "static", "struct", "super", "trait", "true", "type", "unsafe",
+        "use", "where", "while", "async", "await", "dyn",
+    ];
+
+    !RUST_KEYWORDS.contains(&name)
+}
+
+impl PageObjectAst {
+    /// Validate uniqueness of element names within the page object
+    ///
+    /// Checks that all element names are unique within:
+    /// - Top-level elements
+    /// - Shadow DOM elements
+    /// - Nested elements
+    ///
+    /// # Returns
+    ///
+    /// `Ok(())` if all names are unique, otherwise returns error messages
+    pub fn validate_element_names(&self) -> Result<(), Vec<String>> {
+        let mut errors = Vec::new();
+        let mut names = std::collections::HashSet::new();
+
+        // Validate top-level elements
+        for element in &self.elements {
+            if !names.insert(&element.name) {
+                errors.push(format!(
+                    "Duplicate element name '{}' in top-level elements",
+                    element.name
+                ));
+            }
+        }
+
+        // Validate shadow elements
+        if let Some(shadow) = &self.shadow {
+            let mut shadow_names = std::collections::HashSet::new();
+            for element in &shadow.elements {
+                if !shadow_names.insert(&element.name) {
+                    errors.push(format!(
+                        "Duplicate element name '{}' in shadow elements",
+                        element.name
+                    ));
+                }
+            }
+        }
+
+        if errors.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
+    }
 }
 
 #[cfg(test)]
@@ -809,5 +934,290 @@ mod tests {
             ElementKind::Basic => {}
             _ => panic!("Expected Basic element kind for empty action types"),
         }
+    }
+
+    // Validation tests
+    #[test]
+    fn test_validate_element_valid_name() {
+        let element = ElementAst {
+            name: "validButton".to_string(),
+            element_type: Some(ElementTypeAst::ActionTypes(vec!["clickable".to_string()])),
+            selector: Some(SelectorAst {
+                css: Some(".btn".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            public: false,
+            nullable: false,
+            generate_wait: false,
+            load: false,
+            shadow: None,
+            elements: vec![],
+            filter: None,
+            description: None,
+            list: false,
+        };
+
+        assert!(element.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_element_invalid_name_starts_with_digit() {
+        let element = ElementAst {
+            name: "123invalid".to_string(),
+            element_type: None,
+            selector: None,
+            public: false,
+            nullable: false,
+            generate_wait: false,
+            load: false,
+            shadow: None,
+            elements: vec![],
+            filter: None,
+            description: None,
+            list: false,
+        };
+
+        assert!(element.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_element_invalid_name_with_hyphen() {
+        let element = ElementAst {
+            name: "invalid-name".to_string(),
+            element_type: None,
+            selector: None,
+            public: false,
+            nullable: false,
+            generate_wait: false,
+            load: false,
+            shadow: None,
+            elements: vec![],
+            filter: None,
+            description: None,
+            list: false,
+        };
+
+        assert!(element.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_element_valid_name_with_underscore() {
+        let element = ElementAst {
+            name: "valid_name_123".to_string(),
+            element_type: None,
+            selector: None,
+            public: false,
+            nullable: false,
+            generate_wait: false,
+            load: false,
+            shadow: None,
+            elements: vec![],
+            filter: None,
+            description: None,
+            list: false,
+        };
+
+        assert!(element.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_frame_with_return_all_fails() {
+        let element = ElementAst {
+            name: "myFrame".to_string(),
+            element_type: Some(ElementTypeAst::Frame),
+            selector: Some(SelectorAst {
+                css: Some("iframe".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: true, // This should fail validation
+            }),
+            public: false,
+            nullable: false,
+            generate_wait: false,
+            load: false,
+            shadow: None,
+            elements: vec![],
+            filter: None,
+            description: None,
+            list: false,
+        };
+
+        let result = element.validate();
+        assert!(result.is_err());
+        let errors = result.unwrap_err();
+        assert!(errors.iter().any(|e| e.contains("returnAll")));
+    }
+
+    #[test]
+    fn test_validate_frame_without_return_all_succeeds() {
+        let element = ElementAst {
+            name: "myFrame".to_string(),
+            element_type: Some(ElementTypeAst::Frame),
+            selector: Some(SelectorAst {
+                css: Some("iframe".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            public: false,
+            nullable: false,
+            generate_wait: false,
+            load: false,
+            shadow: None,
+            elements: vec![],
+            filter: None,
+            description: None,
+            list: false,
+        };
+
+        assert!(element.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_element_names_unique() {
+        let page = PageObjectAst {
+            description: None,
+            root: true,
+            selector: Some(SelectorAst {
+                css: Some(".root".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            expose_root_element: false,
+            action_types: vec![],
+            platform: None,
+            implements: None,
+            is_interface: false,
+            shadow: Some(ShadowAst {
+                elements: vec![
+                    ElementAst {
+                        name: "button1".to_string(),
+                        element_type: None,
+                        selector: None,
+                        public: false,
+                        nullable: false,
+                        generate_wait: false,
+                        load: false,
+                        shadow: None,
+                        elements: vec![],
+                        filter: None,
+                        description: None,
+                        list: false,
+                    },
+                    ElementAst {
+                        name: "button2".to_string(),
+                        element_type: None,
+                        selector: None,
+                        public: false,
+                        nullable: false,
+                        generate_wait: false,
+                        load: false,
+                        shadow: None,
+                        elements: vec![],
+                        filter: None,
+                        description: None,
+                        list: false,
+                    },
+                ],
+            }),
+            elements: vec![],
+            methods: vec![],
+            before_load: vec![],
+            metadata: None,
+        };
+
+        assert!(page.validate_element_names().is_ok());
+    }
+
+    #[test]
+    fn test_validate_element_names_duplicate() {
+        let page = PageObjectAst {
+            description: None,
+            root: true,
+            selector: Some(SelectorAst {
+                css: Some(".root".to_string()),
+                accessid: None,
+                classchain: None,
+                uiautomator: None,
+                args: vec![],
+                return_all: false,
+            }),
+            expose_root_element: false,
+            action_types: vec![],
+            platform: None,
+            implements: None,
+            is_interface: false,
+            shadow: Some(ShadowAst {
+                elements: vec![
+                    ElementAst {
+                        name: "button".to_string(),
+                        element_type: None,
+                        selector: None,
+                        public: false,
+                        nullable: false,
+                        generate_wait: false,
+                        load: false,
+                        shadow: None,
+                        elements: vec![],
+                        filter: None,
+                        description: None,
+                        list: false,
+                    },
+                    ElementAst {
+                        name: "button".to_string(), // Duplicate name
+                        element_type: None,
+                        selector: None,
+                        public: false,
+                        nullable: false,
+                        generate_wait: false,
+                        load: false,
+                        shadow: None,
+                        elements: vec![],
+                        filter: None,
+                        description: None,
+                        list: false,
+                    },
+                ],
+            }),
+            elements: vec![],
+            methods: vec![],
+            before_load: vec![],
+            metadata: None,
+        };
+
+        let result = page.validate_element_names();
+        assert!(result.is_err());
+        let errors = result.unwrap_err();
+        assert!(errors.iter().any(|e| e.contains("Duplicate")));
+    }
+
+    #[test]
+    fn test_is_valid_rust_identifier() {
+        assert!(super::is_valid_rust_identifier("validName"));
+        assert!(super::is_valid_rust_identifier("_private"));
+        assert!(super::is_valid_rust_identifier("button123"));
+        assert!(super::is_valid_rust_identifier("MyButton"));
+        
+        // Invalid identifiers
+        assert!(!super::is_valid_rust_identifier("123invalid"));
+        assert!(!super::is_valid_rust_identifier("invalid-name"));
+        assert!(!super::is_valid_rust_identifier("invalid name"));
+        assert!(!super::is_valid_rust_identifier(""));
+        
+        // Rust keywords should be invalid
+        assert!(!super::is_valid_rust_identifier("fn"));
+        assert!(!super::is_valid_rust_identifier("let"));
+        assert!(!super::is_valid_rust_identifier("struct"));
     }
 }
