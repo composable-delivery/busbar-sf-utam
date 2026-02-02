@@ -15,7 +15,7 @@
 //! validator.validate_str(json).expect("Invalid UTAM JSON");
 //! ```
 
-mod ast;
+pub mod ast;
 mod codegen;
 pub mod error;
 mod parser;
@@ -24,8 +24,10 @@ pub mod validator;
 pub use error::{CompilerError, CompilerResult, ValidationError};
 pub use validator::SchemaValidator;
 
+// Re-export AST types for convenience
+pub use ast::*;
+
 // TODO: Re-enable once modules are implemented
-// pub use ast::*;
 // pub use codegen::generate;
 // pub use parser::parse;
 
