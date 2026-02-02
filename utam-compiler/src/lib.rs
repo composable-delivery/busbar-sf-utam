@@ -2,39 +2,35 @@
 //!
 //! Transforms UTAM JSON page object definitions into Rust source code.
 //!
-//! **Note**: Core compiler functionality is not yet fully implemented.
-//! The parser and code generator modules are currently stubs.
-//!
 //! # Example
 //!
 //! ```rust,no_run
-//! use utam_compiler::validator::SchemaValidator;
+//! use utam_compiler::{compile, CodeGenConfig};
 //!
 //! let json = r#"{"root": true, "selector": {"css": ".button"}}"#;
-//! let validator = SchemaValidator::new().unwrap();
-//! validator.validate_str(json).expect("Invalid UTAM JSON");
+//! let config = CodeGenConfig::default();
+//! let rust_code = compile(json, config).expect("Failed to compile");
 //! ```
 
 pub mod ast;
-mod codegen;
+pub mod codegen;
 pub mod error;
 mod parser;
 pub mod validator;
 
+pub use codegen::{CodeGenConfig, CodeGenerator};
 pub use error::{CompilerError, CompilerResult, ValidationError};
 pub use validator::SchemaValidator;
 
 // Re-export AST types for convenience
 pub use ast::*;
 
-// TODO: Re-enable once modules are implemented
-// pub use codegen::generate;
-// pub use parser::parse;
-
-// /// Compile UTAM JSON to Rust source code
-// pub fn compile(json: &str) -> CompilerResult<String> {
-//     let ast = parse(json)?;
-//     validate(&ast)?;
-//     let code = generate(&ast)?;
-//     Ok(code)
-// }
+/// Compile UTAM JSON to Rust source code
+pub fn compile(json: &str, config: CodeGenConfig) -> CompilerResult<String> {
+    // Parse JSON to AST
+    let ast: PageObjectAst = serde_json::from_str(json)?;
+    
+    // Generate code
+    let generator = CodeGenerator::new(ast, config);
+    generator.generate()
+}
