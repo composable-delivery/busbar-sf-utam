@@ -105,7 +105,6 @@ fn format_validation_errors(errors: &[ValidationError]) -> String {
 /// Error reporter for formatting compiler errors
 ///
 /// Provides both human-readable terminal output and machine-readable JSON format.
-#[allow(dead_code)]
 pub struct ErrorReporter {
     source: String,
     file_path: String,

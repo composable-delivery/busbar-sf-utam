@@ -12,9 +12,13 @@ fn test_invalid_element_type_error_includes_source_location() {
 }"#
     .to_string();
 
+    // Calculate position dynamically
+    let offset = source.find("unknownType").unwrap();
+    let length = "unknownType".len();
+
     let error = CompilerError::InvalidElementType {
         src: NamedSource::new("test.utam.json", source.clone()),
-        span: SourceSpan::new(70usize.into(), 13usize), // Position of "unknownType"
+        span: SourceSpan::new(offset.into(), length),
     };
 
     // Verify the error has diagnostic information
@@ -37,10 +41,14 @@ fn test_unknown_action_type_error_includes_help_text() {
 }"#
     .to_string();
 
+    // Calculate position dynamically
+    let offset = source.find("invalidAction").unwrap();
+    let length = "invalidAction".len();
+
     let error = CompilerError::UnknownActionType {
         action: "invalidAction".to_string(),
         src: NamedSource::new("button.utam.json", source.clone()),
-        span: SourceSpan::new(70usize.into(), 13usize),
+        span: SourceSpan::new(offset.into(), length),
     };
 
     let error_str = format!("{}", error);
@@ -65,11 +73,15 @@ fn test_selector_parameter_mismatch_error() {
 }"#
     .to_string();
 
+    // Calculate position dynamically - find the entire selector value
+    let offset = source.find("\"button[data-id='%s']\"").unwrap();
+    let length = "\"button[data-id='%s']\"".len();
+
     let error = CompilerError::SelectorParameterMismatch {
         expected: 1,
         actual: 0,
         src: NamedSource::new("form.utam.json", source.clone()),
-        span: SourceSpan::new(42usize.into(), 25usize),
+        span: SourceSpan::new(offset.into(), length),
     };
 
     let error_str = format!("{}", error);
