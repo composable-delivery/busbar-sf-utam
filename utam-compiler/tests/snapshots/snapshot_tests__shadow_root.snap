@@ -1,0 +1,41 @@
+---
+source: utam-compiler/tests/snapshot_tests.rs
+expression: code
+---
+use utam_core::prelude::*;
+///Component with shadow DOM
+pub struct ShadowRoot {
+    root: WebElement,
+}
+impl PageObject for ShadowRoot {
+    fn root(&self) -> &WebElement {
+        &self.root
+    }
+}
+#[async_trait::async_trait]
+impl RootPageObject for ShadowRoot {
+    const ROOT_SELECTOR: &'static str = "my-component";
+    async fn load(driver: &WebDriver) -> UtamResult<Self> {
+        Self::before_load(driver).await?;
+        let root = driver.find(By::Css(Self::ROOT_SELECTOR)).await?;
+        Self::from_element(root).await
+    }
+    async fn from_element(element: WebElement) -> UtamResult<Self> {
+        Ok(Self { root: element })
+    }
+}
+impl ShadowRoot {
+    /// Execute beforeLoad conditions
+    async fn before_load(driver: &WebDriver) -> UtamResult<()> {
+        Ok(())
+    }
+}
+impl ShadowRoot {
+    ///Get the innerButton element
+    pub async fn get_inner_button(&self) -> UtamResult<ClickableElement> {
+        let shadow = self.root.get_shadow_root().await?;
+        let elem = shadow.find(By::Css(".inner-btn")).await?;
+        let wrapped = ClickableElement::new(elem);
+        Ok(wrapped)
+    }
+}
