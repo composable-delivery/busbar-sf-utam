@@ -128,12 +128,7 @@ impl<'de> Deserialize<'de> for ElementTypeAst {
                 }
 
                 // Check for known action types
-                const ACTION_TYPES: &[&str] = &[
-                    "clickable",
-                    "editable",
-                    "actionable",
-                    "draggable",
-                ];
+                const ACTION_TYPES: &[&str] = &["clickable", "editable", "actionable", "draggable"];
 
                 if ACTION_TYPES.contains(&value) {
                     // Single action type - wrap in ActionTypes
@@ -349,7 +344,7 @@ mod tests {
         let json = r#""container""#;
         let elem_type: ElementTypeAst = serde_json::from_str(json).unwrap();
         match elem_type {
-            ElementTypeAst::Container => {},
+            ElementTypeAst::Container => {}
             _ => panic!("Expected Container variant"),
         }
     }
@@ -359,7 +354,7 @@ mod tests {
         let json = r#""frame""#;
         let elem_type: ElementTypeAst = serde_json::from_str(json).unwrap();
         match elem_type {
-            ElementTypeAst::Frame => {},
+            ElementTypeAst::Frame => {}
             _ => panic!("Expected Frame variant"),
         }
     }
@@ -402,7 +397,7 @@ mod tests {
 
         let json = serde_json::to_string(&original).unwrap();
         let deserialized: PageObjectAst = serde_json::from_str(&json).unwrap();
-        
+
         assert_eq!(original.root, deserialized.root);
         assert!(deserialized.selector.is_some());
     }
