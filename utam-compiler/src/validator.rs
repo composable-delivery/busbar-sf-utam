@@ -83,7 +83,8 @@ impl SchemaValidator {
             return Ok(());
         }
 
-        let validation_errors: Vec<ValidationError> = self.validator
+        let validation_errors: Vec<ValidationError> = self
+            .validator
             .iter_errors(json)
             .map(|e| ValidationError {
                 path: e.instance_path().to_string(),
@@ -229,7 +230,7 @@ mod tests {
         assert!(result.is_err(), "Should fail with invalid JSON");
 
         match result {
-            Err(CompilerError::JsonParse(_)) => {},
+            Err(CompilerError::JsonParse(_)) => {}
             _ => panic!("Expected JsonParse error"),
         }
     }
@@ -243,7 +244,7 @@ mod tests {
         assert!(result.is_err(), "Should fail schema validation");
 
         match result {
-            Err(CompilerError::SchemaValidation(_)) => {},
+            Err(CompilerError::SchemaValidation(_)) => {}
             _ => panic!("Expected SchemaValidation error"),
         }
     }

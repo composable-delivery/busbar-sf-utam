@@ -3,8 +3,8 @@
 //! This example demonstrates how to use the SchemaValidator to validate
 //! UTAM page object JSON files against the JSON schema.
 
-use utam_compiler::validator::SchemaValidator;
 use serde_json::json;
+use utam_compiler::validator::SchemaValidator;
 
 fn main() {
     println!("UTAM JSON Schema Validator Example\n");
@@ -19,7 +19,7 @@ fn main() {
         "root": true,
         "selector": { "css": ".my-component" }
     });
-    
+
     match validator.validate(&minimal_json) {
         Ok(_) => println!("✓ Valid: Minimal page object\n"),
         Err(e) => println!("✗ Invalid: {}\n", e),
@@ -42,7 +42,7 @@ fn main() {
             }]
         }
     });
-    
+
     match validator.validate(&with_elements) {
         Ok(_) => println!("✓ Valid: Page object with elements\n"),
         Err(e) => println!("✗ Invalid: {}\n", e),
@@ -54,7 +54,7 @@ fn main() {
         "root": true,
         "type": ["clickable"]
     });
-    
+
     match validator.validate(&missing_selector) {
         Ok(_) => println!("✗ This should have failed validation\n"),
         Err(e) => println!("✓ Correctly caught error:\n{}\n", e),
@@ -70,7 +70,7 @@ fn main() {
             "selector": { "css": ".elem" }
         }]
     });
-    
+
     match validator.validate(&bad_name) {
         Ok(_) => println!("✗ This should have failed validation\n"),
         Err(e) => println!("✓ Correctly caught error:\n{}\n", e),
@@ -84,7 +84,7 @@ fn main() {
         "description": "Example application component",
         "type": ["clickable"]
     }"#;
-    
+
     match validator.validate_str(json_string) {
         Ok(_) => println!("✓ Valid: JSON string parsed and validated successfully\n"),
         Err(e) => println!("✗ Invalid: {}\n", e),
