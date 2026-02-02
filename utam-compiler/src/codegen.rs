@@ -181,6 +181,19 @@ pub fn compile_compose_statements(
 }
 
 /// Compile compose arguments into typed argument references
+///
+/// # Arguments
+///
+/// * `args` - The compose arguments to compile
+/// * `method_args` - The method arguments for reference validation
+///
+/// # Returns
+///
+/// A vector of compiled arguments
+///
+/// # Errors
+///
+/// Returns `InvalidStatement` if an argument reference is not found in method arguments
 fn compile_args(
     args: &[ComposeArgAst],
     method_args: &[MethodArgAst],
@@ -190,7 +203,20 @@ fn compile_args(
         .collect()
 }
 
-/// Compile a single argument
+/// Compile a single ComposeArgAst into a CompiledArg, validating argument references
+///
+/// # Arguments
+///
+/// * `arg` - The compose argument to compile
+/// * `method_args` - The method arguments for reference validation
+///
+/// # Returns
+///
+/// A compiled argument (either a literal value or an argument reference)
+///
+/// # Errors
+///
+/// Returns `InvalidStatement` if an argument reference is not found in method arguments
 fn compile_single_arg(arg: &ComposeArgAst, method_args: &[MethodArgAst]) -> CompilerResult<CompiledArg> {
     match arg {
         ComposeArgAst::Named { name, arg_type } => {
