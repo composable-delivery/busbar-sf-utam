@@ -16,6 +16,7 @@ pub mod ast;
 pub mod codegen;
 pub mod error;
 mod parser;
+pub mod utils;
 pub mod validator;
 
 pub use codegen::{CodeGenConfig, CodeGenerator};

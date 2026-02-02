@@ -7,6 +7,7 @@ use quote::{format_ident, quote};
 
 use crate::ast::*;
 use crate::error::{CompilerError, CompilerResult};
+use crate::utils::{to_pascal_case, to_snake_case};
 
 /// Configuration for code generation
 #[derive(Debug, Clone)]
@@ -640,67 +641,9 @@ impl CodeGenerator {
     }
 }
 
-/// Convert string to snake_case
-fn to_snake_case(s: &str) -> String {
-    let mut result = String::new();
-    let mut prev_lowercase = false;
-    
-    for (i, ch) in s.chars().enumerate() {
-        if ch.is_uppercase() {
-            if i > 0 && prev_lowercase {
-                result.push('_');
-            }
-            result.push(ch.to_lowercase().next().unwrap());
-            prev_lowercase = false;
-        } else {
-            result.push(ch);
-            prev_lowercase = ch.is_lowercase();
-        }
-    }
-    
-    result
-}
-
-/// Convert string to PascalCase
-fn to_pascal_case(s: &str) -> String {
-    let mut result = String::new();
-    let mut capitalize_next = true;
-    
-    for ch in s.chars() {
-        if ch == '_' || ch == '-' || ch == '/' {
-            capitalize_next = true;
-        } else if capitalize_next {
-            result.push(ch.to_uppercase().next().unwrap());
-            capitalize_next = false;
-        } else {
-            result.push(ch);
-        }
-    }
-    
-    result
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_to_snake_case() {
-        assert_eq!(to_snake_case("submitButton"), "submit_button");
-        assert_eq!(to_snake_case("usernameInput"), "username_input");
-        assert_eq!(to_snake_case("simple"), "simple");
-        assert_eq!(to_snake_case("HTTPRequest"), "httprequest");
-    }
-
-    #[test]
-    fn test_to_pascal_case() {
-        assert_eq!(to_pascal_case("login-form"), "LoginForm");
-        assert_eq!(to_pascal_case("simple_button"), "SimpleButton");
-        assert_eq!(to_pascal_case("simpleButton"), "SimpleButton");
-        assert_eq!(to_pascal_case("component"), "Component");
-    }
-
-    #[test]
     fn test_generate_simple_page_object() {
         let ast = PageObjectAst {
             description: Some(DescriptionAst::Simple("Test page".to_string())),

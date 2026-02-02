@@ -3,7 +3,7 @@
 //! Provides common helpers for testing UTAM JSON compilation.
 
 use std::path::Path;
-use utam_compiler::{compile, CodeGenConfig, CompilerResult};
+use utam_compiler::{compile, CodeGenConfig, CompilerResult, utils::to_pascal_case};
 
 /// Load a test fixture from the testdata directory
 pub fn load_fixture(path: &str) -> String {
@@ -37,27 +37,8 @@ fn extract_module_name(path: &str) -> String {
     // Remove .utam suffix if present
     let name = filename.strip_suffix(".utam").unwrap_or(filename);
     
-    // Convert to PascalCase
+    // Convert to PascalCase using shared utility
     to_pascal_case(name)
-}
-
-/// Convert string to PascalCase
-fn to_pascal_case(s: &str) -> String {
-    let mut result = String::new();
-    let mut capitalize_next = true;
-    
-    for ch in s.chars() {
-        if ch == '_' || ch == '-' || ch == '/' || ch == '.' {
-            capitalize_next = true;
-        } else if capitalize_next {
-            result.push(ch.to_uppercase().next().unwrap());
-            capitalize_next = false;
-        } else {
-            result.push(ch);
-        }
-    }
-    
-    result
 }
 
 /// Assert that compilation succeeds for a given fixture
