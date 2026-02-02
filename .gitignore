@@ -4,6 +4,8 @@ Cargo.lock
 *.swo
 .idea/
 .vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
 *.iml
 .DS_Store
 *.log

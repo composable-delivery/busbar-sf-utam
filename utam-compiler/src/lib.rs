@@ -2,30 +2,34 @@
 //!
 //! Transforms UTAM JSON page object definitions into Rust source code.
 //!
-//! **Note**: Core compiler functionality is not yet implemented.
-//! The parser, validator, and code generator modules are currently stubs.
+//! **Note**: Core compiler functionality is not yet fully implemented.
+//! The parser and code generator modules are currently stubs.
 //!
-//! # Planned Example
+//! # Example
 //!
-//! ```rust,ignore
-//! use utam_compiler::compile;
+//! ```rust,no_run
+//! use utam_compiler::validator::SchemaValidator;
 //!
-//! let json = include_str!("login-form.utam.json");
-//! let rust_code = compile(json)?;
+//! let json = r#"{"root": true, "selector": {"css": ".button"}}"#;
+//! let validator = SchemaValidator::new().unwrap();
+//! validator.validate_str(json).expect("Invalid UTAM JSON");
 //! ```
 
-mod ast;
+pub mod ast;
 mod codegen;
-mod error;
+pub mod error;
 mod parser;
-mod validator;
+pub mod validator;
+
+pub use error::{CompilerError, CompilerResult, ValidationError};
+pub use validator::SchemaValidator;
+
+// Re-export AST types for convenience
+pub use ast::*;
 
 // TODO: Re-enable once modules are implemented
-// pub use ast::*;
 // pub use codegen::generate;
-// pub use error::{CompilerError, CompilerResult};
 // pub use parser::parse;
-// pub use validator::validate;
 
 // /// Compile UTAM JSON to Rust source code
 // pub fn compile(json: &str) -> CompilerResult<String> {
