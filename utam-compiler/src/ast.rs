@@ -180,6 +180,73 @@ pub struct SelectorArgAst {
     pub arg_type: String,
 }
 
+/// Types of selectors supported by UTAM
+#[derive(Debug, Clone, PartialEq)]
+pub enum SelectorType {
+    /// CSS selector
+    Css(String),
+    /// Mobile accessibility ID selector
+    AccessibilityId(String),
+    /// iOS class chain selector
+    IosClassChain(String),
+    /// Android UI automator selector
+    AndroidUiAutomator(String),
+    /// Unknown or empty selector
+    Unknown,
+}
+
+impl SelectorAst {
+    /// Returns the type and value of this selector
+    pub fn selector_type(&self) -> SelectorType {
+        if let Some(css) = &self.css {
+            SelectorType::Css(css.clone())
+        } else if let Some(accessid) = &self.accessid {
+            SelectorType::AccessibilityId(accessid.clone())
+        } else if let Some(classchain) = &self.classchain {
+            SelectorType::IosClassChain(classchain.clone())
+        } else if let Some(uiautomator) = &self.uiautomator {
+            SelectorType::AndroidUiAutomator(uiautomator.clone())
+        } else {
+            SelectorType::Unknown
+        }
+    }
+
+    /// Returns true if this selector has parameters
+    pub fn has_parameters(&self) -> bool {
+        !self.args.is_empty()
+    }
+
+    /// Counts the number of placeholders (%s and %d) in the selector string
+    pub fn count_placeholders(&self) -> usize {
+        let selector_str = match self.selector_type() {
+            SelectorType::Css(s) => s,
+            SelectorType::AccessibilityId(s) => s,
+            SelectorType::IosClassChain(s) => s,
+            SelectorType::AndroidUiAutomator(s) => s,
+            SelectorType::Unknown => return 0,
+        };
+
+        let string_count = selector_str.matches("%s").count();
+        let int_count = selector_str.matches("%d").count();
+        string_count + int_count
+    }
+
+    /// Validates that the number of parameters matches the number of placeholders
+    pub fn validate(&self) -> Result<(), crate::error::SelectorError> {
+        if self.has_parameters() {
+            let placeholder_count = self.count_placeholders();
+            let arg_count = self.args.len();
+            if placeholder_count != arg_count {
+                return Err(crate::error::SelectorError::ParameterMismatch {
+                    expected: placeholder_count,
+                    actual: arg_count,
+                });
+            }
+        }
+        Ok(())
+    }
+}
+
 /// Method definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MethodAst {
@@ -696,6 +763,20 @@ mod tests {
         assert!(deserialized.selector.is_some());
     }
 
+    #[test]
+    fn test_selector_type_css() {
+        let selector = SelectorAst {
+            css: Some("button.submit".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        match selector.selector_type() {
+            SelectorType::Css(s) => assert_eq!(s, "button.submit"),
+            _ => panic!("Expected Css selector type"),
     // Element kind tests
     #[test]
     fn test_element_kind_basic() {
@@ -728,6 +809,19 @@ mod tests {
     }
 
     #[test]
+    fn test_selector_type_accessid() {
+        let selector = SelectorAst {
+            css: None,
+            accessid: Some("submit-btn".to_string()),
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        match selector.selector_type() {
+            SelectorType::AccessibilityId(s) => assert_eq!(s, "submit-btn"),
+            _ => panic!("Expected AccessibilityId selector type"),
     fn test_element_kind_typed() {
         let element = ElementAst {
             name: "button".to_string(),
@@ -758,6 +852,19 @@ mod tests {
     }
 
     #[test]
+    fn test_selector_type_classchain() {
+        let selector = SelectorAst {
+            css: None,
+            accessid: None,
+            classchain: Some("XCUIElementTypeButton[1]".to_string()),
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        match selector.selector_type() {
+            SelectorType::IosClassChain(s) => assert_eq!(s, "XCUIElementTypeButton[1]"),
+            _ => panic!("Expected IosClassChain selector type"),
     fn test_element_kind_custom() {
         let element = ElementAst {
             name: "customBtn".to_string(),
@@ -787,6 +894,21 @@ mod tests {
     }
 
     #[test]
+    fn test_selector_type_uiautomator() {
+        let selector = SelectorAst {
+            css: None,
+            accessid: None,
+            classchain: None,
+            uiautomator: Some("new UiSelector().text(\"Submit\")".to_string()),
+            args: vec![],
+            return_all: false,
+        };
+
+        match selector.selector_type() {
+            SelectorType::AndroidUiAutomator(s) => {
+                assert_eq!(s, "new UiSelector().text(\"Submit\")")
+            }
+            _ => panic!("Expected AndroidUiAutomator selector type"),
     fn test_element_kind_container() {
         let element = ElementAst {
             name: "container".to_string(),
@@ -810,6 +932,229 @@ mod tests {
     }
 
     #[test]
+    fn test_selector_type_unknown() {
+        let selector = SelectorAst {
+            css: None,
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        match selector.selector_type() {
+            SelectorType::Unknown => {}
+            _ => panic!("Expected Unknown selector type"),
+        }
+    }
+
+    #[test]
+    fn test_has_parameters_true() {
+        let selector = SelectorAst {
+            css: Some("button[data-id='%s']".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![SelectorArgAst {
+                name: "id".to_string(),
+                arg_type: "string".to_string(),
+            }],
+            return_all: false,
+        };
+
+        assert!(selector.has_parameters());
+    }
+
+    #[test]
+    fn test_has_parameters_false() {
+        let selector = SelectorAst {
+            css: Some("button.submit".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert!(!selector.has_parameters());
+    }
+
+    #[test]
+    fn test_count_placeholders_string() {
+        let selector = SelectorAst {
+            css: Some("button[data-id='%s']".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert_eq!(selector.count_placeholders(), 1);
+    }
+
+    #[test]
+    fn test_count_placeholders_number() {
+        let selector = SelectorAst {
+            css: Some("li:nth-child(%d)".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert_eq!(selector.count_placeholders(), 1);
+    }
+
+    #[test]
+    fn test_count_placeholders_multiple() {
+        let selector = SelectorAst {
+            css: Some("div[data-type='%s'] > li:nth-child(%d)".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert_eq!(selector.count_placeholders(), 2);
+    }
+
+    #[test]
+    fn test_count_placeholders_none() {
+        let selector = SelectorAst {
+            css: Some("button.submit".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert_eq!(selector.count_placeholders(), 0);
+    }
+
+    #[test]
+    fn test_count_placeholders_mobile_selector() {
+        let selector = SelectorAst {
+            css: None,
+            accessid: Some("submit-%s".to_string()),
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert_eq!(selector.count_placeholders(), 1);
+    }
+
+    #[test]
+    fn test_validate_success_no_params() {
+        let selector = SelectorAst {
+            css: Some("button.submit".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![],
+            return_all: false,
+        };
+
+        assert!(selector.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_success_matching_params() {
+        let selector = SelectorAst {
+            css: Some("button[data-id='%s']".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![SelectorArgAst {
+                name: "id".to_string(),
+                arg_type: "string".to_string(),
+            }],
+            return_all: false,
+        };
+
+        assert!(selector.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_success_multiple_params() {
+        let selector = SelectorAst {
+            css: Some("div[data-type='%s'] > li:nth-child(%d)".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![
+                SelectorArgAst {
+                    name: "element_type".to_string(),
+                    arg_type: "string".to_string(),
+                },
+                SelectorArgAst {
+                    name: "index".to_string(),
+                    arg_type: "number".to_string(),
+                },
+            ],
+            return_all: false,
+        };
+
+        assert!(selector.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_error_too_many_args() {
+        let selector = SelectorAst {
+            css: Some("button[data-id='%s']".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![
+                SelectorArgAst {
+                    name: "id".to_string(),
+                    arg_type: "string".to_string(),
+                },
+                SelectorArgAst {
+                    name: "extra".to_string(),
+                    arg_type: "string".to_string(),
+                },
+            ],
+            return_all: false,
+        };
+
+        let result = selector.validate();
+        assert!(result.is_err());
+        match result.unwrap_err() {
+            crate::error::SelectorError::ParameterMismatch { expected, actual } => {
+                assert_eq!(expected, 1);
+                assert_eq!(actual, 2);
+            }
+        }
+    }
+
+    #[test]
+    fn test_validate_error_too_few_args() {
+        let selector = SelectorAst {
+            css: Some("div[data-type='%s'] > li:nth-child(%d)".to_string()),
+            accessid: None,
+            classchain: None,
+            uiautomator: None,
+            args: vec![SelectorArgAst {
+                name: "element_type".to_string(),
+                arg_type: "string".to_string(),
+            }],
+            return_all: false,
+        };
+
+        let result = selector.validate();
+        assert!(result.is_err());
+        match result.unwrap_err() {
+            crate::error::SelectorError::ParameterMismatch { expected, actual } => {
+                assert_eq!(expected, 2);
+                assert_eq!(actual, 1);
+            }
+        }
     fn test_element_kind_frame() {
         let element = ElementAst {
             name: "iframe".to_string(),

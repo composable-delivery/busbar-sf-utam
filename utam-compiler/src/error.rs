@@ -29,6 +29,22 @@ pub enum CompilerError {
     /// Generic compilation error
     #[error("Compilation error: {0}")]
     Compilation(String),
+
+    /// Selector validation error
+    #[error("Selector validation error: {0}")]
+    Selector(#[from] SelectorError),
+}
+
+/// Error type for selector validation
+#[derive(Error, Debug, Diagnostic)]
+pub enum SelectorError {
+    /// Parameter count mismatch between placeholders and args
+    #[error("Parameter count mismatch: expected {expected} placeholders but got {actual} arguments")]
+    #[diagnostic(help("Ensure the number of %s and %d placeholders matches the number of args"))]
+    ParameterMismatch {
+        expected: usize,
+        actual: usize,
+    },
 }
 
 /// Detailed validation error with path and message

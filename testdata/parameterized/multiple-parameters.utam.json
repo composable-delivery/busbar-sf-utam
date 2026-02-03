@@ -1,0 +1,28 @@
+{
+  "description": "Element with multiple parameterized selectors",
+  "root": true,
+  "selector": {
+    "css": "div.form"
+  },
+  "shadow": {
+    "elements": [
+      {
+        "name": "dynamicInput",
+        "type": ["editable"],
+        "selector": {
+          "css": "input[data-type='%s'][data-index='%d']",
+          "args": [
+            {
+              "name": "inputType",
+              "type": "string"
+            },
+            {
+              "name": "position",
+              "type": "number"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
