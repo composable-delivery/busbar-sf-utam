@@ -1,0 +1,24 @@
+{
+  "description": "Element with parameterized selector using %s",
+  "root": true,
+  "selector": {
+    "css": "div.container"
+  },
+  "shadow": {
+    "elements": [
+      {
+        "name": "dynamicButton",
+        "type": ["clickable"],
+        "selector": {
+          "css": "button[data-id='%s']",
+          "args": [
+            {
+              "name": "buttonId",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

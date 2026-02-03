@@ -1,6 +1,6 @@
 //! Error types for the UTAM compiler
 
-use miette::Diagnostic;
+use miette::{Diagnostic, NamedSource, SourceSpan};
 use thiserror::Error;
 
 /// Result type for compiler operations
@@ -33,6 +33,61 @@ pub enum CompilerError {
     /// Invalid statement in compose method
     #[error("Invalid statement: {0}")]
     InvalidStatement(String),
+    /// Invalid element type error
+    #[error("Invalid element type")]
+    #[diagnostic(
+        code(utam::invalid_element_type),
+        help("Element type must be an array of action types, a component path, 'container', or 'frame'")
+    )]
+    InvalidElementType {
+        #[source_code]
+        src: NamedSource<String>,
+        #[label("this element type is invalid")]
+        span: SourceSpan,
+    },
+
+    /// Unknown action type error
+    #[error("Unknown action type '{action}'")]
+    #[diagnostic(
+        code(utam::unknown_action),
+        help("Valid action types are: actionable, clickable, editable, draggable, touchable")
+    )]
+    UnknownActionType {
+        action: String,
+        #[source_code]
+        src: NamedSource<String>,
+        #[label("unknown action type")]
+        span: SourceSpan,
+    },
+
+    /// Selector parameter mismatch error
+    #[error("Selector parameter mismatch: expected {expected}, found {actual}")]
+    #[diagnostic(
+        code(utam::selector_params),
+        help("Ensure the number of args matches the number of %s/%d placeholders in the selector")
+    )]
+    SelectorParameterMismatch {
+        expected: usize,
+        actual: usize,
+        #[source_code]
+        src: NamedSource<String>,
+        #[label("selector with {expected} placeholder(s)")]
+        span: SourceSpan,
+    /// Selector validation error
+    #[error("Selector validation error: {0}")]
+    Selector(#[from] SelectorError),
+}
+
+/// Error type for selector validation
+#[derive(Error, Debug, Diagnostic)]
+pub enum SelectorError {
+    /// Parameter count mismatch between placeholders and args
+    #[error("Parameter count mismatch: expected {expected} placeholders but got {actual} arguments")]
+    #[diagnostic(help("Ensure the number of %s and %d placeholders matches the number of args"))]
+    ParameterMismatch {
+        expected: usize,
+        actual: usize,
+    },
 }
 
 /// Detailed validation error with path and message
@@ -62,4 +117,77 @@ fn format_validation_errors(errors: &[ValidationError]) -> String {
         .map(|(i, e)| format!("  {}. {}", i + 1, e))
         .collect::<Vec<_>>()
         .join("\n")
+}
+
+/// Error reporter for formatting compiler errors
+///
+/// Provides both human-readable terminal output and machine-readable JSON format.
+pub struct ErrorReporter {
+    source: String,
+    file_path: String,
+}
+
+impl ErrorReporter {
+    /// Create a new error reporter
+    ///
+    /// # Arguments
+    ///
+    /// * `source` - The source code being compiled
+    /// * `file_path` - Path to the source file
+    pub fn new(source: String, file_path: String) -> Self {
+        Self { source, file_path }
+    }
+
+    /// Report an error to stderr with colorized output
+    ///
+    /// Uses miette's fancy formatting for terminal output with colors,
+    /// source snippets, and helpful diagnostic information.
+    ///
+    /// # Arguments
+    ///
+    /// * `error` - The compiler error to report
+    pub fn report(&self, error: &CompilerError) {
+        use miette::{GraphicalReportHandler, GraphicalTheme};
+
+        // Create a graphical report handler with fancy theme
+        let mut output = String::new();
+        let handler =
+            GraphicalReportHandler::new_themed(GraphicalTheme::unicode()).with_width(80);
+
+        // Format the error using miette's fancy formatting
+        if let Err(e) = handler.render_report(&mut output, error) {
+            eprintln!("Error formatting diagnostic: {}", e);
+            eprintln!("{:?}", error);
+        } else {
+            eprintln!("{}", output);
+        }
+    }
+
+    /// Generate machine-readable JSON format for errors
+    ///
+    /// Produces a JSON array with error information suitable for
+    /// programmatic consumption by tools and IDEs.
+    ///
+    /// # Arguments
+    ///
+    /// * `errors` - Slice of compiler errors to format
+    ///
+    /// # Returns
+    ///
+    /// A JSON string representing the errors
+    pub fn report_json(&self, errors: &[CompilerError]) -> String {
+        let error_objects: Vec<serde_json::Value> = errors
+            .iter()
+            .map(|e| {
+                serde_json::json!({
+                    "file": self.file_path,
+                    "message": e.to_string(),
+                    "code": e.code().map(|c| c.to_string()),
+                })
+            })
+            .collect();
+
+        serde_json::to_string_pretty(&error_objects)
+            .unwrap_or_else(|_| "[]".to_string())
+    }
 }
