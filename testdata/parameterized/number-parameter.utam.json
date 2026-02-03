@@ -1,0 +1,24 @@
+{
+  "description": "Element with parameterized selector using %d",
+  "root": true,
+  "selector": {
+    "css": "ul.items"
+  },
+  "shadow": {
+    "elements": [
+      {
+        "name": "nthItem",
+        "type": ["clickable"],
+        "selector": {
+          "css": "li:nth-child(%d)",
+          "args": [
+            {
+              "name": "index",
+              "type": "number"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

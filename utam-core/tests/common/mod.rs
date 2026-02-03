@@ -1,34 +1,59 @@
 //! Test utilities for UTAM core runtime tests
 //!
-//! Provides mock WebDriver setup and common assertions.
+//! Provides WebDriver setup and common assertions for integration testing.
 
+use std::path::PathBuf;
 use utam_core::prelude::*;
 
-/// Mock WebDriver configuration for testing
+/// WebDriver configuration for testing
 #[allow(dead_code)]
-pub struct MockDriverConfig {
+pub struct TestDriverConfig {
     pub headless: bool,
     pub implicit_wait_ms: u64,
 }
 
-impl Default for MockDriverConfig {
+impl Default for TestDriverConfig {
     fn default() -> Self {
         Self { headless: true, implicit_wait_ms: 5000 }
     }
 }
 
-/// Setup a mock WebDriver for testing
+/// Setup a test WebDriver for integration tests
 ///
-/// Note: This is a placeholder for actual mock implementation.
-/// In real tests, you would either:
-/// 1. Use a real WebDriver with a test browser
-/// 2. Use a mock WebDriver implementation
-/// 3. Use dependency injection to provide test doubles
+/// This requires a running WebDriver server (e.g., ChromeDriver).
+/// Tests using this should be marked with `#[ignore]` by default
+/// and run explicitly with `cargo test -- --ignored`.
 #[allow(dead_code)]
-pub async fn setup_mock_driver() -> UtamResult<()> {
-    // TODO: Implement mock WebDriver or use test browser
-    // For now, this is a placeholder that shows the API
-    Ok(())
+pub async fn setup_test_driver(config: TestDriverConfig) -> UtamResult<WebDriver> {
+    use thirtyfour::{ChromiumLikeCapabilities, DesiredCapabilities};
+
+    let mut caps = DesiredCapabilities::chrome();
+    if config.headless {
+        caps.set_headless()?;
+    }
+
+    // Try to connect to ChromeDriver on default port
+    let driver = WebDriver::new("http://localhost:9515", caps)
+        .await
+        .map_err(UtamError::WebDriver)?;
+
+    // Set implicit wait
+    driver
+        .set_implicit_wait_timeout(std::time::Duration::from_millis(config.implicit_wait_ms))
+        .await?;
+
+    Ok(driver)
+}
+
+/// Get the file:// URL for a test HTML file
+#[allow(dead_code)]
+pub fn get_test_file_url(filename: &str) -> String {
+    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    path.push("tests");
+    path.push("testdata");
+    path.push(filename);
+
+    format!("file://{}", path.display())
 }
 
 /// Assert that an element is visible

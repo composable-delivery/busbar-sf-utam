@@ -70,6 +70,20 @@ pub enum CompilerError {
         src: NamedSource<String>,
         #[label("selector with {expected} placeholder(s)")]
         span: SourceSpan,
+    /// Selector validation error
+    #[error("Selector validation error: {0}")]
+    Selector(#[from] SelectorError),
+}
+
+/// Error type for selector validation
+#[derive(Error, Debug, Diagnostic)]
+pub enum SelectorError {
+    /// Parameter count mismatch between placeholders and args
+    #[error("Parameter count mismatch: expected {expected} placeholders but got {actual} arguments")]
+    #[diagnostic(help("Ensure the number of %s and %d placeholders matches the number of args"))]
+    ParameterMismatch {
+        expected: usize,
+        actual: usize,
     },
 }
 

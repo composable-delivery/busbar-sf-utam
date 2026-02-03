@@ -1,0 +1,65 @@
+---
+source: utam-compiler/tests/snapshot_tests.rs
+expression: code
+---
+use utam_core::prelude::*;
+///Simple compose method example
+pub struct SimpleMethod {
+    root: WebElement,
+}
+impl PageObject for SimpleMethod {
+    fn root(&self) -> &WebElement {
+        &self.root
+    }
+}
+#[async_trait::async_trait]
+impl RootPageObject for SimpleMethod {
+    const ROOT_SELECTOR: &'static str = "login-form";
+    async fn load(driver: &WebDriver) -> UtamResult<Self> {
+        Self::before_load(driver).await?;
+        let root = driver.find(By::Css(Self::ROOT_SELECTOR)).await?;
+        Self::from_element(root).await
+    }
+    async fn from_element(element: WebElement) -> UtamResult<Self> {
+        Ok(Self { root: element })
+    }
+}
+impl SimpleMethod {
+    /// Execute beforeLoad conditions
+    async fn before_load(driver: &WebDriver) -> UtamResult<()> {
+        Ok(())
+    }
+}
+impl SimpleMethod {
+    ///Get the usernameInput element
+    async fn get_username_input(&self) -> UtamResult<EditableElement> {
+        let shadow = self.root.get_shadow_root().await?;
+        let elem = shadow.find(By::Css("input[name='username']")).await?;
+        let wrapped = EditableElement::new(elem);
+        Ok(wrapped)
+    }
+    ///Get the passwordInput element
+    async fn get_password_input(&self) -> UtamResult<EditableElement> {
+        let shadow = self.root.get_shadow_root().await?;
+        let elem = shadow.find(By::Css("input[name='password']")).await?;
+        let wrapped = EditableElement::new(elem);
+        Ok(wrapped)
+    }
+    ///Get the submitButton element
+    pub async fn get_submit_button(&self) -> UtamResult<ClickableElement> {
+        let shadow = self.root.get_shadow_root().await?;
+        let elem = shadow.find(By::Css("button[type='submit']")).await?;
+        let wrapped = ClickableElement::new(elem);
+        Ok(wrapped)
+    }
+    ///login method
+    pub async fn login(&self, username: &str, password: &str) -> UtamResult<()> {
+        let element = self.get_username_input().await?;
+        element.clear_and_type(username).await?;
+        let element = self.get_password_input().await?;
+        element.clear_and_type(password).await?;
+        let result = self.get_submit_button().await?;
+        result.click().await?;
+        Ok(())
+    }
+}
