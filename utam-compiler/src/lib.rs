@@ -20,7 +20,7 @@ pub mod utils;
 pub mod validator;
 
 pub use codegen::{CodeGenConfig, CodeGenerator};
-pub use error::{CompilerError, CompilerResult, SelectError, ValidationError};
+pub use error::{CompilerError, CompilerResult, ErrorReporter, SelectError, ValidationError};
 pub use validator::SchemaValidator;
 
 // Re-export AST types for convenience
