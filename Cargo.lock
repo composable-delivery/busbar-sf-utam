@@ -2377,6 +2377,7 @@ dependencies = [
  "thirtyfour",
  "thiserror 2.0.18",
  "tokio",
+ "utam-compiler",
 ]
 
 [[package]]

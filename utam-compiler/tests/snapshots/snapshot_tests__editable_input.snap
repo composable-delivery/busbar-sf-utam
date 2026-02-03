@@ -1,0 +1,33 @@
+---
+source: utam-compiler/tests/snapshot_tests.rs
+expression: code
+---
+use utam_core::prelude::*;
+///Editable text input field
+pub struct EditableInput {
+    root: WebElement,
+}
+impl PageObject for EditableInput {
+    fn root(&self) -> &WebElement {
+        &self.root
+    }
+}
+#[async_trait::async_trait]
+impl RootPageObject for EditableInput {
+    const ROOT_SELECTOR: &'static str = "input[type='text']";
+    async fn load(driver: &WebDriver) -> UtamResult<Self> {
+        Self::before_load(driver).await?;
+        let root = driver.find(By::Css(Self::ROOT_SELECTOR)).await?;
+        Self::from_element(root).await
+    }
+    async fn from_element(element: WebElement) -> UtamResult<Self> {
+        Ok(Self { root: element })
+    }
+}
+impl EditableInput {
+    /// Execute beforeLoad conditions
+    async fn before_load(driver: &WebDriver) -> UtamResult<()> {
+        Ok(())
+    }
+}
+impl EditableInput {}
