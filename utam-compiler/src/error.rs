@@ -30,6 +30,9 @@ pub enum CompilerError {
     #[error("Compilation error: {0}")]
     Compilation(String),
 
+    /// Invalid statement in compose method
+    #[error("Invalid statement: {0}")]
+    InvalidStatement(String),
     /// Invalid element type error
     #[error("Invalid element type")]
     #[diagnostic(
