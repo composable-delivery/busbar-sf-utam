@@ -3,15 +3,12 @@
 //! Provides common helpers for testing UTAM JSON compilation.
 
 use std::path::Path;
-use utam_compiler::{compile, CodeGenConfig, CompilerResult, utils::to_pascal_case};
+use utam_compiler::{compile, utils::to_pascal_case, CodeGenConfig, CompilerResult};
 
 /// Load a test fixture from the testdata directory
 pub fn load_fixture(path: &str) -> String {
-    let fixture_path = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
-        .join("testdata")
-        .join(path);
+    let fixture_path =
+        Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().join("testdata").join(path);
     std::fs::read_to_string(&fixture_path)
         .unwrap_or_else(|e| panic!("Failed to load fixture {}: {}", fixture_path.display(), e))
 }
@@ -21,22 +18,17 @@ pub fn compile_fixture(path: &str) -> CompilerResult<String> {
     let json = load_fixture(path);
     // Extract module name from path (e.g., "basic/simple-element.utam.json" -> "SimpleElement")
     let module_name = extract_module_name(path);
-    let config = CodeGenConfig {
-        module_name: Some(module_name),
-    };
+    let config = CodeGenConfig { module_name: Some(module_name) };
     compile(&json, config)
 }
 
 /// Extract module name from fixture path
 fn extract_module_name(path: &str) -> String {
-    let filename = Path::new(path)
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or("PageObject");
-    
+    let filename = Path::new(path).file_stem().and_then(|s| s.to_str()).unwrap_or("PageObject");
+
     // Remove .utam suffix if present
     let name = filename.strip_suffix(".utam").unwrap_or(filename);
-    
+
     // Convert to PascalCase using shared utility
     to_pascal_case(name)
 }
@@ -45,7 +37,7 @@ fn extract_module_name(path: &str) -> String {
 #[track_caller]
 pub fn assert_compiles(path: &str) {
     match compile_fixture(path) {
-        Ok(_code) => {},
+        Ok(_code) => {}
         Err(e) => panic!("Expected fixture {} to compile successfully, but got error: {}", path, e),
     }
 }
@@ -55,7 +47,7 @@ pub fn assert_compiles(path: &str) {
 pub fn assert_fails_to_compile(path: &str) {
     match compile_fixture(path) {
         Ok(_) => panic!("Expected fixture {} to fail compilation, but it succeeded", path),
-        Err(_) => {},
+        Err(_) => {}
     }
 }
 
