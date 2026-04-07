@@ -1,0 +1,53 @@
+//! Error types for the UTAM runtime interpreter
+
+use thiserror::Error;
+use utam_core::error::UtamError;
+
+/// Errors that can occur during runtime interpretation
+#[derive(Debug, Error)]
+pub enum RuntimeError {
+    /// Page object not found in registry
+    #[error("Page object not found: {name}")]
+    PageObjectNotFound { name: String },
+
+    /// Method not found on page object
+    #[error("Method '{method}' not found on page object '{page_object}'")]
+    MethodNotFound { page_object: String, method: String },
+
+    /// Element not defined in page object
+    #[error("Element '{element}' not defined in page object '{page_object}'")]
+    ElementNotDefined {
+        page_object: String,
+        element: String,
+    },
+
+    /// Action not supported for this element type
+    #[error("Action '{action}' not supported for element type '{element_type}'")]
+    UnsupportedAction {
+        action: String,
+        element_type: String,
+    },
+
+    /// Required argument missing
+    #[error("Method '{method}' requires argument '{arg_name}'")]
+    ArgumentMissing { method: String, arg_name: String },
+
+    /// Argument type mismatch
+    #[error("Argument type mismatch: expected {expected}, got {actual}")]
+    ArgumentTypeMismatch { expected: String, actual: String },
+
+    /// Underlying UTAM error
+    #[error(transparent)]
+    Utam(#[from] UtamError),
+
+    /// JSON deserialization error
+    #[error("JSON error: {0}")]
+    Json(#[from] serde_json::Error),
+
+    /// IO error
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+}
+
+/// Result type for runtime operations
+pub type RuntimeResult<T> = Result<T, RuntimeError>;

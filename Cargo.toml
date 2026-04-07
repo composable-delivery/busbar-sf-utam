@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["utam-core", "utam-compiler", "utam-cli", "utam-test"]
+members = ["utam-core", "utam-compiler", "utam-cli", "utam-test", "utam-runtime"]
 
 [workspace.package]
 version = "0.1.0"
@@ -47,3 +47,4 @@ insta = { version = "1", features = ["json"] }
 utam-core = { path = "utam-core" }
 utam-compiler = { path = "utam-compiler" }
 utam-test = { path = "utam-test" }
+utam-runtime = { path = "utam-runtime" }
