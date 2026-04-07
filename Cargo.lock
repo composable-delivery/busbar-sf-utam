@@ -2330,6 +2330,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "utam-runtime"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "insta",
+ "serde",
+ "serde_json",
+ "thirtyfour",
+ "thiserror 2.0.18",
+ "tokio",
+ "utam-compiler",
+ "utam-core",
+]
+
+[[package]]
 name = "utam-test"
 version = "0.1.0"
 dependencies = [

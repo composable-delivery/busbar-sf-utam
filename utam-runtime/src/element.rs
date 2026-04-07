@@ -1,20 +1,15 @@
 //! Dynamic element wrapper and runtime value types
 //!
-//! [`DynamicElement`] wraps utam-core element types behind a uniform interface,
-//! dispatching action names to the correct trait methods at runtime.
+//! [`DynamicElement`] wraps a driver-agnostic [`ElementHandle`] and dispatches
+//! UTAM action names to the correct methods at runtime.
 //!
 //! [`RuntimeValue`] is the dynamically-typed currency flowing through the interpreter.
 
 use std::fmt;
-use std::time::Duration;
 
 use async_trait::async_trait;
-use thirtyfour::WebElement;
 
-use utam_core::elements::{BaseElement, ClickableElement, DraggableElement, EditableElement};
-use utam_core::error::UtamError;
-use utam_core::traits::{Actionable, Clickable, Draggable, Editable, Key};
-
+use crate::driver::{ElementHandle, Selector};
 use crate::error::{RuntimeError, RuntimeResult};
 
 /// Dynamically-typed value flowing through the runtime interpreter.
@@ -83,23 +78,104 @@ pub trait ElementRuntime: Send + Sync {
     async fn execute(&self, action: &str, args: &[RuntimeValue]) -> RuntimeResult<RuntimeValue>;
 
     /// List the actions this element supports
-    fn supported_actions(&self) -> &'static [&'static str];
+    fn supported_actions(&self) -> Vec<&'static str>;
 }
 
-/// Type-erased element wrapper.
+/// The declared capability level of an element.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ElementCapability {
+    Base,
+    Clickable,
+    Editable,
+    Draggable,
+}
+
+impl ElementCapability {
+    /// Determine capability from UTAM type list (e.g. `["clickable", "editable"]`).
+    ///
+    /// Picks the most capable: draggable > editable > clickable > base.
+    pub fn from_type_list(types: &[String]) -> Self {
+        if types.iter().any(|t| t == "draggable") {
+            ElementCapability::Draggable
+        } else if types.iter().any(|t| t == "editable") {
+            ElementCapability::Editable
+        } else if types.iter().any(|t| t == "clickable") {
+            ElementCapability::Clickable
+        } else {
+            ElementCapability::Base
+        }
+    }
+}
+
+/// Driver-agnostic element wrapper.
 ///
-/// Constructed from a `WebElement` + the element's declared type list
-/// (from the UTAM JSON). Dispatches action name strings to the underlying
-/// trait methods at runtime.
-#[derive(Debug, Clone)]
-pub enum DynamicElement {
-    Base(BaseElement),
-    Clickable(ClickableElement),
-    Editable(EditableElement),
-    Draggable(DraggableElement),
+/// Holds an [`ElementHandle`] (from any driver backend) plus the
+/// declared capability from the UTAM JSON. Dispatches action name
+/// strings to the appropriate `ElementHandle` methods at runtime.
+#[derive(Debug)]
+pub struct DynamicElement {
+    handle: Box<dyn ElementHandle>,
+    capability: ElementCapability,
 }
 
-/// All actions supported by BaseElement (available on every variant)
+impl Clone for DynamicElement {
+    fn clone(&self) -> Self {
+        Self { handle: self.handle.clone_handle(), capability: self.capability }
+    }
+}
+
+impl DynamicElement {
+    /// Create from an element handle and UTAM type list
+    pub fn new(handle: Box<dyn ElementHandle>, types: &[String]) -> Self {
+        Self { handle, capability: ElementCapability::from_type_list(types) }
+    }
+
+    /// Create a base-capability element
+    pub fn base(handle: Box<dyn ElementHandle>) -> Self {
+        Self { handle, capability: ElementCapability::Base }
+    }
+
+    /// Get the underlying element handle
+    pub fn handle(&self) -> &dyn ElementHandle {
+        &*self.handle
+    }
+
+    /// Get the capability level
+    pub fn capability(&self) -> ElementCapability {
+        self.capability
+    }
+
+    /// What kind of element is this?
+    pub fn type_name(&self) -> &'static str {
+        match self.capability {
+            ElementCapability::Base => "base",
+            ElementCapability::Clickable => "clickable",
+            ElementCapability::Editable => "editable",
+            ElementCapability::Draggable => "draggable",
+        }
+    }
+
+    /// Check if this element supports a given action
+    pub fn supports_action(&self, action: &str) -> bool {
+        if BASE_ACTIONS.contains(&action) {
+            return true;
+        }
+        match self.capability {
+            ElementCapability::Draggable => {
+                DRAG_ACTIONS.contains(&action)
+                    || CLICK_ACTIONS.contains(&action)
+                    || EDIT_ACTIONS.contains(&action)
+            }
+            ElementCapability::Editable => {
+                EDIT_ACTIONS.contains(&action) || CLICK_ACTIONS.contains(&action)
+            }
+            ElementCapability::Clickable => CLICK_ACTIONS.contains(&action),
+            ElementCapability::Base => false,
+        }
+    }
+}
+
+/// All actions available on every element
 const BASE_ACTIONS: &[&str] = &[
     "getText",
     "getAttribute",
@@ -114,9 +190,6 @@ const BASE_ACTIONS: &[&str] = &[
     "focus",
     "blur",
     "scrollIntoView",
-    "scrollToCenter",
-    "scrollToTop",
-    "moveTo",
     "waitForVisible",
     "waitForInvisible",
     "waitForAbsence",
@@ -127,136 +200,6 @@ const BASE_ACTIONS: &[&str] = &[
 const CLICK_ACTIONS: &[&str] = &["click", "doubleClick", "rightClick", "clickAndHold"];
 const EDIT_ACTIONS: &[&str] = &["clear", "setText", "clearAndType", "press"];
 const DRAG_ACTIONS: &[&str] = &["dragAndDropByOffset"];
-
-impl DynamicElement {
-    /// Construct from a WebElement and the UTAM type list (e.g. `["clickable", "editable"]`).
-    ///
-    /// Picks the most capable wrapper: draggable > editable > clickable > base.
-    pub fn from_type_list(element: WebElement, types: &[String]) -> Self {
-        if types.iter().any(|t| t == "draggable") {
-            DynamicElement::Draggable(DraggableElement::new(element))
-        } else if types.iter().any(|t| t == "editable") {
-            DynamicElement::Editable(EditableElement::new(element))
-        } else if types.iter().any(|t| t == "clickable") {
-            DynamicElement::Clickable(ClickableElement::new(element))
-        } else {
-            DynamicElement::Base(BaseElement::new(element))
-        }
-    }
-
-    /// Construct as a plain base element (no special capabilities)
-    pub fn base(element: WebElement) -> Self {
-        DynamicElement::Base(BaseElement::new(element))
-    }
-
-    /// Get the underlying BaseElement (all variants contain one)
-    fn as_base(&self) -> BaseElement {
-        match self {
-            DynamicElement::Base(e) => e.clone(),
-            DynamicElement::Clickable(e) => BaseElement::new(e.inner().clone()),
-            DynamicElement::Editable(e) => BaseElement::new(e.inner().clone()),
-            DynamicElement::Draggable(e) => BaseElement::new(e.inner().clone()),
-        }
-    }
-
-    /// Get the inner WebElement
-    pub fn web_element(&self) -> &WebElement {
-        match self {
-            DynamicElement::Base(e) => e.inner(),
-            DynamicElement::Clickable(e) => e.inner(),
-            DynamicElement::Editable(e) => e.inner(),
-            DynamicElement::Draggable(e) => e.inner(),
-        }
-    }
-
-    /// What kind of element is this?
-    pub fn type_name(&self) -> &'static str {
-        match self {
-            DynamicElement::Base(_) => "base",
-            DynamicElement::Clickable(_) => "clickable",
-            DynamicElement::Editable(_) => "editable",
-            DynamicElement::Draggable(_) => "draggable",
-        }
-    }
-}
-
-/// Execute base-level actions available on any element variant.
-async fn execute_base_action(
-    base: &BaseElement,
-    action: &str,
-    args: &[RuntimeValue],
-) -> RuntimeResult<RuntimeValue> {
-    match action {
-        "getText" => Ok(RuntimeValue::String(base.get_text().await?)),
-        "getAttribute" => {
-            let name = args.first().map(|a| a.as_str()).transpose()?.unwrap_or("value");
-            Ok(RuntimeValue::String(
-                base.get_attribute(name).await?.unwrap_or_default(),
-            ))
-        }
-        "getClassAttribute" => Ok(RuntimeValue::String(base.get_class_attribute().await?)),
-        "getCssPropertyValue" => {
-            let name = require_str_arg(args, 0, "getCssPropertyValue")?;
-            Ok(RuntimeValue::String(base.get_css_property_value(name).await?))
-        }
-        "getTitle" => Ok(RuntimeValue::String(base.get_title().await?)),
-        "getValue" => Ok(RuntimeValue::String(base.get_value().await?)),
-        "isEnabled" => Ok(RuntimeValue::Bool(base.is_enabled().await?)),
-        "isFocused" => Ok(RuntimeValue::Bool(base.is_focused().await?)),
-        "isPresent" => Ok(RuntimeValue::Bool(base.is_present().await?)),
-        "isVisible" => Ok(RuntimeValue::Bool(base.is_visible().await?)),
-        "focus" => {
-            base.focus().await?;
-            Ok(RuntimeValue::Null)
-        }
-        "blur" => {
-            base.blur().await?;
-            Ok(RuntimeValue::Null)
-        }
-        "scrollIntoView" => {
-            base.scroll_into_view().await?;
-            Ok(RuntimeValue::Null)
-        }
-        "scrollToCenter" => {
-            base.scroll_to_center().await?;
-            Ok(RuntimeValue::Null)
-        }
-        "scrollToTop" => {
-            base.scroll_to_top().await?;
-            Ok(RuntimeValue::Null)
-        }
-        "moveTo" => {
-            base.move_to().await?;
-            Ok(RuntimeValue::Null)
-        }
-        "waitForVisible" => {
-            base.wait_for_visible(Duration::from_secs(10)).await?;
-            Ok(RuntimeValue::Null)
-        }
-        "waitForInvisible" => {
-            base.wait_for_invisible(Duration::from_secs(10)).await?;
-            Ok(RuntimeValue::Null)
-        }
-        "waitForAbsence" => {
-            base.wait_for_absence(Duration::from_secs(10)).await?;
-            Ok(RuntimeValue::Null)
-        }
-        "waitForEnabled" => {
-            base.wait_for_enabled(Duration::from_secs(10)).await?;
-            Ok(RuntimeValue::Null)
-        }
-        "containsElement" => {
-            let selector = require_str_arg(args, 0, "containsElement")?;
-            Ok(RuntimeValue::Bool(
-                base.contains_element(selector, false).await?,
-            ))
-        }
-        _ => Err(RuntimeError::UnsupportedAction {
-            action: action.to_string(),
-            element_type: "base".to_string(),
-        }),
-    }
-}
 
 /// Helper to extract a required string argument at a given position.
 fn require_str_arg<'a>(
@@ -272,142 +215,208 @@ fn require_str_arg<'a>(
         .as_str()
 }
 
-/// Convert a string to a Key enum value.
-fn parse_key(name: &str) -> RuntimeResult<Key> {
-    match name {
-        "Enter" => Ok(Key::Enter),
-        "Tab" => Ok(Key::Tab),
-        "Escape" => Ok(Key::Escape),
-        "Backspace" => Ok(Key::Backspace),
-        "Delete" => Ok(Key::Delete),
-        "ArrowUp" => Ok(Key::ArrowUp),
-        "ArrowDown" => Ok(Key::ArrowDown),
-        "ArrowLeft" => Ok(Key::ArrowLeft),
-        "ArrowRight" => Ok(Key::ArrowRight),
-        "Home" => Ok(Key::Home),
-        "End" => Ok(Key::End),
-        "PageUp" => Ok(Key::PageUp),
-        "PageDown" => Ok(Key::PageDown),
-        "Space" => Ok(Key::Space),
-        _ => Err(RuntimeError::ArgumentTypeMismatch {
-            expected: "valid key name".into(),
-            actual: name.into(),
-        }),
-    }
-}
-
 #[async_trait]
 impl ElementRuntime for DynamicElement {
     async fn execute(&self, action: &str, args: &[RuntimeValue]) -> RuntimeResult<RuntimeValue> {
-        // Try base actions first (available on all variants)
-        let base = self.as_base();
-        if BASE_ACTIONS.contains(&action) {
-            return execute_base_action(&base, action, args).await;
+        let h = &*self.handle;
+
+        // -- Base actions (all elements) --
+        match action {
+            "getText" => return Ok(RuntimeValue::String(h.text().await?)),
+            "getAttribute" => {
+                let name = args.first().map(|a| a.as_str()).transpose()?.unwrap_or("value");
+                return Ok(RuntimeValue::String(h.attribute(name).await?.unwrap_or_default()));
+            }
+            "getClassAttribute" => return Ok(RuntimeValue::String(h.class_name().await?)),
+            "getCssPropertyValue" => {
+                let name = require_str_arg(args, 0, "getCssPropertyValue")?;
+                return Ok(RuntimeValue::String(h.css_value(name).await?));
+            }
+            "getTitle" => return Ok(RuntimeValue::String(h.title().await?)),
+            "getValue" => return Ok(RuntimeValue::String(h.property_value().await?)),
+            "isEnabled" => return Ok(RuntimeValue::Bool(h.is_enabled().await?)),
+            "isFocused" => return Ok(RuntimeValue::Bool(h.is_focused().await?)),
+            "isPresent" => return Ok(RuntimeValue::Bool(h.is_present().await?)),
+            "isVisible" => return Ok(RuntimeValue::Bool(h.is_displayed().await?)),
+            "focus" => {
+                h.focus().await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "blur" => {
+                h.blur().await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "scrollIntoView" => {
+                h.scroll_into_view().await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "waitForVisible" => {
+                // Poll until displayed, with timeout
+                let handle = self.handle.clone_handle();
+                utam_core::wait::wait_for(
+                    || async {
+                        match handle.is_displayed().await {
+                            Ok(true) => Ok(Some(())),
+                            _ => Ok(None),
+                        }
+                    },
+                    &utam_core::wait::WaitConfig::default(),
+                    "element to become visible",
+                )
+                .await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "waitForInvisible" => {
+                let handle = self.handle.clone_handle();
+                utam_core::wait::wait_for(
+                    || async {
+                        match handle.is_displayed().await {
+                            Ok(false) => Ok(Some(())),
+                            _ => Ok(None),
+                        }
+                    },
+                    &utam_core::wait::WaitConfig::default(),
+                    "element to become invisible",
+                )
+                .await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "waitForAbsence" => {
+                let handle = self.handle.clone_handle();
+                utam_core::wait::wait_for(
+                    || async {
+                        match handle.is_present().await {
+                            Ok(false) => Ok(Some(())),
+                            _ => Ok(None),
+                        }
+                    },
+                    &utam_core::wait::WaitConfig::default(),
+                    "element to be absent",
+                )
+                .await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "waitForEnabled" => {
+                let handle = self.handle.clone_handle();
+                utam_core::wait::wait_for(
+                    || async {
+                        match handle.is_enabled().await {
+                            Ok(true) => Ok(Some(())),
+                            _ => Ok(None),
+                        }
+                    },
+                    &utam_core::wait::WaitConfig::default(),
+                    "element to become enabled",
+                )
+                .await?;
+                return Ok(RuntimeValue::Null);
+            }
+            "containsElement" => {
+                let css = require_str_arg(args, 0, "containsElement")?;
+                let found = h.find_elements(&Selector::Css(css.to_string())).await?;
+                return Ok(RuntimeValue::Bool(!found.is_empty()));
+            }
+            _ => {} // fall through to capability-specific actions
         }
 
-        match self {
-            DynamicElement::Clickable(el) => match action {
-                "click" => {
-                    el.click().await?;
-                    Ok(RuntimeValue::Null)
-                }
-                "doubleClick" => {
-                    el.double_click().await?;
-                    Ok(RuntimeValue::Null)
-                }
-                "rightClick" => {
-                    el.right_click().await?;
-                    Ok(RuntimeValue::Null)
-                }
-                "clickAndHold" => {
-                    el.click_and_hold().await?;
-                    Ok(RuntimeValue::Null)
-                }
-                _ => Err(RuntimeError::UnsupportedAction {
-                    action: action.to_string(),
-                    element_type: "clickable".into(),
-                }),
-            },
-
-            DynamicElement::Editable(el) => match action {
-                // Editable also supports click actions
-                "click" => {
-                    el.inner().click().await.map_err(UtamError::WebDriver)?;
-                    Ok(RuntimeValue::Null)
-                }
-                "clear" => {
-                    el.clear().await?;
-                    Ok(RuntimeValue::Null)
-                }
-                "setText" => {
-                    let text = require_str_arg(args, 0, "setText")?;
-                    el.set_text(text).await?;
-                    Ok(RuntimeValue::Null)
-                }
-                "clearAndType" => {
-                    let text = require_str_arg(args, 0, "clearAndType")?;
-                    el.clear_and_type(text).await?;
-                    Ok(RuntimeValue::Null)
-                }
-                "press" => {
-                    let key_name = require_str_arg(args, 0, "press")?;
-                    el.press(parse_key(key_name)?).await?;
-                    Ok(RuntimeValue::Null)
-                }
-                _ => Err(RuntimeError::UnsupportedAction {
-                    action: action.to_string(),
-                    element_type: "editable".into(),
-                }),
-            },
-
-            DynamicElement::Draggable(el) => match action {
-                // Draggable also supports click actions
-                "click" => {
-                    el.inner().click().await.map_err(UtamError::WebDriver)?;
-                    Ok(RuntimeValue::Null)
-                }
-                "dragAndDropByOffset" => {
-                    let x = match args.first() {
-                        Some(RuntimeValue::Number(n)) => *n,
-                        _ => {
-                            return Err(RuntimeError::ArgumentMissing {
-                                method: "dragAndDropByOffset".into(),
-                                arg_name: "x".into(),
-                            })
-                        }
-                    };
-                    let y = match args.get(1) {
-                        Some(RuntimeValue::Number(n)) => *n,
-                        _ => {
-                            return Err(RuntimeError::ArgumentMissing {
-                                method: "dragAndDropByOffset".into(),
-                                arg_name: "y".into(),
-                            })
-                        }
-                    };
-                    el.drag_and_drop_by_offset(x, y).await?;
-                    Ok(RuntimeValue::Null)
-                }
-                _ => Err(RuntimeError::UnsupportedAction {
-                    action: action.to_string(),
-                    element_type: "draggable".into(),
-                }),
-            },
-
-            DynamicElement::Base(_) => Err(RuntimeError::UnsupportedAction {
+        // -- Capability-specific actions --
+        if !self.supports_action(action) {
+            return Err(RuntimeError::UnsupportedAction {
                 action: action.to_string(),
-                element_type: "base".into(),
+                element_type: self.type_name().to_string(),
+            });
+        }
+
+        match action {
+            // Click actions
+            "click" => {
+                h.click().await?;
+                Ok(RuntimeValue::Null)
+            }
+            "doubleClick" => {
+                h.double_click().await?;
+                Ok(RuntimeValue::Null)
+            }
+            "rightClick" => {
+                h.right_click().await?;
+                Ok(RuntimeValue::Null)
+            }
+            "clickAndHold" => {
+                h.click_and_hold().await?;
+                Ok(RuntimeValue::Null)
+            }
+
+            // Edit actions
+            "clear" => {
+                h.clear().await?;
+                Ok(RuntimeValue::Null)
+            }
+            "setText" => {
+                let text = require_str_arg(args, 0, "setText")?;
+                h.send_keys(text).await?;
+                Ok(RuntimeValue::Null)
+            }
+            "clearAndType" => {
+                let text = require_str_arg(args, 0, "clearAndType")?;
+                h.clear().await?;
+                h.send_keys(text).await?;
+                Ok(RuntimeValue::Null)
+            }
+            "press" => {
+                let key = require_str_arg(args, 0, "press")?;
+                h.press_key(key).await?;
+                Ok(RuntimeValue::Null)
+            }
+
+            // Drag actions
+            "dragAndDropByOffset" => {
+                let x = match args.first() {
+                    Some(RuntimeValue::Number(n)) => *n,
+                    _ => {
+                        return Err(RuntimeError::ArgumentMissing {
+                            method: "dragAndDropByOffset".into(),
+                            arg_name: "x".into(),
+                        })
+                    }
+                };
+                let y = match args.get(1) {
+                    Some(RuntimeValue::Number(n)) => *n,
+                    _ => {
+                        return Err(RuntimeError::ArgumentMissing {
+                            method: "dragAndDropByOffset".into(),
+                            arg_name: "y".into(),
+                        })
+                    }
+                };
+                h.drag_by_offset(x, y).await?;
+                Ok(RuntimeValue::Null)
+            }
+
+            _ => Err(RuntimeError::UnsupportedAction {
+                action: action.to_string(),
+                element_type: self.type_name().to_string(),
             }),
         }
     }
 
-    fn supported_actions(&self) -> &'static [&'static str] {
-        match self {
-            DynamicElement::Base(_) => BASE_ACTIONS,
-            DynamicElement::Clickable(_) => CLICK_ACTIONS,
-            DynamicElement::Editable(_) => EDIT_ACTIONS,
-            DynamicElement::Draggable(_) => DRAG_ACTIONS,
+    fn supported_actions(&self) -> Vec<&'static str> {
+        let mut actions: Vec<&str> = BASE_ACTIONS.to_vec();
+        match self.capability {
+            ElementCapability::Draggable => {
+                actions.extend_from_slice(CLICK_ACTIONS);
+                actions.extend_from_slice(EDIT_ACTIONS);
+                actions.extend_from_slice(DRAG_ACTIONS);
+            }
+            ElementCapability::Editable => {
+                actions.extend_from_slice(CLICK_ACTIONS);
+                actions.extend_from_slice(EDIT_ACTIONS);
+            }
+            ElementCapability::Clickable => {
+                actions.extend_from_slice(CLICK_ACTIONS);
+            }
+            ElementCapability::Base => {}
         }
+        actions
     }
 }
 
@@ -443,15 +452,23 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_key_valid() {
-        assert_eq!(parse_key("Enter").unwrap(), Key::Enter);
-        assert_eq!(parse_key("Tab").unwrap(), Key::Tab);
-        assert_eq!(parse_key("Escape").unwrap(), Key::Escape);
-        assert_eq!(parse_key("ArrowDown").unwrap(), Key::ArrowDown);
-    }
-
-    #[test]
-    fn test_parse_key_invalid() {
-        assert!(parse_key("NotAKey").is_err());
+    fn test_element_capability_from_types() {
+        assert_eq!(
+            ElementCapability::from_type_list(&["clickable".into()]),
+            ElementCapability::Clickable
+        );
+        assert_eq!(
+            ElementCapability::from_type_list(&["clickable".into(), "editable".into()]),
+            ElementCapability::Editable
+        );
+        assert_eq!(
+            ElementCapability::from_type_list(&["draggable".into(), "clickable".into()]),
+            ElementCapability::Draggable
+        );
+        assert_eq!(
+            ElementCapability::from_type_list(&["actionable".into()]),
+            ElementCapability::Base
+        );
+        assert_eq!(ElementCapability::from_type_list(&[]), ElementCapability::Base);
     }
 }

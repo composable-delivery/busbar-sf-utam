@@ -16,17 +16,11 @@ pub enum RuntimeError {
 
     /// Element not defined in page object
     #[error("Element '{element}' not defined in page object '{page_object}'")]
-    ElementNotDefined {
-        page_object: String,
-        element: String,
-    },
+    ElementNotDefined { page_object: String, element: String },
 
     /// Action not supported for this element type
     #[error("Action '{action}' not supported for element type '{element_type}'")]
-    UnsupportedAction {
-        action: String,
-        element_type: String,
-    },
+    UnsupportedAction { action: String, element_type: String },
 
     /// Required argument missing
     #[error("Method '{method}' requires argument '{arg_name}'")]
