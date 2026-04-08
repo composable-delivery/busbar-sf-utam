@@ -23,7 +23,8 @@ on:
       - ".github/workflows/salesforce-integration.yml"
 
 permissions:
-  contents: read
+  contents: write
+  pages: write
 
 env:
   RUST_BACKTRACE: 1
@@ -80,9 +81,11 @@ jobs:
           sleep 2
           curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
 
-      # ── Prepare artifacts dir ─────────────────────────────────────────
-      - name: Prepare artifacts directory
-        run: mkdir -p /tmp/sf-artifacts
+      # ── Prepare directories ───────────────────────────────────────────
+      - name: Prepare directories
+        run: |
+          mkdir -p /tmp/sf-artifacts
+          mkdir -p /tmp/allure-results
 
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
@@ -91,6 +94,7 @@ jobs:
           SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           SF_ARTIFACTS_DIR: "/tmp/sf-artifacts"
+          ALLURE_RESULTS_DIR: "/tmp/allure-results"
         run: |
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
@@ -99,37 +103,51 @@ jobs:
             cargo test -p utam-runtime --test salesforce_live -- --nocapture --test-threads=1 2>&1
           fi
 
-      # ── Create animated GIF from screenshots ─────────────────────────
-      - name: Create animated GIF
-        if: always()
-        run: |
-          sudo apt-get install -y -qq imagemagick > /dev/null 2>&1 || true
-          SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
-          if [ "$SC_COUNT" -gt 0 ]; then
-            convert -delay 200 -loop 0 -resize 960x540 \
-              $(ls -v /tmp/sf-artifacts/*.png) \
-              /tmp/sf-artifacts/test-slideshow.gif 2>&1 || \
-            echo "GIF creation failed (non-critical)"
-
-            if [ -f /tmp/sf-artifacts/test-slideshow.gif ]; then
-              echo "Slideshow GIF: $(du -h /tmp/sf-artifacts/test-slideshow.gif | cut -f1)"
-            fi
-          fi
-
-      # ── Upload artifacts ──────────────────────────────────────────────
+      # ── Upload raw artifacts ──────────────────────────────────────────
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: salesforce-test-artifacts
-          path: /tmp/sf-artifacts/
+          path: |
+            /tmp/sf-artifacts/
+            /tmp/allure-results/
           if-no-files-found: ignore
           retention-days: 14
 
-      # ── Job Summary with inline screenshots ──────────────────────────
+      # ── Allure Report ────────────────────────────────────────────────
+      - name: Get Allure history
+        uses: actions/checkout@v6
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.12
+        if: always()
+        with:
+          allure_results: /tmp/allure-results
+          allure_history: allure-history
+          keep_reports: 30
+          gh_pages: gh-pages
+
+      - name: Deploy report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+      # ── Job Summary ──────────────────────────────────────────────────
       - name: Generate summary
         if: always()
         run: |
+          # Determine the GitHub Pages URL for this repo
+          PAGES_URL="https://composable-delivery.github.io/busbar-sf-utam"
+
           {
             echo "## Salesforce Integration Tests"
             echo ""
@@ -140,42 +158,8 @@ jobs:
 
             SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
             echo "| Screenshots | ${SC_COUNT} captured |"
+            echo "| Allure Report | [View full report](${PAGES_URL}) |"
             echo ""
-
-            # ── Inline screenshots ──────────────────────────────────────
-            if [ "$SC_COUNT" -gt 0 ]; then
-              echo "### Screenshots"
-              echo ""
-              echo "> Download \`salesforce-test-artifacts\` for full-resolution PNGs and animated GIF."
-              echo ""
-
-              TOTAL_SIZE=0
-              for png in $(ls -v /tmp/sf-artifacts/*.png); do
-                [ -f "$png" ] || continue
-                BASENAME=$(basename "$png" .png)
-
-                # Resize to small thumbnail and compress as JPEG
-                THUMB="/tmp/sf-artifacts/thumb-${BASENAME}.jpg"
-                convert "$png" -resize 960x540 -quality 35 "$THUMB" 2>/dev/null || continue
-                THUMB_BYTES=$(stat -c%s "$THUMB" 2>/dev/null || echo 0)
-
-                # Safety: stop embedding if total base64 would exceed ~800KB
-                TOTAL_SIZE=$((TOTAL_SIZE + THUMB_BYTES * 4 / 3))
-                if [ "$TOTAL_SIZE" -gt 800000 ]; then
-                  echo ""
-                  echo "_Remaining screenshots omitted (summary size limit). Download artifacts to view all._"
-                  break
-                fi
-
-                B64=$(base64 -w0 "$THUMB")
-                echo "<details open><summary><strong>${BASENAME}</strong></summary>"
-                echo ""
-                echo "<img src=\"data:image/jpeg;base64,${B64}\" width=\"960\" alt=\"${BASENAME}\" />"
-                echo ""
-                echo "</details>"
-                echo ""
-              done
-            fi
 
             # ── Discovery report ────────────────────────────────────────
             if [ -f /tmp/sf-artifacts/discovery-report.json ]; then
