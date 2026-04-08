@@ -58,18 +58,16 @@ jobs:
       - name: Get org info
         id: sf-org
         run: |
+          # Get instance URL
           ORG_INFO=$(sf org display --target-org ci-org --json)
           echo "$ORG_INFO" | jq '{ instanceUrl: .result.instanceUrl, username: .result.username }'
-
           INSTANCE=$(echo "$ORG_INFO" | jq -r '.result.instanceUrl')
-          ACCESS_TOKEN=$(echo "$ORG_INFO" | jq -r '.result.accessToken')
-
-          # Construct frontdoor URL using the INSTANCE URL (the My Domain URL).
-          # This is the only host that accepts the access token for browser auth.
-          # Do NOT use test.salesforce.com or login.salesforce.com.
-          FRONTDOOR="${INSTANCE}/secur/frontdoor.jsp?sid=${ACCESS_TOKEN}"
-
           echo "instance_url=$INSTANCE" >> "$GITHUB_OUTPUT"
+
+          # Get frontdoor URL directly from sf org open --url-only.
+          # This returns a URL like: https://mydomain.scratch.my.salesforce.com/secur/frontdoor.jsp?sid=...
+          # It uses the correct My Domain host, not test.salesforce.com or login.salesforce.com.
+          FRONTDOOR=$(sf org open --url-only --target-org ci-org)
           echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
           echo "Org instance: $INSTANCE"
           echo "Frontdoor host: $(echo "$FRONTDOOR" | sed 's|^\(https://[^/]*\)/.*|\1|')"
