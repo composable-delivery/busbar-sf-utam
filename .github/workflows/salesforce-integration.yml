@@ -22,23 +22,19 @@ on:
       - "salesforce-pageobjects/**"
       - ".github/workflows/salesforce-integration.yml"
 
+# contents: write needed to push to gh-pages branch
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: "pages-${{ github.head_ref || github.ref_name }}"
+  cancel-in-progress: true
 
 env:
   RUST_BACKTRACE: 1
   CARGO_TERM_COLOR: always
 
 jobs:
-  # ════════════════════════════════════════════════════════════════════════
-  # Job 1: Run tests, generate Allure report
-  # ════════════════════════════════════════════════════════════════════════
   salesforce-tests:
     name: Salesforce Live Tests
     runs-on: ubuntu-latest
@@ -155,7 +151,6 @@ jobs:
         run: |
           npm install -g allure-commandline
 
-          # Determine branch name
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BRANCH="${{ github.head_ref }}"
           else
@@ -164,13 +159,12 @@ jobs:
           BRANCH_DIR=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
           echo "branch_dir=$BRANCH_DIR" >> "$GITHUB_OUTPUT"
 
-          # Try to fetch previous history from gh-pages for trend tracking
+          # Fetch previous history from gh-pages for trend tracking
           git fetch origin gh-pages:gh-pages 2>/dev/null || true
           if git rev-parse --verify gh-pages 2>/dev/null; then
             HISTORY_SRC=$(git show "gh-pages:${BRANCH_DIR}/history/history.json" 2>/dev/null || true)
             if [ -n "$HISTORY_SRC" ]; then
               mkdir -p /tmp/allure-results/history
-              # Extract all history files from the gh-pages branch
               git show "gh-pages:${BRANCH_DIR}/history/history.json" > /tmp/allure-results/history/history.json 2>/dev/null || true
               git show "gh-pages:${BRANCH_DIR}/history/history-trend.json" > /tmp/allure-results/history/history-trend.json 2>/dev/null || true
               echo "Loaded previous history"
@@ -180,8 +174,8 @@ jobs:
           allure generate /tmp/allure-results -o /tmp/allure-report --clean
           echo "Report generated"
 
-      # ── Prepare Pages content ─────────────────────────────────────────
-      - name: Prepare Pages artifact
+      # ── Deploy to GitHub Pages (push to gh-pages branch) ──────────────
+      - name: Deploy to GitHub Pages
         if: always()
         run: |
           BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
@@ -190,7 +184,7 @@ jobs:
           DEPLOY_DIR="/tmp/pages-deploy"
           mkdir -p "$DEPLOY_DIR"
 
-          # Fetch existing Pages content from gh-pages branch
+          # Fetch existing Pages content
           if git rev-parse --verify gh-pages 2>/dev/null; then
             git archive gh-pages | tar -x -C "$DEPLOY_DIR" 2>/dev/null || true
           fi
@@ -224,32 +218,15 @@ jobs:
             echo '</body></html>'
           } > "$DEPLOY_DIR/index.html"
 
-          echo "Pages content ready at $DEPLOY_DIR"
-          ls -la "$DEPLOY_DIR/"
-
-      - name: Upload Pages artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: /tmp/pages-deploy
-
-      # Also push to gh-pages branch as a data store for history
-      - name: Update gh-pages data store
-        if: always()
-        continue-on-error: true
-        run: |
-          BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
-          [ -z "$BRANCH_DIR" ] && exit 0
-          [ ! -d /tmp/pages-deploy ] && exit 0
-
-          cd /tmp/pages-deploy
+          # Push to gh-pages branch
+          cd "$DEPLOY_DIR"
           git init
           git checkout -b gh-pages
           git add -A
           git -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" \
-            commit -m "Update report for ${BRANCH_DIR}" --allow-empty
+            commit -m "Update Allure report for ${BRANCH_DIR}" --allow-empty
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          git push --force origin gh-pages 2>/dev/null || echo "gh-pages push failed (non-critical, Pages will still deploy)"
+          git push --force origin gh-pages
 
       # ── Job Summary ──────────────────────────────────────────────────
       - name: Generate summary
@@ -270,26 +247,3 @@ jobs:
             echo "| All Reports | [Report index](${PAGES_URL}/) |"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
-
-  # ════════════════════════════════════════════════════════════════════════
-  # Job 2: Deploy to GitHub Pages (requires separate job with pages env)
-  # ════════════════════════════════════════════════════════════════════════
-  deploy-report:
-    name: Deploy Report
-    needs: salesforce-tests
-    if: always() && needs.salesforce-tests.result != 'cancelled'
-    runs-on: ubuntu-latest
-    continue-on-error: true
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
