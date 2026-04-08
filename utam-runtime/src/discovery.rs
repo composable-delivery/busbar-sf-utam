@@ -13,8 +13,6 @@
 //! Together these give an agent a **coverage map**: what's known, what's not,
 //! and draft page objects for the gaps.
 
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
 
 use utam_compiler::ast::*;
@@ -334,13 +332,12 @@ fn generate_utam_json(
     let elements: Vec<serde_json::Value> = children
         .iter()
         .map(|c| {
-            let mut el = serde_json::json!({
+            serde_json::json!({
                 "name": to_camel_case(&c.name),
                 "type": c.types,
                 "selector": { "css": c.selector },
                 "public": true
-            });
-            el
+            })
         })
         .collect();
 

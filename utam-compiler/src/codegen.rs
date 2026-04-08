@@ -230,8 +230,6 @@ fn compile_single_arg(
                 format!("\"{}\"", v.as_str().unwrap_or(""))
             } else if v.is_boolean() {
                 v.as_bool().unwrap_or(false).to_string()
-            } else if v.is_number() {
-                v.to_string()
             } else {
                 v.to_string()
             };
@@ -300,16 +298,10 @@ pub fn generate_selector_code(selector: &SelectorAst) -> TokenStream {
 }
 
 /// Configuration for code generation
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct CodeGenConfig {
     /// Module name for the generated code
     pub module_name: Option<String>,
-}
-
-impl Default for CodeGenConfig {
-    fn default() -> Self {
-        Self { module_name: None }
-    }
 }
 
 /// Main code generator
@@ -487,11 +479,11 @@ impl CodeGenerator {
 
         // Get all elements including shadow elements
         for element in self.all_elements() {
-            getters.push(self.generate_element_getter(&element));
+            getters.push(self.generate_element_getter(element));
 
             // If wait is true, generate a wait method
             if element.generate_wait {
-                getters.push(self.generate_wait_method(&element));
+                getters.push(self.generate_wait_method(element));
             }
         }
 
@@ -595,15 +587,14 @@ impl CodeGenerator {
                     quote! { EditableElement }
                 } else if types.iter().any(|t| t == "clickable") {
                     quote! { ClickableElement }
-                } else if types.iter().any(|t| t == "actionable") {
-                    quote! { BaseElement }
                 } else {
+                    // actionable or unknown action types fall back to BaseElement
                     quote! { BaseElement }
                 }
             }
             Some(ElementTypeAst::CustomComponent(path)) => {
                 // Convert path like "package/pageObjects/component" to PascalCase
-                let component_name = path.split('/').last().unwrap_or(path);
+                let component_name = path.split('/').next_back().unwrap_or(path);
                 let ident = format_ident!("{}", to_pascal_case(component_name));
                 quote! { #ident }
             }

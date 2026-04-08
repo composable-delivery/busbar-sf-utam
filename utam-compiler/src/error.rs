@@ -124,7 +124,7 @@ fn format_validation_errors(errors: &[ValidationError]) -> String {
 ///
 /// Provides both human-readable terminal output and machine-readable JSON format.
 pub struct ErrorReporter {
-    source: String,
+    _source: String,
     file_path: String,
 }
 
@@ -136,7 +136,7 @@ impl ErrorReporter {
     /// * `source` - The source code being compiled
     /// * `file_path` - Path to the source file
     pub fn new(source: String, file_path: String) -> Self {
-        Self { source, file_path }
+        Self { _source: source, file_path }
     }
 
     /// Report an error to stderr with colorized output

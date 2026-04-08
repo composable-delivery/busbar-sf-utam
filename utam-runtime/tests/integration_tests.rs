@@ -183,7 +183,7 @@ fn test_parameterized_selector_resolution() {
         .elements
         .iter()
         .chain(ast.shadow.iter().flat_map(|s| s.elements.iter()))
-        .find(|e| e.selector.as_ref().map_or(false, |s| s.has_parameters()))
+        .find(|e| e.selector.as_ref().is_some_and(|s| s.has_parameters()))
         .expect("Should have a parameterized element");
 
     let sel_ast = elem.selector.as_ref().unwrap();

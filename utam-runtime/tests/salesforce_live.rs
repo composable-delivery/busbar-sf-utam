@@ -8,11 +8,8 @@
 //! The tests use the thirtyfour (WebDriver) adapter by default,
 //! connecting to chromedriver on localhost:9515.
 
-use std::collections::HashMap;
 use std::path::PathBuf;
 
-use utam_runtime::element::ElementRuntime;
-use utam_runtime::page_object::PageObjectRuntime;
 use utam_runtime::prelude::*;
 
 /// Check if Salesforce credentials are available; skip test if not.
@@ -68,7 +65,7 @@ fn load_registry() -> PageObjectRegistry {
 /// Test: Navigate to the org and verify the page loads
 #[tokio::test]
 async fn test_sf_frontdoor_navigation() {
-    let Some((instance_url, frontdoor_url)) = require_sf_credentials() else {
+    let Some((_instance_url, frontdoor_url)) = require_sf_credentials() else {
         eprintln!("SKIP: SF_INSTANCE_URL / SF_FRONTDOOR_URL not set");
         return;
     };
