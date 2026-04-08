@@ -401,12 +401,9 @@ async fn create_authenticated_session(
 struct PageResult {
     page_name: String,
     suite: String,
-    url: String,
     matched: usize,
     discovered: usize,
     status: String,
-    error: Option<String>,
-    allure: AllureReport,
 }
 
 #[cfg(feature = "webdriver")]
@@ -432,12 +429,9 @@ async fn visit_page(
         return PageResult {
             page_name: page.name.to_string(),
             suite: suite.to_string(),
-            url: page_url,
             matched: 0,
             discovered: 0,
             status: "broken".to_string(),
-            error: Some(msg),
-            allure,
         };
     }
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
@@ -464,12 +458,9 @@ async fn visit_page(
             return PageResult {
                 page_name: page.name.to_string(),
                 suite: suite.to_string(),
-                url: current_url,
                 matched: 0,
                 discovered: 0,
                 status: "failed".to_string(),
-                error: Some(msg),
-                allure,
             };
         }
     };
@@ -504,12 +495,9 @@ async fn visit_page(
     PageResult {
         page_name: page.name.to_string(),
         suite: suite.to_string(),
-        url: current_url,
         matched,
         discovered,
         status: "passed".to_string(),
-        error: None,
-        allure,
     }
 }
 
