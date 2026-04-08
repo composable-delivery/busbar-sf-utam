@@ -58,13 +58,11 @@ jobs:
       - name: Get org info
         id: sf-org
         run: |
-          # Get instance URL
           ORG_INFO=$(sf org display --target-org ci-org --json)
           echo "$ORG_INFO" | jq '{ instanceUrl: .result.instanceUrl, username: .result.username }'
           INSTANCE=$(echo "$ORG_INFO" | jq -r '.result.instanceUrl')
           echo "instance_url=$INSTANCE" >> "$GITHUB_OUTPUT"
 
-          # Get frontdoor URL via --json to avoid CLI warnings in stdout
           FRONTDOOR_JSON=$(sf org open --url-only --target-org ci-org --json)
           FRONTDOOR=$(echo "$FRONTDOOR_JSON" | jq -r '.result.url')
 
@@ -73,19 +71,8 @@ jobs:
           echo "Frontdoor host: $(echo "$FRONTDOOR" | sed 's|^\(https://[^/]*\)/.*|\1|')"
           echo "Frontdoor length: ${#FRONTDOOR}"
 
-      # ── Virtual display ───────────────────────────────────────────────
-      - name: Start Xvfb
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg imagemagick > /dev/null 2>&1
-          Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 1
-          # Verify Xvfb is running
-          xdpyinfo -display :99 > /dev/null 2>&1 && echo "Xvfb :99 ready" || echo "WARNING: Xvfb not responding"
-
-      # ── Chrome + Chromedriver (after Xvfb so Chrome can use the display)
+      # ── Chrome + Chromedriver ─────────────────────────────────────────
       - name: Start chromedriver
-        env:
-          DISPLAY: ":99"
         run: |
           google-chrome --version || true
           chromedriver --version || true
@@ -93,22 +80,9 @@ jobs:
           sleep 2
           curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
 
-      # ── Prepare artifacts + start video recording ─────────────────────
-      - name: Start video recording
-        run: |
-          mkdir -p /tmp/sf-artifacts
-          # Record the virtual display (x11grab needs DISPLAY with .screen suffix)
-          DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 5 -i :99.0 \
-            -c:v libx264 -preset ultrafast -crf 28 -pix_fmt yuv420p \
-            /tmp/sf-artifacts/test-recording.mp4 </dev/null 2>/tmp/ffmpeg-stderr.log &
-          echo $! > /tmp/ffmpeg-pid
-          sleep 1
-          if kill -0 "$(cat /tmp/ffmpeg-pid)" 2>/dev/null; then
-            echo "Video recording started (PID: $(cat /tmp/ffmpeg-pid))"
-          else
-            echo "WARNING: ffmpeg failed to start. Stderr:"
-            cat /tmp/ffmpeg-stderr.log || true
-          fi
+      # ── Prepare artifacts dir ─────────────────────────────────────────
+      - name: Prepare artifacts directory
+        run: mkdir -p /tmp/sf-artifacts
 
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
@@ -117,7 +91,6 @@ jobs:
           SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           SF_ARTIFACTS_DIR: "/tmp/sf-artifacts"
-          DISPLAY: ":99"
         run: |
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
@@ -126,38 +99,16 @@ jobs:
             cargo test -p utam-runtime --test salesforce_live -- --nocapture --test-threads=1 2>&1
           fi
 
-      # ── Stop video recording ─────────────────────────────────────────
-      - name: Stop video recording
-        if: always()
-        run: |
-          if [ -f /tmp/ffmpeg-pid ]; then
-            FFPID=$(cat /tmp/ffmpeg-pid)
-            # Send SIGINT for clean shutdown (ffmpeg writes the trailer)
-            kill -INT "$FFPID" 2>/dev/null || true
-            # Wait up to 10s for ffmpeg to finish writing
-            for i in $(seq 1 10); do
-              kill -0 "$FFPID" 2>/dev/null || break
-              sleep 1
-            done
-            kill -9 "$FFPID" 2>/dev/null || true
-          fi
-
-          if [ -f /tmp/sf-artifacts/test-recording.mp4 ]; then
-            echo "Video recorded: $(du -h /tmp/sf-artifacts/test-recording.mp4 | cut -f1)"
-          else
-            echo "WARNING: No video file found"
-          fi
-
       # ── Create animated GIF from screenshots ─────────────────────────
       - name: Create animated GIF
         if: always()
         run: |
+          sudo apt-get install -y -qq imagemagick > /dev/null 2>&1 || true
           SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
           if [ "$SC_COUNT" -gt 0 ]; then
-            # Create animated GIF from screenshots (2 second delay per frame)
             convert -delay 200 -loop 0 -resize 960x540 \
-              $(ls -v /tmp/sf-artifacts/*.png | grep -v FAIL) \
-              /tmp/sf-artifacts/test-slideshow.gif 2>/dev/null || \
+              $(ls -v /tmp/sf-artifacts/*.png) \
+              /tmp/sf-artifacts/test-slideshow.gif 2>&1 || \
             echo "GIF creation failed (non-critical)"
 
             if [ -f /tmp/sf-artifacts/test-slideshow.gif ]; then
@@ -185,45 +136,39 @@ jobs:
             echo "| Detail | Value |"
             echo "|--------|-------|"
             echo "| Org | \`${{ steps.sf-org.outputs.instance_url }}\` |"
-            echo "| Driver | Chrome on Xvfb (video recorded) |"
+            echo "| Driver | chromedriver (headless Chrome) |"
 
             SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
             echo "| Screenshots | ${SC_COUNT} captured |"
-
-            if [ -f /tmp/sf-artifacts/test-recording.mp4 ]; then
-              VID_SIZE=$(du -h /tmp/sf-artifacts/test-recording.mp4 | cut -f1)
-              echo "| Video | ${VID_SIZE} — download \`salesforce-test-artifacts\` to view |"
-            fi
-
             echo ""
 
             # ── Inline screenshots ──────────────────────────────────────
             if [ "$SC_COUNT" -gt 0 ]; then
               echo "### Screenshots"
               echo ""
-              echo "> Click each to expand. Download \`salesforce-test-artifacts\` for full-res PNGs and video."
+              echo "> Download \`salesforce-test-artifacts\` for full-resolution PNGs and animated GIF."
               echo ""
 
-              TOTAL_B64_SIZE=0
+              TOTAL_SIZE=0
               for png in $(ls -v /tmp/sf-artifacts/*.png); do
                 [ -f "$png" ] || continue
                 BASENAME=$(basename "$png" .png)
-                SIZE=$(du -h "$png" | cut -f1)
 
-                # Resize to thumbnail for inline display
+                # Resize to small thumbnail and compress as JPEG
                 THUMB="/tmp/sf-artifacts/thumb-${BASENAME}.jpg"
-                convert "$png" -resize 960x540 -quality 40 "$THUMB" 2>/dev/null || continue
-                THUMB_KB=$(stat -c%s "$THUMB" 2>/dev/null || echo 0)
+                convert "$png" -resize 960x540 -quality 35 "$THUMB" 2>/dev/null || continue
+                THUMB_BYTES=$(stat -c%s "$THUMB" 2>/dev/null || echo 0)
 
-                # Safety: stop embedding if we'd exceed ~900KB of base64
-                TOTAL_B64_SIZE=$((TOTAL_B64_SIZE + THUMB_KB * 4 / 3))
-                if [ "$TOTAL_B64_SIZE" -gt 900000 ]; then
-                  echo "- _Remaining screenshots omitted (summary size limit). See artifacts._"
+                # Safety: stop embedding if total base64 would exceed ~800KB
+                TOTAL_SIZE=$((TOTAL_SIZE + THUMB_BYTES * 4 / 3))
+                if [ "$TOTAL_SIZE" -gt 800000 ]; then
+                  echo ""
+                  echo "_Remaining screenshots omitted (summary size limit). Download artifacts to view all._"
                   break
                 fi
 
                 B64=$(base64 -w0 "$THUMB")
-                echo "<details open><summary><strong>${BASENAME}</strong> (${SIZE})</summary>"
+                echo "<details open><summary><strong>${BASENAME}</strong></summary>"
                 echo ""
                 echo "<img src=\"data:image/jpeg;base64,${B64}\" width=\"960\" alt=\"${BASENAME}\" />"
                 echo ""
