@@ -34,8 +34,6 @@ jobs:
     name: Salesforce Live Tests
     runs-on: ubuntu-latest
     environment: salesforce
-    # Only run if the secret is available
-    if: ${{ vars.SF_ENABLED == 'true' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - uses: actions/checkout@v6
