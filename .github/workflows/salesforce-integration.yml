@@ -73,8 +73,19 @@ jobs:
           echo "Frontdoor host: $(echo "$FRONTDOOR" | sed 's|^\(https://[^/]*\)/.*|\1|')"
           echo "Frontdoor length: ${#FRONTDOOR}"
 
-      # ── Chrome + Chromedriver ─────────────────────────────────────────
+      # ── Virtual display ───────────────────────────────────────────────
+      - name: Start Xvfb
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg imagemagick > /dev/null 2>&1
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 1
+          # Verify Xvfb is running
+          xdpyinfo -display :99 > /dev/null 2>&1 && echo "Xvfb :99 ready" || echo "WARNING: Xvfb not responding"
+
+      # ── Chrome + Chromedriver (after Xvfb so Chrome can use the display)
       - name: Start chromedriver
+        env:
+          DISPLAY: ":99"
         run: |
           google-chrome --version || true
           chromedriver --version || true
@@ -82,23 +93,22 @@ jobs:
           sleep 2
           curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
 
-      # ── Virtual display + video recording ─────────────────────────────
-      - name: Start Xvfb and video recording
+      # ── Prepare artifacts + start video recording ─────────────────────
+      - name: Start video recording
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg imagemagick > /dev/null 2>&1
-          # Start virtual framebuffer
-          Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 1
-          echo "DISPLAY=:99" >> "$GITHUB_ENV"
-
           mkdir -p /tmp/sf-artifacts
-
-          # Record the virtual display as video (background)
-          ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 5 -i :99 \
+          # Record the virtual display (x11grab needs DISPLAY with .screen suffix)
+          DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 5 -i :99.0 \
             -c:v libx264 -preset ultrafast -crf 28 -pix_fmt yuv420p \
-            /tmp/sf-artifacts/test-recording.mp4 &
+            /tmp/sf-artifacts/test-recording.mp4 </dev/null 2>/tmp/ffmpeg-stderr.log &
           echo $! > /tmp/ffmpeg-pid
-          echo "Video recording started (PID: $(cat /tmp/ffmpeg-pid))"
+          sleep 1
+          if kill -0 "$(cat /tmp/ffmpeg-pid)" 2>/dev/null; then
+            echo "Video recording started (PID: $(cat /tmp/ffmpeg-pid))"
+          else
+            echo "WARNING: ffmpeg failed to start. Stderr:"
+            cat /tmp/ffmpeg-stderr.log || true
+          fi
 
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests

@@ -68,15 +68,19 @@ async fn create_driver() -> RuntimeResult<Box<dyn UtamDriver>> {
     let url = chromedriver_url();
     let mut caps = DesiredCapabilities::chrome();
 
-    // If DISPLAY is set (Xvfb), run non-headless so ffmpeg can record.
-    // Otherwise fall back to headless mode.
-    if std::env::var("DISPLAY").is_err() {
+    // If DISPLAY is set (Xvfb), run non-headless so ffmpeg can record the display.
+    // Otherwise fall back to headless mode for local dev.
+    let has_display = std::env::var("DISPLAY").is_ok();
+    if !has_display {
         let _ = caps.set_headless();
     }
     let _ = caps.set_no_sandbox();
     let _ = caps.set_disable_gpu();
     let _ = caps.add_arg("--window-size=1920,1080");
     let _ = caps.add_arg("--disable-dev-shm-usage");
+    if has_display {
+        let _ = caps.add_arg("--start-maximized");
+    }
 
     let driver = WebDriver::new(&url, caps).await.map_err(|e| RuntimeError::UnsupportedAction {
         action: "create_driver".into(),
