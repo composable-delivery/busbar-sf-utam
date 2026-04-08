@@ -41,6 +41,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
+      # ── Build first (so test step is fast) ────────────────────────────
+      - name: Build tests
+        run: cargo test -p utam-runtime --test salesforce_live --no-run
+
       # ── Salesforce CLI ────────────────────────────────────────────────
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
@@ -51,28 +55,43 @@ jobs:
           sf org login sfdx-url --sfdx-url-file /tmp/sf-auth-url.txt --set-default --alias ci-org
           rm /tmp/sf-auth-url.txt
 
-      - name: Get org frontdoor URL
+      - name: Get org info
         id: sf-org
         run: |
-          # Get the frontdoor URL for browser authentication
-          FRONTDOOR=$(sf org open --url-only --target-org ci-org 2>/dev/null)
-          echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
+          # Get org display info as JSON
+          ORG_INFO=$(sf org display --target-org ci-org --json)
+          echo "$ORG_INFO" | jq '{ instanceUrl: .result.instanceUrl, username: .result.username }'
 
-          # Get the instance URL
-          INSTANCE=$(sf org display --target-org ci-org --json | jq -r '.result.instanceUrl')
+          INSTANCE=$(echo "$ORG_INFO" | jq -r '.result.instanceUrl')
           echo "instance_url=$INSTANCE" >> "$GITHUB_OUTPUT"
 
+          # Get the frontdoor URL (--json for reliable parsing)
+          FRONTDOOR_JSON=$(sf org open --url-only --target-org ci-org --json 2>/dev/null || true)
+          FRONTDOOR=$(echo "$FRONTDOOR_JSON" | jq -r '.result.url // empty')
+
+          # Fallback: construct frontdoor manually if --json didn't work
+          if [ -z "$FRONTDOOR" ]; then
+            ACCESS_TOKEN=$(echo "$ORG_INFO" | jq -r '.result.accessToken')
+            FRONTDOOR="${INSTANCE}/secur/frontdoor.jsp?sid=${ACCESS_TOKEN}"
+          fi
+
+          echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
           echo "Org instance: $INSTANCE"
+          echo "Frontdoor URL length: ${#FRONTDOOR}"
 
       # ── Chrome + Chromedriver ─────────────────────────────────────────
       - name: Start chromedriver
         run: |
-          # chromedriver is pre-installed on ubuntu-latest runners
-          chromedriver --port=9515 --silent &
-          echo "Chromedriver started on port 9515"
+          # Find installed Chrome and chromedriver versions
+          google-chrome --version || true
+          chromedriver --version || true
+
+          # Start chromedriver
+          chromedriver --port=9515 &
           sleep 2
+
           # Verify it's running
-          curl -s http://localhost:9515/status | jq .
+          curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
 
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
@@ -81,11 +100,15 @@ jobs:
           SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
           CHROMEDRIVER_URL: "http://localhost:9515"
         run: |
+          echo "SF_INSTANCE_URL: $SF_INSTANCE_URL"
+          echo "SF_FRONTDOOR_URL length: ${#SF_FRONTDOOR_URL}"
+          echo "CHROMEDRIVER_URL: $CHROMEDRIVER_URL"
+
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture
+            cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture 2>&1
           else
-            cargo test -p utam-runtime --test salesforce_live -- --nocapture
+            cargo test -p utam-runtime --test salesforce_live -- --nocapture 2>&1
           fi
 
       # ── Upload artifacts ──────────────────────────────────────────────
