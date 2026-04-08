@@ -49,31 +49,6 @@ jobs:
       - name: Build tests
         run: cargo test -p utam-runtime --test salesforce_live --no-run
 
-      # ── Salesforce CLI ────────────────────────────────────────────────
-      - name: Install Salesforce CLI
-        run: npm install -g @salesforce/cli
-
-      - name: Authenticate to Salesforce
-        run: |
-          echo "${{ secrets.SF_AUTH_URL }}" > /tmp/sf-auth-url.txt
-          sf org login sfdx-url --sfdx-url-file /tmp/sf-auth-url.txt --set-default --alias ci-org
-          rm /tmp/sf-auth-url.txt
-
-      - name: Get org info
-        id: sf-org
-        run: |
-          ORG_INFO=$(sf org display --target-org ci-org --json)
-          echo "$ORG_INFO" | jq '{ instanceUrl: .result.instanceUrl, username: .result.username }'
-          INSTANCE=$(echo "$ORG_INFO" | jq -r '.result.instanceUrl')
-          echo "instance_url=$INSTANCE" >> "$GITHUB_OUTPUT"
-
-          FRONTDOOR_JSON=$(sf org open --url-only --target-org ci-org --json)
-          FRONTDOOR=$(echo "$FRONTDOOR_JSON" | jq -r '.result.url')
-
-          echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
-          echo "Org instance: $INSTANCE"
-          echo "Frontdoor length: ${#FRONTDOOR}"
-
       # ── Xvfb + Chrome + video ─────────────────────────────────────────
       - name: Start Xvfb and chromedriver
         run: |
@@ -101,8 +76,7 @@ jobs:
       # to avoid recording the frontdoor URL which contains credentials.
       - name: Run Salesforce integration tests
         env:
-          SF_INSTANCE_URL: ${{ steps.sf-org.outputs.instance_url }}
-          SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
+          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           ALLURE_RESULTS_DIR: "/tmp/allure-results"
           DISPLAY: ":99"
@@ -256,8 +230,8 @@ jobs:
             echo ""
             echo "| Detail | Value |"
             echo "|--------|-------|"
-            echo "| Org | \`${{ steps.sf-org.outputs.instance_url }}\` |"
             echo "| Driver | Chrome on Xvfb (video recorded) |"
+            echo "| Auth | busbar-sf-api (direct OAuth, no SF CLI) |"
             echo "| Allure Report | [View report](${PAGES_URL}/${BRANCH_DIR}/) |"
             echo "| All Reports | [Report index](${PAGES_URL}/) |"
             echo ""

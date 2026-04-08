@@ -27,3 +27,4 @@ thiserror.workspace = true
 
 [dev-dependencies]
 insta.workspace = true
+busbar-sf-api = { path = "../busbar-sf-api" }

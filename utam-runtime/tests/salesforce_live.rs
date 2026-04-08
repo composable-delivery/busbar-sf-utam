@@ -17,6 +17,7 @@ use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use busbar_sf_api::{SObjectRecord, SalesforceClient, SfdxAuthUrl};
 use utam_runtime::prelude::*;
 
 // ---------------------------------------------------------------------------
@@ -276,22 +277,108 @@ fn write_allure_categories() {
 // Test helpers
 // ---------------------------------------------------------------------------
 
-fn require_sf_credentials() -> Option<(String, String)> {
-    let instance = std::env::var("SF_INSTANCE_URL").ok();
-    let frontdoor = std::env::var("SF_FRONTDOOR_URL").ok();
-    match (instance, frontdoor) {
-        (Some(i), Some(f)) if !i.is_empty() && !f.is_empty() => Some((i, f)),
+/// Connect to Salesforce via SF_AUTH_URL. Returns None for local dev (no env var).
+/// Panics in CI (CHROMEDRIVER_URL set) if auth fails.
+async fn connect_salesforce() -> Option<SalesforceClient> {
+    let auth_url = match std::env::var("SF_AUTH_URL") {
+        Ok(url) if !url.is_empty() => url,
         _ => {
             if std::env::var("CHROMEDRIVER_URL").is_ok() {
-                panic!(
-                    "SF_INSTANCE_URL and SF_FRONTDOOR_URL must be set in CI!\n\
-                     SF_INSTANCE_URL={}\n\
-                     SF_FRONTDOOR_URL=({} chars)",
-                    std::env::var("SF_INSTANCE_URL").unwrap_or_else(|_| "<not set>".into()),
-                    std::env::var("SF_FRONTDOOR_URL").map(|s| s.len()).unwrap_or(0),
-                );
+                panic!("SF_AUTH_URL must be set in CI!");
             }
-            None
+            return None;
+        }
+    };
+
+    let parsed = SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
+    eprintln!("Authenticating to {}", parsed.instance_url);
+
+    let client = SalesforceClient::from_auth_url(&parsed)
+        .await
+        .expect("Failed to exchange refresh token for access token");
+    eprintln!("Authenticated. Instance: {}", client.instance_url);
+
+    Some(client)
+}
+
+/// Seed test data into the org so list views and detail pages have content.
+/// Returns record IDs for cleanup and detail page navigation.
+async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
+    eprintln!("Seeding test data...");
+
+    let records = vec![
+        (
+            "account1",
+            "Account",
+            SObjectRecord::new()
+                .field("Name", "Acme Corp")
+                .field("Industry", "Technology")
+                .field("Phone", "(555) 123-4567"),
+        ),
+        (
+            "contact1",
+            "Contact",
+            SObjectRecord::new()
+                .field("FirstName", "Jane")
+                .field("LastName", "Doe")
+                .field("Email", "jane.doe@example.com")
+                .field("AccountId", "@{account1.id}"),
+        ),
+        (
+            "opportunity1",
+            "Opportunity",
+            SObjectRecord::new()
+                .field("Name", "Acme Deal")
+                .field("StageName", "Prospecting")
+                .field("CloseDate", "2026-12-31")
+                .field("AccountId", "@{account1.id}"),
+        ),
+        (
+            "lead1",
+            "Lead",
+            SObjectRecord::new()
+                .field("FirstName", "John")
+                .field("LastName", "Smith")
+                .field("Company", "Smith Industries")
+                .field("Email", "john.smith@example.com"),
+        ),
+        (
+            "case1",
+            "Case",
+            SObjectRecord::new()
+                .field("Subject", "Test Support Case")
+                .field("Status", "New")
+                .field("Origin", "Web")
+                .field("AccountId", "@{account1.id}"),
+        ),
+    ];
+
+    // Use composite API to create all records with references
+    match client.create_related(records).await {
+        Ok(ids) => {
+            let types = ["Account", "Contact", "Opportunity", "Lead", "Case"];
+            let pairs: Vec<(String, String)> =
+                types.iter().zip(ids.iter()).map(|(t, id)| (t.to_string(), id.clone())).collect();
+            for (t, id) in &pairs {
+                eprintln!("  Created {t}: {id}");
+            }
+            pairs
+        }
+        Err(e) => {
+            eprintln!("WARNING: Failed to seed test data: {e}");
+            eprintln!("Tests will continue but list views may be empty.");
+            Vec::new()
+        }
+    }
+}
+
+/// Clean up test data after tests run.
+async fn cleanup_test_data(client: &SalesforceClient, records: &[(String, String)]) {
+    // Delete in reverse order (children first) to avoid FK violations
+    for (sobject_type, id) in records.iter().rev() {
+        match client.delete(sobject_type, id).await {
+            Ok(()) => eprintln!("  Deleted {sobject_type}/{id}"),
+            Err(e) => eprintln!("  Failed to delete {sobject_type}/{id}: {e}"),
         }
     }
 }
@@ -518,13 +605,32 @@ async fn visit_page(
 
 #[tokio::test]
 async fn test_salesforce_live() {
-    let Some((instance_url, frontdoor_url)) = require_sf_credentials() else {
+    let Some(sf_client) = connect_salesforce().await else {
         eprintln!("SKIP: SF credentials not set");
         return;
     };
 
+    let instance_url = sf_client.instance_url.clone();
+    let frontdoor_url = sf_client.frontdoor_url();
+
     write_allure_environment(&instance_url);
     write_allure_categories();
+
+    // ── Phase 0: Seed test data via REST API ─────────────────────────
+    eprintln!("\n=== Phase 0: Seed Test Data ===");
+    let seeded_records = seed_test_data(&sf_client).await;
+
+    // Build dynamic page targets including record detail pages
+    let mut dynamic_pages: Vec<PageTarget> = Vec::new();
+    for (sobject_type, id) in &seeded_records {
+        dynamic_pages.push(PageTarget {
+            name: Box::leak(format!("{sobject_type} Detail").into_boxed_str()),
+            url_suffix: Box::leak(
+                format!("/lightning/r/{sobject_type}/{id}/view").into_boxed_str(),
+            ),
+            suite: "Record Detail",
+        });
+    }
 
     let driver = create_driver().await;
     let registry = load_registry();
@@ -534,7 +640,6 @@ async fn test_salesforce_live() {
     let mut auth_allure = AllureReport::new("Authentication", "Setup");
     auth_allure.begin_step();
 
-    // Navigate through frontdoor (contains credentials — video not recording yet)
     driver.navigate(&frontdoor_url).await.expect("Failed to navigate to frontdoor");
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
@@ -546,11 +651,11 @@ async fn test_salesforce_live() {
             }
             auth_allure.end_step_failed("Frontdoor auth", &msg, vec![]);
             auth_allure.finish("failed", Some(&msg));
+            cleanup_test_data(&sf_client, &seeded_records).await;
             panic!("{msg}");
         }
     }
 
-    // Navigate to Lightning home to fully establish the session
     let home_url = format!("{instance_url}/lightning/page/home");
     match navigate_and_verify(driver.as_ref(), &home_url, "auth-home").await {
         Ok(url) => eprintln!("Lightning home: {url}"),
@@ -560,6 +665,7 @@ async fn test_salesforce_live() {
             }
             auth_allure.end_step_failed("Lightning home", &msg, vec![]);
             auth_allure.finish("failed", Some(&msg));
+            cleanup_test_data(&sf_client, &seeded_records).await;
             panic!("{msg}");
         }
     }
@@ -573,15 +679,17 @@ async fn test_salesforce_live() {
     auth_allure.end_step("Frontdoor auth + Lightning", "passed", auth_att);
     auth_allure.finish("passed", None);
 
-    // Signal to CI that auth is complete — safe to start video recording.
-    // The frontdoor URL (with credentials) is no longer visible in the browser.
+    // Signal to CI that auth is complete — safe to start video recording
     let _ = std::fs::write(allure_results_dir().join("browser-ready"), "1");
 
     // ── Phase 2: Visit each page and run discovery ───────────────────
-    eprintln!("\n=== Phase 2: Page Discovery ({} pages) ===", PAGES.len());
+    let total_pages = PAGES.len() + dynamic_pages.len();
+    eprintln!("\n=== Phase 2: Page Discovery ({total_pages} pages) ===");
 
     let mut results = Vec::new();
-    for page in PAGES {
+    let all_pages: Vec<&PageTarget> = PAGES.iter().chain(dynamic_pages.iter()).collect();
+
+    for page in &all_pages {
         let result = visit_page(driver.as_ref(), &instance_url, page, &registry).await;
 
         // If we hit the login page, auth is gone — stop trying other pages
@@ -619,6 +727,12 @@ async fn test_salesforce_live() {
     }
 
     driver.quit().await.expect("Failed to quit");
+
+    // ── Phase 4: Cleanup test data ───────────────────────────────────
+    if !seeded_records.is_empty() {
+        eprintln!("\n=== Phase 4: Cleanup ===");
+        cleanup_test_data(&sf_client, &seeded_records).await;
+    }
 
     assert!(pages_passed > 0, "No pages passed! All {pages_total} pages failed.");
     assert!(total_matched > 10, "Expected >10 total matched page objects, got {total_matched}");

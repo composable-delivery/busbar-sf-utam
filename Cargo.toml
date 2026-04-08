@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["utam-core", "utam-compiler", "utam-cli", "utam-test", "utam-runtime"]
+members = ["utam-core", "utam-compiler", "utam-cli", "utam-test", "utam-runtime", "busbar-sf-api"]
 
 [workspace.package]
 version = "0.1.0"
