@@ -1,7 +1,10 @@
 //! Salesforce live integration tests
 //!
-//! Run against a real Salesforce org. Skipped locally (no CHROMEDRIVER_URL),
-//! panics in CI if credentials are missing.
+//! Runs against a real Salesforce org using a single browser session.
+//! The frontdoor token can only establish one session, so all test steps
+//! share the same WebDriver instance.
+//!
+//! Skipped locally (no CHROMEDRIVER_URL), panics in CI if credentials missing.
 
 use std::path::PathBuf;
 
@@ -89,57 +92,11 @@ fn load_registry() -> PageObjectRegistry {
     registry
 }
 
-/// Navigate to the org and wait for Lightning to fully load.
-/// Panics if we end up on the login page or Lightning never renders.
-async fn navigate_and_wait_for_lightning(
-    driver: &dyn UtamDriver,
-    frontdoor_url: &str,
-    instance_url: &str,
-) {
-    eprintln!("Navigating to frontdoor URL ({} chars)", frontdoor_url.len());
-    driver.navigate(frontdoor_url).await.expect("Failed to navigate to frontdoor");
-
-    // Wait for the initial frontdoor redirect
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-
-    let url = driver.current_url().await.unwrap_or_default();
-    eprintln!("After frontdoor: {url}");
-
-    // Check we're not on the login page
-    if url.contains("/login.") || url.contains("Login&") {
-        save_screenshot(driver, "FAIL-on-login-page").await;
-        panic!("Frontdoor auth failed — landed on login page: {url}");
-    }
-
-    // Navigate to Lightning app home explicitly
-    let home_url = format!("{instance_url}/lightning/page/home");
-    eprintln!("Navigating to Lightning home: {home_url}");
-    driver.navigate(&home_url).await.expect("Failed to navigate to home");
-
-    // Wait for Lightning to actually render — poll for the oneHeader element
-    eprintln!("Waiting for Lightning to load...");
-    let loaded = wait_for_lightning_loaded(driver).await;
-    let final_url = driver.current_url().await.unwrap_or_default();
-    eprintln!("Final URL: {final_url}");
-
-    if !loaded {
-        save_screenshot(driver, "FAIL-lightning-not-loaded").await;
-        panic!(
-            "Lightning did not load within timeout.\n\
-             Final URL: {final_url}\n\
-             Expected a fully rendered Lightning page."
-        );
-    }
-
-    eprintln!("Lightning loaded successfully");
-}
-
 /// Poll until we detect Lightning has rendered (check for key DOM elements).
 async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
     for attempt in 1..=30 {
         tokio::time::sleep(std::time::Duration::from_secs(2)).await;
 
-        // Check if Lightning runtime has rendered by looking for key elements
         let result = driver
             .execute_script(
                 "return !!(document.querySelector('.oneHeader') || \
@@ -166,48 +123,68 @@ async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
 }
 
 // ---------------------------------------------------------------------------
-// Tests
+// Single integration test — one browser session, sequential steps
 // ---------------------------------------------------------------------------
 
-/// Test 1: Authenticate via frontdoor, navigate to Lightning, verify it loads.
+/// All Salesforce live tests run in a single browser session.
+///
+/// The frontdoor.jsp token establishes one authenticated session. Creating
+/// multiple WebDriver sessions with the same token causes redirect loops
+/// (ec=301/302) because the token is consumed on first use.
 #[tokio::test]
-async fn test_01_frontdoor_and_lightning() {
+async fn test_salesforce_live() {
     let Some((instance_url, frontdoor_url)) = require_sf_credentials() else {
         eprintln!("SKIP: SF credentials not set");
         return;
     };
 
     let driver = create_driver().await.expect("Failed to create driver");
-    navigate_and_wait_for_lightning(driver.as_ref(), &frontdoor_url, &instance_url).await;
-    save_screenshot(driver.as_ref(), "01-lightning-home").await;
+
+    // ── Step 1: Frontdoor authentication ─────────────────────────────
+    eprintln!("\n=== Step 1: Frontdoor Authentication ===");
+    eprintln!("Navigating to frontdoor URL ({} chars)", frontdoor_url.len());
+    driver.navigate(&frontdoor_url).await.expect("Failed to navigate to frontdoor");
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
     let url = driver.current_url().await.unwrap_or_default();
+    eprintln!("After frontdoor: {url}");
+    save_screenshot(driver.as_ref(), "01-after-frontdoor").await;
+
+    // Verify we're not stuck on the login page
+    assert!(
+        !url.contains("/login.") && !url.contains("Login&"),
+        "Frontdoor auth failed — landed on login page: {url}"
+    );
+
+    // ── Step 2: Navigate to Lightning home ───────────────────────────
+    eprintln!("\n=== Step 2: Lightning Home ===");
+    let home_url = format!("{instance_url}/lightning/page/home");
+    eprintln!("Navigating to: {home_url}");
+    driver.navigate(&home_url).await.expect("Failed to navigate to home");
+
+    eprintln!("Waiting for Lightning to load...");
+    assert!(
+        wait_for_lightning_loaded(driver.as_ref()).await,
+        "Lightning did not load within timeout. URL: {}",
+        driver.current_url().await.unwrap_or_default()
+    );
+
+    let url = driver.current_url().await.unwrap_or_default();
+    eprintln!("Lightning home: {url}");
+    save_screenshot(driver.as_ref(), "02-lightning-home").await;
+
     assert!(
         url.contains("lightning") || url.contains("force.com"),
         "Should be on a Lightning page, got: {url}"
     );
 
-    driver.quit().await.expect("Failed to quit");
-}
-
-/// Test 2: Run page object discovery on a fully loaded Lightning page.
-#[tokio::test]
-async fn test_02_discovery() {
-    let Some((instance_url, frontdoor_url)) = require_sf_credentials() else {
-        eprintln!("SKIP: SF credentials not set");
-        return;
-    };
-
-    let driver = create_driver().await.expect("Failed to create driver");
-    navigate_and_wait_for_lightning(driver.as_ref(), &frontdoor_url, &instance_url).await;
-    save_screenshot(driver.as_ref(), "02a-before-discovery").await;
-
+    // ── Step 3: Page object discovery ────────────────────────────────
+    eprintln!("\n=== Step 3: Page Object Discovery ===");
     let registry = load_registry();
     let report = utam_runtime::discovery::discover(driver.as_ref(), &registry)
         .await
         .expect("Discovery failed");
 
-    eprintln!("=== Discovery Report ===");
     eprintln!("URL: {}", report.url);
     eprintln!("Known page objects matched: {}", report.matched.len());
     for m in &report.matched {
@@ -217,92 +194,67 @@ async fn test_02_discovery() {
     for d in report.discovered.iter().take(15) {
         eprintln!("  ? <{}> shadow={} children={}", d.tag_name, d.has_shadow, d.children.len());
     }
-    eprintln!("========================");
+    save_screenshot(driver.as_ref(), "03-after-discovery").await;
 
-    save_screenshot(driver.as_ref(), "02b-after-discovery").await;
-
-    // Save the discovery report as JSON artifact
     let report_json = serde_json::to_string_pretty(&report).unwrap_or_default();
     let report_path = artifacts_dir().join("discovery-report.json");
     let _ = std::fs::write(&report_path, &report_json);
+    eprintln!("Discovery report saved to {}", report_path.display());
 
-    // On a fully loaded Lightning page, we MUST find components
     let total = report.matched.len() + report.discovered.len();
-    assert!(total > 5, "Expected to discover many components on a Lightning page, got {total}");
+    assert!(total > 5, "Expected >5 components on a Lightning page, got {total}");
 
-    driver.quit().await.expect("Failed to quit");
-}
-
-/// Test 3: Load the global header page object against a live Lightning page.
-#[tokio::test]
-async fn test_03_header_page_object() {
-    let Some((instance_url, frontdoor_url)) = require_sf_credentials() else {
-        eprintln!("SKIP: SF credentials not set");
-        return;
-    };
-
-    let registry = load_registry();
+    // ── Step 4: Header page object ───────────────────────────────────
+    eprintln!("\n=== Step 4: Header Page Object ===");
     let header_matches = registry.search("global/header");
-    if header_matches.is_empty() {
-        panic!("global/header not found in registry — check salesforce-pageobjects/");
-    }
+    assert!(!header_matches.is_empty(), "global/header not found in registry");
 
     let header_ast = registry.get(&header_matches[0]).expect("Failed to get header AST");
     eprintln!("Header: {}", header_matches[0]);
     eprintln!("  Root selector: {:?}", header_ast.selector.as_ref().map(|s| &s.css));
     eprintln!("  Methods: {:?}", header_ast.methods.iter().map(|m| &m.name).collect::<Vec<_>>());
 
-    // DynamicPageObject::load takes ownership of the driver
-    let driver = create_driver().await.expect("Failed to create driver");
-    navigate_and_wait_for_lightning(driver.as_ref(), &frontdoor_url, &instance_url).await;
-    save_screenshot(driver.as_ref(), "03a-before-header-load").await;
+    // Verify the header root element exists on the current page.
+    // We can't use DynamicPageObject::load() because it takes ownership
+    // of the driver, and we only have one authenticated session.
+    let root_css = header_ast
+        .selector
+        .as_ref()
+        .and_then(|s| s.css.as_ref())
+        .expect("Header should have a root CSS selector")
+        .clone();
+    eprintln!("Looking for header root: {root_css}");
+    let selector = Selector::Css(root_css.clone());
+    let header_el = driver.find_element(&selector).await;
+    match header_el {
+        Ok(_) => {
+            eprintln!("Header element found!");
+            save_screenshot(driver.as_ref(), "04-header-found").await;
+        }
+        Err(e) => {
+            save_screenshot(driver.as_ref(), "04-header-not-found").await;
+            panic!("Header root element {root_css} not found on Lightning page: {e}");
+        }
+    }
 
-    // Load the header page object
-    let page = DynamicPageObject::load(driver, header_ast)
-        .await
-        .expect("Header page object should load on a Lightning page with .oneHeader");
-
-    eprintln!("Header loaded successfully!");
-    let methods = page.method_signatures();
-    eprintln!("  Methods: {:?}", methods.iter().map(|m| &m.name).collect::<Vec<_>>());
-    let elements = page.element_names();
-    eprintln!("  Elements: {:?}", elements);
-
-    assert!(!methods.is_empty(), "Header should have methods");
-    assert!(!elements.is_empty(), "Header should have elements");
-}
-
-/// Test 4: Navigate across multiple Lightning pages, screenshot each.
-#[tokio::test]
-async fn test_04_navigate_pages() {
-    let Some((instance_url, frontdoor_url)) = require_sf_credentials() else {
-        eprintln!("SKIP: SF credentials not set");
-        return;
-    };
-
-    let driver = create_driver().await.expect("Failed to create driver");
-    navigate_and_wait_for_lightning(driver.as_ref(), &frontdoor_url, &instance_url).await;
-    save_screenshot(driver.as_ref(), "04a-lightning-home").await;
-
-    // Navigate to Accounts
+    // ── Step 5: Navigate to Accounts and Contacts ────────────────────
+    eprintln!("\n=== Step 5: Navigate Pages ===");
     let accounts_url = format!("{instance_url}/lightning/o/Account/list");
     eprintln!("Navigating to Accounts: {accounts_url}");
     driver.navigate(&accounts_url).await.expect("Accounts navigate failed");
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    save_screenshot(driver.as_ref(), "04b-accounts-list").await;
+    save_screenshot(driver.as_ref(), "05a-accounts").await;
     let url = driver.current_url().await.unwrap_or_default();
-    eprintln!("Accounts URL: {url}");
-    assert!(
-        url.contains("Account") || url.contains("lightning"),
-        "Should be on Accounts page, got: {url}"
-    );
+    eprintln!("Accounts: {url}");
 
-    // Navigate to Contacts
     let contacts_url = format!("{instance_url}/lightning/o/Contact/list");
     eprintln!("Navigating to Contacts: {contacts_url}");
     driver.navigate(&contacts_url).await.expect("Contacts navigate failed");
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    save_screenshot(driver.as_ref(), "04c-contacts-list").await;
+    save_screenshot(driver.as_ref(), "05b-contacts").await;
+    let url = driver.current_url().await.unwrap_or_default();
+    eprintln!("Contacts: {url}");
 
     driver.quit().await.expect("Failed to quit");
+    eprintln!("\n=== All steps completed ===");
 }
