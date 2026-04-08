@@ -33,18 +33,23 @@ async fn create_driver() -> RuntimeResult<Box<dyn UtamDriver>> {
     eprintln!("Connecting to chromedriver at {url}");
 
     let mut caps = DesiredCapabilities::chrome();
-    let _ = caps.set_headless();
     let _ = caps.set_no_sandbox();
     let _ = caps.set_disable_gpu();
     let _ = caps.add_arg("--window-size=1920,1080");
     let _ = caps.add_arg("--disable-dev-shm-usage");
+
+    // If DISPLAY is set (Xvfb virtual display), run with a visible window
+    // so ffmpeg can record it. Otherwise use headless mode.
+    if std::env::var("DISPLAY").is_err() {
+        let _ = caps.set_headless();
+    }
 
     let driver = WebDriver::new(&url, caps).await.map_err(|e| RuntimeError::UnsupportedAction {
         action: "create_driver".into(),
         element_type: format!("WebDriver connection to {url} failed: {e}"),
     })?;
 
-    eprintln!("WebDriver session created");
+    eprintln!("WebDriver session created (headless: {})", std::env::var("DISPLAY").is_err());
     Ok(Box::new(ThirtyfourDriver::new(driver)))
 }
 
