@@ -64,13 +64,14 @@ jobs:
           INSTANCE=$(echo "$ORG_INFO" | jq -r '.result.instanceUrl')
           echo "instance_url=$INSTANCE" >> "$GITHUB_OUTPUT"
 
-          # Get frontdoor URL directly from sf org open --url-only.
-          # This returns a URL like: https://mydomain.scratch.my.salesforce.com/secur/frontdoor.jsp?sid=...
-          # It uses the correct My Domain host, not test.salesforce.com or login.salesforce.com.
-          FRONTDOOR=$(sf org open --url-only --target-org ci-org)
+          # Get frontdoor URL via --json to avoid CLI warnings in stdout
+          FRONTDOOR_JSON=$(sf org open --url-only --target-org ci-org --json)
+          FRONTDOOR=$(echo "$FRONTDOOR_JSON" | jq -r '.result.url')
+
           echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
           echo "Org instance: $INSTANCE"
           echo "Frontdoor host: $(echo "$FRONTDOOR" | sed 's|^\(https://[^/]*\)/.*|\1|')"
+          echo "Frontdoor length: ${#FRONTDOOR}"
 
       # ── Chrome + Chromedriver ─────────────────────────────────────────
       - name: Start chromedriver

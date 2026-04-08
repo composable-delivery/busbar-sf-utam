@@ -15,13 +15,28 @@ use utam_runtime::prelude::*;
 // Helpers
 // ---------------------------------------------------------------------------
 
+/// Returns credentials or panics in CI. Only returns None for local dev.
 fn require_sf_credentials() -> Option<(String, String)> {
-    let instance = std::env::var("SF_INSTANCE_URL").ok()?;
-    let frontdoor = std::env::var("SF_FRONTDOOR_URL").ok()?;
-    if instance.is_empty() || frontdoor.is_empty() {
-        return None;
+    let instance = std::env::var("SF_INSTANCE_URL").ok();
+    let frontdoor = std::env::var("SF_FRONTDOOR_URL").ok();
+
+    match (instance, frontdoor) {
+        (Some(i), Some(f)) if !i.is_empty() && !f.is_empty() => Some((i, f)),
+        _ => {
+            // If we're in CI (CHROMEDRIVER_URL is set), this is a real failure
+            if std::env::var("CHROMEDRIVER_URL").is_ok() {
+                panic!(
+                    "SF_INSTANCE_URL and SF_FRONTDOOR_URL must be set in CI!\n\
+                     SF_INSTANCE_URL={}\n\
+                     SF_FRONTDOOR_URL=({} chars)",
+                    std::env::var("SF_INSTANCE_URL").unwrap_or_else(|_| "<not set>".into()),
+                    std::env::var("SF_FRONTDOOR_URL").map(|s| s.len()).unwrap_or(0),
+                );
+            }
+            // Local dev: skip gracefully
+            None
+        }
     }
-    Some((instance, frontdoor))
 }
 
 fn chromedriver_url() -> String {
