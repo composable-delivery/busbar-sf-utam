@@ -12,8 +12,9 @@ keywords = ["testing", "webdriver", "page-object", "automation"]
 categories = ["development-tools::testing", "web-programming"]
 
 [workspace.dependencies]
-# Runtime
+# Browser automation
 thirtyfour = "0.36.1"
+chromiumoxide = { version = "0.9", features = ["bytes"], default-features = false }
 tokio = { version = "1", features = ["full"] }
 async-trait = "0.1"
 

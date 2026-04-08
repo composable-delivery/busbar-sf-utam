@@ -8,10 +8,17 @@ repository.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
+[features]
+default = ["webdriver"]
+webdriver = ["thirtyfour"]
+cdp = ["chromiumoxide", "futures"]
+
 [dependencies]
 utam-core = { path = "../utam-core" }
 utam-compiler = { path = "../utam-compiler" }
-thirtyfour.workspace = true
+thirtyfour = { workspace = true, optional = true }
+chromiumoxide = { workspace = true, optional = true }
+futures = { version = "0.3", optional = true }
 tokio.workspace = true
 async-trait.workspace = true
 serde.workspace = true
