@@ -23,13 +23,22 @@ on:
       - ".github/workflows/salesforce-integration.yml"
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 env:
   RUST_BACKTRACE: 1
   CARGO_TERM_COLOR: always
 
 jobs:
+  # ════════════════════════════════════════════════════════════════════════
+  # Job 1: Run tests, generate Allure report
+  # ════════════════════════════════════════════════════════════════════════
   salesforce-tests:
     name: Salesforce Live Tests
     runs-on: ubuntu-latest
@@ -41,7 +50,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
-      # ── Build first (so test step is fast) ────────────────────────────
       - name: Build tests
         run: cargo test -p utam-runtime --test salesforce_live --no-run
 
@@ -70,17 +78,13 @@ jobs:
           echo "Org instance: $INSTANCE"
           echo "Frontdoor length: ${#FRONTDOOR}"
 
-      # ── Xvfb + ffmpeg + Chrome ────────────────────────────────────────
+      # ── Xvfb + Chrome + video ─────────────────────────────────────────
       - name: Start Xvfb and chromedriver
         run: |
           sudo apt-get update -qq > /dev/null 2>&1
           sudo apt-get install -y -qq xvfb ffmpeg > /dev/null 2>&1
-
-          # Start virtual display
           Xvfb :99 -screen 0 1920x1080x24 &
           sleep 1
-
-          # Start chromedriver on the virtual display
           DISPLAY=:99 chromedriver --port=9515 &
           sleep 2
           curl -sf http://localhost:9515/status | jq .ready || echo "WARNING: chromedriver not ready"
@@ -88,7 +92,6 @@ jobs:
       - name: Start video recording
         run: |
           mkdir -p /tmp/allure-results
-          # Record the Xvfb display as mp4
           DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 10 \
             -i :99.0 -c:v libx264 -preset ultrafast -crf 25 -pix_fmt yuv420p \
             /tmp/allure-results/screencast.mp4 </dev/null 2>/tmp/ffmpeg.log &
@@ -101,7 +104,7 @@ jobs:
             cat /tmp/ffmpeg.log
           fi
 
-      # ── Run Tests ────────────────────────────────────────────────────
+      # ── Run tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
         env:
           SF_INSTANCE_URL: ${{ steps.sf-org.outputs.instance_url }}
@@ -117,11 +120,10 @@ jobs:
             cargo test -p utam-runtime --test salesforce_live -- --nocapture --test-threads=1 2>&1
           fi
 
-      # ── Stop recording + attach video to Allure ───────────────────────
+      # ── Stop recording + attach video ─────────────────────────────────
       - name: Stop recording and attach video
         if: always()
         run: |
-          # Gracefully stop ffmpeg
           if [ -f /tmp/ffmpeg.pid ]; then
             kill -INT "$(cat /tmp/ffmpeg.pid)" 2>/dev/null || true
             for i in $(seq 1 10); do
@@ -135,11 +137,8 @@ jobs:
           if [ -f "$VIDEO" ] && [ -s "$VIDEO" ]; then
             SIZE=$(du -h "$VIDEO" | cut -f1)
             echo "Video recorded: $SIZE"
-
-            # Find the Allure result JSON and add the video as a top-level attachment
             RESULT_FILE=$(ls /tmp/allure-results/*-result.json 2>/dev/null | head -1)
             if [ -n "$RESULT_FILE" ]; then
-              # Use jq to add the video attachment
               jq '.attachments += [{"name": "Screencast", "source": "screencast.mp4", "type": "video/mp4"}]' \
                 "$RESULT_FILE" > "${RESULT_FILE}.tmp" && mv "${RESULT_FILE}.tmp" "$RESULT_FILE"
               echo "Video attached to Allure result"
@@ -151,96 +150,112 @@ jobs:
 
       # ── Generate Allure report ────────────────────────────────────────
       - name: Generate Allure report
+        id: allure
         if: always()
         run: |
-          # Install Allure CLI via npm
           npm install -g allure-commandline
 
-          # Determine branch name for the report path
+          # Determine branch name
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BRANCH="${{ github.head_ref }}"
           else
             BRANCH="${{ github.ref_name }}"
           fi
-          # Sanitize branch name for use as directory
           BRANCH_DIR=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
-          echo "Publishing report for branch: $BRANCH_DIR"
-          echo "branch_dir=$BRANCH_DIR" >> "$GITHUB_ENV"
+          echo "branch_dir=$BRANCH_DIR" >> "$GITHUB_OUTPUT"
 
-          # Fetch existing history from gh-pages if available
+          # Try to fetch previous history from gh-pages for trend tracking
           git fetch origin gh-pages:gh-pages 2>/dev/null || true
-          mkdir -p /tmp/gh-pages
-          git worktree add /tmp/gh-pages gh-pages 2>/dev/null || true
-
-          # Copy previous history for this branch if it exists
-          HISTORY_SRC="/tmp/gh-pages/${BRANCH_DIR}/history"
-          if [ -d "$HISTORY_SRC" ]; then
-            mkdir -p /tmp/allure-results/history
-            cp -r "$HISTORY_SRC"/* /tmp/allure-results/history/ 2>/dev/null || true
-            echo "Loaded history from previous run"
+          if git rev-parse --verify gh-pages 2>/dev/null; then
+            HISTORY_SRC=$(git show "gh-pages:${BRANCH_DIR}/history/history.json" 2>/dev/null || true)
+            if [ -n "$HISTORY_SRC" ]; then
+              mkdir -p /tmp/allure-results/history
+              # Extract all history files from the gh-pages branch
+              git show "gh-pages:${BRANCH_DIR}/history/history.json" > /tmp/allure-results/history/history.json 2>/dev/null || true
+              git show "gh-pages:${BRANCH_DIR}/history/history-trend.json" > /tmp/allure-results/history/history-trend.json 2>/dev/null || true
+              echo "Loaded previous history"
+            fi
           fi
 
-          # Generate the report
           allure generate /tmp/allure-results -o /tmp/allure-report --clean
-          echo "Report generated at /tmp/allure-report"
-          ls /tmp/allure-report/ 2>/dev/null || true
+          echo "Report generated"
 
-      # ── Deploy to GitHub Pages ────────────────────────────────────────
-      - name: Deploy to GitHub Pages
+      # ── Prepare Pages content ─────────────────────────────────────────
+      - name: Prepare Pages artifact
         if: always()
         run: |
-          BRANCH_DIR="${branch_dir}"
+          BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
           [ -z "$BRANCH_DIR" ] && BRANCH_DIR="unknown"
 
-          # Prepare the gh-pages content
-          DEPLOY_DIR="/tmp/deploy"
+          DEPLOY_DIR="/tmp/pages-deploy"
           mkdir -p "$DEPLOY_DIR"
 
-          # Copy existing gh-pages content
-          if [ -d /tmp/gh-pages ]; then
-            cp -r /tmp/gh-pages/* "$DEPLOY_DIR/" 2>/dev/null || true
-            # Remove git metadata
-            rm -rf "$DEPLOY_DIR/.git"
+          # Fetch existing Pages content from gh-pages branch
+          if git rev-parse --verify gh-pages 2>/dev/null; then
+            git archive gh-pages | tar -x -C "$DEPLOY_DIR" 2>/dev/null || true
           fi
 
-          # Copy this branch's report
+          # Replace this branch's report
+          rm -rf "$DEPLOY_DIR/${BRANCH_DIR}"
           mkdir -p "$DEPLOY_DIR/${BRANCH_DIR}"
           if [ -d /tmp/allure-report ]; then
-            cp -r /tmp/allure-report/* "$DEPLOY_DIR/${BRANCH_DIR}/" 2>/dev/null || true
+            cp -r /tmp/allure-report/* "$DEPLOY_DIR/${BRANCH_DIR}/"
           fi
 
-          # Create an index page listing all branch reports
+          # Create index page
           {
-            echo "<!DOCTYPE html><html><head><title>Allure Reports</title>"
-            echo "<style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px}"
-            echo "a{display:block;padding:8px 0;font-size:18px}</style></head><body>"
-            echo "<h1>Salesforce Integration Test Reports</h1>"
-            echo "<p>Select a branch to view its latest Allure report:</p>"
+            echo '<!DOCTYPE html><html><head><title>Allure Reports — busbar-sf-utam</title>'
+            echo '<style>'
+            echo 'body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }'
+            echo 'a { display: block; padding: 10px 16px; margin: 4px 0; background: #f6f8fa; border-radius: 6px; text-decoration: none; color: #0969da; }'
+            echo 'a:hover { background: #ddf4ff; }'
+            echo '.current { font-weight: bold; background: #ddf4ff; }'
+            echo '</style></head><body>'
+            echo '<h1>Salesforce Integration Test Reports</h1>'
+            echo '<p>Each branch publishes its own Allure report with screenshots, video, and history.</p>'
             for dir in "$DEPLOY_DIR"/*/; do
               [ -d "$dir" ] || continue
               name=$(basename "$dir")
-              [ "$name" = ".git" ] && continue
-              echo "<a href=\"${name}/index.html\">${name}</a>"
+              CLASS=""
+              [ "$name" = "$BRANCH_DIR" ] && CLASS=' class="current"'
+              echo "<a href=\"${name}/index.html\"${CLASS}>${name}</a>"
             done
-            echo "<hr><p><small>Updated: $(date -u '+%Y-%m-%d %H:%M UTC')</small></p>"
-            echo "</body></html>"
+            echo "<hr><p><small>Last updated: $(date -u '+%Y-%m-%d %H:%M UTC')</small></p>"
+            echo '</body></html>'
           } > "$DEPLOY_DIR/index.html"
 
-          # Deploy via git push
-          cd "$DEPLOY_DIR"
+          echo "Pages content ready at $DEPLOY_DIR"
+          ls -la "$DEPLOY_DIR/"
+
+      - name: Upload Pages artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/pages-deploy
+
+      # Also push to gh-pages branch as a data store for history
+      - name: Update gh-pages data store
+        if: always()
+        continue-on-error: true
+        run: |
+          BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
+          [ -z "$BRANCH_DIR" ] && exit 0
+          [ ! -d /tmp/pages-deploy ] && exit 0
+
+          cd /tmp/pages-deploy
           git init
           git checkout -b gh-pages
           git add -A
           git -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" \
-            commit -m "Update Allure report for ${BRANCH_DIR}" --allow-empty
+            commit -m "Update report for ${BRANCH_DIR}" --allow-empty
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          git push --force origin gh-pages
+          git push --force origin gh-pages 2>/dev/null || echo "gh-pages push failed (non-critical, Pages will still deploy)"
 
       # ── Job Summary ──────────────────────────────────────────────────
       - name: Generate summary
         if: always()
         run: |
-          BRANCH_DIR="${branch_dir}"
+          BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
           [ -z "$BRANCH_DIR" ] && BRANCH_DIR="unknown"
           PAGES_URL="https://composable-delivery.github.io/busbar-sf-utam"
 
@@ -255,3 +270,25 @@ jobs:
             echo "| All Reports | [Report index](${PAGES_URL}/) |"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # ════════════════════════════════════════════════════════════════════════
+  # Job 2: Deploy to GitHub Pages (requires separate job with pages env)
+  # ════════════════════════════════════════════════════════════════════════
+  deploy-report:
+    name: Deploy Report
+    needs: salesforce-tests
+    if: always()
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
