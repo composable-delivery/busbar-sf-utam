@@ -23,8 +23,7 @@ on:
       - ".github/workflows/salesforce-integration.yml"
 
 permissions:
-  contents: write
-  pages: write
+  contents: read
 
 env:
   RUST_BACKTRACE: 1
