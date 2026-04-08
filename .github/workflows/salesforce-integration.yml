@@ -1,0 +1,104 @@
+name: Salesforce Integration Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_filter:
+        description: "Test name filter (e.g. 'test_sf_header' or empty for all)"
+        required: false
+        default: ""
+  # Run on pushes to main if the runtime or page objects changed
+  push:
+    branches: [main]
+    paths:
+      - "utam-runtime/**"
+      - "salesforce-pageobjects/**"
+      - ".github/workflows/salesforce-integration.yml"
+
+permissions:
+  contents: read
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  salesforce-tests:
+    name: Salesforce Live Tests
+    runs-on: ubuntu-latest
+    environment: salesforce
+    # Only run if the secret is available
+    if: ${{ vars.SF_ENABLED == 'true' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      # ── Salesforce CLI ────────────────────────────────────────────────
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to Salesforce
+        run: |
+          echo "${{ secrets.SF_AUTH_URL }}" > /tmp/sf-auth-url.txt
+          sf org login sfdx-url --sfdx-url-file /tmp/sf-auth-url.txt --set-default --alias ci-org
+          rm /tmp/sf-auth-url.txt
+
+      - name: Get org frontdoor URL
+        id: sf-org
+        run: |
+          # Get the frontdoor URL for browser authentication
+          FRONTDOOR=$(sf org open --url-only --target-org ci-org 2>/dev/null)
+          echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
+
+          # Get the instance URL
+          INSTANCE=$(sf org display --target-org ci-org --json | jq -r '.result.instanceUrl')
+          echo "instance_url=$INSTANCE" >> "$GITHUB_OUTPUT"
+
+          echo "Org instance: $INSTANCE"
+
+      # ── Chrome + Chromedriver ─────────────────────────────────────────
+      - name: Start chromedriver
+        run: |
+          # chromedriver is pre-installed on ubuntu-latest runners
+          chromedriver --port=9515 --silent &
+          echo "Chromedriver started on port 9515"
+          sleep 2
+          # Verify it's running
+          curl -s http://localhost:9515/status | jq .
+
+      # ── Run Tests ────────────────────────────────────────────────────
+      - name: Run Salesforce integration tests
+        env:
+          SF_INSTANCE_URL: ${{ steps.sf-org.outputs.instance_url }}
+          SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
+          CHROMEDRIVER_URL: "http://localhost:9515"
+        run: |
+          FILTER="${{ inputs.test_filter }}"
+          if [ -n "$FILTER" ]; then
+            cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture
+          else
+            cargo test -p utam-runtime --test salesforce_live -- --nocapture
+          fi
+
+      # ── Upload artifacts ──────────────────────────────────────────────
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: salesforce-screenshots
+          path: /tmp/sf-screenshot*.png
+          if-no-files-found: ignore
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Salesforce Integration Tests" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Org: ${{ steps.sf-org.outputs.instance_url }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Driver: chromedriver (WebDriver)" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/sf-screenshot.png ]; then
+            echo "- Screenshot captured" >> "$GITHUB_STEP_SUMMARY"
+          fi
