@@ -134,12 +134,21 @@ jobs:
           gh_pages: gh-pages
 
       - name: Deploy report to GitHub Pages
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
+
+      - name: Upload Allure report (PR only)
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-history/
+          if-no-files-found: ignore
+          retention-days: 14
 
       # ── Job Summary ──────────────────────────────────────────────────
       - name: Generate summary
