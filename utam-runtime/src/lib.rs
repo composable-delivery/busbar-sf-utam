@@ -16,6 +16,7 @@
 //! - `webdriver` (default) — [`ThirtyfourDriver`] for WebDriver/Selenium
 //! - `cdp` — [`CdpDriver`] for Chrome DevTools Protocol with checkpointing
 
+pub mod discovery;
 pub mod driver;
 pub mod element;
 pub mod error;
