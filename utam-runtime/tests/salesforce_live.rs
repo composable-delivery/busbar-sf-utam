@@ -4,7 +4,9 @@
 //! The frontdoor token can only establish one session, so all test steps
 //! share the same WebDriver instance.
 //!
-//! Emits Allure-format JSON results to `allure-results/` for rich reporting.
+//! Emits Allure-format JSON results for rich reporting with screenshots
+//! and video. Video is recorded externally (ffmpeg on Xvfb) and attached
+//! post-test by the CI workflow.
 //!
 //! Skipped locally (no CHROMEDRIVER_URL), panics in CI if credentials missing.
 
@@ -16,19 +18,17 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use utam_runtime::prelude::*;
 
 // ---------------------------------------------------------------------------
-// Allure reporting helpers
+// Allure reporting
 // ---------------------------------------------------------------------------
 
 fn now_millis() -> u64 {
     SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_millis() as u64
 }
 
-/// Generate a deterministic UUID-like string from a seed.
 fn make_uuid(seed: &str) -> String {
     let mut h = DefaultHasher::new();
     seed.hash(&mut h);
     let n = h.finish();
-    // Add timestamp for uniqueness across runs
     let mut h2 = DefaultHasher::new();
     now_millis().hash(&mut h2);
     seed.hash(&mut h2);
@@ -51,23 +51,23 @@ fn allure_results_dir() -> PathBuf {
     dir
 }
 
-/// A single Allure step with optional screenshot attachment.
 struct AllureStep {
     name: String,
     status: String,
     start: u64,
     stop: u64,
     attachments: Vec<serde_json::Value>,
-    details: Option<(String, String)>, // (message, trace)
+    details: Option<(String, String)>,
 }
 
-/// Tracks the overall test result and its steps for Allure output.
 struct AllureReport {
     test_uuid: String,
     test_name: String,
     start: u64,
     steps: Vec<AllureStep>,
     current_step_start: u64,
+    /// Top-level attachments (e.g., video added post-test by CI).
+    top_attachments: Vec<serde_json::Value>,
 }
 
 impl AllureReport {
@@ -79,6 +79,7 @@ impl AllureReport {
             start,
             steps: Vec::new(),
             current_step_start: start,
+            top_attachments: Vec::new(),
         }
     }
 
@@ -86,22 +87,26 @@ impl AllureReport {
         self.current_step_start = now_millis();
     }
 
-    /// Save a screenshot to allure-results and return the attachment JSON.
-    fn save_screenshot_attachment(&self, png_data: &[u8], name: &str) -> Option<serde_json::Value> {
+    fn save_attachment(
+        &self,
+        data: &[u8],
+        name: &str,
+        ext: &str,
+        mime: &str,
+    ) -> Option<serde_json::Value> {
         let att_uuid = make_uuid(&format!("{}-{name}", self.test_uuid));
-        let filename = format!("{att_uuid}-attachment.png");
+        let filename = format!("{att_uuid}-attachment.{ext}");
         let path = allure_results_dir().join(&filename);
-        std::fs::write(&path, png_data).ok()?;
-
-        // Also save to artifacts dir for the existing artifact upload
-        let artifacts = artifacts_dir();
-        let _ = std::fs::write(artifacts.join(format!("{name}.png")), png_data);
-
+        std::fs::write(&path, data).ok()?;
         Some(serde_json::json!({
             "name": name,
             "source": filename,
-            "type": "image/png"
+            "type": mime
         }))
+    }
+
+    fn save_screenshot(&self, png_data: &[u8], name: &str) -> Option<serde_json::Value> {
+        self.save_attachment(png_data, name, "png", "image/png")
     }
 
     fn end_step(&mut self, name: &str, status: &str, attachments: Vec<serde_json::Value>) {
@@ -126,7 +131,6 @@ impl AllureReport {
         });
     }
 
-    /// Write the Allure result JSON file.
     fn finish(&self, status: &str, message: Option<&str>) {
         let steps_json: Vec<serde_json::Value> = self
             .steps
@@ -170,7 +174,7 @@ impl AllureReport {
                 { "name": "severity", "value": "critical" }
             ],
             "steps": steps_json,
-            "attachments": [],
+            "attachments": self.top_attachments,
             "parameters": [],
             "links": []
         });
@@ -185,24 +189,21 @@ impl AllureReport {
         let path = allure_results_dir().join(format!("{}-result.json", self.test_uuid));
         let json = serde_json::to_string_pretty(&result).unwrap_or_default();
         let _ = std::fs::write(&path, &json);
-        eprintln!("Allure result written to {}", path.display());
+        eprintln!("Allure result: {}", path.display());
     }
 }
 
-/// Write Allure environment.properties file.
 fn write_allure_environment(instance_url: &str) {
-    let dir = allure_results_dir();
     let content = format!(
         "sf.instance={instance_url}\n\
-         browser=Chrome (headless)\n\
+         browser=Chrome\n\
          driver=chromedriver\n\
          framework=busbar-sf-utam\n\
          language=Rust\n"
     );
-    let _ = std::fs::write(dir.join("environment.properties"), content);
+    let _ = std::fs::write(allure_results_dir().join("environment.properties"), content);
 }
 
-/// Write Allure categories.json file.
 fn write_allure_categories() {
     let categories = serde_json::json!([
         {
@@ -233,13 +234,12 @@ fn write_allure_categories() {
 }
 
 // ---------------------------------------------------------------------------
-// Original helpers
+// Test helpers
 // ---------------------------------------------------------------------------
 
 fn require_sf_credentials() -> Option<(String, String)> {
     let instance = std::env::var("SF_INSTANCE_URL").ok();
     let frontdoor = std::env::var("SF_FRONTDOOR_URL").ok();
-
     match (instance, frontdoor) {
         (Some(i), Some(f)) if !i.is_empty() && !f.is_empty() => Some((i, f)),
         _ => {
@@ -261,15 +261,6 @@ fn chromedriver_url() -> String {
     std::env::var("CHROMEDRIVER_URL").unwrap_or_else(|_| "http://localhost:9515".to_string())
 }
 
-fn artifacts_dir() -> PathBuf {
-    let dir = std::env::var("SF_ARTIFACTS_DIR")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| PathBuf::from("/tmp/sf-artifacts"));
-    let _ = std::fs::create_dir_all(&dir);
-    dir
-}
-
-/// Take a screenshot and return the PNG bytes (for Allure attachment).
 async fn take_screenshot(driver: &dyn UtamDriver) -> Option<Vec<u8>> {
     driver.screenshot_png().await.ok()
 }
@@ -280,7 +271,10 @@ async fn create_driver() -> RuntimeResult<Box<dyn UtamDriver>> {
 
     let url = chromedriver_url();
     let mut caps = DesiredCapabilities::chrome();
-    let _ = caps.set_headless();
+    // Use non-headless when DISPLAY is set (Xvfb) so ffmpeg can record.
+    if std::env::var("DISPLAY").is_err() {
+        let _ = caps.set_headless();
+    }
     let _ = caps.set_no_sandbox();
     let _ = caps.set_disable_gpu();
     let _ = caps.add_arg("--window-size=1920,1080");
@@ -308,7 +302,6 @@ fn load_registry() -> PageObjectRegistry {
 async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
     for attempt in 1..=30 {
         tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-
         let result = driver
             .execute_script(
                 "return !!(document.querySelector('.oneHeader') || \
@@ -317,7 +310,6 @@ async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
                 vec![],
             )
             .await;
-
         match result {
             Ok(serde_json::Value::Bool(true)) => {
                 eprintln!("  Lightning detected on attempt {attempt}");
@@ -335,7 +327,7 @@ async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
 }
 
 // ---------------------------------------------------------------------------
-// Single integration test — one browser session, sequential steps
+// Test
 // ---------------------------------------------------------------------------
 
 #[tokio::test]
@@ -345,7 +337,6 @@ async fn test_salesforce_live() {
         return;
     };
 
-    // Initialize Allure reporting
     let mut allure = AllureReport::new("test_salesforce_live");
     write_allure_environment(&instance_url);
     write_allure_categories();
@@ -364,7 +355,7 @@ async fn test_salesforce_live() {
 
     let mut attachments = Vec::new();
     if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot_attachment(&png, "01-after-frontdoor") {
+        if let Some(att) = allure.save_screenshot(&png, "01-after-frontdoor") {
             attachments.push(att);
         }
     }
@@ -395,7 +386,7 @@ async fn test_salesforce_live() {
 
     let mut attachments = Vec::new();
     if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot_attachment(&png, "02-lightning-home") {
+        if let Some(att) = allure.save_screenshot(&png, "02-lightning-home") {
             attachments.push(att);
         }
     }
@@ -435,18 +426,13 @@ async fn test_salesforce_live() {
 
     let mut attachments = Vec::new();
     if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot_attachment(&png, "03-after-discovery") {
+        if let Some(att) = allure.save_screenshot(&png, "03-after-discovery") {
             attachments.push(att);
         }
     }
 
-    // Attach discovery report as JSON
+    // Attach discovery report
     let report_json = serde_json::to_string_pretty(&report).unwrap_or_default();
-    let report_path = artifacts_dir().join("discovery-report.json");
-    let _ = std::fs::write(&report_path, &report_json);
-    eprintln!("Discovery report saved to {}", report_path.display());
-
-    // Also save discovery report as an Allure attachment
     let disc_uuid = make_uuid("discovery-report");
     let disc_filename = format!("{disc_uuid}-attachment.json");
     let _ = std::fs::write(allure_results_dir().join(&disc_filename), &report_json);
@@ -485,7 +471,6 @@ async fn test_salesforce_live() {
     let header_ast = registry.get(&header_matches[0]).expect("Failed to get header AST");
     eprintln!("Header: {}", header_matches[0]);
     eprintln!("  Root selector: {:?}", header_ast.selector.as_ref().map(|s| &s.css));
-    eprintln!("  Methods: {:?}", header_ast.methods.iter().map(|m| &m.name).collect::<Vec<_>>());
 
     let root_css = header_ast
         .selector
@@ -500,7 +485,7 @@ async fn test_salesforce_live() {
     let mut attachments = Vec::new();
     if let Some(png) = take_screenshot(driver.as_ref()).await {
         let name = if header_el.is_ok() { "04-header-found" } else { "04-header-not-found" };
-        if let Some(att) = allure.save_screenshot_attachment(&png, name) {
+        if let Some(att) = allure.save_screenshot(&png, name) {
             attachments.push(att);
         }
     }
@@ -531,7 +516,7 @@ async fn test_salesforce_live() {
 
     let mut attachments = Vec::new();
     if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot_attachment(&png, "05a-accounts") {
+        if let Some(att) = allure.save_screenshot(&png, "05a-accounts") {
             attachments.push(att);
         }
     }
@@ -544,7 +529,7 @@ async fn test_salesforce_live() {
     eprintln!("Contacts: {url}");
 
     if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot_attachment(&png, "05b-contacts") {
+        if let Some(att) = allure.save_screenshot(&png, "05b-contacts") {
             attachments.push(att);
         }
     }
@@ -553,7 +538,6 @@ async fn test_salesforce_live() {
 
     driver.quit().await.expect("Failed to quit");
 
-    // Write the final Allure result
     allure.finish("passed", None);
     eprintln!("\n=== All steps completed ===");
 }

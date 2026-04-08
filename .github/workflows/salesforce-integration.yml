@@ -23,7 +23,7 @@ on:
       - ".github/workflows/salesforce-integration.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   RUST_BACKTRACE: 1
@@ -68,23 +68,38 @@ jobs:
 
           echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
           echo "Org instance: $INSTANCE"
-          echo "Frontdoor host: $(echo "$FRONTDOOR" | sed 's|^\(https://[^/]*\)/.*|\1|')"
           echo "Frontdoor length: ${#FRONTDOOR}"
 
-      # ── Chrome + Chromedriver ─────────────────────────────────────────
-      - name: Start chromedriver
+      # ── Xvfb + ffmpeg + Chrome ────────────────────────────────────────
+      - name: Start Xvfb and chromedriver
         run: |
-          google-chrome --version || true
-          chromedriver --version || true
-          chromedriver --port=9515 &
-          sleep 2
-          curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
+          sudo apt-get update -qq > /dev/null 2>&1
+          sudo apt-get install -y -qq xvfb ffmpeg > /dev/null 2>&1
 
-      # ── Prepare directories ───────────────────────────────────────────
-      - name: Prepare directories
+          # Start virtual display
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 1
+
+          # Start chromedriver on the virtual display
+          DISPLAY=:99 chromedriver --port=9515 &
+          sleep 2
+          curl -sf http://localhost:9515/status | jq .ready || echo "WARNING: chromedriver not ready"
+
+      - name: Start video recording
         run: |
-          mkdir -p /tmp/sf-artifacts
           mkdir -p /tmp/allure-results
+          # Record the Xvfb display as mp4
+          DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 10 \
+            -i :99.0 -c:v libx264 -preset ultrafast -crf 25 -pix_fmt yuv420p \
+            /tmp/allure-results/screencast.mp4 </dev/null 2>/tmp/ffmpeg.log &
+          echo $! > /tmp/ffmpeg.pid
+          sleep 1
+          if kill -0 "$(cat /tmp/ffmpeg.pid)" 2>/dev/null; then
+            echo "Recording started (PID $(cat /tmp/ffmpeg.pid))"
+          else
+            echo "WARNING: ffmpeg failed to start"
+            cat /tmp/ffmpeg.log
+          fi
 
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
@@ -92,8 +107,8 @@ jobs:
           SF_INSTANCE_URL: ${{ steps.sf-org.outputs.instance_url }}
           SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
           CHROMEDRIVER_URL: "http://localhost:9515"
-          SF_ARTIFACTS_DIR: "/tmp/sf-artifacts"
           ALLURE_RESULTS_DIR: "/tmp/allure-results"
+          DISPLAY: ":99"
         run: |
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
@@ -102,48 +117,141 @@ jobs:
             cargo test -p utam-runtime --test salesforce_live -- --nocapture --test-threads=1 2>&1
           fi
 
-      # ── Upload artifacts ──────────────────────────────────────────────
-      - name: Upload test artifacts
+      # ── Stop recording + attach video to Allure ───────────────────────
+      - name: Stop recording and attach video
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: salesforce-test-artifacts
-          path: |
-            /tmp/sf-artifacts/
-            /tmp/allure-results/
-          if-no-files-found: ignore
-          retention-days: 14
+        run: |
+          # Gracefully stop ffmpeg
+          if [ -f /tmp/ffmpeg.pid ]; then
+            kill -INT "$(cat /tmp/ffmpeg.pid)" 2>/dev/null || true
+            for i in $(seq 1 10); do
+              kill -0 "$(cat /tmp/ffmpeg.pid)" 2>/dev/null || break
+              sleep 1
+            done
+            kill -9 "$(cat /tmp/ffmpeg.pid)" 2>/dev/null || true
+          fi
+
+          VIDEO="/tmp/allure-results/screencast.mp4"
+          if [ -f "$VIDEO" ] && [ -s "$VIDEO" ]; then
+            SIZE=$(du -h "$VIDEO" | cut -f1)
+            echo "Video recorded: $SIZE"
+
+            # Find the Allure result JSON and add the video as a top-level attachment
+            RESULT_FILE=$(ls /tmp/allure-results/*-result.json 2>/dev/null | head -1)
+            if [ -n "$RESULT_FILE" ]; then
+              # Use jq to add the video attachment
+              jq '.attachments += [{"name": "Screencast", "source": "screencast.mp4", "type": "video/mp4"}]' \
+                "$RESULT_FILE" > "${RESULT_FILE}.tmp" && mv "${RESULT_FILE}.tmp" "$RESULT_FILE"
+              echo "Video attached to Allure result"
+            fi
+          else
+            echo "WARNING: No video recorded"
+            cat /tmp/ffmpeg.log 2>/dev/null || true
+          fi
+
+      # ── Generate Allure report ────────────────────────────────────────
+      - name: Generate Allure report
+        if: always()
+        run: |
+          # Install Allure CLI via npm
+          npm install -g allure-commandline
+
+          # Determine branch name for the report path
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH="${{ github.head_ref }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+          fi
+          # Sanitize branch name for use as directory
+          BRANCH_DIR=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          echo "Publishing report for branch: $BRANCH_DIR"
+          echo "branch_dir=$BRANCH_DIR" >> "$GITHUB_ENV"
+
+          # Fetch existing history from gh-pages if available
+          git fetch origin gh-pages:gh-pages 2>/dev/null || true
+          mkdir -p /tmp/gh-pages
+          git worktree add /tmp/gh-pages gh-pages 2>/dev/null || true
+
+          # Copy previous history for this branch if it exists
+          HISTORY_SRC="/tmp/gh-pages/${BRANCH_DIR}/history"
+          if [ -d "$HISTORY_SRC" ]; then
+            mkdir -p /tmp/allure-results/history
+            cp -r "$HISTORY_SRC"/* /tmp/allure-results/history/ 2>/dev/null || true
+            echo "Loaded history from previous run"
+          fi
+
+          # Generate the report
+          allure generate /tmp/allure-results -o /tmp/allure-report --clean
+          echo "Report generated at /tmp/allure-report"
+          ls /tmp/allure-report/ 2>/dev/null || true
+
+      # ── Deploy to GitHub Pages ────────────────────────────────────────
+      - name: Deploy to GitHub Pages
+        if: always()
+        run: |
+          BRANCH_DIR="${branch_dir}"
+          [ -z "$BRANCH_DIR" ] && BRANCH_DIR="unknown"
+
+          # Prepare the gh-pages content
+          DEPLOY_DIR="/tmp/deploy"
+          mkdir -p "$DEPLOY_DIR"
+
+          # Copy existing gh-pages content
+          if [ -d /tmp/gh-pages ]; then
+            cp -r /tmp/gh-pages/* "$DEPLOY_DIR/" 2>/dev/null || true
+            # Remove git metadata
+            rm -rf "$DEPLOY_DIR/.git"
+          fi
+
+          # Copy this branch's report
+          mkdir -p "$DEPLOY_DIR/${BRANCH_DIR}"
+          if [ -d /tmp/allure-report ]; then
+            cp -r /tmp/allure-report/* "$DEPLOY_DIR/${BRANCH_DIR}/" 2>/dev/null || true
+          fi
+
+          # Create an index page listing all branch reports
+          {
+            echo "<!DOCTYPE html><html><head><title>Allure Reports</title>"
+            echo "<style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px}"
+            echo "a{display:block;padding:8px 0;font-size:18px}</style></head><body>"
+            echo "<h1>Salesforce Integration Test Reports</h1>"
+            echo "<p>Select a branch to view its latest Allure report:</p>"
+            for dir in "$DEPLOY_DIR"/*/; do
+              [ -d "$dir" ] || continue
+              name=$(basename "$dir")
+              [ "$name" = ".git" ] && continue
+              echo "<a href=\"${name}/index.html\">${name}</a>"
+            done
+            echo "<hr><p><small>Updated: $(date -u '+%Y-%m-%d %H:%M UTC')</small></p>"
+            echo "</body></html>"
+          } > "$DEPLOY_DIR/index.html"
+
+          # Deploy via git push
+          cd "$DEPLOY_DIR"
+          git init
+          git checkout -b gh-pages
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" \
+            commit -m "Update Allure report for ${BRANCH_DIR}" --allow-empty
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git push --force origin gh-pages
 
       # ── Job Summary ──────────────────────────────────────────────────
       - name: Generate summary
         if: always()
         run: |
+          BRANCH_DIR="${branch_dir}"
+          [ -z "$BRANCH_DIR" ] && BRANCH_DIR="unknown"
+          PAGES_URL="https://composable-delivery.github.io/busbar-sf-utam"
+
           {
             echo "## Salesforce Integration Tests"
             echo ""
             echo "| Detail | Value |"
             echo "|--------|-------|"
             echo "| Org | \`${{ steps.sf-org.outputs.instance_url }}\` |"
-            echo "| Driver | chromedriver (headless Chrome) |"
-
-            SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
-            echo "| Screenshots | ${SC_COUNT} captured |"
+            echo "| Driver | Chrome on Xvfb (video recorded) |"
+            echo "| Allure Report | [View report](${PAGES_URL}/${BRANCH_DIR}/) |"
+            echo "| All Reports | [Report index](${PAGES_URL}/) |"
             echo ""
-
-            if [ -f /tmp/sf-artifacts/discovery-report.json ]; then
-              MATCHED=$(jq '.matched | length' /tmp/sf-artifacts/discovery-report.json 2>/dev/null || echo "?")
-              DISCOVERED=$(jq '.discovered | length' /tmp/sf-artifacts/discovery-report.json 2>/dev/null || echo "?")
-              echo "### Discovery Results"
-              echo ""
-              echo "- **Known page objects matched:** ${MATCHED}"
-              echo "- **Unknown components discovered:** ${DISCOVERED}"
-              echo ""
-              echo "<details><summary>Full discovery report</summary>"
-              echo ""
-              echo '```json'
-              cat /tmp/sf-artifacts/discovery-report.json
-              echo '```'
-              echo ""
-              echo "</details>"
-            fi
           } >> "$GITHUB_STEP_SUMMARY"
