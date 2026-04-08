@@ -168,20 +168,12 @@ async fn test_sf_header_introspection() {
         eprintln!("    - {}", m.name);
     }
 
-    // Try to load the page object against the live page
-    match DynamicPageObject::load(
-        Box::new(ThirtyfourDriver::new(
-            thirtyfour::WebDriver::new(
-                &chromedriver_url(),
-                thirtyfour::DesiredCapabilities::chrome(),
-            )
-            .await
-            .unwrap(),
-        )),
-        header_ast,
-    )
-    .await
-    {
+    // Try to load the page object against the live page.
+    // DynamicPageObject::load takes ownership of the driver, so create a new session.
+    let driver2 = create_driver().await.expect("Failed to create second driver");
+    navigate_to_org(driver2.as_ref(), &frontdoor_url).await.expect("Navigate failed (driver2)");
+
+    match DynamicPageObject::load(driver2, header_ast).await {
         Ok(page) => {
             eprintln!("Header page object loaded successfully!");
             let methods = page.method_signatures();
