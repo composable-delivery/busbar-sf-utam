@@ -151,12 +151,15 @@ jobs:
           # Fetch previous history from gh-pages for trend tracking
           git fetch origin gh-pages:gh-pages 2>/dev/null || true
           if git rev-parse --verify gh-pages 2>/dev/null; then
-            HISTORY_SRC=$(git show "gh-pages:${BRANCH_DIR}/history/history.json" 2>/dev/null || true)
-            if [ -n "$HISTORY_SRC" ]; then
+            # Extract the entire history/ directory from the previous report
+            mkdir -p /tmp/prev-report
+            git archive gh-pages -- "${BRANCH_DIR}/history" 2>/dev/null | tar -x -C /tmp/prev-report 2>/dev/null || true
+            if [ -d "/tmp/prev-report/${BRANCH_DIR}/history" ]; then
               mkdir -p /tmp/allure-results/history
-              git show "gh-pages:${BRANCH_DIR}/history/history.json" > /tmp/allure-results/history/history.json 2>/dev/null || true
-              git show "gh-pages:${BRANCH_DIR}/history/history-trend.json" > /tmp/allure-results/history/history-trend.json 2>/dev/null || true
-              echo "Loaded previous history"
+              cp -r "/tmp/prev-report/${BRANCH_DIR}/history/"* /tmp/allure-results/history/
+              echo "Loaded previous history ($(ls /tmp/allure-results/history/ | wc -l) files)"
+            else
+              echo "No previous history found for branch ${BRANCH_DIR}"
             fi
           fi
 
