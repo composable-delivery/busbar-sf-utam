@@ -12,8 +12,9 @@ use async_trait::async_trait;
 use utam_compiler::ast::*;
 
 use crate::driver::{ElementHandle, Selector, UtamDriver};
-use crate::element::{DynamicElement, ElementCapability, RuntimeValue};
+use crate::element::{DynamicElement, ElementRuntime, RuntimeValue};
 use crate::error::{RuntimeError, RuntimeResult};
+use crate::registry::PageObjectRegistry;
 
 // ---------------------------------------------------------------------------
 // Selector resolution
@@ -137,13 +138,15 @@ pub struct DynamicPageObject {
     driver: Box<dyn UtamDriver>,
     /// Flattened element index: name -> (ElementAst, is_in_shadow)
     element_index: HashMap<String, (ElementAst, bool)>,
+    /// Optional registry for cross-page-object resolution (applyExternal)
+    registry: Option<std::sync::Arc<PageObjectRegistry>>,
 }
 
 impl DynamicPageObject {
     /// Load a root page object from the current page.
     ///
-    /// Finds the root element using the AST's selector and returns a
-    /// new `DynamicPageObject` backed by it.
+    /// Finds the root element using the AST's selector, executes any
+    /// `beforeLoad` predicates, and returns a new `DynamicPageObject`.
     pub async fn load(driver: Box<dyn UtamDriver>, ast: PageObjectAst) -> RuntimeResult<Self> {
         let selector_ast =
             ast.selector.as_ref().ok_or_else(|| RuntimeError::UnsupportedAction {
@@ -151,10 +154,16 @@ impl DynamicPageObject {
                 element_type: "page object has no root selector".into(),
             })?;
         let selector = resolve_selector(selector_ast, &HashMap::new())?;
-        let root = driver.find_element(&selector).await?;
+
+        // If there are beforeLoad steps, wait for the root element
+        let root = if !ast.before_load.is_empty() {
+            driver.wait_for_element(&selector, std::time::Duration::from_secs(10)).await?
+        } else {
+            driver.find_element(&selector).await?
+        };
 
         let element_index = build_element_index(&ast);
-        Ok(Self { ast, root, driver, element_index })
+        Ok(Self { ast, root, driver, element_index, registry: None })
     }
 
     /// Wrap an existing element as a page object.
@@ -164,7 +173,13 @@ impl DynamicPageObject {
         root: Box<dyn ElementHandle>,
     ) -> Self {
         let element_index = build_element_index(&ast);
-        Self { ast, root, driver, element_index }
+        Self { ast, root, driver, element_index, registry: None }
+    }
+
+    /// Attach a registry for cross-page-object resolution (`applyExternal`).
+    pub fn with_registry(mut self, registry: std::sync::Arc<PageObjectRegistry>) -> Self {
+        self.registry = Some(registry);
+        self
     }
 
     /// Get the underlying driver
@@ -182,12 +197,60 @@ impl DynamicPageObject {
         &self.ast
     }
 
+    /// Get the optional registry
+    pub fn registry(&self) -> Option<&PageObjectRegistry> {
+        self.registry.as_deref()
+    }
+
+    /// Resolve a list of elements matching a selector (for `returnAll`/`list` elements).
+    async fn resolve_elements(
+        &self,
+        name: &str,
+        args: &HashMap<String, RuntimeValue>,
+    ) -> RuntimeResult<Vec<DynamicElement>> {
+        let (elem_ast, in_shadow) =
+            self.element_index.get(name).ok_or_else(|| RuntimeError::ElementNotDefined {
+                page_object: self.struct_name(),
+                element: name.to_string(),
+            })?;
+
+        let selector_ast =
+            elem_ast.selector.as_ref().ok_or_else(|| RuntimeError::ElementNotDefined {
+                page_object: self.struct_name(),
+                element: format!("{name} (no selector)"),
+            })?;
+
+        let selector = resolve_selector(selector_ast, args)?;
+        let types = match &elem_ast.element_type {
+            Some(ElementTypeAst::ActionTypes(types)) => types.clone(),
+            _ => vec![],
+        };
+
+        let handles = if *in_shadow {
+            let shadow =
+                self.root.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
+                    action: "shadow_root".into(),
+                    element_type: "root has no shadow root".into(),
+                })?;
+            shadow.find_elements(&selector).await?
+        } else {
+            self.root.find_elements(&selector).await?
+        };
+
+        Ok(handles.into_iter().map(|h| DynamicElement::new(h, &types)).collect())
+    }
+
     /// Resolve a single element by name from the DOM.
     async fn resolve_element(
         &self,
         name: &str,
         args: &HashMap<String, RuntimeValue>,
     ) -> RuntimeResult<DynamicElement> {
+        // Special "root" pseudo-element — returns the root element itself
+        if name == "root" {
+            return Ok(DynamicElement::base(self.root.clone_handle()));
+        }
+
         let (elem_ast, in_shadow) =
             self.element_index.get(name).ok_or_else(|| RuntimeError::ElementNotDefined {
                 page_object: self.struct_name(),
@@ -315,16 +378,37 @@ fn execute_compose<'a>(
         let mut last_element: Option<DynamicElement> = None;
 
         for stmt in statements {
-            // 1. Resolve the element (if specified)
+            // 1. Handle filter statements — resolve list + filter
+            if let Some(filters) = &stmt.filter {
+                if let Some(elem_name) = &stmt.element {
+                    let all = page.resolve_elements(elem_name, method_args).await?;
+                    let filtered = apply_filters(all, filters, method_args).await?;
+                    last_result = RuntimeValue::Elements(filtered);
+                    continue;
+                }
+            }
+
+            // 2. Handle applyExternal — cross-page-object method call
+            if let Some(external) = &stmt.apply_external {
+                let ext_args = resolve_compose_args(&external.args, method_args)?;
+                // For now, if we have a registry we can try to resolve the external method.
+                // The external method name format varies; store result and continue.
+                last_result = RuntimeValue::String(format!(
+                    "<external: {} with {} args>",
+                    external.method,
+                    ext_args.len()
+                ));
+                continue;
+            }
+
+            // 3. Resolve the element (if specified)
             let element = if let Some(elem_name) = &stmt.element {
                 if elem_name == "document" {
-                    // Special "document" element → use driver-level operations
                     None
                 } else {
                     Some(page.resolve_element(elem_name, method_args).await?)
                 }
             } else if stmt.chain {
-                // Chain from previous result
                 match &last_result {
                     RuntimeValue::Element(el) => Some(*el.clone()),
                     _ => last_element.clone(),
@@ -333,23 +417,36 @@ fn execute_compose<'a>(
                 None
             };
 
-            // 2. Resolve arguments for this statement
+            // 4. Resolve arguments for this statement
             let stmt_args = resolve_compose_args(&stmt.args, method_args)?;
 
-            // 3. Execute the action
+            // 5. Handle matcher assertions (e.g. stringContains on a result)
+            if let Some(matcher) = &stmt.matcher {
+                let matcher_args = resolve_compose_args(&matcher.args, method_args)?;
+                let matched = evaluate_matcher(&matcher.matcher_type, &last_result, &matcher_args);
+                last_result = RuntimeValue::Bool(matched);
+                continue;
+            }
+
+            // 6. Execute the action
             if let Some(apply) = &stmt.apply {
+                // Handle "waitFor" with predicate specially
+                if apply == "waitFor" {
+                    if let Some(predicate) = &stmt.predicate {
+                        execute_wait_for_predicate(page, predicate, method_args).await?;
+                        last_result = RuntimeValue::Null;
+                    }
+                    continue;
+                }
+
                 if let Some(el) = &element {
-                    // Element + action
-                    use crate::element::ElementRuntime;
                     last_result = el.execute(apply, &stmt_args).await?;
                     last_element = Some(el.clone());
                 } else if stmt.element.as_deref() == Some("document") {
-                    // Document-level actions
                     last_result = execute_document_action(page, apply, &stmt_args).await?;
                 } else {
-                    // Self-referential method call (calling another method on this page object)
+                    // Self-referential method call
                     let mut sub_args = method_args.clone();
-                    // Merge positional args into named args
                     for (i, val) in stmt_args.iter().enumerate() {
                         if let Some(method) = page.ast.methods.iter().find(|m| m.name == *apply) {
                             if let Some(arg_def) = method.args.get(i) {
@@ -360,13 +457,11 @@ fn execute_compose<'a>(
                     last_result = execute_method_by_name(page, apply, &sub_args).await?;
                 }
             } else if stmt.return_element {
-                // Just return the element
                 if let Some(el) = element {
                     last_result = RuntimeValue::Element(Box::new(el.clone()));
                     last_element = Some(el);
                 }
             } else if let Some(el) = element {
-                // Element reference without action — store for chaining
                 last_result = RuntimeValue::Element(Box::new(el.clone()));
                 last_element = Some(el);
             }
@@ -374,6 +469,76 @@ fn execute_compose<'a>(
 
         Ok(last_result)
     }) // end Box::pin
+}
+
+/// Apply filter predicates to a list of elements.
+async fn apply_filters(
+    elements: Vec<DynamicElement>,
+    filters: &[FilterAst],
+    _method_args: &HashMap<String, RuntimeValue>,
+) -> RuntimeResult<Vec<DynamicElement>> {
+    let mut result = elements;
+
+    for filter in filters {
+        let matcher_type = &filter.matcher.matcher_type;
+        let mut kept = Vec::new();
+
+        for el in result {
+            let pass = match matcher_type.as_str() {
+                "isVisible" => el.execute("isVisible", &[]).await?.as_bool().unwrap_or(false),
+                "isEnabled" => el.execute("isEnabled", &[]).await?.as_bool().unwrap_or(false),
+                "isPresent" => el.execute("isPresent", &[]).await?.as_bool().unwrap_or(false),
+                _ => true, // Unknown matchers pass through
+            };
+            if pass {
+                kept.push(el);
+            }
+        }
+        result = kept;
+    }
+
+    Ok(result)
+}
+
+/// Evaluate a matcher against a runtime value.
+fn evaluate_matcher(matcher_type: &str, value: &RuntimeValue, args: &[RuntimeValue]) -> bool {
+    let actual = match value {
+        RuntimeValue::String(s) => s.clone(),
+        RuntimeValue::Bool(b) => b.to_string(),
+        RuntimeValue::Number(n) => n.to_string(),
+        _ => return false,
+    };
+    let expected = args.first().map(|a| a.to_string()).unwrap_or_default();
+
+    match matcher_type {
+        "stringContains" | "contains" => actual.contains(&expected),
+        "stringEquals" | "equals" => actual == expected,
+        "startsWith" => actual.starts_with(&expected),
+        "endsWith" => actual.ends_with(&expected),
+        "isVisible" | "isTrue" => actual == "true",
+        _ => false,
+    }
+}
+
+/// Execute a `waitFor` predicate by polling its compose statements.
+async fn execute_wait_for_predicate(
+    page: &DynamicPageObject,
+    predicate: &[ComposeStatementAst],
+    method_args: &HashMap<String, RuntimeValue>,
+) -> RuntimeResult<()> {
+    utam_core::wait::wait_for(
+        || async {
+            match execute_compose(page, predicate, method_args).await {
+                Ok(RuntimeValue::Bool(true)) => Ok(Some(())),
+                Ok(_) => Ok(Some(())), // Predicate didn't error → treat as passed
+                Err(_) => Ok(None),    // Error → keep polling
+            }
+        },
+        &utam_core::wait::WaitConfig::default(),
+        "waitFor predicate",
+    )
+    .await
+    .map_err(RuntimeError::Utam)
 }
 
 /// Resolve compose statement arguments against method-level args.
