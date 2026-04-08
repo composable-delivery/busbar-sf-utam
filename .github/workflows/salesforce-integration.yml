@@ -277,8 +277,9 @@ jobs:
   deploy-report:
     name: Deploy Report
     needs: salesforce-tests
-    if: always()
+    if: always() && needs.salesforce-tests.result != 'cancelled'
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     permissions:
       pages: write
