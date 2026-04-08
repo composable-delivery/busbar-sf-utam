@@ -86,6 +86,7 @@ fn load_registry() -> PageObjectRegistry {
 
 async fn navigate_to_org(driver: &dyn UtamDriver, frontdoor_url: &str) -> RuntimeResult<String> {
     eprintln!("Navigating to frontdoor URL ({} chars)", frontdoor_url.len());
+    eprintln!("  Host: {}", frontdoor_url.split("/secur/").next().unwrap_or("unknown"));
     driver.navigate(frontdoor_url).await?;
 
     // Salesforce redirects through frontdoor; give it time to settle
@@ -94,6 +95,29 @@ async fn navigate_to_org(driver: &dyn UtamDriver, frontdoor_url: &str) -> Runtim
     let url = driver.current_url().await?;
     eprintln!("Current URL after navigation: {url}");
     Ok(url)
+}
+
+/// Assert that we are NOT on the login page (auth succeeded).
+async fn assert_authenticated(driver: &dyn UtamDriver, context: &str) {
+    let url = driver.current_url().await.unwrap_or_default();
+    let is_login_page = url.contains("/login") && !url.contains("/lightning");
+
+    if is_login_page {
+        // Take a screenshot before panicking
+        save_screenshot(driver, &format!("FAIL-auth-{context}")).await;
+
+        // Check page content for more context
+        let title = driver.title().await.unwrap_or_default();
+        panic!(
+            "Authentication failed in {context}! \
+             Landed on login page instead of the app.\n\
+             URL: {url}\n\
+             Title: {title}\n\
+             This usually means the frontdoor.jsp token was expired or \
+             the URL host was incorrect."
+        );
+    }
+    eprintln!("  Auth check passed: {url}");
 }
 
 // ---------------------------------------------------------------------------
@@ -114,8 +138,8 @@ async fn test_01_frontdoor_and_home() {
     // Navigate through frontdoor
     let url = navigate_to_org(driver.as_ref(), &frontdoor_url).await.expect("Failed to navigate");
     save_screenshot(driver.as_ref(), "01a-after-frontdoor").await;
+    assert_authenticated(driver.as_ref(), "test_01_frontdoor").await;
 
-    assert!(!url.is_empty(), "URL should not be empty after navigation");
     eprintln!("Landed at: {url}");
 
     // If we landed on Setup, navigate to the app home
@@ -147,6 +171,7 @@ async fn test_02_discovery() {
 
     let driver = create_driver().await.expect("Failed to create driver");
     navigate_to_org(driver.as_ref(), &frontdoor_url).await.expect("Navigate failed");
+    assert_authenticated(driver.as_ref(), "test_02_discovery").await;
 
     // Try to get to the app home for better discovery results
     let instance = std::env::var("SF_INSTANCE_URL").unwrap_or_default();
@@ -194,6 +219,7 @@ async fn test_03_header_page_object() {
 
     let driver = create_driver().await.expect("Failed to create driver");
     navigate_to_org(driver.as_ref(), &frontdoor_url).await.expect("Navigate failed");
+    assert_authenticated(driver.as_ref(), "test_03_header").await;
 
     // Navigate to app home where the header is present
     let instance = std::env::var("SF_INSTANCE_URL").unwrap_or_default();
@@ -255,6 +281,7 @@ async fn test_04_navigate_pages() {
     // Frontdoor
     navigate_to_org(driver.as_ref(), &frontdoor_url).await.expect("Navigate failed");
     save_screenshot(driver.as_ref(), "04a-frontdoor").await;
+    assert_authenticated(driver.as_ref(), "test_04_navigate").await;
 
     if instance.is_empty() {
         driver.quit().await.expect("Failed to quit");
