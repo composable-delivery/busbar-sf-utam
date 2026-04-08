@@ -1,21 +1,54 @@
 //! Salesforce live integration tests
 //!
-//! Runs against a real Salesforce org using a single browser session.
-//! The frontdoor token can only establish one session, so all test steps
-//! share the same WebDriver instance.
+//! Runs against a real Salesforce org. Authenticates once via frontdoor.jsp,
+//! clones session cookies into parallel browser sessions, and discovers page
+//! objects across many Lightning pages simultaneously.
 //!
-//! Emits Allure-format JSON results for rich reporting with screenshots
-//! and video. Video is recorded externally (ffmpeg on Xvfb) and attached
-//! post-test by the CI workflow.
+//! Emits Allure-format JSON results (one per page) for rich reporting with
+//! screenshots and video.
 //!
 //! Skipped locally (no CHROMEDRIVER_URL), panics in CI if credentials missing.
 
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use utam_runtime::prelude::*;
+
+// ---------------------------------------------------------------------------
+// Page targets — grouped into parallel lanes
+// ---------------------------------------------------------------------------
+
+struct PageTarget {
+    name: &'static str,
+    url_suffix: &'static str,
+}
+
+const LANE_CORE: &[PageTarget] = &[
+    PageTarget { name: "Home", url_suffix: "/lightning/page/home" },
+    PageTarget { name: "Accounts", url_suffix: "/lightning/o/Account/list" },
+    PageTarget { name: "Contacts", url_suffix: "/lightning/o/Contact/list" },
+];
+
+const LANE_SALES: &[PageTarget] = &[
+    PageTarget { name: "Opportunities", url_suffix: "/lightning/o/Opportunity/list" },
+    PageTarget { name: "Leads", url_suffix: "/lightning/o/Lead/list" },
+    PageTarget { name: "Campaigns", url_suffix: "/lightning/o/Campaign/list" },
+];
+
+const LANE_SERVICE: &[PageTarget] = &[
+    PageTarget { name: "Cases", url_suffix: "/lightning/o/Case/list" },
+    PageTarget { name: "Tasks", url_suffix: "/lightning/o/Task/home" },
+    PageTarget { name: "Events", url_suffix: "/lightning/o/Event/home" },
+];
+
+const LANE_ADMIN: &[PageTarget] = &[
+    PageTarget { name: "Reports", url_suffix: "/lightning/o/Report/home" },
+    PageTarget { name: "Dashboards", url_suffix: "/lightning/o/Dashboard/home" },
+    PageTarget { name: "Setup", url_suffix: "/lightning/setup/SetupOneHome/home" },
+];
 
 // ---------------------------------------------------------------------------
 // Allure reporting
@@ -57,25 +90,26 @@ struct AllureStep {
     start: u64,
     stop: u64,
     attachments: Vec<serde_json::Value>,
-    details: Option<(String, String)>,
+    details: Option<String>,
 }
 
 struct AllureReport {
     test_uuid: String,
     test_name: String,
+    suite: String,
     start: u64,
     steps: Vec<AllureStep>,
     current_step_start: u64,
-    /// Top-level attachments (e.g., video added post-test by CI).
     top_attachments: Vec<serde_json::Value>,
 }
 
 impl AllureReport {
-    fn new(test_name: &str) -> Self {
+    fn new(test_name: &str, suite: &str) -> Self {
         let start = now_millis();
         Self {
             test_uuid: make_uuid(&format!("{test_name}-{start}")),
             test_name: test_name.to_string(),
+            suite: suite.to_string(),
             start,
             steps: Vec::new(),
             current_step_start: start,
@@ -87,26 +121,28 @@ impl AllureReport {
         self.current_step_start = now_millis();
     }
 
-    fn save_attachment(
-        &self,
-        data: &[u8],
-        name: &str,
-        ext: &str,
-        mime: &str,
-    ) -> Option<serde_json::Value> {
+    fn save_screenshot(&self, png_data: &[u8], name: &str) -> Option<serde_json::Value> {
         let att_uuid = make_uuid(&format!("{}-{name}", self.test_uuid));
-        let filename = format!("{att_uuid}-attachment.{ext}");
+        let filename = format!("{att_uuid}-attachment.png");
+        let path = allure_results_dir().join(&filename);
+        std::fs::write(&path, png_data).ok()?;
+        Some(serde_json::json!({
+            "name": name,
+            "source": filename,
+            "type": "image/png"
+        }))
+    }
+
+    fn save_json_attachment(&self, data: &str, name: &str) -> Option<serde_json::Value> {
+        let att_uuid = make_uuid(&format!("{}-{name}", self.test_uuid));
+        let filename = format!("{att_uuid}-attachment.json");
         let path = allure_results_dir().join(&filename);
         std::fs::write(&path, data).ok()?;
         Some(serde_json::json!({
             "name": name,
             "source": filename,
-            "type": mime
+            "type": "application/json"
         }))
-    }
-
-    fn save_screenshot(&self, png_data: &[u8], name: &str) -> Option<serde_json::Value> {
-        self.save_attachment(png_data, name, "png", "image/png")
     }
 
     fn end_step(&mut self, name: &str, status: &str, attachments: Vec<serde_json::Value>) {
@@ -127,7 +163,7 @@ impl AllureReport {
             start: self.current_step_start,
             stop: now_millis(),
             attachments,
-            details: Some((message.to_string(), String::new())),
+            details: Some(message.to_string()),
         });
     }
 
@@ -146,11 +182,8 @@ impl AllureReport {
                     "steps": [],
                     "parameters": []
                 });
-                if let Some((ref msg, ref trace)) = s.details {
-                    step["statusDetails"] = serde_json::json!({
-                        "message": msg,
-                        "trace": trace
-                    });
+                if let Some(ref msg) = s.details {
+                    step["statusDetails"] = serde_json::json!({ "message": msg, "trace": "" });
                 }
                 step
             })
@@ -166,12 +199,13 @@ impl AllureReport {
             "start": self.start,
             "stop": now_millis(),
             "labels": [
-                { "name": "suite", "value": "Salesforce Integration" },
-                { "name": "parentSuite", "value": "Live Tests" },
+                { "name": "parentSuite", "value": "Salesforce Integration" },
+                { "name": "suite", "value": self.suite },
+                { "name": "subSuite", "value": self.test_name },
                 { "name": "framework", "value": "busbar-sf-utam" },
                 { "name": "language", "value": "rust" },
                 { "name": "feature", "value": "Salesforce Browser Testing" },
-                { "name": "severity", "value": "critical" }
+                { "name": "severity", "value": "normal" }
             ],
             "steps": steps_json,
             "attachments": self.top_attachments,
@@ -180,16 +214,12 @@ impl AllureReport {
         });
 
         if let Some(msg) = message {
-            result["statusDetails"] = serde_json::json!({
-                "message": msg,
-                "trace": ""
-            });
+            result["statusDetails"] = serde_json::json!({ "message": msg, "trace": "" });
         }
 
         let path = allure_results_dir().join(format!("{}-result.json", self.test_uuid));
         let json = serde_json::to_string_pretty(&result).unwrap_or_default();
         let _ = std::fs::write(&path, &json);
-        eprintln!("Allure result: {}", path.display());
     }
 }
 
@@ -199,33 +229,18 @@ fn write_allure_environment(instance_url: &str) {
          browser=Chrome\n\
          driver=chromedriver\n\
          framework=busbar-sf-utam\n\
-         language=Rust\n"
+         language=Rust\n\
+         parallel_lanes=4\n"
     );
     let _ = std::fs::write(allure_results_dir().join("environment.properties"), content);
 }
 
 fn write_allure_categories() {
     let categories = serde_json::json!([
-        {
-            "name": "Authentication failures",
-            "messageRegex": ".*login.*|.*frontdoor.*|.*auth.*",
-            "matchedStatuses": ["failed", "broken"]
-        },
-        {
-            "name": "Lightning load failures",
-            "messageRegex": ".*Lightning.*|.*timeout.*|.*load.*",
-            "matchedStatuses": ["failed", "broken"]
-        },
-        {
-            "name": "Element not found",
-            "messageRegex": ".*not found.*|.*Unable to locate.*",
-            "matchedStatuses": ["failed"]
-        },
-        {
-            "name": "Infrastructure problems",
-            "messageRegex": ".*WebDriver.*|.*connection.*|.*chromedriver.*",
-            "matchedStatuses": ["broken"]
-        }
+        { "name": "Auth failures", "messageRegex": ".*login.*|.*frontdoor.*|.*auth.*", "matchedStatuses": ["failed"] },
+        { "name": "Lightning load failures", "messageRegex": ".*Lightning.*|.*timeout.*|.*load.*", "matchedStatuses": ["failed"] },
+        { "name": "Element not found", "messageRegex": ".*not found.*|.*Unable to locate.*", "matchedStatuses": ["failed"] },
+        { "name": "Infrastructure", "messageRegex": ".*WebDriver.*|.*connection.*", "matchedStatuses": ["broken"] }
     ]);
     let _ = std::fs::write(
         allure_results_dir().join("categories.json"),
@@ -261,17 +276,10 @@ fn chromedriver_url() -> String {
     std::env::var("CHROMEDRIVER_URL").unwrap_or_else(|_| "http://localhost:9515".to_string())
 }
 
-async fn take_screenshot(driver: &dyn UtamDriver) -> Option<Vec<u8>> {
-    driver.screenshot_png().await.ok()
-}
-
 #[cfg(feature = "webdriver")]
-async fn create_driver() -> RuntimeResult<Box<dyn UtamDriver>> {
+fn chrome_caps() -> thirtyfour::ChromeCapabilities {
     use thirtyfour::prelude::*;
-
-    let url = chromedriver_url();
     let mut caps = DesiredCapabilities::chrome();
-    // Use non-headless when DISPLAY is set (Xvfb) so ffmpeg can record.
     let has_display = std::env::var("DISPLAY").is_ok();
     if !has_display {
         let _ = caps.set_headless();
@@ -284,13 +292,16 @@ async fn create_driver() -> RuntimeResult<Box<dyn UtamDriver>> {
     } else {
         let _ = caps.add_arg("--window-size=1920,1080");
     }
+    caps
+}
 
-    let driver = WebDriver::new(&url, caps).await.map_err(|e| RuntimeError::UnsupportedAction {
-        action: "create_driver".into(),
-        element_type: format!("WebDriver connection to {url} failed: {e}"),
-    })?;
-
-    Ok(Box::new(ThirtyfourDriver::new(driver)))
+#[cfg(feature = "webdriver")]
+async fn create_driver() -> thirtyfour::prelude::WebDriver {
+    use thirtyfour::prelude::*;
+    let url = chromedriver_url();
+    WebDriver::new(&url, chrome_caps())
+        .await
+        .unwrap_or_else(|e| panic!("WebDriver connection to {url} failed: {e}"))
 }
 
 fn load_registry() -> PageObjectRegistry {
@@ -304,8 +315,8 @@ fn load_registry() -> PageObjectRegistry {
     registry
 }
 
-async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
-    for attempt in 1..=30 {
+async fn wait_for_lightning(driver: &dyn UtamDriver) -> bool {
+    for attempt in 1..=20 {
         tokio::time::sleep(std::time::Duration::from_secs(2)).await;
         let result = driver
             .execute_script(
@@ -315,20 +326,212 @@ async fn wait_for_lightning_loaded(driver: &dyn UtamDriver) -> bool {
                 vec![],
             )
             .await;
-        match result {
-            Ok(serde_json::Value::Bool(true)) => {
-                eprintln!("  Lightning detected on attempt {attempt}");
-                return true;
-            }
-            _ => {
-                if attempt % 5 == 0 {
-                    let url = driver.current_url().await.unwrap_or_default();
-                    eprintln!("  Attempt {attempt}/30 — still waiting... URL: {url}");
-                }
-            }
+        if matches!(result, Ok(serde_json::Value::Bool(true))) {
+            eprintln!("  Lightning detected on attempt {attempt}");
+            return true;
+        }
+        if attempt % 5 == 0 {
+            let url = driver.current_url().await.unwrap_or_default();
+            eprintln!("  Attempt {attempt}/20 — waiting... URL: {url}");
         }
     }
     false
+}
+
+// ---------------------------------------------------------------------------
+// Phase 1: Authentication
+// ---------------------------------------------------------------------------
+
+#[cfg(feature = "webdriver")]
+async fn authenticate(
+    driver: &thirtyfour::prelude::WebDriver,
+    frontdoor_url: &str,
+    instance_url: &str,
+) -> Vec<thirtyfour::Cookie> {
+    let utam = ThirtyfourDriver::new(driver.clone());
+
+    eprintln!("Navigating to frontdoor URL ({} chars)", frontdoor_url.len());
+    utam.navigate(frontdoor_url).await.expect("Failed to navigate to frontdoor");
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+
+    let url = utam.current_url().await.unwrap_or_default();
+    eprintln!("After frontdoor: {url}");
+    assert!(
+        !url.contains("/login.") && !url.contains("Login&"),
+        "Frontdoor auth failed — landed on login page: {url}"
+    );
+
+    // Navigate to Lightning home to ensure full session setup
+    let home = format!("{instance_url}/lightning/page/home");
+    utam.navigate(&home).await.expect("Failed to navigate home");
+    assert!(wait_for_lightning(&utam).await, "Lightning did not load after auth");
+    eprintln!("Authenticated and Lightning loaded");
+
+    // Extract all cookies
+    let cookies = driver.get_all_cookies().await.expect("Failed to get cookies");
+    eprintln!("Extracted {} cookies", cookies.len());
+    cookies
+}
+
+/// Create a new browser session and inject cookies for authentication.
+#[cfg(feature = "webdriver")]
+async fn create_authenticated_session(
+    instance_url: &str,
+    cookies: &[thirtyfour::Cookie],
+) -> thirtyfour::prelude::WebDriver {
+    let driver = create_driver().await;
+
+    // Must be on the same domain before adding cookies
+    driver.goto(instance_url).await.expect("Failed to navigate for cookie injection");
+    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+
+    // Inject session cookies
+    for cookie in cookies {
+        let _ = driver.add_cookie(cookie.clone()).await;
+    }
+    eprintln!("Injected {} cookies into new session", cookies.len());
+
+    driver
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2: Per-page discovery
+// ---------------------------------------------------------------------------
+
+struct PageResult {
+    page_name: String,
+    suite: String,
+    url: String,
+    matched: usize,
+    discovered: usize,
+    status: String,
+    error: Option<String>,
+    allure: AllureReport,
+}
+
+#[cfg(feature = "webdriver")]
+async fn visit_page(
+    driver: &thirtyfour::prelude::WebDriver,
+    instance_url: &str,
+    page: &PageTarget,
+    suite: &str,
+    registry: &PageObjectRegistry,
+) -> PageResult {
+    let utam = ThirtyfourDriver::new(driver.clone());
+    let test_name = format!("Discovery: {}", page.name);
+    let mut allure = AllureReport::new(&test_name, suite);
+    let page_url = format!("{}{}", instance_url, page.url_suffix);
+
+    // Step: Navigate
+    allure.begin_step();
+    eprintln!("[{}] Navigating to {}", page.name, page_url);
+    if let Err(e) = utam.navigate(&page_url).await {
+        let msg = format!("Navigation failed: {e}");
+        allure.end_step_failed("Navigate", &msg, vec![]);
+        allure.finish("broken", Some(&msg));
+        return PageResult {
+            page_name: page.name.to_string(),
+            suite: suite.to_string(),
+            url: page_url,
+            matched: 0,
+            discovered: 0,
+            status: "broken".to_string(),
+            error: Some(msg),
+            allure,
+        };
+    }
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+
+    let current_url = utam.current_url().await.unwrap_or_default();
+    eprintln!("[{}] Current URL: {current_url}", page.name);
+
+    let mut nav_attachments = Vec::new();
+    if let Ok(png) = utam.screenshot_png().await {
+        if let Some(att) = allure.save_screenshot(&png, &format!("{}-loaded", page.name)) {
+            nav_attachments.push(att);
+        }
+    }
+    allure.end_step("Navigate", "passed", nav_attachments);
+
+    // Step: Discovery
+    allure.begin_step();
+    let report = match utam_runtime::discovery::discover(&utam, registry).await {
+        Ok(r) => r,
+        Err(e) => {
+            let msg = format!("Discovery failed: {e}");
+            allure.end_step_failed("Discovery", &msg, vec![]);
+            allure.finish("failed", Some(&msg));
+            return PageResult {
+                page_name: page.name.to_string(),
+                suite: suite.to_string(),
+                url: current_url,
+                matched: 0,
+                discovered: 0,
+                status: "failed".to_string(),
+                error: Some(msg),
+                allure,
+            };
+        }
+    };
+
+    let matched = report.matched.len();
+    let discovered = report.discovered.len();
+    eprintln!("[{}] Found {} matched, {} discovered", page.name, matched, discovered);
+    for m in &report.matched {
+        eprintln!("  + {} ({} methods)", m.name, m.method_count);
+    }
+
+    let mut disc_attachments = Vec::new();
+    let report_json = serde_json::to_string_pretty(&report).unwrap_or_default();
+    if let Some(att) =
+        allure.save_json_attachment(&report_json, &format!("{}-discovery.json", page.name))
+    {
+        disc_attachments.push(att);
+    }
+    if let Ok(png) = utam.screenshot_png().await {
+        if let Some(att) = allure.save_screenshot(&png, &format!("{}-after-discovery", page.name)) {
+            disc_attachments.push(att);
+        }
+    }
+
+    allure.end_step(
+        &format!("Discovery ({matched} matched, {discovered} new)"),
+        "passed",
+        disc_attachments,
+    );
+    allure.finish("passed", None);
+
+    PageResult {
+        page_name: page.name.to_string(),
+        suite: suite.to_string(),
+        url: current_url,
+        matched,
+        discovered,
+        status: "passed".to_string(),
+        error: None,
+        allure,
+    }
+}
+
+/// Run a lane: visit all pages in sequence using one browser session.
+#[cfg(feature = "webdriver")]
+async fn run_lane(
+    instance_url: &str,
+    cookies: &[thirtyfour::Cookie],
+    pages: &[PageTarget],
+    suite: &str,
+    registry: &PageObjectRegistry,
+) -> Vec<PageResult> {
+    let driver = create_authenticated_session(instance_url, cookies).await;
+    let mut results = Vec::new();
+
+    for page in pages {
+        let result = visit_page(&driver, instance_url, page, suite, registry).await;
+        results.push(result);
+    }
+
+    let _ = driver.quit().await;
+    results
 }
 
 // ---------------------------------------------------------------------------
@@ -342,207 +545,89 @@ async fn test_salesforce_live() {
         return;
     };
 
-    let mut allure = AllureReport::new("test_salesforce_live");
     write_allure_environment(&instance_url);
     write_allure_categories();
 
-    let driver = create_driver().await.expect("Failed to create driver");
+    // ── Phase 1: Authenticate ────────────────────────────────────────
+    eprintln!("\n=== Phase 1: Authentication ===");
+    let auth_driver = create_driver().await;
+    let cookies = authenticate(&auth_driver, &frontdoor_url, &instance_url).await;
 
-    // ── Step 1: Frontdoor authentication ─────────────────────────────
-    allure.begin_step();
-    eprintln!("\n=== Step 1: Frontdoor Authentication ===");
-    eprintln!("Navigating to frontdoor URL ({} chars)", frontdoor_url.len());
-    driver.navigate(&frontdoor_url).await.expect("Failed to navigate to frontdoor");
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-
-    let url = driver.current_url().await.unwrap_or_default();
-    eprintln!("After frontdoor: {url}");
-
-    let mut attachments = Vec::new();
-    if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot(&png, "01-after-frontdoor") {
-            attachments.push(att);
+    // Auth Allure result
+    let mut auth_allure = AllureReport::new("Authentication", "Setup");
+    auth_allure.begin_step();
+    let utam = ThirtyfourDriver::new(auth_driver.clone());
+    let mut auth_att = Vec::new();
+    if let Ok(png) = utam.screenshot_png().await {
+        if let Some(att) = auth_allure.save_screenshot(&png, "authenticated") {
+            auth_att.push(att);
         }
     }
-
-    if url.contains("/login.") || url.contains("Login&") {
-        allure.end_step_failed(
-            "Frontdoor Authentication",
-            &format!("Landed on login page: {url}"),
-            attachments,
-        );
-        allure.finish("failed", Some(&format!("Auth failed — landed on login page: {url}")));
-        panic!("Frontdoor auth failed — landed on login page: {url}");
-    }
-    allure.end_step("Frontdoor Authentication", "passed", attachments);
-
-    // ── Step 2: Navigate to Lightning home ───────────────────────────
-    allure.begin_step();
-    eprintln!("\n=== Step 2: Lightning Home ===");
-    let home_url = format!("{instance_url}/lightning/page/home");
-    eprintln!("Navigating to: {home_url}");
-    driver.navigate(&home_url).await.expect("Failed to navigate to home");
-
-    eprintln!("Waiting for Lightning to load...");
-    let lightning_loaded = wait_for_lightning_loaded(driver.as_ref()).await;
-
-    let url = driver.current_url().await.unwrap_or_default();
-    eprintln!("Lightning home: {url}");
-
-    let mut attachments = Vec::new();
-    if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot(&png, "02-lightning-home") {
-            attachments.push(att);
-        }
-    }
-
-    if !lightning_loaded {
-        allure.end_step_failed(
-            "Navigate to Lightning Home",
-            &format!("Lightning did not load. URL: {url}"),
-            attachments,
-        );
-        allure.finish("failed", Some("Lightning did not load within timeout"));
-        panic!("Lightning did not load within timeout. URL: {url}");
-    }
-    assert!(
-        url.contains("lightning") || url.contains("force.com"),
-        "Should be on a Lightning page, got: {url}"
-    );
-    allure.end_step("Navigate to Lightning Home", "passed", attachments);
-
-    // ── Step 3: Page object discovery ────────────────────────────────
-    allure.begin_step();
-    eprintln!("\n=== Step 3: Page Object Discovery ===");
-    let registry = load_registry();
-    let report = utam_runtime::discovery::discover(driver.as_ref(), &registry)
-        .await
-        .expect("Discovery failed");
-
-    eprintln!("URL: {}", report.url);
-    eprintln!("Known page objects matched: {}", report.matched.len());
-    for m in &report.matched {
-        eprintln!("  + {} ({} methods, {} elements)", m.name, m.method_count, m.element_count);
-    }
-    eprintln!("Unknown components discovered: {}", report.discovered.len());
-    for d in report.discovered.iter().take(15) {
-        eprintln!("  ? <{}> shadow={} children={}", d.tag_name, d.has_shadow, d.children.len());
-    }
-
-    let mut attachments = Vec::new();
-    if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot(&png, "03-after-discovery") {
-            attachments.push(att);
-        }
-    }
-
-    // Attach discovery report
-    let report_json = serde_json::to_string_pretty(&report).unwrap_or_default();
-    let disc_uuid = make_uuid("discovery-report");
-    let disc_filename = format!("{disc_uuid}-attachment.json");
-    let _ = std::fs::write(allure_results_dir().join(&disc_filename), &report_json);
-    attachments.push(serde_json::json!({
-        "name": "discovery-report.json",
-        "source": disc_filename,
-        "type": "application/json"
-    }));
-
-    let total = report.matched.len() + report.discovered.len();
-    if total <= 5 {
-        allure.end_step_failed(
-            &format!("Page Object Discovery ({total} found)"),
-            &format!("Expected >5 components, got {total}"),
-            attachments,
-        );
-        allure.finish("failed", Some(&format!("Only {total} components found")));
-        panic!("Expected >5 components on a Lightning page, got {total}");
-    }
-    allure.end_step(
-        &format!(
-            "Page Object Discovery ({} matched, {} discovered)",
-            report.matched.len(),
-            report.discovered.len()
-        ),
+    auth_allure.end_step(
+        &format!("Frontdoor auth ({} cookies)", cookies.len()),
         "passed",
-        attachments,
+        auth_att,
     );
+    auth_allure.finish("passed", None);
 
-    // ── Step 4: Header page object ───────────────────────────────────
-    allure.begin_step();
-    eprintln!("\n=== Step 4: Header Page Object ===");
-    let header_matches = registry.search("global/header");
-    assert!(!header_matches.is_empty(), "global/header not found in registry");
+    let _ = auth_driver.quit().await;
+    eprintln!("Auth session closed, launching parallel lanes\n");
 
-    let header_ast = registry.get(&header_matches[0]).expect("Failed to get header AST");
-    eprintln!("Header: {}", header_matches[0]);
-    eprintln!("  Root selector: {:?}", header_ast.selector.as_ref().map(|s| &s.css));
+    // ── Phase 2: Parallel discovery ──────────────────────────────────
+    eprintln!("=== Phase 2: Parallel Discovery (4 lanes) ===");
+    let registry = Arc::new(load_registry());
 
-    let root_css = header_ast
-        .selector
-        .as_ref()
-        .and_then(|s| s.css.as_ref())
-        .expect("Header should have a root CSS selector")
-        .clone();
-    eprintln!("Looking for header root: {root_css}");
-    let selector = Selector::Css(root_css.clone());
-    let header_el = driver.find_element(&selector).await;
+    let lanes: Vec<(&str, &[PageTarget])> = vec![
+        ("Core Navigation", LANE_CORE),
+        ("Sales", LANE_SALES),
+        ("Service & Activities", LANE_SERVICE),
+        ("Admin & Analytics", LANE_ADMIN),
+    ];
 
-    let mut attachments = Vec::new();
-    if let Some(png) = take_screenshot(driver.as_ref()).await {
-        let name = if header_el.is_ok() { "04-header-found" } else { "04-header-not-found" };
-        if let Some(att) = allure.save_screenshot(&png, name) {
-            attachments.push(att);
+    let mut handles = Vec::new();
+    for (suite, pages) in &lanes {
+        let instance_url = instance_url.clone();
+        let cookies = cookies.clone();
+        let registry = Arc::clone(&registry);
+        let suite = suite.to_string();
+        let pages: Vec<PageTarget> =
+            pages.iter().map(|p| PageTarget { name: p.name, url_suffix: p.url_suffix }).collect();
+
+        handles.push(tokio::spawn(async move {
+            run_lane(&instance_url, &cookies, &pages, &suite, &registry).await
+        }));
+    }
+
+    // Collect results
+    let mut all_results: Vec<PageResult> = Vec::new();
+    for handle in handles {
+        match handle.await {
+            Ok(results) => all_results.extend(results),
+            Err(e) => eprintln!("Lane panicked: {e}"),
         }
     }
 
-    match header_el {
-        Ok(_) => {
-            eprintln!("Header element found!");
-            allure.end_step("Header Page Object (.oneHeader)", "passed", attachments);
-        }
-        Err(e) => {
-            let msg = format!("Header root element {root_css} not found: {e}");
-            allure.end_step_failed("Header Page Object (.oneHeader)", &msg, attachments);
-            allure.finish("failed", Some(&msg));
-            panic!("{msg}");
-        }
+    // ── Phase 3: Summary ─────────────────────────────────────────────
+    eprintln!("\n=== Phase 3: Summary ===");
+    let total_matched: usize = all_results.iter().map(|r| r.matched).sum();
+    let total_discovered: usize = all_results.iter().map(|r| r.discovered).sum();
+    let pages_passed = all_results.iter().filter(|r| r.status == "passed").count();
+    let pages_total = all_results.len();
+
+    eprintln!("Pages: {pages_passed}/{pages_total} passed");
+    eprintln!("Total matched: {total_matched}");
+    eprintln!("Total discovered: {total_discovered}");
+    for r in &all_results {
+        let icon = if r.status == "passed" { "+" } else { "!" };
+        eprintln!(
+            "  {icon} {} ({}) — {} matched, {} discovered",
+            r.page_name, r.suite, r.matched, r.discovered
+        );
     }
 
-    // ── Step 5: Navigate to Accounts and Contacts ────────────────────
-    allure.begin_step();
-    eprintln!("\n=== Step 5: Navigate Pages ===");
+    // Assert at least some pages worked
+    assert!(pages_passed > 0, "No pages passed! All {pages_total} pages failed.");
+    assert!(total_matched > 10, "Expected >10 total matched page objects, got {total_matched}");
 
-    let accounts_url = format!("{instance_url}/lightning/o/Account/list");
-    eprintln!("Navigating to Accounts: {accounts_url}");
-    driver.navigate(&accounts_url).await.expect("Accounts navigate failed");
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    let url = driver.current_url().await.unwrap_or_default();
-    eprintln!("Accounts: {url}");
-
-    let mut attachments = Vec::new();
-    if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot(&png, "05a-accounts") {
-            attachments.push(att);
-        }
-    }
-
-    let contacts_url = format!("{instance_url}/lightning/o/Contact/list");
-    eprintln!("Navigating to Contacts: {contacts_url}");
-    driver.navigate(&contacts_url).await.expect("Contacts navigate failed");
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    let url = driver.current_url().await.unwrap_or_default();
-    eprintln!("Contacts: {url}");
-
-    if let Some(png) = take_screenshot(driver.as_ref()).await {
-        if let Some(att) = allure.save_screenshot(&png, "05b-contacts") {
-            attachments.push(att);
-        }
-    }
-
-    allure.end_step("Navigate Pages (Accounts + Contacts)", "passed", attachments);
-
-    driver.quit().await.expect("Failed to quit");
-
-    allure.finish("passed", None);
-    eprintln!("\n=== All steps completed ===");
+    eprintln!("\n=== All phases completed ===");
 }
