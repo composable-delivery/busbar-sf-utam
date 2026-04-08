@@ -75,25 +75,6 @@ jobs:
           echo "frontdoor_url=$FRONTDOOR" >> "$GITHUB_OUTPUT"
           echo "Org instance: $INSTANCE"
 
-      # ── Video recording setup ─────────────────────────────────────────
-      - name: Setup virtual display and video recording
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb ffmpeg > /dev/null 2>&1
-
-          # Start a virtual display
-          Xvfb :99 -screen 0 1920x1080x24 &
-          echo "DISPLAY=:99" >> "$GITHUB_ENV"
-          sleep 1
-
-          # Start recording the virtual display
-          mkdir -p /tmp/sf-artifacts
-          ffmpeg -f x11grab -video_size 1920x1080 -i :99 \
-            -codec:v libx264 -preset ultrafast -pix_fmt yuv420p \
-            -y /tmp/sf-artifacts/session.mp4 &
-          echo $! > /tmp/ffmpeg.pid
-          echo "Video recording started (PID: $(cat /tmp/ffmpeg.pid))"
-
       # ── Chrome + Chromedriver ─────────────────────────────────────────
       - name: Start chromedriver
         run: |
@@ -103,44 +84,24 @@ jobs:
           sleep 2
           curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
 
+      # ── Prepare artifacts dir ─────────────────────────────────────────
+      - name: Prepare artifacts directory
+        run: mkdir -p /tmp/sf-artifacts
+
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
         env:
           SF_INSTANCE_URL: ${{ steps.sf-org.outputs.instance_url }}
           SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
           CHROMEDRIVER_URL: "http://localhost:9515"
-          # Use the virtual display instead of headless so video captures the browser
-          DISPLAY: ":99"
+          SF_ARTIFACTS_DIR: "/tmp/sf-artifacts"
         run: |
-          echo "SF_INSTANCE_URL: $SF_INSTANCE_URL"
-          echo "CHROMEDRIVER_URL: $CHROMEDRIVER_URL"
-
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture --test-threads=1 2>&1
           else
-            cargo test -p utam-runtime --test salesforce_live -- --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live -- --nocapture --test-threads=1 2>&1
           fi
-
-      # ── Stop recording ───────────────────────────────────────────────
-      - name: Stop video recording
-        if: always()
-        run: |
-          if [ -f /tmp/ffmpeg.pid ]; then
-            kill -INT "$(cat /tmp/ffmpeg.pid)" 2>/dev/null || true
-            sleep 3
-            # Verify the video was created
-            if [ -f /tmp/sf-artifacts/session.mp4 ]; then
-              echo "Video recorded: $(du -h /tmp/sf-artifacts/session.mp4 | cut -f1)"
-            fi
-          fi
-
-      # ── Collect screenshots ──────────────────────────────────────────
-      - name: Collect screenshots
-        if: always()
-        run: |
-          cp /tmp/sf-screenshot*.png /tmp/sf-artifacts/ 2>/dev/null || true
-          ls -lh /tmp/sf-artifacts/ 2>/dev/null || echo "No artifacts found"
 
       # ── Upload artifacts ──────────────────────────────────────────────
       - name: Upload test artifacts
@@ -152,44 +113,30 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      # ── Job Summary with inline screenshots ──────────────────────────
+      # ── Job Summary ──────────────────────────────────────────────────
       - name: Generate summary
         if: always()
         run: |
-          cat >> "$GITHUB_STEP_SUMMARY" << 'HEADER'
-          ## Salesforce Integration Tests
+          echo "## Salesforce Integration Tests" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Detail | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Org | \`${{ steps.sf-org.outputs.instance_url }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Driver | chromedriver (headless Chrome) |" >> "$GITHUB_STEP_SUMMARY"
 
-          | Detail | Value |
-          |--------|-------|
-          HEADER
-
-          echo "| Org | ${{ steps.sf-org.outputs.instance_url }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Driver | chromedriver (WebDriver) |" >> "$GITHUB_STEP_SUMMARY"
-
-          # Count screenshots
           SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
-          echo "| Screenshots | ${SC_COUNT} captured |" >> "$GITHUB_STEP_SUMMARY"
-
-          # Video info
-          if [ -f /tmp/sf-artifacts/session.mp4 ]; then
-            VID_SIZE=$(du -h /tmp/sf-artifacts/session.mp4 | cut -f1)
-            echo "| Video | ${VID_SIZE} (see artifacts) |" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
+          echo "| Screenshots | ${SC_COUNT} captured (download artifacts to view) |" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          # Embed screenshots inline (GitHub renders base64 images in summaries)
-          for png in /tmp/sf-artifacts/*.png; do
-            [ -f "$png" ] || continue
-            BASENAME=$(basename "$png")
-            echo "### ${BASENAME}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$SC_COUNT" -gt 0 ]; then
+            echo "### Screenshots" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "<details><summary>Click to expand</summary>" >> "$GITHUB_STEP_SUMMARY"
+            echo "Download the \`salesforce-test-artifacts\` artifact to view all screenshots:" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            # GitHub step summary supports <img> with base64 src
-            B64=$(base64 -w0 "$png")
-            echo "<img src=\"data:image/png;base64,${B64}\" width=\"800\" />" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "</details>" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-          done
+            for png in /tmp/sf-artifacts/*.png; do
+              [ -f "$png" ] || continue
+              BASENAME=$(basename "$png")
+              SIZE=$(du -h "$png" | cut -f1)
+              echo "- \`${BASENAME}\` (${SIZE})" >> "$GITHUB_STEP_SUMMARY"
+            done
+          fi
