@@ -7,7 +7,14 @@ on:
         description: "Test name filter (e.g. 'test_sf_header' or empty for all)"
         required: false
         default: ""
-  # Run on pushes to main if the runtime or page objects changed
+  pull_request:
+    branches: [main]
+    paths:
+      - "utam-runtime/**"
+      - "utam-test/**"
+      - "utam-core/**"
+      - "salesforce-pageobjects/**"
+      - ".github/workflows/salesforce-integration.yml"
   push:
     branches: [main]
     paths:
