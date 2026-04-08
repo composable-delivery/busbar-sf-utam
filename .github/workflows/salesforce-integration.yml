@@ -93,22 +93,12 @@ jobs:
           sleep 2
           curl -sf http://localhost:9515/status | jq .ready || echo "WARNING: chromedriver not ready"
 
-      - name: Start video recording
-        run: |
-          mkdir -p /tmp/allure-results
-          DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 10 \
-            -i :99.0 -c:v libx264 -preset ultrafast -crf 25 -pix_fmt yuv420p \
-            /tmp/allure-results/screencast.mp4 </dev/null 2>/tmp/ffmpeg.log &
-          echo $! > /tmp/ffmpeg.pid
-          sleep 1
-          if kill -0 "$(cat /tmp/ffmpeg.pid)" 2>/dev/null; then
-            echo "Recording started (PID $(cat /tmp/ffmpeg.pid))"
-          else
-            echo "WARNING: ffmpeg failed to start"
-            cat /tmp/ffmpeg.log
-          fi
+      - name: Prepare allure results directory
+        run: mkdir -p /tmp/allure-results
 
       # ── Run tests ────────────────────────────────────────────────────
+      # Video recording starts AFTER auth (inside the test run step)
+      # to avoid recording the frontdoor URL which contains credentials.
       - name: Run Salesforce integration tests
         env:
           SF_INSTANCE_URL: ${{ steps.sf-org.outputs.instance_url }}
@@ -117,6 +107,22 @@ jobs:
           ALLURE_RESULTS_DIR: "/tmp/allure-results"
           DISPLAY: ":99"
         run: |
+          # Start video recording in background — waits for browser-ready signal
+          # This ensures we never record the frontdoor URL (contains credentials)
+          (
+            # Wait for the test to signal that auth is complete
+            for i in $(seq 1 120); do
+              [ -f /tmp/allure-results/browser-ready ] && break
+              sleep 1
+            done
+            rm -f /tmp/allure-results/browser-ready
+            echo "Starting video recording (auth complete)"
+            DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 10 \
+              -i :99.0 -c:v libx264 -preset ultrafast -crf 25 -pix_fmt yuv420p \
+              /tmp/allure-results/screencast.mp4 </dev/null 2>/tmp/ffmpeg.log
+          ) &
+          echo $! > /tmp/ffmpeg.pid
+
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
             cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture 2>&1
