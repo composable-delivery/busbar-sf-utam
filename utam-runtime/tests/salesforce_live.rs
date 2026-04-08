@@ -67,7 +67,12 @@ async fn create_driver() -> RuntimeResult<Box<dyn UtamDriver>> {
 
     let url = chromedriver_url();
     let mut caps = DesiredCapabilities::chrome();
-    let _ = caps.set_headless();
+
+    // If DISPLAY is set (Xvfb), run non-headless so ffmpeg can record.
+    // Otherwise fall back to headless mode.
+    if std::env::var("DISPLAY").is_err() {
+        let _ = caps.set_headless();
+    }
     let _ = caps.set_no_sandbox();
     let _ = caps.set_disable_gpu();
     let _ = caps.add_arg("--window-size=1920,1080");

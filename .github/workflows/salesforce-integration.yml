@@ -82,9 +82,23 @@ jobs:
           sleep 2
           curl -sf http://localhost:9515/status | jq . || echo "WARNING: chromedriver status check failed"
 
-      # ── Prepare artifacts dir ─────────────────────────────────────────
-      - name: Prepare artifacts directory
-        run: mkdir -p /tmp/sf-artifacts
+      # ── Virtual display + video recording ─────────────────────────────
+      - name: Start Xvfb and video recording
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg imagemagick > /dev/null 2>&1
+          # Start virtual framebuffer
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 1
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+
+          mkdir -p /tmp/sf-artifacts
+
+          # Record the virtual display as video (background)
+          ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 5 -i :99 \
+            -c:v libx264 -preset ultrafast -crf 28 -pix_fmt yuv420p \
+            /tmp/sf-artifacts/test-recording.mp4 &
+          echo $! > /tmp/ffmpeg-pid
+          echo "Video recording started (PID: $(cat /tmp/ffmpeg-pid))"
 
       # ── Run Tests ────────────────────────────────────────────────────
       - name: Run Salesforce integration tests
@@ -93,12 +107,52 @@ jobs:
           SF_FRONTDOOR_URL: ${{ steps.sf-org.outputs.frontdoor_url }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           SF_ARTIFACTS_DIR: "/tmp/sf-artifacts"
+          DISPLAY: ":99"
         run: |
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
             cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture --test-threads=1 2>&1
           else
             cargo test -p utam-runtime --test salesforce_live -- --nocapture --test-threads=1 2>&1
+          fi
+
+      # ── Stop video recording ─────────────────────────────────────────
+      - name: Stop video recording
+        if: always()
+        run: |
+          if [ -f /tmp/ffmpeg-pid ]; then
+            FFPID=$(cat /tmp/ffmpeg-pid)
+            # Send SIGINT for clean shutdown (ffmpeg writes the trailer)
+            kill -INT "$FFPID" 2>/dev/null || true
+            # Wait up to 10s for ffmpeg to finish writing
+            for i in $(seq 1 10); do
+              kill -0 "$FFPID" 2>/dev/null || break
+              sleep 1
+            done
+            kill -9 "$FFPID" 2>/dev/null || true
+          fi
+
+          if [ -f /tmp/sf-artifacts/test-recording.mp4 ]; then
+            echo "Video recorded: $(du -h /tmp/sf-artifacts/test-recording.mp4 | cut -f1)"
+          else
+            echo "WARNING: No video file found"
+          fi
+
+      # ── Create animated GIF from screenshots ─────────────────────────
+      - name: Create animated GIF
+        if: always()
+        run: |
+          SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
+          if [ "$SC_COUNT" -gt 0 ]; then
+            # Create animated GIF from screenshots (2 second delay per frame)
+            convert -delay 200 -loop 0 -resize 960x540 \
+              $(ls -v /tmp/sf-artifacts/*.png | grep -v FAIL) \
+              /tmp/sf-artifacts/test-slideshow.gif 2>/dev/null || \
+            echo "GIF creation failed (non-critical)"
+
+            if [ -f /tmp/sf-artifacts/test-slideshow.gif ]; then
+              echo "Slideshow GIF: $(du -h /tmp/sf-artifacts/test-slideshow.gif | cut -f1)"
+            fi
           fi
 
       # ── Upload artifacts ──────────────────────────────────────────────
@@ -111,30 +165,78 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      # ── Job Summary ──────────────────────────────────────────────────
+      # ── Job Summary with inline screenshots ──────────────────────────
       - name: Generate summary
         if: always()
         run: |
-          echo "## Salesforce Integration Tests" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Detail | Value |" >> "$GITHUB_STEP_SUMMARY"
-          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Org | \`${{ steps.sf-org.outputs.instance_url }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Driver | chromedriver (headless Chrome) |" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Salesforce Integration Tests"
+            echo ""
+            echo "| Detail | Value |"
+            echo "|--------|-------|"
+            echo "| Org | \`${{ steps.sf-org.outputs.instance_url }}\` |"
+            echo "| Driver | Chrome on Xvfb (video recorded) |"
 
-          SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
-          echo "| Screenshots | ${SC_COUNT} captured (download artifacts to view) |" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
+            SC_COUNT=$(ls /tmp/sf-artifacts/*.png 2>/dev/null | wc -l)
+            echo "| Screenshots | ${SC_COUNT} captured |"
 
-          if [ "$SC_COUNT" -gt 0 ]; then
-            echo "### Screenshots" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "Download the \`salesforce-test-artifacts\` artifact to view all screenshots:" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            for png in /tmp/sf-artifacts/*.png; do
-              [ -f "$png" ] || continue
-              BASENAME=$(basename "$png")
-              SIZE=$(du -h "$png" | cut -f1)
-              echo "- \`${BASENAME}\` (${SIZE})" >> "$GITHUB_STEP_SUMMARY"
-            done
-          fi
+            if [ -f /tmp/sf-artifacts/test-recording.mp4 ]; then
+              VID_SIZE=$(du -h /tmp/sf-artifacts/test-recording.mp4 | cut -f1)
+              echo "| Video | ${VID_SIZE} — download \`salesforce-test-artifacts\` to view |"
+            fi
+
+            echo ""
+
+            # ── Inline screenshots ──────────────────────────────────────
+            if [ "$SC_COUNT" -gt 0 ]; then
+              echo "### Screenshots"
+              echo ""
+              echo "> Click each to expand. Download \`salesforce-test-artifacts\` for full-res PNGs and video."
+              echo ""
+
+              TOTAL_B64_SIZE=0
+              for png in $(ls -v /tmp/sf-artifacts/*.png); do
+                [ -f "$png" ] || continue
+                BASENAME=$(basename "$png" .png)
+                SIZE=$(du -h "$png" | cut -f1)
+
+                # Resize to thumbnail for inline display
+                THUMB="/tmp/sf-artifacts/thumb-${BASENAME}.jpg"
+                convert "$png" -resize 960x540 -quality 40 "$THUMB" 2>/dev/null || continue
+                THUMB_KB=$(stat -c%s "$THUMB" 2>/dev/null || echo 0)
+
+                # Safety: stop embedding if we'd exceed ~900KB of base64
+                TOTAL_B64_SIZE=$((TOTAL_B64_SIZE + THUMB_KB * 4 / 3))
+                if [ "$TOTAL_B64_SIZE" -gt 900000 ]; then
+                  echo "- _Remaining screenshots omitted (summary size limit). See artifacts._"
+                  break
+                fi
+
+                B64=$(base64 -w0 "$THUMB")
+                echo "<details open><summary><strong>${BASENAME}</strong> (${SIZE})</summary>"
+                echo ""
+                echo "<img src=\"data:image/jpeg;base64,${B64}\" width=\"960\" alt=\"${BASENAME}\" />"
+                echo ""
+                echo "</details>"
+                echo ""
+              done
+            fi
+
+            # ── Discovery report ────────────────────────────────────────
+            if [ -f /tmp/sf-artifacts/discovery-report.json ]; then
+              MATCHED=$(jq '.matched | length' /tmp/sf-artifacts/discovery-report.json 2>/dev/null || echo "?")
+              DISCOVERED=$(jq '.discovered | length' /tmp/sf-artifacts/discovery-report.json 2>/dev/null || echo "?")
+              echo "### Discovery Results"
+              echo ""
+              echo "- **Known page objects matched:** ${MATCHED}"
+              echo "- **Unknown components discovered:** ${DISCOVERED}"
+              echo ""
+              echo "<details><summary>Full discovery report</summary>"
+              echo ""
+              echo '```json'
+              cat /tmp/sf-artifacts/discovery-report.json
+              echo '```'
+              echo ""
+              echo "</details>"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
