@@ -723,13 +723,172 @@ async fn test_salesforce_live() {
         results.push(result);
     }
 
-    // NOTE: Page object interaction tests are tracked in #82.
-    // They require updated JSON selectors (#83) and CDP adapter support (#84).
-    // Current page object selectors are stale — e.g. global/header references
-    // "[data-key=search].forceHeaderButtonDeprecated" which no longer exists.
-    // Interaction tests must use DynamicPageObject::call_method(), not raw JS.
-    //
-    // ── Phase 3: Summary ─────────────────────────────────────────────
+    // ── Phase 3: Page Object Interaction Tests ─────────────────────
+    // These tests exercise DynamicPageObject::call_method() and
+    // get_element() against the live DOM. They use the registry for
+    // custom component type resolution.
+    eprintln!("\n=== Phase 3: Page Object Interactions ===");
+    let mut interaction_failures: Vec<String> = Vec::new();
+
+    // Navigate to Home for header interactions
+    let home_url = format!("{instance_url}/lightning/page/home");
+    let _ = navigate_and_verify(driver.as_ref(), &home_url, "interactions-setup").await;
+
+    // Test: Load global/header and call compose methods
+    {
+        let mut allure = AllureReport::new("Header: load + methods", "Interactions");
+        allure.begin_step();
+
+        let header_names = registry.search("global/header");
+        if header_names.is_empty() {
+            let msg = "global/header not found in registry";
+            eprintln!("[Header] {msg}");
+            allure.end_step_failed("Find header", msg, vec![]);
+            allure.finish("broken", Some(msg));
+            interaction_failures.push(msg.to_string());
+        } else {
+            match registry.get(&header_names[0]) {
+                Ok(header_ast) => {
+                    // Create a driver that can be shared with child page objects
+                    let driver_arc: std::sync::Arc<dyn UtamDriver> =
+                        std::sync::Arc::from(create_driver().await);
+                    // Navigate this driver to the same page
+                    driver_arc.navigate(&home_url).await.expect("nav failed");
+                    let _ = wait_for_lightning(driver_arc.as_ref()).await;
+
+                    match DynamicPageObject::load(driver_arc.clone(), header_ast)
+                        .await
+                        .map(|po| po.with_registry(registry.clone()))
+                    {
+                        Ok(header) => {
+                            eprintln!(
+                                "[Header] Loaded! Methods: {:?}",
+                                header
+                                    .method_signatures()
+                                    .iter()
+                                    .map(|m| &m.name)
+                                    .collect::<Vec<_>>()
+                            );
+                            eprintln!("[Header] Elements: {:?}", header.element_names());
+
+                            let mut att = Vec::new();
+                            if let Ok(png) = header.driver().screenshot_png().await {
+                                if let Some(a) = allure.save_screenshot(&png, "header-loaded") {
+                                    att.push(a);
+                                }
+                            }
+                            allure.end_step("Load header page object", "passed", att);
+
+                            // Try getNotificationCount — simple getText compose
+                            allure.begin_step();
+                            let args = std::collections::HashMap::new();
+                            match header.call_method("getNotificationCount", &args).await {
+                                Ok(val) => {
+                                    eprintln!("[Header] getNotificationCount = {val}");
+                                    allure.end_step(
+                                        &format!("getNotificationCount → {val}"),
+                                        "passed",
+                                        vec![],
+                                    );
+                                }
+                                Err(e) => {
+                                    let msg = format!("getNotificationCount failed: {e}");
+                                    eprintln!("[Header] {msg}");
+                                    let mut att = Vec::new();
+                                    if let Ok(png) = header.driver().screenshot_png().await {
+                                        if let Some(a) =
+                                            allure.save_screenshot(&png, "notif-failed")
+                                        {
+                                            att.push(a);
+                                        }
+                                    }
+                                    allure.end_step_failed("getNotificationCount", &msg, att);
+                                    interaction_failures.push(msg);
+                                }
+                            }
+
+                            // Try hasNewNotification — isVisible compose
+                            allure.begin_step();
+                            match header.call_method("hasNewNotification", &args).await {
+                                Ok(val) => {
+                                    eprintln!("[Header] hasNewNotification = {val}");
+                                    allure.end_step(
+                                        &format!("hasNewNotification → {val}"),
+                                        "passed",
+                                        vec![],
+                                    );
+                                }
+                                Err(e) => {
+                                    let msg = format!("hasNewNotification failed: {e}");
+                                    eprintln!("[Header] {msg}");
+                                    allure.end_step_failed("hasNewNotification", &msg, vec![]);
+                                    interaction_failures.push(msg);
+                                }
+                            }
+
+                            // Try showSetupMenu — click compose
+                            allure.begin_step();
+                            match header.call_method("showSetupMenu", &args).await {
+                                Ok(_) => {
+                                    eprintln!("[Header] showSetupMenu clicked");
+                                    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+                                    let mut att = Vec::new();
+                                    if let Ok(png) = header.driver().screenshot_png().await {
+                                        if let Some(a) =
+                                            allure.save_screenshot(&png, "setup-menu-open")
+                                        {
+                                            att.push(a);
+                                        }
+                                    }
+                                    allure.end_step("showSetupMenu (click)", "passed", att);
+                                }
+                                Err(e) => {
+                                    let msg = format!("showSetupMenu failed: {e}");
+                                    eprintln!("[Header] {msg}");
+                                    let mut att = Vec::new();
+                                    if let Ok(png) = header.driver().screenshot_png().await {
+                                        if let Some(a) =
+                                            allure.save_screenshot(&png, "setup-menu-failed")
+                                        {
+                                            att.push(a);
+                                        }
+                                    }
+                                    allure.end_step_failed("showSetupMenu", &msg, att);
+                                    interaction_failures.push(msg);
+                                }
+                            }
+
+                            let _ = driver_arc.quit().await;
+                        }
+                        Err(e) => {
+                            let msg = format!("Failed to load header: {e}");
+                            eprintln!("[Header] {msg}");
+                            allure.end_step_failed("Load header", &msg, vec![]);
+                            interaction_failures.push(msg);
+                            let _ = driver_arc.quit().await;
+                        }
+                    }
+                }
+                Err(e) => {
+                    let msg = format!("Failed to get header AST: {e}");
+                    allure.end_step_failed("Get header AST", &msg, vec![]);
+                    interaction_failures.push(msg);
+                }
+            }
+        }
+        let status =
+            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
+        allure.finish(status, None);
+    }
+
+    if !interaction_failures.is_empty() {
+        eprintln!("\nInteraction test failures:");
+        for f in &interaction_failures {
+            eprintln!("  ! {f}");
+        }
+    }
+
+    // ── Phase 4: Summary ─────────────────────────────────────────────
     eprintln!("\n=== Phase 3: Summary ===");
     let total_matched: usize = results.iter().map(|r| r.matched).sum();
     let total_discovered: usize = results.iter().map(|r| r.discovered).sum();
@@ -757,6 +916,16 @@ async fn test_salesforce_live() {
 
     assert!(pages_passed > 0, "No pages passed! All {pages_total} pages failed.");
     assert!(total_matched > 10, "Expected >10 total matched page objects, got {total_matched}");
+
+    // Interaction failures are reported in Allure but don't hard-fail CI yet.
+    // Once selectors are validated and interactions are stable, this should
+    // become: assert!(interaction_failures.is_empty(), ...)
+    if !interaction_failures.is_empty() {
+        eprintln!(
+            "\nWARNING: {} interaction test(s) failed (see Allure report)",
+            interaction_failures.len()
+        );
+    }
 
     eprintln!("\n=== Complete ===");
 }
