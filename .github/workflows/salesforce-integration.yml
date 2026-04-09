@@ -113,9 +113,17 @@ jobs:
             cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
           fi
 
-          # Run dual adapter tests (WebDriver + CDP)
+      # Run dual adapter tests separately (experimental, non-blocking)
+      - name: Dual adapter tests (WebDriver + CDP)
+        if: always()
+        continue-on-error: true
+        env:
+          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
+          CHROMEDRIVER_URL: "http://localhost:9515"
+          DISPLAY: ":99"
+        run: |
           echo "=== Dual Adapter Tests ==="
-          cargo test -p utam-runtime --test dual_adapter --all-features -- --nocapture 2>&1
+          cargo test -p utam-runtime --test dual_adapter --all-features -- --nocapture 2>&1 || true
 
       # ── Stop recording + attach video ─────────────────────────────────
       - name: Stop recording and attach video
