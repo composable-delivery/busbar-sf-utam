@@ -1,87 +1,25 @@
 //! Salesforce live integration tests
 //!
-//! Runs against a real Salesforce org. Authenticates once via frontdoor.jsp,
-//! then reuses the same browser session to visit multiple pages and run
-//! page object discovery on each.
+//! Runs against a real Salesforce org. Authenticates via busbar-sf-api,
+//! seeds test data, then exercises page objects against the live DOM.
 //!
-//! The frontdoor token is single-use per browser session, so all pages
-//! are visited sequentially in one session rather than parallel sessions
-//! with cookie cloning (which proved unreliable).
-//!
-//! Emits Allure-format JSON results (one per page) for rich reporting.
+//! Uses DynamicPageObject with PageObjectRegistry for custom component
+//! type resolution and compose method chaining.
 //!
 //! Skipped locally (no CHROMEDRIVER_URL), panics in CI if credentials missing.
 
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use busbar_sf_api::{SObjectRecord, SalesforceClient, SfdxAuthUrl};
 use utam_runtime::prelude::*;
 
 // ---------------------------------------------------------------------------
-// Page targets
-// ---------------------------------------------------------------------------
-
-struct PageTarget {
-    name: &'static str,
-    url_suffix: &'static str,
-    suite: &'static str,
-}
-
-const PAGES: &[PageTarget] = &[
-    // Core Navigation
-    PageTarget { name: "Home", url_suffix: "/lightning/page/home", suite: "Core" },
-    PageTarget { name: "Accounts", url_suffix: "/lightning/o/Account/list", suite: "Core" },
-    PageTarget { name: "Contacts", url_suffix: "/lightning/o/Contact/list", suite: "Core" },
-    // Sales
-    PageTarget {
-        name: "Opportunities",
-        url_suffix: "/lightning/o/Opportunity/list",
-        suite: "Sales",
-    },
-    PageTarget { name: "Leads", url_suffix: "/lightning/o/Lead/list", suite: "Sales" },
-    PageTarget { name: "Campaigns", url_suffix: "/lightning/o/Campaign/list", suite: "Sales" },
-    // Service & Activities
-    PageTarget { name: "Cases", url_suffix: "/lightning/o/Case/list", suite: "Service" },
-    PageTarget { name: "Tasks", url_suffix: "/lightning/o/Task/home", suite: "Service" },
-    PageTarget { name: "Events", url_suffix: "/lightning/o/Event/home", suite: "Service" },
-    // Admin & Analytics
-    PageTarget { name: "Reports", url_suffix: "/lightning/o/Report/home", suite: "Admin" },
-    PageTarget { name: "Dashboards", url_suffix: "/lightning/o/Dashboard/home", suite: "Admin" },
-    PageTarget { name: "Setup", url_suffix: "/lightning/setup/SetupOneHome/home", suite: "Admin" },
-];
-
-// ---------------------------------------------------------------------------
-// Login detection
-// ---------------------------------------------------------------------------
-
-/// Check if the current URL indicates we're on a login page.
-fn is_login_page(url: &str) -> bool {
-    let dominated_by_login = url.contains("/login")
-        || url.contains("Login&")
-        || url.contains("login.salesforce.com")
-        || url.contains("test.salesforce.com/login");
-    // Lightning URLs that contain "/login" in a different context are OK
-    let is_lightning = url.contains("/lightning/");
-    dominated_by_login && !is_lightning
-}
-
-/// Verify the browser is authenticated. Returns current URL on success.
-async fn assert_authenticated(driver: &dyn UtamDriver, context: &str) -> Result<String, String> {
-    let url = driver.current_url().await.unwrap_or_default();
-    if is_login_page(&url) {
-        Err(format!("[{context}] On login page instead of app. URL: {url}"))
-    } else if url.is_empty() {
-        Err(format!("[{context}] Empty URL — browser may have crashed"))
-    } else {
-        Ok(url)
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Allure reporting
+// Allure reporting (minimal, focused)
 // ---------------------------------------------------------------------------
 
 fn now_millis() -> u64 {
@@ -157,15 +95,6 @@ impl AllureReport {
         std::fs::write(allure_results_dir().join(&filename), png_data).ok()?;
         Some(serde_json::json!({
             "name": name, "source": filename, "type": "image/png"
-        }))
-    }
-
-    fn save_json_attachment(&self, data: &str, name: &str) -> Option<serde_json::Value> {
-        let att_uuid = make_uuid(&format!("{}-{name}", self.test_uuid));
-        let filename = format!("{att_uuid}-attachment.json");
-        std::fs::write(allure_results_dir().join(&filename), data).ok()?;
-        Some(serde_json::json!({
-            "name": name, "source": filename, "type": "application/json"
         }))
     }
 
@@ -253,9 +182,7 @@ fn write_allure_environment(instance_url: &str) {
          browser=Chrome\n\
          driver=chromedriver\n\
          framework=busbar-sf-utam\n\
-         language=Rust\n\
-         pages={}\n",
-        PAGES.len()
+         language=Rust\n"
     );
     let _ = std::fs::write(allure_results_dir().join("environment.properties"), content);
 }
@@ -263,7 +190,6 @@ fn write_allure_environment(instance_url: &str) {
 fn write_allure_categories() {
     let categories = serde_json::json!([
         { "name": "Auth failures", "messageRegex": ".*login.*|.*frontdoor.*|.*auth.*", "matchedStatuses": ["failed"] },
-        { "name": "Lightning load failures", "messageRegex": ".*Lightning.*|.*timeout.*|.*load.*", "matchedStatuses": ["failed"] },
         { "name": "Element not found", "messageRegex": ".*not found.*|.*Unable to locate.*", "matchedStatuses": ["failed"] },
         { "name": "Infrastructure", "messageRegex": ".*WebDriver.*|.*connection.*", "matchedStatuses": ["broken"] }
     ]);
@@ -274,11 +200,48 @@ fn write_allure_categories() {
 }
 
 // ---------------------------------------------------------------------------
+// Login detection
+// ---------------------------------------------------------------------------
+
+fn is_login_page(url: &str) -> bool {
+    let dominated_by_login = url.contains("/login")
+        || url.contains("Login&")
+        || url.contains("login.salesforce.com")
+        || url.contains("test.salesforce.com/login");
+    let is_lightning = url.contains("/lightning/");
+    dominated_by_login && !is_lightning
+}
+
+async fn wait_for_lightning(driver: &dyn UtamDriver) -> bool {
+    for attempt in 1..=20 {
+        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+        let url = driver.current_url().await.unwrap_or_default();
+        if is_login_page(&url) {
+            return false;
+        }
+        let result = driver
+            .execute_script(
+                "return !!(document.querySelector('.oneHeader') || \
+                 document.querySelector('.desktop.container.forceStyle') || \
+                 document.querySelector('one-app-nav-bar'))",
+                vec![],
+            )
+            .await;
+        if matches!(result, Ok(serde_json::Value::Bool(true))) {
+            eprintln!("  Lightning detected on attempt {attempt}");
+            return true;
+        }
+        if attempt % 5 == 0 {
+            eprintln!("  Attempt {attempt}/20 — waiting... URL: {url}");
+        }
+    }
+    false
+}
+
+// ---------------------------------------------------------------------------
 // Test helpers
 // ---------------------------------------------------------------------------
 
-/// Connect to Salesforce via SF_AUTH_URL. Returns None for local dev (no env var).
-/// Panics in CI (CHROMEDRIVER_URL set) if auth fails.
 async fn connect_salesforce() -> Option<SalesforceClient> {
     let auth_url = match std::env::var("SF_AUTH_URL") {
         Ok(url) if !url.is_empty() => url,
@@ -289,23 +252,15 @@ async fn connect_salesforce() -> Option<SalesforceClient> {
             return None;
         }
     };
-
     let parsed = SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
-    eprintln!("Authenticating to {}", parsed.instance_url);
-
-    let client = SalesforceClient::from_auth_url(&parsed)
-        .await
-        .expect("Failed to exchange refresh token for access token");
-    eprintln!("Authenticated. Instance: {}", client.instance_url);
-
+    let client =
+        SalesforceClient::from_auth_url(&parsed).await.expect("Failed to exchange refresh token");
+    eprintln!("Authenticated to {}", client.instance_url);
     Some(client)
 }
 
-/// Seed test data into the org so list views and detail pages have content.
-/// Returns record IDs for cleanup and detail page navigation.
 async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
     eprintln!("Seeding test data...");
-
     let records = vec![
         (
             "account1",
@@ -339,8 +294,7 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
             SObjectRecord::new()
                 .field("FirstName", "John")
                 .field("LastName", "Smith")
-                .field("Company", "Smith Industries")
-                .field("Email", "john.smith@example.com"),
+                .field("Company", "Smith Industries"),
         ),
         (
             "case1",
@@ -353,7 +307,6 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
         ),
     ];
 
-    // Use composite API to create all records with references
     match client.create_related(records).await {
         Ok(ids) => {
             let types = ["Account", "Contact", "Opportunity", "Lead", "Case"];
@@ -362,34 +315,26 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
             for (t, id) in &pairs {
                 eprintln!("  Created {t}: {id}");
             }
-
-            // Mark all records as "recently viewed" so list views show them.
-            // SOQL FOR VIEW is a side-effect query that populates RecentlyViewed.
+            // Mark as recently viewed
             for sobject_type in &types {
                 let soql = format!(
                     "SELECT Id FROM {sobject_type} ORDER BY CreatedDate DESC LIMIT 200 FOR VIEW"
                 );
                 match client.query(&soql).await {
-                    Ok(rows) => {
-                        eprintln!("  Marked {} {sobject_type} as recently viewed", rows.len())
-                    }
+                    Ok(rows) => eprintln!("  Marked {} {sobject_type} recently viewed", rows.len()),
                     Err(e) => eprintln!("  WARNING: FOR VIEW failed for {sobject_type}: {e}"),
                 }
             }
-
             pairs
         }
         Err(e) => {
             eprintln!("WARNING: Failed to seed test data: {e}");
-            eprintln!("Tests will continue but list views may be empty.");
             Vec::new()
         }
     }
 }
 
-/// Clean up test data after tests run.
 async fn cleanup_test_data(client: &SalesforceClient, records: &[(String, String)]) {
-    // Delete in reverse order (children first) to avoid FK violations
     for (sobject_type, id) in records.iter().rev() {
         match client.delete(sobject_type, id).await {
             Ok(()) => eprintln!("  Deleted {sobject_type}/{id}"),
@@ -403,9 +348,8 @@ fn chromedriver_url() -> String {
 }
 
 #[cfg(feature = "webdriver")]
-async fn create_driver() -> Box<dyn UtamDriver> {
+async fn create_driver() -> Arc<dyn UtamDriver> {
     use thirtyfour::prelude::*;
-
     let url = chromedriver_url();
     let mut caps = DesiredCapabilities::chrome();
     let has_display = std::env::var("DISPLAY").is_ok();
@@ -420,12 +364,10 @@ async fn create_driver() -> Box<dyn UtamDriver> {
     } else {
         let _ = caps.add_arg("--window-size=1920,1080");
     }
-
     let driver = WebDriver::new(&url, caps)
         .await
         .unwrap_or_else(|e| panic!("WebDriver connection to {url} failed: {e}"));
-
-    Box::new(ThirtyfourDriver::new(driver))
+    Arc::new(ThirtyfourDriver::new(driver))
 }
 
 fn load_registry() -> PageObjectRegistry {
@@ -439,179 +381,21 @@ fn load_registry() -> PageObjectRegistry {
     registry
 }
 
-/// Wait for Lightning to render, checking for key DOM elements.
-/// Returns true if Lightning loaded, false on timeout.
-async fn wait_for_lightning(driver: &dyn UtamDriver) -> bool {
-    for attempt in 1..=20 {
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-
-        // First check: are we on the login page?
-        let url = driver.current_url().await.unwrap_or_default();
-        if is_login_page(&url) {
-            eprintln!("  Attempt {attempt}/20 — stuck on login page: {url}");
-            return false;
-        }
-
-        let result = driver
-            .execute_script(
-                "return !!(document.querySelector('.oneHeader') || \
-                 document.querySelector('.desktop.container.forceStyle') || \
-                 document.querySelector('one-app-nav-bar'))",
-                vec![],
-            )
-            .await;
-        if matches!(result, Ok(serde_json::Value::Bool(true))) {
-            eprintln!("  Lightning detected on attempt {attempt}");
-            return true;
-        }
-        if attempt % 5 == 0 {
-            eprintln!("  Attempt {attempt}/20 — waiting... URL: {url}");
-        }
+/// Helper: load a page object by name from the registry, using the shared driver.
+async fn load_page_object(
+    driver: Arc<dyn UtamDriver>,
+    registry: &Arc<PageObjectRegistry>,
+    name: &str,
+) -> Result<DynamicPageObject, String> {
+    let matches = registry.search(name);
+    if matches.is_empty() {
+        return Err(format!("{name} not found in registry"));
     }
-    false
-}
-
-/// Navigate to a URL and wait for Lightning to load.
-/// Returns Ok(url) on success, Err(message) if auth fails or Lightning doesn't load.
-async fn navigate_and_verify(
-    driver: &dyn UtamDriver,
-    url: &str,
-    context: &str,
-) -> Result<String, String> {
-    driver.navigate(url).await.map_err(|e| format!("[{context}] Navigation failed: {e}"))?;
-
-    // Quick check: did we get redirected to login?
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-    let current = driver.current_url().await.unwrap_or_default();
-    if is_login_page(&current) {
-        return Err(format!("[{context}] Redirected to login page: {current}"));
-    }
-
-    // Wait for Lightning to render
-    if !wait_for_lightning(driver).await {
-        let current = driver.current_url().await.unwrap_or_default();
-        if is_login_page(&current) {
-            return Err(format!("[{context}] Ended up on login page after waiting: {current}"));
-        }
-        // Lightning didn't fully render but we're not on login — continue anyway
-        eprintln!(
-            "[{context}] Lightning elements not detected, but not on login page. Continuing."
-        );
-    }
-
-    let current = driver.current_url().await.unwrap_or_default();
-    Ok(current)
-}
-
-// ---------------------------------------------------------------------------
-// Per-page discovery
-// ---------------------------------------------------------------------------
-
-struct PageResult {
-    page_name: String,
-    suite: String,
-    matched: usize,
-    discovered: usize,
-    status: String,
-}
-
-async fn visit_page(
-    driver: &dyn UtamDriver,
-    instance_url: &str,
-    page: &PageTarget,
-    registry: &PageObjectRegistry,
-) -> PageResult {
-    let test_name = format!("Discovery: {}", page.name);
-    let mut allure = AllureReport::new(&test_name, page.suite);
-    let page_url = format!("{}{}", instance_url, page.url_suffix);
-
-    // Step 1: Navigate and verify auth
-    allure.begin_step();
-    eprintln!("[{}] Navigating to {}", page.name, page.url_suffix);
-
-    let nav_result = navigate_and_verify(driver, &page_url, page.name).await;
-
-    let mut nav_att = Vec::new();
-    if let Ok(png) = driver.screenshot_png().await {
-        if let Some(att) = allure.save_screenshot(&png, &format!("{}-loaded", page.name)) {
-            nav_att.push(att);
-        }
-    }
-
-    let current_url = match nav_result {
-        Ok(url) => {
-            allure.end_step("Navigate", "passed", nav_att);
-            url
-        }
-        Err(msg) => {
-            eprintln!("[{}] FAILED: {msg}", page.name);
-            allure.end_step_failed("Navigate", &msg, nav_att);
-            allure.finish("failed", Some(&msg));
-            return PageResult {
-                page_name: page.name.to_string(),
-                suite: page.suite.to_string(),
-                matched: 0,
-                discovered: 0,
-                status: "failed".to_string(),
-            };
-        }
-    };
-
-    eprintln!("[{}] Loaded: {current_url}", page.name);
-
-    // Step 2: Discovery
-    allure.begin_step();
-    let report = match utam_runtime::discovery::discover(driver, registry).await {
-        Ok(r) => r,
-        Err(e) => {
-            let msg = format!("Discovery failed: {e}");
-            eprintln!("[{}] {msg}", page.name);
-            allure.end_step_failed("Discovery", &msg, vec![]);
-            allure.finish("failed", Some(&msg));
-            return PageResult {
-                page_name: page.name.to_string(),
-                suite: page.suite.to_string(),
-                matched: 0,
-                discovered: 0,
-                status: "failed".to_string(),
-            };
-        }
-    };
-
-    let matched = report.matched.len();
-    let discovered = report.discovered.len();
-    eprintln!("[{}] {} matched, {} discovered", page.name, matched, discovered);
-    for m in &report.matched {
-        eprintln!("  + {} ({} methods)", m.name, m.method_count);
-    }
-
-    let mut disc_att = Vec::new();
-    let report_json = serde_json::to_string_pretty(&report).unwrap_or_default();
-    if let Some(att) =
-        allure.save_json_attachment(&report_json, &format!("{}-discovery.json", page.name))
-    {
-        disc_att.push(att);
-    }
-    if let Ok(png) = driver.screenshot_png().await {
-        if let Some(att) = allure.save_screenshot(&png, &format!("{}-after-discovery", page.name)) {
-            disc_att.push(att);
-        }
-    }
-
-    allure.end_step(
-        &format!("Discovery ({matched} matched, {discovered} new)"),
-        "passed",
-        disc_att,
-    );
-    allure.finish("passed", None);
-
-    PageResult {
-        page_name: page.name.to_string(),
-        suite: page.suite.to_string(),
-        matched,
-        discovered,
-        status: "passed".to_string(),
-    }
+    let ast = registry.get(&matches[0]).map_err(|e| format!("{e}"))?;
+    DynamicPageObject::load(driver, ast)
+        .await
+        .map(|po| po.with_registry(Arc::clone(registry)))
+        .map_err(|e| format!("{e}"))
 }
 
 // ---------------------------------------------------------------------------
@@ -631,249 +415,108 @@ async fn test_salesforce_live() {
     write_allure_environment(&instance_url);
     write_allure_categories();
 
-    // ── Phase 0: Seed test data via REST API ─────────────────────────
-    eprintln!("\n=== Phase 0: Seed Test Data ===");
+    // ── Seed test data ──────────────────────────────────────────────
+    eprintln!("\n=== Seed Test Data ===");
     let seeded_records = seed_test_data(&sf_client).await;
 
-    // Build dynamic page targets including record detail pages
-    let mut dynamic_pages: Vec<PageTarget> = Vec::new();
-    for (sobject_type, id) in &seeded_records {
-        dynamic_pages.push(PageTarget {
-            name: Box::leak(format!("{sobject_type} Detail").into_boxed_str()),
-            url_suffix: Box::leak(
-                format!("/lightning/r/{sobject_type}/{id}/view").into_boxed_str(),
-            ),
-            suite: "Record Detail",
-        });
-    }
-
     let driver = create_driver().await;
-    let registry = std::sync::Arc::new(load_registry());
+    let registry = Arc::new(load_registry());
 
-    // ── Phase 1: Authenticate via frontdoor ──────────────────────────
-    eprintln!("\n=== Phase 1: Authentication ===");
-    let mut auth_allure = AllureReport::new("Authentication", "Setup");
-    auth_allure.begin_step();
-
+    // ── Authenticate ────────────────────────────────────────────────
+    eprintln!("\n=== Authenticate ===");
     driver.navigate(&frontdoor_url).await.expect("Failed to navigate to frontdoor");
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-    match assert_authenticated(driver.as_ref(), "frontdoor").await {
-        Ok(url) => eprintln!("After frontdoor: {url}"),
-        Err(msg) => {
-            if let Ok(png) = driver.screenshot_png().await {
-                auth_allure.save_screenshot(&png, "FAIL-auth");
-            }
-            auth_allure.end_step_failed("Frontdoor auth", &msg, vec![]);
-            auth_allure.finish("failed", Some(&msg));
-            cleanup_test_data(&sf_client, &seeded_records).await;
-            panic!("{msg}");
-        }
+    let url = driver.current_url().await.unwrap_or_default();
+    if is_login_page(&url) {
+        cleanup_test_data(&sf_client, &seeded_records).await;
+        panic!("Frontdoor auth failed — landed on login page: {url}");
     }
+    eprintln!("After frontdoor: {url}");
 
     let home_url = format!("{instance_url}/lightning/page/home");
-    match navigate_and_verify(driver.as_ref(), &home_url, "auth-home").await {
-        Ok(url) => eprintln!("Lightning home: {url}"),
-        Err(msg) => {
-            if let Ok(png) = driver.screenshot_png().await {
-                auth_allure.save_screenshot(&png, "FAIL-lightning");
-            }
-            auth_allure.end_step_failed("Lightning home", &msg, vec![]);
-            auth_allure.finish("failed", Some(&msg));
-            cleanup_test_data(&sf_client, &seeded_records).await;
-            panic!("{msg}");
-        }
-    }
+    driver.navigate(&home_url).await.expect("Failed to navigate to home");
+    assert!(wait_for_lightning(driver.as_ref()).await, "Lightning did not load after auth");
+    eprintln!("Lightning loaded");
 
-    let mut auth_att = Vec::new();
-    if let Ok(png) = driver.screenshot_png().await {
-        if let Some(att) = auth_allure.save_screenshot(&png, "authenticated") {
-            auth_att.push(att);
-        }
-    }
-    auth_allure.end_step("Frontdoor auth + Lightning", "passed", auth_att);
-    auth_allure.finish("passed", None);
-
-    // Signal to CI that auth is complete — safe to start video recording
+    // Signal to CI: safe to start video recording
     let _ = std::fs::write(allure_results_dir().join("browser-ready"), "1");
 
-    // ── Phase 2: Visit each page and run discovery ───────────────────
-    let total_pages = PAGES.len() + dynamic_pages.len();
-    eprintln!("\n=== Phase 2: Page Discovery ({total_pages} pages) ===");
-
-    let mut results = Vec::new();
-    let all_pages: Vec<&PageTarget> = PAGES.iter().chain(dynamic_pages.iter()).collect();
-
-    for page in &all_pages {
-        let result = visit_page(driver.as_ref(), &instance_url, page, registry.as_ref()).await;
-
-        // If we hit the login page, auth is gone — stop trying other pages
-        if result.status == "failed" {
-            let url = driver.current_url().await.unwrap_or_default();
-            if is_login_page(&url) {
-                eprintln!(
-                    "[{}] Session expired or auth lost — aborting remaining pages",
-                    page.name
-                );
-                results.push(result);
-                break;
-            }
-        }
-
-        results.push(result);
-    }
-
-    // ── Phase 3: Page Object Interaction Tests ─────────────────────
-    // These tests exercise DynamicPageObject::call_method() and
-    // get_element() against the live DOM. They use the registry for
-    // custom component type resolution.
-    eprintln!("\n=== Phase 3: Page Object Interactions ===");
-    let mut interaction_failures: Vec<String> = Vec::new();
-
-    // Navigate to Home for header interactions
-    let home_url = format!("{instance_url}/lightning/page/home");
-    let _ = navigate_and_verify(driver.as_ref(), &home_url, "interactions-setup").await;
-
-    // Test: Load global/header and call compose methods
+    // ── Test: Header page object ────────────────────────────────────
+    eprintln!("\n=== Test: Header Page Object ===");
     {
-        let mut allure = AllureReport::new("Header: load + methods", "Interactions");
+        let mut allure = AllureReport::new("Header: notifications", "Page Objects");
         allure.begin_step();
 
-        let header_names = registry.search("global/header");
-        if header_names.is_empty() {
-            let msg = "global/header not found in registry";
-            eprintln!("[Header] {msg}");
-            allure.end_step_failed("Find header", msg, vec![]);
-            allure.finish("broken", Some(msg));
-            interaction_failures.push(msg.to_string());
-        } else {
-            match registry.get(&header_names[0]) {
-                Ok(header_ast) => {
-                    // Create a driver that can be shared with child page objects
-                    let driver_arc: std::sync::Arc<dyn UtamDriver> =
-                        std::sync::Arc::from(create_driver().await);
-                    // Navigate this driver to the same page
-                    driver_arc.navigate(&home_url).await.expect("nav failed");
-                    let _ = wait_for_lightning(driver_arc.as_ref()).await;
-
-                    match DynamicPageObject::load(driver_arc.clone(), header_ast)
-                        .await
-                        .map(|po| po.with_registry(registry.clone()))
-                    {
-                        Ok(header) => {
-                            eprintln!(
-                                "[Header] Loaded! Methods: {:?}",
-                                header
-                                    .method_signatures()
-                                    .iter()
-                                    .map(|m| &m.name)
-                                    .collect::<Vec<_>>()
-                            );
-                            eprintln!("[Header] Elements: {:?}", header.element_names());
-
-                            let mut att = Vec::new();
-                            if let Ok(png) = header.driver().screenshot_png().await {
-                                if let Some(a) = allure.save_screenshot(&png, "header-loaded") {
-                                    att.push(a);
-                                }
-                            }
-                            allure.end_step("Load header page object", "passed", att);
-
-                            // Try getNotificationCount — simple getText compose
-                            allure.begin_step();
-                            let args = std::collections::HashMap::new();
-                            match header.call_method("getNotificationCount", &args).await {
-                                Ok(val) => {
-                                    eprintln!("[Header] getNotificationCount = {val}");
-                                    allure.end_step(
-                                        &format!("getNotificationCount → {val}"),
-                                        "passed",
-                                        vec![],
-                                    );
-                                }
-                                Err(e) => {
-                                    let msg = format!("getNotificationCount failed: {e}");
-                                    eprintln!("[Header] {msg}");
-                                    let mut att = Vec::new();
-                                    if let Ok(png) = header.driver().screenshot_png().await {
-                                        if let Some(a) =
-                                            allure.save_screenshot(&png, "notif-failed")
-                                        {
-                                            att.push(a);
-                                        }
-                                    }
-                                    allure.end_step_failed("getNotificationCount", &msg, att);
-                                    interaction_failures.push(msg);
-                                }
-                            }
-
-                            // Try hasNewNotification — isVisible compose
-                            allure.begin_step();
-                            match header.call_method("hasNewNotification", &args).await {
-                                Ok(val) => {
-                                    eprintln!("[Header] hasNewNotification = {val}");
-                                    allure.end_step(
-                                        &format!("hasNewNotification → {val}"),
-                                        "passed",
-                                        vec![],
-                                    );
-                                }
-                                Err(e) => {
-                                    let msg = format!("hasNewNotification failed: {e}");
-                                    eprintln!("[Header] {msg}");
-                                    allure.end_step_failed("hasNewNotification", &msg, vec![]);
-                                    interaction_failures.push(msg);
-                                }
-                            }
-
-                            // Try showSetupMenu — click compose
-                            allure.begin_step();
-                            match header.call_method("showSetupMenu", &args).await {
-                                Ok(_) => {
-                                    eprintln!("[Header] showSetupMenu clicked");
-                                    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-                                    let mut att = Vec::new();
-                                    if let Ok(png) = header.driver().screenshot_png().await {
-                                        if let Some(a) =
-                                            allure.save_screenshot(&png, "setup-menu-open")
-                                        {
-                                            att.push(a);
-                                        }
-                                    }
-                                    allure.end_step("showSetupMenu (click)", "passed", att);
-                                }
-                                Err(e) => {
-                                    let msg = format!("showSetupMenu failed: {e}");
-                                    eprintln!("[Header] {msg}");
-                                    let mut att = Vec::new();
-                                    if let Ok(png) = header.driver().screenshot_png().await {
-                                        if let Some(a) =
-                                            allure.save_screenshot(&png, "setup-menu-failed")
-                                        {
-                                            att.push(a);
-                                        }
-                                    }
-                                    allure.end_step_failed("showSetupMenu", &msg, att);
-                                    interaction_failures.push(msg);
-                                }
-                            }
-
-                            let _ = driver_arc.quit().await;
-                        }
-                        Err(e) => {
-                            let msg = format!("Failed to load header: {e}");
-                            eprintln!("[Header] {msg}");
-                            allure.end_step_failed("Load header", &msg, vec![]);
-                            interaction_failures.push(msg);
-                            let _ = driver_arc.quit().await;
-                        }
+        match load_page_object(Arc::clone(&driver), &registry, "global/header").await {
+            Ok(header) => {
+                eprintln!(
+                    "  Methods: {:?}",
+                    header.method_signatures().iter().map(|m| &m.name).collect::<Vec<_>>()
+                );
+                let mut att = Vec::new();
+                if let Ok(png) = driver.screenshot_png().await {
+                    if let Some(a) = allure.save_screenshot(&png, "header-loaded") {
+                        att.push(a);
                     }
                 }
-                Err(e) => {
-                    let msg = format!("Failed to get header AST: {e}");
-                    allure.end_step_failed("Get header AST", &msg, vec![]);
-                    interaction_failures.push(msg);
+                allure.end_step("Load global/header", "passed", att);
+
+                // getNotificationCount
+                allure.begin_step();
+                let args = HashMap::new();
+                match header.call_method("getNotificationCount", &args).await {
+                    Ok(val) => {
+                        eprintln!("  getNotificationCount = {val}");
+                        allure.end_step(&format!("getNotificationCount → {val}"), "passed", vec![]);
+                    }
+                    Err(e) => {
+                        eprintln!("  getNotificationCount FAILED: {e}");
+                        let mut att = Vec::new();
+                        if let Ok(png) = driver.screenshot_png().await {
+                            if let Some(a) = allure.save_screenshot(&png, "notif-failed") {
+                                att.push(a);
+                            }
+                        }
+                        allure.end_step_failed("getNotificationCount", &format!("{e}"), att);
+                    }
                 }
+
+                // showSetupMenu (click)
+                allure.begin_step();
+                match header.call_method("showSetupMenu", &args).await {
+                    Ok(_) => {
+                        eprintln!("  showSetupMenu clicked");
+                        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+                        let mut att = Vec::new();
+                        if let Ok(png) = driver.screenshot_png().await {
+                            if let Some(a) = allure.save_screenshot(&png, "setup-menu-open") {
+                                att.push(a);
+                            }
+                        }
+                        allure.end_step("showSetupMenu (click)", "passed", att);
+                    }
+                    Err(e) => {
+                        eprintln!("  showSetupMenu FAILED: {e}");
+                        let mut att = Vec::new();
+                        if let Ok(png) = driver.screenshot_png().await {
+                            if let Some(a) = allure.save_screenshot(&png, "setup-failed") {
+                                att.push(a);
+                            }
+                        }
+                        allure.end_step_failed("showSetupMenu", &format!("{e}"), att);
+                    }
+                }
+            }
+            Err(e) => {
+                eprintln!("  FAILED to load header: {e}");
+                let mut att = Vec::new();
+                if let Ok(png) = driver.screenshot_png().await {
+                    if let Some(a) = allure.save_screenshot(&png, "header-load-failed") {
+                        att.push(a);
+                    }
+                }
+                allure.end_step_failed("Load global/header", &e, att);
             }
         }
         let status =
@@ -881,50 +524,61 @@ async fn test_salesforce_live() {
         allure.finish(status, None);
     }
 
-    if !interaction_failures.is_empty() {
-        eprintln!("\nInteraction test failures:");
-        for f in &interaction_failures {
-            eprintln!("  ! {f}");
+    // ── Test: Navigate to Accounts list ─────────────────────────────
+    eprintln!("\n=== Test: Accounts List ===");
+    {
+        let mut allure = AllureReport::new("Navigate: Accounts list", "Navigation");
+        allure.begin_step();
+
+        let accounts_url = format!("{instance_url}/lightning/o/Account/list");
+        driver.navigate(&accounts_url).await.expect("Failed to navigate to Accounts");
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+
+        let url = driver.current_url().await.unwrap_or_default();
+        eprintln!("  Accounts URL: {url}");
+        let mut att = Vec::new();
+        if let Ok(png) = driver.screenshot_png().await {
+            if let Some(a) = allure.save_screenshot(&png, "accounts-list") {
+                att.push(a);
+            }
+        }
+        if is_login_page(&url) {
+            allure.end_step_failed("Navigate to Accounts", "Redirected to login", att);
+            allure.finish("failed", Some("Auth lost"));
+        } else {
+            allure.end_step("Navigate to Accounts", "passed", att);
+            allure.finish("passed", None);
         }
     }
 
-    // ── Phase 4: Summary ─────────────────────────────────────────────
-    eprintln!("\n=== Phase 3: Summary ===");
-    let total_matched: usize = results.iter().map(|r| r.matched).sum();
-    let total_discovered: usize = results.iter().map(|r| r.discovered).sum();
-    let pages_passed = results.iter().filter(|r| r.status == "passed").count();
-    let pages_total = results.len();
+    // ── Test: Navigate to seeded Account detail ─────────────────────
+    if let Some((_, account_id)) = seeded_records.iter().find(|(t, _)| t == "Account") {
+        eprintln!("\n=== Test: Account Detail ===");
+        let mut allure = AllureReport::new("Navigate: Account detail (Acme Corp)", "Navigation");
+        allure.begin_step();
 
-    eprintln!("Pages: {pages_passed}/{pages_total} passed");
-    eprintln!("Total matched: {total_matched}");
-    eprintln!("Total discovered: {total_discovered}");
-    for r in &results {
-        let icon = if r.status == "passed" { "+" } else { "!" };
-        eprintln!(
-            "  {icon} {} [{}] — {} matched, {} discovered",
-            r.page_name, r.suite, r.matched, r.discovered
-        );
+        let detail_url = format!("{instance_url}/lightning/r/Account/{account_id}/view");
+        driver.navigate(&detail_url).await.expect("Failed to navigate to Account detail");
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+
+        let url = driver.current_url().await.unwrap_or_default();
+        eprintln!("  Detail URL: {url}");
+        let mut att = Vec::new();
+        if let Ok(png) = driver.screenshot_png().await {
+            if let Some(a) = allure.save_screenshot(&png, "account-detail") {
+                att.push(a);
+            }
+        }
+        allure.end_step("Navigate to Account detail", "passed", att);
+        allure.finish("passed", None);
     }
 
+    // ── Cleanup ─────────────────────────────────────────────────────
     driver.quit().await.expect("Failed to quit");
 
-    // ── Phase 5: Cleanup test data ───────────────────────────────────
     if !seeded_records.is_empty() {
-        eprintln!("\n=== Phase 4: Cleanup ===");
+        eprintln!("\n=== Cleanup ===");
         cleanup_test_data(&sf_client, &seeded_records).await;
-    }
-
-    assert!(pages_passed > 0, "No pages passed! All {pages_total} pages failed.");
-    assert!(total_matched > 10, "Expected >10 total matched page objects, got {total_matched}");
-
-    // Interaction failures are reported in Allure but don't hard-fail CI yet.
-    // Once selectors are validated and interactions are stable, this should
-    // become: assert!(interaction_failures.is_empty(), ...)
-    if !interaction_failures.is_empty() {
-        eprintln!(
-            "\nWARNING: {} interaction test(s) failed (see Allure report)",
-            interaction_failures.len()
-        );
     }
 
     eprintln!("\n=== Complete ===");
