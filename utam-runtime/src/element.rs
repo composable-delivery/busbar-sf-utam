@@ -30,6 +30,13 @@ pub enum RuntimeValue {
     Element(Box<DynamicElement>),
     /// A list of resolved elements
     Elements(Vec<DynamicElement>),
+    /// A resolved custom component — carries the element handle, the page object
+    /// AST, and the registry so compose methods can chain through it.
+    CustomComponent {
+        element: Box<DynamicElement>,
+        ast: Box<utam_compiler::ast::PageObjectAst>,
+        registry: Option<std::sync::Arc<crate::registry::PageObjectRegistry>>,
+    },
 }
 
 impl RuntimeValue {
@@ -65,6 +72,7 @@ impl fmt::Display for RuntimeValue {
             RuntimeValue::Number(n) => write!(f, "{n}"),
             RuntimeValue::Element(_) => write!(f, "<element>"),
             RuntimeValue::Elements(v) => write!(f, "<{} elements>", v.len()),
+            RuntimeValue::CustomComponent { .. } => write!(f, "<custom component>"),
         }
     }
 }

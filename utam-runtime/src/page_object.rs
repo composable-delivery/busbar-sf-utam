@@ -411,6 +411,7 @@ fn execute_compose<'a>(
             } else if stmt.chain {
                 match &last_result {
                     RuntimeValue::Element(el) => Some(*el.clone()),
+                    RuntimeValue::CustomComponent { element, .. } => Some(*element.clone()),
                     _ => last_element.clone(),
                 }
             } else {

@@ -24,6 +24,7 @@ use crate::error::{RuntimeError, RuntimeResult};
 /// let ast = registry.get("helpers/login")?;
 /// let page = DynamicPageObject::load(driver, ast).await?;
 /// ```
+#[derive(Debug)]
 pub struct PageObjectRegistry {
     /// Parsed ASTs indexed by qualified name (e.g. "global/header")
     cache: RwLock<HashMap<String, PageObjectAst>>,
