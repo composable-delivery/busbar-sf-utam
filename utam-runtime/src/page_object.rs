@@ -6,6 +6,7 @@
 //! JSON on the fly.
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use async_trait::async_trait;
 
@@ -135,11 +136,11 @@ pub struct ArgInfo {
 pub struct DynamicPageObject {
     ast: PageObjectAst,
     root: Box<dyn ElementHandle>,
-    driver: Box<dyn UtamDriver>,
+    driver: Arc<dyn UtamDriver>,
     /// Flattened element index: name -> (ElementAst, is_in_shadow)
     element_index: HashMap<String, (ElementAst, bool)>,
-    /// Optional registry for cross-page-object resolution (applyExternal)
-    registry: Option<std::sync::Arc<PageObjectRegistry>>,
+    /// Optional registry for cross-page-object resolution
+    registry: Option<Arc<PageObjectRegistry>>,
 }
 
 impl DynamicPageObject {
@@ -147,7 +148,11 @@ impl DynamicPageObject {
     ///
     /// Finds the root element using the AST's selector, executes any
     /// `beforeLoad` predicates, and returns a new `DynamicPageObject`.
-    pub async fn load(driver: Box<dyn UtamDriver>, ast: PageObjectAst) -> RuntimeResult<Self> {
+    pub async fn load(
+        driver: impl Into<Arc<dyn UtamDriver>>,
+        ast: PageObjectAst,
+    ) -> RuntimeResult<Self> {
+        let driver: Arc<dyn UtamDriver> = driver.into();
         let selector_ast =
             ast.selector.as_ref().ok_or_else(|| RuntimeError::UnsupportedAction {
                 action: "load".into(),
@@ -168,23 +173,28 @@ impl DynamicPageObject {
 
     /// Wrap an existing element as a page object.
     pub fn from_element(
-        driver: Box<dyn UtamDriver>,
+        driver: impl Into<Arc<dyn UtamDriver>>,
         ast: PageObjectAst,
         root: Box<dyn ElementHandle>,
     ) -> Self {
         let element_index = build_element_index(&ast);
-        Self { ast, root, driver, element_index, registry: None }
+        Self { ast, root, driver: driver.into(), element_index, registry: None }
     }
 
-    /// Attach a registry for cross-page-object resolution (`applyExternal`).
-    pub fn with_registry(mut self, registry: std::sync::Arc<PageObjectRegistry>) -> Self {
+    /// Attach a registry for cross-page-object resolution.
+    pub fn with_registry(mut self, registry: Arc<PageObjectRegistry>) -> Self {
         self.registry = Some(registry);
         self
     }
 
-    /// Get the underlying driver
+    /// Get the underlying driver (borrowed)
     pub fn driver(&self) -> &dyn UtamDriver {
         &*self.driver
+    }
+
+    /// Get a shared reference to the driver for creating child page objects
+    pub fn driver_arc(&self) -> Arc<dyn UtamDriver> {
+        Arc::clone(&self.driver)
     }
 
     /// Get the root element handle
@@ -402,11 +412,42 @@ fn execute_compose<'a>(
             }
 
             // 3. Resolve the element (if specified)
+            //
+            // When the element has a CustomComponent type and a registry is
+            // available, look up the referenced page object AST so chained
+            // method calls can resolve through the child page object.
+            let mut resolved_as_custom = false;
             let element = if let Some(elem_name) = &stmt.element {
                 if elem_name == "document" {
                     None
                 } else {
-                    Some(page.resolve_element(elem_name, method_args).await?)
+                    let el = page.resolve_element(elem_name, method_args).await?;
+
+                    // Check if this element is a custom component type
+                    if let Some((elem_ast, _)) = page.element_index.get(elem_name) {
+                        if let Some(ElementTypeAst::CustomComponent(ref path)) =
+                            elem_ast.element_type
+                        {
+                            if let Some(ref registry) = page.registry {
+                                if let Ok(child_ast) = registry.get(path) {
+                                    // Wrap as CustomComponent for chaining
+                                    last_result = RuntimeValue::CustomComponent {
+                                        element: Box::new(el.clone()),
+                                        ast: Box::new(child_ast),
+                                        registry: Some(Arc::clone(registry)),
+                                    };
+                                    last_element = Some(el.clone());
+                                    resolved_as_custom = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if resolved_as_custom {
+                        None
+                    } else {
+                        Some(el)
+                    }
                 }
             } else if stmt.chain {
                 match &last_result {
@@ -417,6 +458,13 @@ fn execute_compose<'a>(
             } else {
                 None
             };
+
+            // If we resolved a custom component without an apply action,
+            // skip to the next statement (the element is now in last_result
+            // for chained access).
+            if resolved_as_custom && stmt.apply.is_none() {
+                continue;
+            }
 
             // 4. Resolve arguments for this statement
             let stmt_args = resolve_compose_args(&stmt.args, method_args)?;
@@ -438,6 +486,57 @@ fn execute_compose<'a>(
                         last_result = RuntimeValue::Null;
                     }
                     continue;
+                }
+
+                // If the last result is a CustomComponent and we're chaining,
+                // delegate the method call to a nested DynamicPageObject.
+                if stmt.chain {
+                    if let RuntimeValue::CustomComponent { ref element, ref ast, ref registry } =
+                        last_result
+                    {
+                        let child = DynamicPageObject::from_element(
+                            page.driver_arc(),
+                            *ast.clone(),
+                            element.handle().clone_handle(),
+                        );
+                        let child = if let Some(reg) = registry {
+                            child.with_registry(Arc::clone(reg))
+                        } else {
+                            child
+                        };
+                        // Try calling as a method on the child page object first
+                        let mut sub_args = method_args.clone();
+                        for (i, val) in stmt_args.iter().enumerate() {
+                            if let Some(method) =
+                                child.ast.methods.iter().find(|m| m.name == *apply)
+                            {
+                                if let Some(arg_def) = method.args.get(i) {
+                                    sub_args.insert(arg_def.name.clone(), val.clone());
+                                }
+                            }
+                        }
+                        if child.ast.methods.iter().any(|m| m.name == *apply) {
+                            last_result = execute_method_by_name(&child, apply, &sub_args).await?;
+                            continue;
+                        }
+                        // If not a method, try resolving as an element getter
+                        if child.element_index.contains_key(apply.as_str())
+                            || child.element_index.contains_key(
+                                &apply.strip_prefix("get").unwrap_or(apply).to_lowercase(),
+                            )
+                        {
+                            let elem_name = if child.element_index.contains_key(apply.as_str()) {
+                                apply.clone()
+                            } else {
+                                apply.strip_prefix("get").unwrap_or(apply).to_lowercase()
+                            };
+                            let el = child.resolve_element(&elem_name, &sub_args).await?;
+                            last_result = RuntimeValue::Element(Box::new(el.clone()));
+                            last_element = Some(el);
+                            continue;
+                        }
+                        // Fall through to regular element execution
+                    }
                 }
 
                 if let Some(el) = &element {
