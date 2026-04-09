@@ -100,18 +100,16 @@ jobs:
           ) &
           echo $! > /tmp/ffmpeg.pid
 
-          # Run compiled page object tests first (no browser needed)
-          echo "=== Compiled Page Object Tests ==="
-          cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture 2>&1
-
-          # Run live Salesforce tests (WebDriver)
-          echo "=== Live Salesforce Tests (WebDriver) ==="
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
             cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
           else
             cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
           fi
+
+      - name: Compiled page object tests
+        if: always()
+        run: cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture 2>&1
 
       # Run dual adapter tests separately (experimental, non-blocking)
       - name: Dual adapter tests (WebDriver + CDP)

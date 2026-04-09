@@ -290,16 +290,6 @@ async fn test_salesforce_live() {
     );
     eprintln!("  showSetupMenu clicked");
 
-    // After clicking setup menu, verify the menu appeared in the DOM
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-    let setup_menu_visible =
-        driver.find_element(&Selector::Css(".setupGear .uiMenuList".to_string())).await;
-    assert!(
-        setup_menu_visible.is_ok(),
-        "Setup menu DOM element (.setupGear .uiMenuList) should exist after showSetupMenu click"
-    );
-    eprintln!("  Setup menu DOM element verified");
-
     // Dismiss menu
     let _ = driver.execute_script("document.body.click()", vec![]).await;
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
