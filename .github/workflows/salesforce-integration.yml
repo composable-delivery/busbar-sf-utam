@@ -47,7 +47,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: Build tests
-        run: cargo test -p utam-runtime --test salesforce_live --no-run
+        run: |
+          cargo test -p utam-runtime --test salesforce_live --all-features --no-run
+          cargo test -p utam-runtime --test compiled_page_objects --all-features --no-run
+          cargo test -p utam-runtime --test dual_adapter --all-features --no-run
 
       # ── Xvfb + Chrome + video ─────────────────────────────────────────
       - name: Start Xvfb and chromedriver
@@ -97,12 +100,22 @@ jobs:
           ) &
           echo $! > /tmp/ffmpeg.pid
 
+          # Run compiled page object tests first (no browser needed)
+          echo "=== Compiled Page Object Tests ==="
+          cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture 2>&1
+
+          # Run live Salesforce tests (WebDriver)
+          echo "=== Live Salesforce Tests (WebDriver) ==="
           FILTER="${{ inputs.test_filter }}"
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live -- "$FILTER" --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
           else
-            cargo test -p utam-runtime --test salesforce_live -- --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
           fi
+
+          # Run dual adapter tests (WebDriver + CDP)
+          echo "=== Dual Adapter Tests ==="
+          cargo test -p utam-runtime --test dual_adapter --all-features -- --nocapture 2>&1
 
       # ── Stop recording + attach video ─────────────────────────────────
       - name: Stop recording and attach video
