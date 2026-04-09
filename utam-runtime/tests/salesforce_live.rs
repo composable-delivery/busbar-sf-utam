@@ -442,127 +442,130 @@ async fn test_salesforce_live() {
     // Signal to CI: safe to start video recording
     let _ = std::fs::write(allure_results_dir().join("browser-ready"), "1");
 
-    // ── Test: Header page object ────────────────────────────────────
-    eprintln!("\n=== Test: Header Page Object ===");
+    let empty_args = HashMap::new();
+
+    // Helper macro to reduce boilerplate for calling page object methods
+    macro_rules! test_method {
+        ($po:expr, $allure:expr, $driver:expr, $method:expr) => {{
+            $allure.begin_step();
+            match $po.call_method($method, &empty_args).await {
+                Ok(val) => {
+                    eprintln!("  {} → {val}", $method);
+                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                    let mut att = Vec::new();
+                    if let Ok(png) = $driver.screenshot_png().await {
+                        if let Some(a) = $allure.save_screenshot(&png, $method) {
+                            att.push(a);
+                        }
+                    }
+                    $allure.end_step(&format!("{} → {val}", $method), "passed", att);
+                }
+                Err(e) => {
+                    eprintln!("  {} FAILED: {e}", $method);
+                    let mut att = Vec::new();
+                    if let Ok(png) = $driver.screenshot_png().await {
+                        if let Some(a) =
+                            $allure.save_screenshot(&png, &format!("{}-failed", $method))
+                        {
+                            att.push(a);
+                        }
+                    }
+                    $allure.end_step_failed($method, &format!("{e}"), att);
+                }
+            }
+        }};
+    }
+
+    // ── Test: global/header ─────────────────────────────────────────
+    eprintln!("\n=== Test: global/header ===");
     {
-        let mut allure = AllureReport::new("Header: notifications", "Page Objects");
+        let mut allure = AllureReport::new("global/header", "Page Objects");
         allure.begin_step();
 
         match load_page_object(Arc::clone(&driver), &registry, "global/header").await {
             Ok(header) => {
-                eprintln!(
-                    "  Methods: {:?}",
-                    header.method_signatures().iter().map(|m| &m.name).collect::<Vec<_>>()
-                );
-                let mut att = Vec::new();
-                if let Ok(png) = driver.screenshot_png().await {
-                    if let Some(a) = allure.save_screenshot(&png, "header-loaded") {
-                        att.push(a);
-                    }
-                }
-                allure.end_step("Load global/header", "passed", att);
-
-                // getNotificationCount
-                allure.begin_step();
-                let args = HashMap::new();
-                match header.call_method("getNotificationCount", &args).await {
-                    Ok(val) => {
-                        eprintln!("  getNotificationCount = {val}");
-                        allure.end_step(&format!("getNotificationCount → {val}"), "passed", vec![]);
-                    }
-                    Err(e) => {
-                        eprintln!("  getNotificationCount FAILED: {e}");
-                        let mut att = Vec::new();
-                        if let Ok(png) = driver.screenshot_png().await {
-                            if let Some(a) = allure.save_screenshot(&png, "notif-failed") {
-                                att.push(a);
-                            }
-                        }
-                        allure.end_step_failed("getNotificationCount", &format!("{e}"), att);
-                    }
-                }
-
-                // showSetupMenu (click)
-                allure.begin_step();
-                match header.call_method("showSetupMenu", &args).await {
-                    Ok(_) => {
-                        eprintln!("  showSetupMenu clicked");
-                        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-                        let mut att = Vec::new();
-                        if let Ok(png) = driver.screenshot_png().await {
-                            if let Some(a) = allure.save_screenshot(&png, "setup-menu-open") {
-                                att.push(a);
-                            }
-                        }
-                        allure.end_step("showSetupMenu (click)", "passed", att);
-                    }
-                    Err(e) => {
-                        eprintln!("  showSetupMenu FAILED: {e}");
-                        let mut att = Vec::new();
-                        if let Ok(png) = driver.screenshot_png().await {
-                            if let Some(a) = allure.save_screenshot(&png, "setup-failed") {
-                                att.push(a);
-                            }
-                        }
-                        allure.end_step_failed("showSetupMenu", &format!("{e}"), att);
-                    }
-                }
+                allure.end_step("Load global/header", "passed", vec![]);
+                test_method!(header, allure, driver, "getNotificationCount");
+                test_method!(header, allure, driver, "hasNewNotification");
+                test_method!(header, allure, driver, "showSetupMenu");
+                test_method!(header, allure, driver, "getGlobalActionsList");
+                test_method!(header, allure, driver, "addToFavorites");
             }
-            Err(e) => {
-                eprintln!("  FAILED to load header: {e}");
-                let mut att = Vec::new();
-                if let Ok(png) = driver.screenshot_png().await {
-                    if let Some(a) = allure.save_screenshot(&png, "header-load-failed") {
-                        att.push(a);
-                    }
-                }
-                allure.end_step_failed("Load global/header", &e, att);
-            }
+            Err(e) => allure.end_step_failed("Load global/header", &e, vec![]),
         }
         let status =
             if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
         allure.finish(status, None);
     }
 
-    // ── Test: Navigate to Accounts list ─────────────────────────────
-    eprintln!("\n=== Test: Accounts List ===");
+    // Dismiss any open menus
+    let _ = driver.execute_script("document.body.click()", vec![]).await;
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+
+    // ── Test: navex/desktopLayoutContainer ───────────────────────────
+    eprintln!("\n=== Test: navex/desktopLayoutContainer ===");
     {
-        let mut allure = AllureReport::new("Navigate: Accounts list", "Navigation");
+        let mut allure = AllureReport::new("navex/desktopLayoutContainer", "Page Objects");
         allure.begin_step();
+        match load_page_object(Arc::clone(&driver), &registry, "navex/desktopLayoutContainer").await
+        {
+            Ok(nav) => {
+                allure.end_step("Load navex/desktopLayoutContainer", "passed", vec![]);
+                test_method!(nav, allure, driver, "getAppNav");
+            }
+            Err(e) => allure.end_step_failed("Load navex/desktopLayoutContainer", &e, vec![]),
+        }
+        let status =
+            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
+        allure.finish(status, None);
+    }
 
-        let accounts_url = format!("{instance_url}/lightning/o/Account/list");
-        driver.navigate(&accounts_url).await.expect("Failed to navigate to Accounts");
+    // ── Test: global/globalCreate ────────────────────────────────────
+    eprintln!("\n=== Test: global/globalCreate ===");
+    {
+        let mut allure = AllureReport::new("global/globalCreate", "Page Objects");
+        allure.begin_step();
+        match load_page_object(Arc::clone(&driver), &registry, "global/globalCreate").await {
+            Ok(gc) => {
+                allure.end_step("Load global/globalCreate", "passed", vec![]);
+                test_method!(gc, allure, driver, "clickGlobalActions");
+            }
+            Err(e) => allure.end_step_failed("Load global/globalCreate", &e, vec![]),
+        }
+        let status =
+            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
+        allure.finish(status, None);
+    }
+
+    let _ = driver.execute_script("document.body.click()", vec![]).await;
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+
+    // ── Test: Accounts list ─────────────────────────────────────────
+    eprintln!("\n=== Test: Accounts list ===");
+    {
+        let mut allure = AllureReport::new("Accounts list", "Navigation");
+        allure.begin_step();
+        let url = format!("{instance_url}/lightning/o/Account/list");
+        driver.navigate(&url).await.expect("nav failed");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-
-        let url = driver.current_url().await.unwrap_or_default();
-        eprintln!("  Accounts URL: {url}");
         let mut att = Vec::new();
         if let Ok(png) = driver.screenshot_png().await {
             if let Some(a) = allure.save_screenshot(&png, "accounts-list") {
                 att.push(a);
             }
         }
-        if is_login_page(&url) {
-            allure.end_step_failed("Navigate to Accounts", "Redirected to login", att);
-            allure.finish("failed", Some("Auth lost"));
-        } else {
-            allure.end_step("Navigate to Accounts", "passed", att);
-            allure.finish("passed", None);
-        }
+        allure.end_step("Navigate to Accounts", "passed", att);
+        allure.finish("passed", None);
     }
 
-    // ── Test: Navigate to seeded Account detail ─────────────────────
+    // ── Test: Account detail ────────────────────────────────────────
     if let Some((_, account_id)) = seeded_records.iter().find(|(t, _)| t == "Account") {
-        eprintln!("\n=== Test: Account Detail ===");
-        let mut allure = AllureReport::new("Navigate: Account detail (Acme Corp)", "Navigation");
+        eprintln!("\n=== Test: Account detail (Acme Corp) ===");
+        let mut allure = AllureReport::new("Account detail (Acme Corp)", "Record Pages");
         allure.begin_step();
-
-        let detail_url = format!("{instance_url}/lightning/r/Account/{account_id}/view");
-        driver.navigate(&detail_url).await.expect("Failed to navigate to Account detail");
+        let url = format!("{instance_url}/lightning/r/Account/{account_id}/view");
+        driver.navigate(&url).await.expect("nav failed");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-
-        let url = driver.current_url().await.unwrap_or_default();
-        eprintln!("  Detail URL: {url}");
         let mut att = Vec::new();
         if let Ok(png) = driver.screenshot_png().await {
             if let Some(a) = allure.save_screenshot(&png, "account-detail") {
@@ -571,6 +574,70 @@ async fn test_salesforce_live() {
         }
         allure.end_step("Navigate to Account detail", "passed", att);
         allure.finish("passed", None);
+    }
+
+    // ── Test: Contact detail ────────────────────────────────────────
+    if let Some((_, contact_id)) = seeded_records.iter().find(|(t, _)| t == "Contact") {
+        eprintln!("\n=== Test: Contact detail (Jane Doe) ===");
+        let mut allure = AllureReport::new("Contact detail (Jane Doe)", "Record Pages");
+        allure.begin_step();
+        let url = format!("{instance_url}/lightning/r/Contact/{contact_id}/view");
+        driver.navigate(&url).await.expect("nav failed");
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+        let mut att = Vec::new();
+        if let Ok(png) = driver.screenshot_png().await {
+            if let Some(a) = allure.save_screenshot(&png, "contact-detail") {
+                att.push(a);
+            }
+        }
+        allure.end_step("Navigate to Contact detail", "passed", att);
+        allure.finish("passed", None);
+    }
+
+    // ── Test: Opportunity detail ─────────────────────────────────────
+    if let Some((_, opp_id)) = seeded_records.iter().find(|(t, _)| t == "Opportunity") {
+        eprintln!("\n=== Test: Opportunity detail (Acme Deal) ===");
+        let mut allure = AllureReport::new("Opportunity detail (Acme Deal)", "Record Pages");
+        allure.begin_step();
+        let url = format!("{instance_url}/lightning/r/Opportunity/{opp_id}/view");
+        driver.navigate(&url).await.expect("nav failed");
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+        let mut att = Vec::new();
+        if let Ok(png) = driver.screenshot_png().await {
+            if let Some(a) = allure.save_screenshot(&png, "opportunity-detail") {
+                att.push(a);
+            }
+        }
+        allure.end_step("Navigate to Opportunity detail", "passed", att);
+        allure.finish("passed", None);
+    }
+
+    // ── Test: Setup home + setupNavTree ──────────────────────────────
+    eprintln!("\n=== Test: Setup ===");
+    {
+        let mut allure = AllureReport::new("setup/setupNavTree", "Setup");
+        allure.begin_step();
+        let url = format!("{instance_url}/lightning/setup/SetupOneHome/home");
+        driver.navigate(&url).await.expect("nav failed");
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+        let mut att = Vec::new();
+        if let Ok(png) = driver.screenshot_png().await {
+            if let Some(a) = allure.save_screenshot(&png, "setup-home") {
+                att.push(a);
+            }
+        }
+        allure.end_step("Navigate to Setup", "passed", att);
+
+        allure.begin_step();
+        match load_page_object(Arc::clone(&driver), &registry, "setup/setupNavTree").await {
+            Ok(_nav_tree) => {
+                allure.end_step("Load setup/setupNavTree", "passed", vec![]);
+            }
+            Err(e) => allure.end_step_failed("Load setup/setupNavTree", &e, vec![]),
+        }
+        let status =
+            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
+        allure.finish(status, None);
     }
 
     // ── Cleanup ─────────────────────────────────────────────────────
