@@ -77,6 +77,10 @@ async fn connect_salesforce() -> Option<SalesforceClient> {
 
 async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
     eprintln!("Seeding test data...");
+
+    // Clean up any leftover test records from previous runs
+    cleanup_old_test_data(client).await;
+
     let records = vec![
         (
             "account1",
@@ -146,6 +150,28 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
         Err(e) => {
             eprintln!("WARNING: Failed to seed test data: {e}");
             Vec::new()
+        }
+    }
+}
+
+/// Delete any leftover test records from previous runs that didn't clean up.
+async fn cleanup_old_test_data(client: &SalesforceClient) {
+    // Delete children first to avoid FK violations
+    let queries = [
+        ("Case", "SELECT Id FROM Case WHERE Subject = 'Test Support Case'"),
+        ("Opportunity", "SELECT Id FROM Opportunity WHERE Name = 'Acme Deal'"),
+        ("Contact", "SELECT Id FROM Contact WHERE Email = 'jane.doe@example.com'"),
+        ("Lead", "SELECT Id FROM Lead WHERE Company = 'Smith Industries' AND FirstName = 'John'"),
+        ("Account", "SELECT Id FROM Account WHERE Name = 'Acme Corp'"),
+    ];
+    for (sobject_type, soql) in &queries {
+        if let Ok(records) = client.query(soql).await {
+            for record in &records {
+                if let Some(id) = record.id() {
+                    let _ = client.delete(sobject_type, id).await;
+                    eprintln!("  Cleaned up old {sobject_type}/{id}");
+                }
+            }
         }
     }
 }
@@ -336,7 +362,12 @@ async fn test_salesforce_live() {
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
     // ── Test: Navigate to Account detail, verify seeded data visible ──
-    if let Some((_, account_id)) = seeded_records.iter().find(|(t, _)| t == "Account") {
+    assert!(!seeded_records.is_empty(), "Test data seeding must succeed — no records were created");
+    {
+        let (_, account_id) = seeded_records
+            .iter()
+            .find(|(t, _)| t == "Account")
+            .expect("Account must be in seeded records");
         eprintln!("\n=== Test: Account detail — verify seeded data ===");
         let url = format!("{instance_url}/lightning/r/Account/{account_id}/view");
         driver.navigate(&url).await.expect("nav to Account detail failed");
