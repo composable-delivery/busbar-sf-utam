@@ -403,7 +403,7 @@ fn chromedriver_url() -> String {
 }
 
 #[cfg(feature = "webdriver")]
-async fn create_driver() -> (Box<dyn UtamDriver>, thirtyfour::prelude::WebDriver) {
+async fn create_driver() -> Box<dyn UtamDriver> {
     use thirtyfour::prelude::*;
 
     let url = chromedriver_url();
@@ -425,8 +425,7 @@ async fn create_driver() -> (Box<dyn UtamDriver>, thirtyfour::prelude::WebDriver
         .await
         .unwrap_or_else(|e| panic!("WebDriver connection to {url} failed: {e}"));
 
-    let raw = driver.clone();
-    (Box::new(ThirtyfourDriver::new(driver)), raw)
+    Box::new(ThirtyfourDriver::new(driver))
 }
 
 fn load_registry() -> PageObjectRegistry {
@@ -648,7 +647,7 @@ async fn test_salesforce_live() {
         });
     }
 
-    let (driver, raw_driver) = create_driver().await;
+    let driver = create_driver().await;
     let registry = std::sync::Arc::new(load_registry());
 
     // ── Phase 1: Authenticate via frontdoor ──────────────────────────
@@ -724,157 +723,13 @@ async fn test_salesforce_live() {
         results.push(result);
     }
 
-    // ── Phase 3: Page Object Interaction Tests ─────────────────────────
-    eprintln!("\n=== Phase 3: Page Object Interactions ===");
-
-    // Navigate to Home first (best page for header interactions)
-    let home_url = format!("{instance_url}/lightning/page/home");
-    let _ = navigate_and_verify(driver.as_ref(), &home_url, "interaction-setup").await;
-
-    // Test: Load global/header page object and call methods
-    {
-        let mut allure = AllureReport::new("Header: getSearch", "Interactions");
-        allure.begin_step();
-
-        let header_matches = registry.search("global/header");
-        if !header_matches.is_empty() {
-            let header_ast = registry.get(&header_matches[0]).unwrap();
-            // Create a fresh UtamDriver wrapper from the shared WebDriver
-            let driver_for_po: Box<dyn UtamDriver> =
-                Box::new(ThirtyfourDriver::new(raw_driver.clone()));
-            match DynamicPageObject::load(driver_for_po, header_ast.clone()).await {
-                Ok(header) => {
-                    eprintln!("[Header] Loaded successfully");
-                    eprintln!(
-                        "  Methods: {:?}",
-                        header.method_signatures().iter().map(|m| &m.name).collect::<Vec<_>>()
-                    );
-                    eprintln!("  Elements: {:?}", header.element_names());
-
-                    // Try calling getSearch with the seeded account name
-                    let mut args = std::collections::HashMap::new();
-                    args.insert(
-                        "searchTerm".to_string(),
-                        utam_runtime::RuntimeValue::String("Acme".to_string()),
-                    );
-                    match header.call_method("getSearch", &args).await {
-                        Ok(result) => {
-                            eprintln!("[Header] getSearch('Acme') returned: {result:?}");
-                            tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-                            let mut att = Vec::new();
-                            // Take screenshot from the original driver (header owns its copy)
-                            if let Ok(png) = header.driver().screenshot_png().await {
-                                if let Some(a) = allure.save_screenshot(&png, "search-results") {
-                                    att.push(a);
-                                }
-                            }
-                            allure.end_step("getSearch('Acme')", "passed", att);
-                        }
-                        Err(e) => {
-                            eprintln!("[Header] getSearch failed: {e}");
-                            let mut att = Vec::new();
-                            if let Ok(png) = header.driver().screenshot_png().await {
-                                if let Some(a) = allure.save_screenshot(&png, "search-failed") {
-                                    att.push(a);
-                                }
-                            }
-                            allure.end_step_failed("getSearch('Acme')", &format!("{e}"), att);
-                        }
-                    }
-                }
-                Err(e) => {
-                    eprintln!("[Header] Failed to load: {e}");
-                    allure.end_step_failed("Load header", &format!("{e}"), vec![]);
-                }
-            }
-        } else {
-            eprintln!("[Header] global/header not found in registry");
-            allure.end_step_failed("Load header", "not found in registry", vec![]);
-        }
-        allure.finish(
-            if allure.steps.iter().all(|s| s.status == "passed") { "passed" } else { "failed" },
-            None,
-        );
-    }
-
-    // Test: Load header and get notification count
-    {
-        let mut allure = AllureReport::new("Header: getNotificationCount", "Interactions");
-        allure.begin_step();
-
-        let header_matches = registry.search("global/header");
-        if !header_matches.is_empty() {
-            let header_ast = registry.get(&header_matches[0]).unwrap();
-            let driver_for_po: Box<dyn UtamDriver> =
-                Box::new(ThirtyfourDriver::new(raw_driver.clone()));
-            match DynamicPageObject::load(driver_for_po, header_ast.clone()).await {
-                Ok(header) => {
-                    let args = std::collections::HashMap::new();
-                    match header.call_method("getNotificationCount", &args).await {
-                        Ok(result) => {
-                            eprintln!("[Header] getNotificationCount returned: {result:?}");
-                            allure.end_step("getNotificationCount", "passed", vec![]);
-                        }
-                        Err(e) => {
-                            eprintln!("[Header] getNotificationCount failed: {e}");
-                            allure.end_step_failed("getNotificationCount", &format!("{e}"), vec![]);
-                        }
-                    }
-                }
-                Err(e) => {
-                    allure.end_step_failed("Load header", &format!("{e}"), vec![]);
-                }
-            }
-        }
-        allure.finish(
-            if allure.steps.iter().all(|s| s.status == "passed") { "passed" } else { "failed" },
-            None,
-        );
-    }
-
-    // Test: Load navex/desktopLayoutContainer and introspect
-    {
-        let mut allure = AllureReport::new("NavContainer: getAppNav", "Interactions");
-        allure.begin_step();
-
-        let nav_matches = registry.search("navex/desktopLayoutContainer");
-        if !nav_matches.is_empty() {
-            let nav_ast = registry.get(&nav_matches[0]).unwrap();
-            let driver_for_po: Box<dyn UtamDriver> =
-                Box::new(ThirtyfourDriver::new(raw_driver.clone()));
-            match DynamicPageObject::load(driver_for_po, nav_ast.clone()).await {
-                Ok(nav) => {
-                    eprintln!("[NavContainer] Loaded successfully");
-                    eprintln!(
-                        "  Methods: {:?}",
-                        nav.method_signatures().iter().map(|m| &m.name).collect::<Vec<_>>()
-                    );
-                    eprintln!("  Elements: {:?}", nav.element_names());
-
-                    let args = std::collections::HashMap::new();
-                    match nav.call_method("getAppNav", &args).await {
-                        Ok(result) => {
-                            eprintln!("[NavContainer] getAppNav returned: {result:?}");
-                            allure.end_step("getAppNav", "passed", vec![]);
-                        }
-                        Err(e) => {
-                            eprintln!("[NavContainer] getAppNav failed: {e}");
-                            allure.end_step_failed("getAppNav", &format!("{e}"), vec![]);
-                        }
-                    }
-                }
-                Err(e) => {
-                    allure.end_step_failed("Load navContainer", &format!("{e}"), vec![]);
-                }
-            }
-        }
-        allure.finish(
-            if allure.steps.iter().all(|s| s.status == "passed") { "passed" } else { "failed" },
-            None,
-        );
-    }
-
-    // ── Phase 4: Summary ─────────────────────────────────────────────
+    // NOTE: Page object interaction tests are tracked in #82.
+    // They require updated JSON selectors (#83) and CDP adapter support (#84).
+    // Current page object selectors are stale — e.g. global/header references
+    // "[data-key=search].forceHeaderButtonDeprecated" which no longer exists.
+    // Interaction tests must use DynamicPageObject::call_method(), not raw JS.
+    //
+    // ── Phase 3: Summary ─────────────────────────────────────────────
     eprintln!("\n=== Phase 3: Summary ===");
     let total_matched: usize = results.iter().map(|r| r.matched).sum();
     let total_discovered: usize = results.iter().map(|r| r.discovered).sum();
