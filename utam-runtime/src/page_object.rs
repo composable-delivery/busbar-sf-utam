@@ -481,9 +481,35 @@ fn execute_compose<'a>(
             if let Some(apply) = &stmt.apply {
                 // Handle "waitFor" with predicate specially
                 if apply == "waitFor" {
-                    if let Some(predicate) = &stmt.predicate {
+                    // The predicate can be at stmt.predicate OR inside args
+                    // as {"type": "function", "predicate": [...]}
+                    let predicate_stmts = if let Some(ref pred) = stmt.predicate {
+                        Some(pred.clone())
+                    } else {
+                        // Extract predicate from function-type arg
+                        stmt.args.iter().find_map(|arg| {
+                            if let ComposeArgAst::Value(v) = arg {
+                                if v.get("type").and_then(|t| t.as_str()) == Some("function") {
+                                    if let Some(pred_val) = v.get("predicate") {
+                                        serde_json::from_value::<Vec<ComposeStatementAst>>(
+                                            pred_val.clone(),
+                                        )
+                                        .ok()
+                                    } else {
+                                        None
+                                    }
+                                } else {
+                                    None
+                                }
+                            } else {
+                                None
+                            }
+                        })
+                    };
+
+                    if let Some(predicate) = predicate_stmts {
                         let predicate_result =
-                            execute_wait_for_predicate(page, predicate, method_args).await?;
+                            execute_wait_for_predicate(page, &predicate, method_args).await?;
                         last_result = predicate_result;
                     }
                     continue;
