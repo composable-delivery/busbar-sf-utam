@@ -8,198 +8,14 @@
 //!
 //! Skipped locally (no CHROMEDRIVER_URL), panics in CI if credentials missing.
 
-use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 use busbar_sf_api::{SObjectRecord, SalesforceClient, SfdxAuthUrl};
 use utam_runtime::prelude::*;
 
-// ---------------------------------------------------------------------------
-// Allure reporting (minimal, focused)
-// ---------------------------------------------------------------------------
-
-fn now_millis() -> u64 {
-    SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_millis() as u64
-}
-
-fn make_uuid(seed: &str) -> String {
-    let mut h = DefaultHasher::new();
-    seed.hash(&mut h);
-    let n = h.finish();
-    let mut h2 = DefaultHasher::new();
-    now_millis().hash(&mut h2);
-    seed.hash(&mut h2);
-    let n2 = h2.finish();
-    format!(
-        "{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
-        (n >> 32) as u32,
-        (n >> 16) as u16,
-        (n & 0xffff) as u16,
-        (n2 >> 48) as u16,
-        n2 & 0x0000_ffff_ffff_ffff
-    )
-}
-
-fn allure_results_dir() -> PathBuf {
-    let dir = std::env::var("ALLURE_RESULTS_DIR")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| PathBuf::from("/tmp/allure-results"));
-    let _ = std::fs::create_dir_all(&dir);
-    dir
-}
-
-struct AllureStep {
-    name: String,
-    status: String,
-    start: u64,
-    stop: u64,
-    attachments: Vec<serde_json::Value>,
-    details: Option<String>,
-}
-
-struct AllureReport {
-    test_uuid: String,
-    test_name: String,
-    suite: String,
-    start: u64,
-    steps: Vec<AllureStep>,
-    current_step_start: u64,
-    top_attachments: Vec<serde_json::Value>,
-}
-
-impl AllureReport {
-    fn new(test_name: &str, suite: &str) -> Self {
-        let start = now_millis();
-        Self {
-            test_uuid: make_uuid(&format!("{test_name}-{start}")),
-            test_name: test_name.to_string(),
-            suite: suite.to_string(),
-            start,
-            steps: Vec::new(),
-            current_step_start: start,
-            top_attachments: Vec::new(),
-        }
-    }
-
-    fn begin_step(&mut self) {
-        self.current_step_start = now_millis();
-    }
-
-    fn save_screenshot(&self, png_data: &[u8], name: &str) -> Option<serde_json::Value> {
-        let att_uuid = make_uuid(&format!("{}-{name}", self.test_uuid));
-        let filename = format!("{att_uuid}-attachment.png");
-        std::fs::write(allure_results_dir().join(&filename), png_data).ok()?;
-        Some(serde_json::json!({
-            "name": name, "source": filename, "type": "image/png"
-        }))
-    }
-
-    fn end_step(&mut self, name: &str, status: &str, attachments: Vec<serde_json::Value>) {
-        self.steps.push(AllureStep {
-            name: name.to_string(),
-            status: status.to_string(),
-            start: self.current_step_start,
-            stop: now_millis(),
-            attachments,
-            details: None,
-        });
-    }
-
-    fn end_step_failed(&mut self, name: &str, message: &str, attachments: Vec<serde_json::Value>) {
-        self.steps.push(AllureStep {
-            name: name.to_string(),
-            status: "failed".to_string(),
-            start: self.current_step_start,
-            stop: now_millis(),
-            attachments,
-            details: Some(message.to_string()),
-        });
-    }
-
-    fn finish(&self, status: &str, message: Option<&str>) {
-        let steps_json: Vec<serde_json::Value> = self
-            .steps
-            .iter()
-            .map(|s| {
-                let mut step = serde_json::json!({
-                    "name": s.name,
-                    "status": s.status,
-                    "stage": "finished",
-                    "start": s.start,
-                    "stop": s.stop,
-                    "attachments": s.attachments,
-                    "steps": [],
-                    "parameters": []
-                });
-                if let Some(ref msg) = s.details {
-                    step["statusDetails"] = serde_json::json!({ "message": msg, "trace": "" });
-                }
-                step
-            })
-            .collect();
-
-        let mut result = serde_json::json!({
-            "uuid": self.test_uuid,
-            "historyId": make_uuid(&self.test_name),
-            "fullName": format!("salesforce_live::{}", self.test_name),
-            "name": self.test_name,
-            "status": status,
-            "stage": "finished",
-            "start": self.start,
-            "stop": now_millis(),
-            "labels": [
-                { "name": "parentSuite", "value": "Salesforce Integration" },
-                { "name": "suite", "value": self.suite },
-                { "name": "subSuite", "value": self.test_name },
-                { "name": "framework", "value": "busbar-sf-utam" },
-                { "name": "language", "value": "rust" },
-                { "name": "feature", "value": "Salesforce Browser Testing" },
-                { "name": "severity", "value": "normal" }
-            ],
-            "steps": steps_json,
-            "attachments": self.top_attachments,
-            "parameters": [],
-            "links": []
-        });
-
-        if let Some(msg) = message {
-            result["statusDetails"] = serde_json::json!({ "message": msg, "trace": "" });
-        }
-
-        let path = allure_results_dir().join(format!("{}-result.json", self.test_uuid));
-        let json = serde_json::to_string_pretty(&result).unwrap_or_default();
-        let _ = std::fs::write(&path, &json);
-    }
-}
-
-fn write_allure_environment(instance_url: &str) {
-    let content = format!(
-        "sf.instance={instance_url}\n\
-         browser=Chrome\n\
-         driver=chromedriver\n\
-         framework=busbar-sf-utam\n\
-         language=Rust\n"
-    );
-    let _ = std::fs::write(allure_results_dir().join("environment.properties"), content);
-}
-
-fn write_allure_categories() {
-    let categories = serde_json::json!([
-        { "name": "Auth failures", "messageRegex": ".*login.*|.*frontdoor.*|.*auth.*", "matchedStatuses": ["failed"] },
-        { "name": "Element not found", "messageRegex": ".*not found.*|.*Unable to locate.*", "matchedStatuses": ["failed"] },
-        { "name": "Infrastructure", "messageRegex": ".*WebDriver.*|.*connection.*", "matchedStatuses": ["broken"] }
-    ]);
-    let _ = std::fs::write(
-        allure_results_dir().join("categories.json"),
-        serde_json::to_string_pretty(&categories).unwrap_or_default(),
-    );
-}
-
-// ---------------------------------------------------------------------------
+// (Allure reporting removed — tests use direct assertions now)
 // Login detection
 // ---------------------------------------------------------------------------
 
@@ -412,9 +228,6 @@ async fn test_salesforce_live() {
     let instance_url = sf_client.instance_url.clone();
     let frontdoor_url = sf_client.frontdoor_url();
 
-    write_allure_environment(&instance_url);
-    write_allure_categories();
-
     // ── Seed test data ──────────────────────────────────────────────
     eprintln!("\n=== Seed Test Data ===");
     let seeded_records = seed_test_data(&sf_client).await;
@@ -440,205 +253,159 @@ async fn test_salesforce_live() {
     eprintln!("Lightning loaded");
 
     // Signal to CI: safe to start video recording
-    let _ = std::fs::write(allure_results_dir().join("browser-ready"), "1");
+    let _ = std::fs::write(PathBuf::from("/tmp/allure-results/browser-ready"), "1");
 
     let empty_args = HashMap::new();
 
-    // Helper macro to reduce boilerplate for calling page object methods
-    macro_rules! test_method {
-        ($po:expr, $allure:expr, $driver:expr, $method:expr) => {{
-            $allure.begin_step();
-            match $po.call_method($method, &empty_args).await {
-                Ok(val) => {
-                    eprintln!("  {} → {val}", $method);
-                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-                    let mut att = Vec::new();
-                    if let Ok(png) = $driver.screenshot_png().await {
-                        if let Some(a) = $allure.save_screenshot(&png, $method) {
-                            att.push(a);
-                        }
-                    }
-                    $allure.end_step(&format!("{} → {val}", $method), "passed", att);
-                }
-                Err(e) => {
-                    eprintln!("  {} FAILED: {e}", $method);
-                    let mut att = Vec::new();
-                    if let Ok(png) = $driver.screenshot_png().await {
-                        if let Some(a) =
-                            $allure.save_screenshot(&png, &format!("{}-failed", $method))
-                        {
-                            att.push(a);
-                        }
-                    }
-                    $allure.end_step_failed($method, &format!("{e}"), att);
-                }
-            }
-        }};
-    }
-
-    // ── Test: global/header ─────────────────────────────────────────
+    // ── Test: global/header — load and verify compose methods ────────
     eprintln!("\n=== Test: global/header ===");
-    {
-        let mut allure = AllureReport::new("global/header", "Page Objects");
-        allure.begin_step();
+    let header = load_page_object(Arc::clone(&driver), &registry, "global/header")
+        .await
+        .expect("global/header must load — .oneHeader not found in DOM");
 
-        match load_page_object(Arc::clone(&driver), &registry, "global/header").await {
-            Ok(header) => {
-                allure.end_step("Load global/header", "passed", vec![]);
-                test_method!(header, allure, driver, "getNotificationCount");
-                test_method!(header, allure, driver, "hasNewNotification");
-                test_method!(header, allure, driver, "showSetupMenu");
-                test_method!(header, allure, driver, "getGlobalActionsList");
-                test_method!(header, allure, driver, "addToFavorites");
-            }
-            Err(e) => allure.end_step_failed("Load global/header", &e, vec![]),
-        }
-        let status =
-            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
-        allure.finish(status, None);
-    }
+    // getNotificationCount must return a String (the counter text)
+    let count = header.call_method("getNotificationCount", &empty_args).await.expect(
+        "getNotificationCount must succeed — .unsNotificationsCounter span.counterLabel not found",
+    );
+    assert!(
+        matches!(count, utam_runtime::RuntimeValue::String(_)),
+        "getNotificationCount must return a String, got: {count:?}"
+    );
+    eprintln!("  getNotificationCount = {count}");
 
-    // Dismiss any open menus
+    // hasNewNotification must return a Bool (isVisible result)
+    let has_notif = header
+        .call_method("hasNewNotification", &empty_args)
+        .await
+        .expect("hasNewNotification must succeed");
+    assert!(
+        matches!(has_notif, utam_runtime::RuntimeValue::Bool(_)),
+        "hasNewNotification must return a Bool, got: {has_notif:?}"
+    );
+    eprintln!("  hasNewNotification = {has_notif}");
+
+    // showSetupMenu must click without error
+    header.call_method("showSetupMenu", &empty_args).await.expect(
+        "showSetupMenu must succeed — .slds-global-actions__item .menuTriggerLink not found",
+    );
+    eprintln!("  showSetupMenu clicked");
+
+    // After clicking setup menu, verify the menu appeared in the DOM
+    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+    let setup_menu_visible =
+        driver.find_element(&Selector::Css(".setupGear .uiMenuList".to_string())).await;
+    assert!(
+        setup_menu_visible.is_ok(),
+        "Setup menu DOM element (.setupGear .uiMenuList) should exist after showSetupMenu click"
+    );
+    eprintln!("  Setup menu DOM element verified");
+
+    // Dismiss menu
     let _ = driver.execute_script("document.body.click()", vec![]).await;
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
-    // ── Test: navex/desktopLayoutContainer ───────────────────────────
+    // getGlobalActionsList must click without error
+    header
+        .call_method("getGlobalActionsList", &empty_args)
+        .await
+        .expect("getGlobalActionsList must succeed — .globalCreateTrigger not found");
+    eprintln!("  getGlobalActionsList clicked");
+
+    // Dismiss
+    let _ = driver.execute_script("document.body.click()", vec![]).await;
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+
+    // ── Test: navex/desktopLayoutContainer — load and call getAppNav ──
     eprintln!("\n=== Test: navex/desktopLayoutContainer ===");
-    {
-        let mut allure = AllureReport::new("navex/desktopLayoutContainer", "Page Objects");
-        allure.begin_step();
-        match load_page_object(Arc::clone(&driver), &registry, "navex/desktopLayoutContainer").await
-        {
-            Ok(nav) => {
-                allure.end_step("Load navex/desktopLayoutContainer", "passed", vec![]);
-                test_method!(nav, allure, driver, "getAppNav");
-            }
-            Err(e) => allure.end_step_failed("Load navex/desktopLayoutContainer", &e, vec![]),
-        }
-        let status =
-            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
-        allure.finish(status, None);
-    }
+    let nav = load_page_object(Arc::clone(&driver), &registry, "navex/desktopLayoutContainer")
+        .await
+        .expect("navex/desktopLayoutContainer must load — .navexDesktopLayoutContainer not found");
 
-    // ── Test: global/globalCreate ────────────────────────────────────
+    let app_nav = nav.call_method("getAppNav", &empty_args).await.expect("getAppNav must succeed");
+    // getAppNav returns the appNav custom component element
+    assert!(
+        !matches!(app_nav, utam_runtime::RuntimeValue::Null),
+        "getAppNav must return a non-null value, got: {app_nav:?}"
+    );
+    eprintln!("  getAppNav = {app_nav}");
+
+    // ── Test: global/globalCreate — load and click ────────────────────
     eprintln!("\n=== Test: global/globalCreate ===");
-    {
-        let mut allure = AllureReport::new("global/globalCreate", "Page Objects");
-        allure.begin_step();
-        match load_page_object(Arc::clone(&driver), &registry, "global/globalCreate").await {
-            Ok(gc) => {
-                allure.end_step("Load global/globalCreate", "passed", vec![]);
-                test_method!(gc, allure, driver, "clickGlobalActions");
-            }
-            Err(e) => allure.end_step_failed("Load global/globalCreate", &e, vec![]),
-        }
-        let status =
-            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
-        allure.finish(status, None);
-    }
+    let global_create = load_page_object(Arc::clone(&driver), &registry, "global/globalCreate")
+        .await
+        .expect("global/globalCreate must load — div[class*='globalCreateContainer'] not found");
 
+    global_create
+        .call_method("clickGlobalActions", &empty_args)
+        .await
+        .expect("clickGlobalActions must succeed — .globalCreateTrigger button not found");
+    eprintln!("  clickGlobalActions clicked");
+
+    // Dismiss
     let _ = driver.execute_script("document.body.click()", vec![]).await;
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
-    // ── Test: Accounts list ─────────────────────────────────────────
-    eprintln!("\n=== Test: Accounts list ===");
-    {
-        let mut allure = AllureReport::new("Accounts list", "Navigation");
-        allure.begin_step();
-        let url = format!("{instance_url}/lightning/o/Account/list");
-        driver.navigate(&url).await.expect("nav failed");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-        let mut att = Vec::new();
-        if let Ok(png) = driver.screenshot_png().await {
-            if let Some(a) = allure.save_screenshot(&png, "accounts-list") {
-                att.push(a);
-            }
-        }
-        allure.end_step("Navigate to Accounts", "passed", att);
-        allure.finish("passed", None);
-    }
-
-    // ── Test: Account detail ────────────────────────────────────────
+    // ── Test: Navigate to Account detail, verify seeded data visible ──
     if let Some((_, account_id)) = seeded_records.iter().find(|(t, _)| t == "Account") {
-        eprintln!("\n=== Test: Account detail (Acme Corp) ===");
-        let mut allure = AllureReport::new("Account detail (Acme Corp)", "Record Pages");
-        allure.begin_step();
+        eprintln!("\n=== Test: Account detail — verify seeded data ===");
         let url = format!("{instance_url}/lightning/r/Account/{account_id}/view");
-        driver.navigate(&url).await.expect("nav failed");
+        driver.navigate(&url).await.expect("nav to Account detail failed");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-        let mut att = Vec::new();
-        if let Ok(png) = driver.screenshot_png().await {
-            if let Some(a) = allure.save_screenshot(&png, "account-detail") {
-                att.push(a);
-            }
-        }
-        allure.end_step("Navigate to Account detail", "passed", att);
-        allure.finish("passed", None);
+
+        // Verify the page title or body contains "Acme Corp"
+        let title = driver.title().await.unwrap_or_default();
+        let body_has_acme = driver
+            .execute_script("return document.body.innerText.includes('Acme Corp')", vec![])
+            .await;
+        assert!(
+            title.contains("Acme Corp")
+                || matches!(body_has_acme, Ok(serde_json::Value::Bool(true))),
+            "Account detail page must contain 'Acme Corp'. Title: '{title}'"
+        );
+        eprintln!("  Verified 'Acme Corp' visible on detail page");
+
+        // Verify related Contact is visible
+        let body_has_jane = driver
+            .execute_script(
+                "return document.body.innerText.includes('Jane Doe') || document.body.innerText.includes('Jane')",
+                vec![],
+            )
+            .await;
+        assert!(
+            matches!(body_has_jane, Ok(serde_json::Value::Bool(true))),
+            "Account detail should show related Contact 'Jane Doe'"
+        );
+        eprintln!("  Verified related Contact 'Jane Doe' visible");
+
+        // Verify related Opportunity is visible
+        let body_has_deal = driver
+            .execute_script("return document.body.innerText.includes('Acme Deal')", vec![])
+            .await;
+        assert!(
+            matches!(body_has_deal, Ok(serde_json::Value::Bool(true))),
+            "Account detail should show related Opportunity 'Acme Deal'"
+        );
+        eprintln!("  Verified related Opportunity 'Acme Deal' visible");
     }
 
-    // ── Test: Contact detail ────────────────────────────────────────
-    if let Some((_, contact_id)) = seeded_records.iter().find(|(t, _)| t == "Contact") {
-        eprintln!("\n=== Test: Contact detail (Jane Doe) ===");
-        let mut allure = AllureReport::new("Contact detail (Jane Doe)", "Record Pages");
-        allure.begin_step();
-        let url = format!("{instance_url}/lightning/r/Contact/{contact_id}/view");
-        driver.navigate(&url).await.expect("nav failed");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-        let mut att = Vec::new();
-        if let Ok(png) = driver.screenshot_png().await {
-            if let Some(a) = allure.save_screenshot(&png, "contact-detail") {
-                att.push(a);
-            }
-        }
-        allure.end_step("Navigate to Contact detail", "passed", att);
-        allure.finish("passed", None);
-    }
+    // ── Test: Setup — load setupNavTree page object ───────────────────
+    eprintln!("\n=== Test: setup/setupNavTree ===");
+    let setup_url = format!("{instance_url}/lightning/setup/SetupOneHome/home");
+    driver.navigate(&setup_url).await.expect("nav to Setup failed");
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-    // ── Test: Opportunity detail ─────────────────────────────────────
-    if let Some((_, opp_id)) = seeded_records.iter().find(|(t, _)| t == "Opportunity") {
-        eprintln!("\n=== Test: Opportunity detail (Acme Deal) ===");
-        let mut allure = AllureReport::new("Opportunity detail (Acme Deal)", "Record Pages");
-        allure.begin_step();
-        let url = format!("{instance_url}/lightning/r/Opportunity/{opp_id}/view");
-        driver.navigate(&url).await.expect("nav failed");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-        let mut att = Vec::new();
-        if let Ok(png) = driver.screenshot_png().await {
-            if let Some(a) = allure.save_screenshot(&png, "opportunity-detail") {
-                att.push(a);
-            }
-        }
-        allure.end_step("Navigate to Opportunity detail", "passed", att);
-        allure.finish("passed", None);
-    }
+    let _setup_nav = load_page_object(Arc::clone(&driver), &registry, "setup/setupNavTree")
+        .await
+        .expect("setup/setupNavTree must load — .onesetupSetupNavTree not found");
+    eprintln!("  setup/setupNavTree loaded");
 
-    // ── Test: Setup home + setupNavTree ──────────────────────────────
-    eprintln!("\n=== Test: Setup ===");
-    {
-        let mut allure = AllureReport::new("setup/setupNavTree", "Setup");
-        allure.begin_step();
-        let url = format!("{instance_url}/lightning/setup/SetupOneHome/home");
-        driver.navigate(&url).await.expect("nav failed");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-        let mut att = Vec::new();
-        if let Ok(png) = driver.screenshot_png().await {
-            if let Some(a) = allure.save_screenshot(&png, "setup-home") {
-                att.push(a);
-            }
-        }
-        allure.end_step("Navigate to Setup", "passed", att);
-
-        allure.begin_step();
-        match load_page_object(Arc::clone(&driver), &registry, "setup/setupNavTree").await {
-            Ok(_nav_tree) => {
-                allure.end_step("Load setup/setupNavTree", "passed", vec![]);
-            }
-            Err(e) => allure.end_step_failed("Load setup/setupNavTree", &e, vec![]),
-        }
-        let status =
-            if allure.steps.iter().any(|s| s.status == "failed") { "failed" } else { "passed" };
-        allure.finish(status, None);
-    }
+    // Verify the URL contains SetupOneHome
+    let setup_current_url = driver.current_url().await.unwrap_or_default();
+    assert!(
+        setup_current_url.contains("Setup") || setup_current_url.contains("setup"),
+        "Should be on Setup page, got: {setup_current_url}"
+    );
+    eprintln!("  Verified on Setup page: {setup_current_url}");
 
     // ── Cleanup ─────────────────────────────────────────────────────
     driver.quit().await.expect("Failed to quit");
@@ -648,5 +415,5 @@ async fn test_salesforce_live() {
         cleanup_test_data(&sf_client, &seeded_records).await;
     }
 
-    eprintln!("\n=== Complete ===");
+    eprintln!("\n=== All tests passed ===");
 }
