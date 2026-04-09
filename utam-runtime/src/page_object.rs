@@ -482,8 +482,9 @@ fn execute_compose<'a>(
                 // Handle "waitFor" with predicate specially
                 if apply == "waitFor" {
                     if let Some(predicate) = &stmt.predicate {
-                        execute_wait_for_predicate(page, predicate, method_args).await?;
-                        last_result = RuntimeValue::Null;
+                        let predicate_result =
+                            execute_wait_for_predicate(page, predicate, method_args).await?;
+                        last_result = predicate_result;
                     }
                     continue;
                 }
@@ -625,13 +626,14 @@ async fn execute_wait_for_predicate(
     page: &DynamicPageObject,
     predicate: &[ComposeStatementAst],
     method_args: &HashMap<String, RuntimeValue>,
-) -> RuntimeResult<()> {
+) -> RuntimeResult<RuntimeValue> {
     utam_core::wait::wait_for(
         || async {
             match execute_compose(page, predicate, method_args).await {
-                Ok(RuntimeValue::Bool(true)) => Ok(Some(())),
-                Ok(_) => Ok(Some(())), // Predicate didn't error → treat as passed
-                Err(_) => Ok(None),    // Error → keep polling
+                Ok(RuntimeValue::Bool(false)) => Ok(None), // Explicitly false → keep polling
+                Ok(RuntimeValue::Null) => Ok(None),        // Null → keep polling
+                Ok(val) => Ok(Some(val)),                  // Any truthy value → done
+                Err(_) => Ok(None),                        // Error → keep polling
             }
         },
         &utam_core::wait::WaitConfig::default(),
