@@ -137,8 +137,8 @@ pub struct DynamicPageObject {
     ast: PageObjectAst,
     root: Box<dyn ElementHandle>,
     driver: Arc<dyn UtamDriver>,
-    /// Flattened element index: name -> (ElementAst, is_in_shadow)
-    element_index: HashMap<String, (ElementAst, bool)>,
+    /// Flattened element index: name -> (ElementAst, is_in_shadow, parent_name)
+    element_index: HashMap<String, (ElementAst, bool, Option<String>)>,
     /// Optional registry for cross-page-object resolution
     registry: Option<Arc<PageObjectRegistry>>,
 }
@@ -218,7 +218,7 @@ impl DynamicPageObject {
         name: &str,
         args: &HashMap<String, RuntimeValue>,
     ) -> RuntimeResult<Vec<DynamicElement>> {
-        let (elem_ast, in_shadow) =
+        let (elem_ast, in_shadow, ref parent_name) =
             self.element_index.get(name).ok_or_else(|| RuntimeError::ElementNotDefined {
                 page_object: self.struct_name(),
                 element: name.to_string(),
@@ -236,15 +236,42 @@ impl DynamicPageObject {
             _ => vec![],
         };
 
+        // Resolve the search scope — if this element has a parent,
+        // search within the parent element instead of the root.
+        let scope: Box<dyn ElementHandle> = if let Some(pname) = parent_name {
+            if let Some((parent_ast, parent_in_shadow, _)) = self.element_index.get(pname) {
+                if let Some(parent_sel_ast) = &parent_ast.selector {
+                    let parent_sel = resolve_selector(parent_sel_ast, args)?;
+                    if *parent_in_shadow {
+                        let shadow = self.root.shadow_root().await?.ok_or_else(|| {
+                            RuntimeError::UnsupportedAction {
+                                action: "shadow_root".into(),
+                                element_type: "root has no shadow root".into(),
+                            }
+                        })?;
+                        shadow.find_element(&parent_sel).await?
+                    } else {
+                        self.root.find_element(&parent_sel).await?
+                    }
+                } else {
+                    self.root.clone_handle()
+                }
+            } else {
+                self.root.clone_handle()
+            }
+        } else {
+            self.root.clone_handle()
+        };
+
         let handles = if *in_shadow {
             let shadow =
-                self.root.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
+                scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
                     action: "shadow_root".into(),
-                    element_type: "root has no shadow root".into(),
+                    element_type: "element has no shadow root".into(),
                 })?;
             shadow.find_elements(&selector).await?
         } else {
-            self.root.find_elements(&selector).await?
+            scope.find_elements(&selector).await?
         };
 
         Ok(handles.into_iter().map(|h| DynamicElement::new(h, &types)).collect())
@@ -261,7 +288,7 @@ impl DynamicPageObject {
             return Ok(DynamicElement::base(self.root.clone_handle()));
         }
 
-        let (elem_ast, in_shadow) =
+        let (elem_ast, in_shadow, ref parent_elem_name) =
             self.element_index.get(name).ok_or_else(|| RuntimeError::ElementNotDefined {
                 page_object: self.struct_name(),
                 element: name.to_string(),
@@ -275,13 +302,39 @@ impl DynamicPageObject {
 
         let selector = resolve_selector(selector_ast, args)?;
 
+        // Resolve search scope — nested elements search within their parent.
+        // We resolve the parent's selector directly to avoid async recursion.
+        let scope: Box<dyn ElementHandle> = if let Some(pname) = parent_elem_name {
+            if let Some((parent_ast, parent_in_shadow, _)) = self.element_index.get(pname) {
+                if let Some(parent_sel_ast) = &parent_ast.selector {
+                    let parent_sel = resolve_selector(parent_sel_ast, args)?;
+                    if *parent_in_shadow {
+                        let shadow = self.root.shadow_root().await?.ok_or_else(|| {
+                            RuntimeError::UnsupportedAction {
+                                action: "shadow_root".into(),
+                                element_type: "root has no shadow root".into(),
+                            }
+                        })?;
+                        shadow.find_element(&parent_sel).await?
+                    } else {
+                        self.root.find_element(&parent_sel).await?
+                    }
+                } else {
+                    self.root.clone_handle()
+                }
+            } else {
+                self.root.clone_handle()
+            }
+        } else {
+            self.root.clone_handle()
+        };
+
         // Determine where to search
-        let parent: Box<dyn ElementHandle> = if *in_shadow {
-            // Search inside the root's shadow DOM
+        let found: Box<dyn ElementHandle> = if *in_shadow {
             let shadow =
-                self.root.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
+                scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
                     action: "shadow_root".into(),
-                    element_type: "root has no shadow root".into(),
+                    element_type: "element has no shadow root".into(),
                 })?;
             if selector_ast.return_all {
                 let handles = shadow.find_elements(&selector).await?;
@@ -301,9 +354,9 @@ impl DynamicPageObject {
             }
             shadow.find_element(&selector).await?
         } else if selector_ast.return_all {
-            let handles = self.root.find_elements(&selector).await?;
+            let handles = scope.find_elements(&selector).await?;
             if elem_ast.nullable && handles.is_empty() {
-                return Ok(DynamicElement::base(self.root.clone_handle()));
+                return Ok(DynamicElement::base(scope));
             }
             return Ok(wrap_element(
                 handles.into_iter().next().ok_or_else(|| RuntimeError::ElementNotDefined {
@@ -313,10 +366,9 @@ impl DynamicPageObject {
                 elem_ast,
             ));
         } else {
-            match self.root.find_element(&selector).await {
+            match scope.find_element(&selector).await {
                 Ok(el) => el,
                 Err(e) if elem_ast.nullable => {
-                    // Nullable elements return a base stub on not-found
                     let _ = e;
                     return Ok(DynamicElement::base(self.root.clone_handle()));
                 }
@@ -324,7 +376,7 @@ impl DynamicPageObject {
             }
         };
 
-        Ok(wrap_element(parent, elem_ast))
+        Ok(wrap_element(found, elem_ast))
     }
 
     fn struct_name(&self) -> String {
@@ -347,16 +399,16 @@ fn wrap_element(handle: Box<dyn ElementHandle>, ast: &ElementAst) -> DynamicElem
     DynamicElement::new(handle, &types)
 }
 
-/// Build a flat name→(ast, in_shadow) index from a PageObjectAst,
+/// Build a flat name→(ast, in_shadow, parent_name) index from a PageObjectAst,
 /// recursively collecting elements from nested `elements` and `shadow`.
-fn build_element_index(ast: &PageObjectAst) -> HashMap<String, (ElementAst, bool)> {
+fn build_element_index(ast: &PageObjectAst) -> HashMap<String, (ElementAst, bool, Option<String>)> {
     let mut index = HashMap::new();
     for elem in &ast.elements {
-        collect_elements(elem, false, &mut index);
+        collect_elements(elem, false, None, &mut index);
     }
     if let Some(shadow) = &ast.shadow {
         for elem in &shadow.elements {
-            collect_elements(elem, true, &mut index);
+            collect_elements(elem, true, None, &mut index);
         }
     }
     index
@@ -365,11 +417,18 @@ fn build_element_index(ast: &PageObjectAst) -> HashMap<String, (ElementAst, bool
 fn collect_elements(
     elem: &ElementAst,
     in_shadow: bool,
-    index: &mut HashMap<String, (ElementAst, bool)>,
+    parent: Option<&str>,
+    index: &mut HashMap<String, (ElementAst, bool, Option<String>)>,
 ) {
-    index.insert(elem.name.clone(), (elem.clone(), in_shadow));
+    index.insert(elem.name.clone(), (elem.clone(), in_shadow, parent.map(|s| s.to_string())));
     for child in &elem.elements {
-        collect_elements(child, in_shadow, index);
+        collect_elements(child, in_shadow, Some(&elem.name), index);
+    }
+    // Also recurse into element-level shadow
+    if let Some(shadow) = &elem.shadow {
+        for child in &shadow.elements {
+            collect_elements(child, true, Some(&elem.name), index);
+        }
     }
 }
 
@@ -424,7 +483,7 @@ fn execute_compose<'a>(
                     let el = page.resolve_element(elem_name, method_args).await?;
 
                     // Check if this element is a custom component type
-                    if let Some((elem_ast, _)) = page.element_index.get(elem_name) {
+                    if let Some((elem_ast, _, _)) = page.element_index.get(elem_name) {
                         if let Some(ElementTypeAst::CustomComponent(ref path)) =
                             elem_ast.element_type
                         {
