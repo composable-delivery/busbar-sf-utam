@@ -356,20 +356,19 @@ async fn test_salesforce_live() {
         .await
         .expect("clickGlobalActions must succeed");
     eprintln!("  clickGlobalActions opened menu");
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
-    // Click "Account" in the global create menu using parameterized selector
-    let mut menu_args = HashMap::new();
-    menu_args.insert(
-        "titleString".to_string(),
-        utam_runtime::RuntimeValue::String("Account".to_string()),
-    );
-    // globalCreateMenuItem uses selector: [class*=oneGlobalCreateItem] a[title='%s']
-    let menu_item = global_create
-        .get_element("globalCreateMenuItem", &menu_args)
+    // Click "Account" in the global create menu.
+    // The menu renders as a popup outside the globalCreate container,
+    // so we search from the document root using the page object's selector
+    // with parameter substitution: [class*=oneGlobalCreateItem] a[title='Account']
+    let account_menu_selector =
+        Selector::Css("[class*=oneGlobalCreateItem] a[title='Account']".to_string());
+    let menu_item = driver
+        .find_element(&account_menu_selector)
         .await
-        .expect("globalCreateMenuItem('Account') must resolve — menu item not found");
-    menu_item.execute("click", &[]).await.expect("Click on Account menu item must succeed");
+        .expect("Account menu item must exist after opening global create menu");
+    menu_item.click().await.expect("Click on Account menu item must succeed");
     eprintln!("  Clicked 'Account' in create menu");
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
