@@ -362,6 +362,21 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
             for (t, id) in &pairs {
                 eprintln!("  Created {t}: {id}");
             }
+
+            // Mark all records as "recently viewed" so list views show them.
+            // SOQL FOR VIEW is a side-effect query that populates RecentlyViewed.
+            for sobject_type in &types {
+                let soql = format!(
+                    "SELECT Id FROM {sobject_type} ORDER BY CreatedDate DESC LIMIT 200 FOR VIEW"
+                );
+                match client.query(&soql).await {
+                    Ok(rows) => {
+                        eprintln!("  Marked {} {sobject_type} as recently viewed", rows.len())
+                    }
+                    Err(e) => eprintln!("  WARNING: FOR VIEW failed for {sobject_type}: {e}"),
+                }
+            }
+
             pairs
         }
         Err(e) => {
