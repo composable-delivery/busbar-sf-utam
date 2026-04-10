@@ -393,14 +393,18 @@ async fn test_salesforce_live() {
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
     // Click "New Contact" in the global create menu.
-    // DOM inspection shows items use class="highlightButton" with title attributes.
-    // CDP's click() handles scroll-into-view + pixel-coordinate dispatch automatically,
-    // avoiding the "element not interactable" error that WebDriver gives.
-    let menu_item = driver
-        .find_element(&Selector::Css("a.highlightButton[title='New Contact']".to_string()))
+    // Uses focus()+click() via JS — the CumulusCI pattern for reliable Lightning clicks.
+    // WebDriver's native click fails with "element not interactable" on menu items
+    // because the <a> is visually rendered by the parent <li>.
+    driver
+        .execute_script(
+            "const el = document.querySelector(\"a.highlightButton[title='New Contact']\"); \
+             if (!el) throw new Error('New Contact not found'); \
+             el.focus(); el.click();",
+            vec![],
+        )
         .await
-        .expect("'New Contact' must exist in global create menu");
-    menu_item.click().await.expect("Click on 'New Contact' must succeed");
+        .expect("'New Contact' focus+click must succeed");
     eprintln!("  Clicked 'New Contact' in create menu");
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 

@@ -102,12 +102,13 @@ jobs:
 
           FILTER="${{ inputs.test_filter }}"
 
-          # Run with CDP adapter (more reliable clicks, native shadow DOM piercing)
-          echo "=== Salesforce Live Tests (CDP) ==="
+          # Run with WebDriver adapter (default, stable)
+          # CDP adapter has a clone_handle stale element issue — tracked in #86
+          echo "=== Salesforce Live Tests (WebDriver) ==="
           if [ -n "$FILTER" ]; then
-            UTAM_DRIVER=cdp cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
           else
-            UTAM_DRIVER=cdp cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
           fi
 
       - name: Compiled page object tests
