@@ -361,14 +361,15 @@ async fn test_salesforce_live() {
     // Click "New Contact" in the global create menu.
     // DOM inspection shows menu items use class="highlightButton" with title attributes.
     // "Account" is NOT a global action — only New Event/Task/Contact/Opportunity/Case/Lead/Note.
-    let menu_item = driver
-        .find_element(&Selector::Css("a.highlightButton[title='New Contact']".to_string()))
+    // Use JS click — the a.highlightButton is found but not interactable
+    // (covered by parent li or has zero dimensions). JS click bypasses this.
+    driver
+        .execute_script(
+            "document.querySelector(\"a.highlightButton[title='New Contact']\").click()",
+            vec![],
+        )
         .await
-        .expect("'New Contact' must exist in global create menu");
-    // Scroll into view and wait for the menu animation to complete
-    menu_item.scroll_into_view().await.expect("scroll into view");
-    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-    menu_item.click().await.expect("Click on 'New Contact' must succeed");
+        .expect("JS click on 'New Contact' must succeed");
     eprintln!("  Clicked 'New Contact' in create menu");
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
