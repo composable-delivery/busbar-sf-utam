@@ -73,6 +73,8 @@ pub enum CompilerError {
         src: NamedSource<String>,
         #[label("selector with {expected} placeholder(s)")]
         span: SourceSpan,
+    },
+
     /// Selector validation error
     #[error("Selector validation error: {0}")]
     Selector(#[from] SelectorError),
@@ -82,12 +84,11 @@ pub enum CompilerError {
 #[derive(Error, Debug, Diagnostic)]
 pub enum SelectorError {
     /// Parameter count mismatch between placeholders and args
-    #[error("Parameter count mismatch: expected {expected} placeholders but got {actual} arguments")]
+    #[error(
+        "Parameter count mismatch: expected {expected} placeholders but got {actual} arguments"
+    )]
     #[diagnostic(help("Ensure the number of %s and %d placeholders matches the number of args"))]
-    ParameterMismatch {
-        expected: usize,
-        actual: usize,
-    },
+    ParameterMismatch { expected: usize, actual: usize },
 }
 
 /// Detailed validation error with path and message
@@ -123,7 +124,7 @@ fn format_validation_errors(errors: &[ValidationError]) -> String {
 ///
 /// Provides both human-readable terminal output and machine-readable JSON format.
 pub struct ErrorReporter {
-    source: String,
+    _source: String,
     file_path: String,
 }
 
@@ -135,7 +136,7 @@ impl ErrorReporter {
     /// * `source` - The source code being compiled
     /// * `file_path` - Path to the source file
     pub fn new(source: String, file_path: String) -> Self {
-        Self { source, file_path }
+        Self { _source: source, file_path }
     }
 
     /// Report an error to stderr with colorized output
@@ -151,8 +152,7 @@ impl ErrorReporter {
 
         // Create a graphical report handler with fancy theme
         let mut output = String::new();
-        let handler =
-            GraphicalReportHandler::new_themed(GraphicalTheme::unicode()).with_width(80);
+        let handler = GraphicalReportHandler::new_themed(GraphicalTheme::unicode()).with_width(80);
 
         // Format the error using miette's fancy formatting
         if let Err(e) = handler.render_report(&mut output, error) {
@@ -187,7 +187,6 @@ impl ErrorReporter {
             })
             .collect();
 
-        serde_json::to_string_pretty(&error_objects)
-            .unwrap_or_else(|_| "[]".to_string())
+        serde_json::to_string_pretty(&error_objects).unwrap_or_else(|_| "[]".to_string())
     }
 }

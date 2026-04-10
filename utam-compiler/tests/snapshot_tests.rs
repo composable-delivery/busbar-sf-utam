@@ -29,8 +29,8 @@ fn snapshot_editable_input() {
 
 #[test]
 fn snapshot_shadow_root() {
-    let code = compile_fixture("shadow-dom/shadow-root.utam.json")
-        .expect("Failed to compile shadow-root");
+    let code =
+        compile_fixture("shadow-dom/shadow-root.utam.json").expect("Failed to compile shadow-root");
     insta::assert_snapshot!("shadow_root", code);
 }
 
