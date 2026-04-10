@@ -215,7 +215,7 @@ impl UtamDriver for CdpDriver {
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
         let el = self.page.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: el, page: Arc::clone(&self.page) }))
+        Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
     }
 
     async fn find_elements(
@@ -226,7 +226,7 @@ impl UtamDriver for CdpDriver {
         Ok(els
             .into_iter()
             .map(|e| {
-                Box::new(CdpElement { inner: e, page: Arc::clone(&self.page) })
+                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
                     as Box<dyn ElementHandle>
             })
             .collect())
@@ -251,7 +251,7 @@ impl UtamDriver for CdpDriver {
         )
         .await
         .map(|el| {
-            Box::new(CdpElement { inner: el, page: Arc::clone(&self.page) })
+            Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) })
                 as Box<dyn ElementHandle>
         })
         .map_err(Into::into)
@@ -268,7 +268,7 @@ impl UtamDriver for CdpDriver {
 
 #[derive(Debug)]
 struct CdpElement {
-    inner: Element,
+    inner: Arc<Element>,
     page: Arc<Page>,
 }
 
@@ -283,15 +283,7 @@ fn js_string(ret: chromiumoxide::cdp::js_protocol::runtime::CallFunctionOnReturn
 #[async_trait]
 impl ElementHandle for CdpElement {
     fn clone_handle(&self) -> Box<dyn ElementHandle> {
-        // Re-create by finding the element again via its remote object
-        // For now, we can't truly clone an Element — return a stub
-        // that will work if the element is still in the DOM.
-        // This is a limitation of chromiumoxide's API.
-        Box::new(CdpElementSnapshot {
-            page: Arc::clone(&self.page),
-            // Store enough info to re-query if needed
-            description: format!("{:?}", self.inner),
-        })
+        Box::new(CdpElement { inner: Arc::clone(&self.inner), page: Arc::clone(&self.page) })
     }
 
     async fn text(&self) -> RuntimeResult<String> {
@@ -463,7 +455,7 @@ impl ElementHandle for CdpElement {
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
         let child = self.inner.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: child, page: Arc::clone(&self.page) }))
+        Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
     }
 
     async fn find_elements(
@@ -474,112 +466,10 @@ impl ElementHandle for CdpElement {
         Ok(children
             .into_iter()
             .map(|e| {
-                Box::new(CdpElement { inner: e, page: Arc::clone(&self.page) })
+                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
                     as Box<dyn ElementHandle>
             })
             .collect())
-    }
-}
-
-// ---------------------------------------------------------------------------
-// CdpElementSnapshot — fallback for clone_handle
-// ---------------------------------------------------------------------------
-
-/// A degraded element handle used when cloning a CdpElement.
-/// Most operations will fail since we don't have the original Element.
-#[derive(Debug)]
-struct CdpElementSnapshot {
-    page: Arc<Page>,
-    description: String,
-}
-
-#[async_trait]
-impl ElementHandle for CdpElementSnapshot {
-    fn clone_handle(&self) -> Box<dyn ElementHandle> {
-        Box::new(CdpElementSnapshot {
-            page: Arc::clone(&self.page),
-            description: self.description.clone(),
-        })
-    }
-
-    async fn text(&self) -> RuntimeResult<String> {
-        Err(stale_err())
-    }
-    async fn attribute(&self, _: &str) -> RuntimeResult<Option<String>> {
-        Err(stale_err())
-    }
-    async fn class_name(&self) -> RuntimeResult<String> {
-        Err(stale_err())
-    }
-    async fn css_value(&self, _: &str) -> RuntimeResult<String> {
-        Err(stale_err())
-    }
-    async fn property_value(&self) -> RuntimeResult<String> {
-        Err(stale_err())
-    }
-    async fn title(&self) -> RuntimeResult<String> {
-        Err(stale_err())
-    }
-    async fn is_displayed(&self) -> RuntimeResult<bool> {
-        Ok(false)
-    }
-    async fn is_enabled(&self) -> RuntimeResult<bool> {
-        Ok(false)
-    }
-    async fn is_present(&self) -> RuntimeResult<bool> {
-        Ok(false)
-    }
-    async fn is_focused(&self) -> RuntimeResult<bool> {
-        Ok(false)
-    }
-    async fn click(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn double_click(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn right_click(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn click_and_hold(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn focus(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn blur(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn send_keys(&self, _: &str) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn clear(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn press_key(&self, _: &str) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn scroll_into_view(&self) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn drag_by_offset(&self, _: i64, _: i64) -> RuntimeResult<()> {
-        Err(stale_err())
-    }
-    async fn shadow_root(&self) -> RuntimeResult<Option<Box<dyn ShadowRootHandle>>> {
-        Ok(None)
-    }
-    async fn find_element(&self, _: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        Err(stale_err())
-    }
-    async fn find_elements(&self, _: &Selector) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        Err(stale_err())
-    }
-}
-
-fn stale_err() -> RuntimeError {
-    RuntimeError::UnsupportedAction {
-        action: "CDP element".into(),
-        element_type: "element snapshot is stale — re-query from page".into(),
     }
 }
 
@@ -597,7 +487,7 @@ impl ShadowRootHandle for CdpShadowRootViaPage {
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
         // chromiumoxide's find_element pierces shadow DOM by default
         let el = self.page.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: el, page: Arc::clone(&self.page) }))
+        Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
     }
 
     async fn find_elements(
@@ -608,7 +498,7 @@ impl ShadowRootHandle for CdpShadowRootViaPage {
         Ok(els
             .into_iter()
             .map(|e| {
-                Box::new(CdpElement { inner: e, page: Arc::clone(&self.page) })
+                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
                     as Box<dyn ElementHandle>
             })
             .collect())
