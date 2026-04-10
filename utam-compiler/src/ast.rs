@@ -4,7 +4,25 @@
 //! All types derive Serialize, Deserialize, Debug, and Clone for proper JSON
 //! handling and debugging.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
+
+/// Deserialize a field that can be either a single string or an array of strings.
+/// E.g., `"type": "clickable"` or `"type": ["clickable", "editable"]`
+fn deserialize_string_or_vec<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum StringOrVec {
+        Single(String),
+        Multiple(Vec<String>),
+    }
+    match StringOrVec::deserialize(deserializer)? {
+        StringOrVec::Single(s) => Ok(vec![s]),
+        StringOrVec::Multiple(v) => Ok(v),
+    }
+}
 
 /// Root page object definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16,7 +34,7 @@ pub struct PageObjectAst {
     pub selector: Option<SelectorAst>,
     #[serde(rename = "exposeRootElement", default)]
     pub expose_root_element: bool,
-    #[serde(rename = "type", default)]
+    #[serde(rename = "type", default, deserialize_with = "deserialize_string_or_vec")]
     pub action_types: Vec<String>,
     #[serde(default)]
     pub platform: Option<String>,
