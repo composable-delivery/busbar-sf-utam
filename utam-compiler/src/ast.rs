@@ -4,7 +4,25 @@
 //! All types derive Serialize, Deserialize, Debug, and Clone for proper JSON
 //! handling and debugging.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
+
+/// Deserialize a field that can be either a single string or an array of strings.
+/// E.g., `"type": "clickable"` or `"type": ["clickable", "editable"]`
+fn deserialize_string_or_vec<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum StringOrVec {
+        Single(String),
+        Multiple(Vec<String>),
+    }
+    match StringOrVec::deserialize(deserializer)? {
+        StringOrVec::Single(s) => Ok(vec![s]),
+        StringOrVec::Multiple(v) => Ok(v),
+    }
+}
 
 /// Root page object definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16,7 +34,7 @@ pub struct PageObjectAst {
     pub selector: Option<SelectorAst>,
     #[serde(rename = "exposeRootElement", default)]
     pub expose_root_element: bool,
-    #[serde(rename = "type", default)]
+    #[serde(rename = "type", default, deserialize_with = "deserialize_string_or_vec")]
     pub action_types: Vec<String>,
     #[serde(default)]
     pub platform: Option<String>,
@@ -378,19 +396,15 @@ impl CustomComponentRef {
     /// ```
     pub fn parse(s: &str) -> Self {
         let parts: Vec<&str> = s.split('/').collect();
-        
+
         // Handle various formats:
         // - "package/pageObjects/name" -> package="package", path=[], name="name"
         // - "package/pageObjects/path/name" -> package="package", path=["path"], name="name"
         // - "simple-component" (no slashes) -> package="", path=[], name="simple-component"
-        
+
         if parts.len() == 1 {
             // Simple component reference with no package
-            Self {
-                package: String::new(),
-                path: Vec::new(),
-                name: parts[0].to_string(),
-            }
+            Self { package: String::new(), path: Vec::new(), name: parts[0].to_string() }
         } else if parts.len() >= 3 {
             // Full path with package/pageObjects/...
             Self {
@@ -404,11 +418,7 @@ impl CustomComponentRef {
             }
         } else {
             // Fallback: treat as simple name
-            Self {
-                package: String::new(),
-                path: Vec::new(),
-                name: s.to_string(),
-            }
+            Self { package: String::new(), path: Vec::new(), name: s.to_string() }
         }
     }
 
@@ -528,10 +538,8 @@ impl ElementAst {
         if matches!(self.element_kind(), ElementKind::Frame) {
             if let Some(selector) = &self.selector {
                 if selector.return_all {
-                    errors.push(format!(
-                        "Frame element '{}' cannot have returnAll: true",
-                        self.name
-                    ));
+                    errors
+                        .push(format!("Frame element '{}' cannot have returnAll: true", self.name));
                 }
             }
         }
@@ -777,6 +785,9 @@ mod tests {
         match selector.selector_type() {
             SelectorType::Css(s) => assert_eq!(s, "button.submit"),
             _ => panic!("Expected Css selector type"),
+        }
+    }
+
     // Element kind tests
     #[test]
     fn test_element_kind_basic() {
@@ -822,6 +833,10 @@ mod tests {
         match selector.selector_type() {
             SelectorType::AccessibilityId(s) => assert_eq!(s, "submit-btn"),
             _ => panic!("Expected AccessibilityId selector type"),
+        }
+    }
+
+    #[test]
     fn test_element_kind_typed() {
         let element = ElementAst {
             name: "button".to_string(),
@@ -865,6 +880,10 @@ mod tests {
         match selector.selector_type() {
             SelectorType::IosClassChain(s) => assert_eq!(s, "XCUIElementTypeButton[1]"),
             _ => panic!("Expected IosClassChain selector type"),
+        }
+    }
+
+    #[test]
     fn test_element_kind_custom() {
         let element = ElementAst {
             name: "customBtn".to_string(),
@@ -909,6 +928,10 @@ mod tests {
                 assert_eq!(s, "new UiSelector().text(\"Submit\")")
             }
             _ => panic!("Expected AndroidUiAutomator selector type"),
+        }
+    }
+
+    #[test]
     fn test_element_kind_container() {
         let element = ElementAst {
             name: "container".to_string(),
@@ -955,10 +978,7 @@ mod tests {
             accessid: None,
             classchain: None,
             uiautomator: None,
-            args: vec![SelectorArgAst {
-                name: "id".to_string(),
-                arg_type: "string".to_string(),
-            }],
+            args: vec![SelectorArgAst { name: "id".to_string(), arg_type: "string".to_string() }],
             return_all: false,
         };
 
@@ -1070,10 +1090,7 @@ mod tests {
             accessid: None,
             classchain: None,
             uiautomator: None,
-            args: vec![SelectorArgAst {
-                name: "id".to_string(),
-                arg_type: "string".to_string(),
-            }],
+            args: vec![SelectorArgAst { name: "id".to_string(), arg_type: "string".to_string() }],
             return_all: false,
         };
 
@@ -1088,14 +1105,8 @@ mod tests {
             classchain: None,
             uiautomator: None,
             args: vec![
-                SelectorArgAst {
-                    name: "element_type".to_string(),
-                    arg_type: "string".to_string(),
-                },
-                SelectorArgAst {
-                    name: "index".to_string(),
-                    arg_type: "number".to_string(),
-                },
+                SelectorArgAst { name: "element_type".to_string(), arg_type: "string".to_string() },
+                SelectorArgAst { name: "index".to_string(), arg_type: "number".to_string() },
             ],
             return_all: false,
         };
@@ -1111,14 +1122,8 @@ mod tests {
             classchain: None,
             uiautomator: None,
             args: vec![
-                SelectorArgAst {
-                    name: "id".to_string(),
-                    arg_type: "string".to_string(),
-                },
-                SelectorArgAst {
-                    name: "extra".to_string(),
-                    arg_type: "string".to_string(),
-                },
+                SelectorArgAst { name: "id".to_string(), arg_type: "string".to_string() },
+                SelectorArgAst { name: "extra".to_string(), arg_type: "string".to_string() },
             ],
             return_all: false,
         };
@@ -1155,6 +1160,9 @@ mod tests {
                 assert_eq!(actual, 1);
             }
         }
+    }
+
+    #[test]
     fn test_element_kind_frame() {
         let element = ElementAst {
             name: "iframe".to_string(),
@@ -1553,13 +1561,13 @@ mod tests {
         assert!(super::is_valid_rust_identifier("_private"));
         assert!(super::is_valid_rust_identifier("button123"));
         assert!(super::is_valid_rust_identifier("MyButton"));
-        
+
         // Invalid identifiers
         assert!(!super::is_valid_rust_identifier("123invalid"));
         assert!(!super::is_valid_rust_identifier("invalid-name"));
         assert!(!super::is_valid_rust_identifier("invalid name"));
         assert!(!super::is_valid_rust_identifier(""));
-        
+
         // Rust keywords should be invalid
         assert!(!super::is_valid_rust_identifier("fn"));
         assert!(!super::is_valid_rust_identifier("let"));

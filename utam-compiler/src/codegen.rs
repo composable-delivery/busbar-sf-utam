@@ -2,8 +2,12 @@
 //!
 //! This module handles transformation of AST types into Rust source code.
 
-use crate::ast::{ComposeArgAst, ComposeStatementAst, ElementAst, MethodArgAst, MethodAst};
+use proc_macro2::TokenStream;
+use quote::{format_ident, quote};
+
+use crate::ast::*;
 use crate::error::{CompilerError, CompilerResult};
+use crate::utils::{to_pascal_case, to_snake_case};
 
 /// Rust method signature
 #[derive(Debug, Clone, PartialEq)]
@@ -43,20 +47,11 @@ pub enum StatementKind {
     /// Get element: self.get_element_name().await?
     GetElement { name: String },
     /// Apply action: element.action(args).await?
-    ApplyAction {
-        action: String,
-        args: Vec<CompiledArg>,
-    },
+    ApplyAction { action: String, args: Vec<CompiledArg> },
     /// Chain from previous: prev.action(args).await?
-    ChainAction {
-        action: String,
-        args: Vec<CompiledArg>,
-    },
+    ChainAction { action: String, args: Vec<CompiledArg> },
     /// Matcher assertion
-    MatcherAssert {
-        matcher: MatcherKind,
-        value: CompiledArg,
-    },
+    MatcherAssert { matcher: MatcherKind, value: CompiledArg },
 }
 
 /// Matcher types for element filtering
@@ -135,9 +130,7 @@ pub fn compile_compose_statements(
                     args: compile_args(&stmt.args, method_args)?,
                 }
             } else {
-                StatementKind::GetElement {
-                    name: element.clone(),
-                }
+                StatementKind::GetElement { name: element.clone() }
             }
         } else if let Some(matcher) = &stmt.matcher {
             // Matcher assertion
@@ -160,10 +153,7 @@ pub fn compile_compose_statements(
                     "Matcher requires an argument".to_string(),
                 ));
             };
-            StatementKind::MatcherAssert {
-                matcher: matcher_kind,
-                value,
-            }
+            StatementKind::MatcherAssert { matcher: matcher_kind, value }
         } else {
             return Err(CompilerError::InvalidStatement(format!(
                 "Invalid statement at index {}",
@@ -171,10 +161,7 @@ pub fn compile_compose_statements(
             )));
         };
 
-        compiled.push(CompiledStatement {
-            kind,
-            return_type: stmt.return_type.clone(),
-        });
+        compiled.push(CompiledStatement { kind, return_type: stmt.return_type.clone() });
     }
 
     Ok(compiled)
@@ -198,9 +185,7 @@ fn compile_args(
     args: &[ComposeArgAst],
     method_args: &[MethodArgAst],
 ) -> CompilerResult<Vec<CompiledArg>> {
-    args.iter()
-        .map(|arg| compile_single_arg(arg, method_args))
-        .collect()
+    args.iter().map(|arg| compile_single_arg(arg, method_args)).collect()
 }
 
 /// Compile a single ComposeArgAst into a CompiledArg, validating argument references
@@ -217,7 +202,10 @@ fn compile_args(
 /// # Errors
 ///
 /// Returns `InvalidStatement` if an argument reference is not found in method arguments
-fn compile_single_arg(arg: &ComposeArgAst, method_args: &[MethodArgAst]) -> CompilerResult<CompiledArg> {
+fn compile_single_arg(
+    arg: &ComposeArgAst,
+    method_args: &[MethodArgAst],
+) -> CompilerResult<CompiledArg> {
     match arg {
         ComposeArgAst::Named { name, arg_type } => {
             // Check if this is an argumentReference
@@ -242,8 +230,6 @@ fn compile_single_arg(arg: &ComposeArgAst, method_args: &[MethodArgAst]) -> Comp
                 format!("\"{}\"", v.as_str().unwrap_or(""))
             } else if v.is_boolean() {
                 v.as_bool().unwrap_or(false).to_string()
-            } else if v.is_number() {
-                v.to_string()
             } else {
                 v.to_string()
             };
@@ -251,57 +237,6 @@ fn compile_single_arg(arg: &ComposeArgAst, method_args: &[MethodArgAst]) -> Comp
         }
     }
 }
-
-/// Convert a string to snake_case
-pub fn to_snake_case(s: &str) -> String {
-    let mut result = String::new();
-    let mut chars = s.chars().peekable();
-
-    while let Some(c) = chars.next() {
-        if c.is_uppercase() {
-            if !result.is_empty() {
-                result.push('_');
-            }
-            result.push(c.to_lowercase().next().unwrap());
-        } else {
-            result.push(c);
-        }
-    }
-
-    result
-}
-
-/// Convert a string to PascalCase
-pub fn to_pascal_case(s: &str) -> String {
-    let mut result = String::new();
-    let mut capitalize_next = true;
-
-    for c in s.chars() {
-        if c == '_' || c == '-' {
-            capitalize_next = true;
-        } else if capitalize_next {
-            result.push(c.to_uppercase().next().unwrap());
-            capitalize_next = false;
-        } else {
-            result.push(c);
-        }
-    }
-
-    result
-//! Generates Rust source code from parsed AST using the quote crate.
-
-use proc_macro2::TokenStream;
-use quote::{format_ident, quote};
-
-use crate::ast::*;
-use crate::error::{CompilerError, CompilerResult};
-use crate::utils::{to_pascal_case, to_snake_case};//! Codegen module for generating Rust code from UTAM AST
-//!
-//! This module provides functions to generate Rust code from parsed UTAM page objects.
-
-use crate::ast::SelectorAst;
-use proc_macro2::TokenStream;
-use quote::{format_ident, quote};
 
 /// Generates Rust code for a selector, handling parameterized selectors
 ///
@@ -360,19 +295,13 @@ pub fn generate_selector_code(selector: &SelectorAst) -> TokenStream {
             quote! { compile_error!("Selector must have at least one selector type") }
         }
     }
-
+}
 
 /// Configuration for code generation
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct CodeGenConfig {
     /// Module name for the generated code
     pub module_name: Option<String>,
-}
-
-impl Default for CodeGenConfig {
-    fn default() -> Self {
-        Self { module_name: None }
-    }
 }
 
 /// Main code generator
@@ -418,8 +347,9 @@ impl CodeGenerator {
         };
 
         // Format with prettyplease
-        let syntax_tree = syn::parse2(tokens)
-            .map_err(|e| CompilerError::Compilation(format!("Failed to parse generated tokens: {}", e)))?;
+        let syntax_tree = syn::parse2(tokens).map_err(|e| {
+            CompilerError::Compilation(format!("Failed to parse generated tokens: {}", e))
+        })?;
         Ok(prettyplease::unparse(&syntax_tree))
     }
 
@@ -451,10 +381,13 @@ impl CodeGenerator {
                 quote! { #[doc = #text] }
             }
             Some(DescriptionAst::Detailed { text, author, .. }) => {
-                let doc_lines: Vec<_> = text.iter().map(|line| {
-                    quote! { #[doc = #line] }
-                }).collect();
-                
+                let doc_lines: Vec<_> = text
+                    .iter()
+                    .map(|line| {
+                        quote! { #[doc = #line] }
+                    })
+                    .collect();
+
                 let author_doc = if let Some(auth) = author {
                     let author_line = format!("\nAuthor: {}", auth);
                     quote! { #[doc = #author_line] }
@@ -484,7 +417,10 @@ impl CodeGenerator {
 
     /// Generate RootPageObject trait implementation
     fn generate_root_page_object_impl(&self, struct_name: &proc_macro2::Ident) -> TokenStream {
-        let selector = self.ast.selector.as_ref()
+        let selector = self
+            .ast
+            .selector
+            .as_ref()
             .and_then(|s| s.css.as_ref())
             .map(|s| s.as_str())
             .unwrap_or("");
@@ -524,9 +460,12 @@ impl CodeGenerator {
 
     /// Generate beforeLoad method body
     fn generate_before_load_body(&self) -> TokenStream {
-        let statements: Vec<_> = self.ast.before_load.iter().map(|stmt| {
-            self.generate_compose_statement(stmt, None)
-        }).collect();
+        let statements: Vec<_> = self
+            .ast
+            .before_load
+            .iter()
+            .map(|stmt| self.generate_compose_statement(stmt, None))
+            .collect();
 
         quote! {
             #(#statements)*
@@ -540,11 +479,11 @@ impl CodeGenerator {
 
         // Get all elements including shadow elements
         for element in self.all_elements() {
-            getters.push(self.generate_element_getter(&element));
+            getters.push(self.generate_element_getter(element));
 
             // If wait is true, generate a wait method
             if element.generate_wait {
-                getters.push(self.generate_wait_method(&element));
+                getters.push(self.generate_wait_method(element));
             }
         }
 
@@ -554,19 +493,19 @@ impl CodeGenerator {
     /// Get all elements including shadow elements
     fn all_elements(&self) -> Vec<&ElementAst> {
         let mut elements = Vec::new();
-        
+
         // Add regular elements
         for elem in &self.ast.elements {
             elements.push(elem);
         }
-        
+
         // Add shadow elements
         if let Some(shadow) = &self.ast.shadow {
             for elem in &shadow.elements {
                 elements.push(elem);
             }
         }
-        
+
         elements
     }
 
@@ -648,15 +587,14 @@ impl CodeGenerator {
                     quote! { EditableElement }
                 } else if types.iter().any(|t| t == "clickable") {
                     quote! { ClickableElement }
-                } else if types.iter().any(|t| t == "actionable") {
-                    quote! { BaseElement }
                 } else {
+                    // actionable or unknown action types fall back to BaseElement
                     quote! { BaseElement }
                 }
             }
             Some(ElementTypeAst::CustomComponent(path)) => {
                 // Convert path like "package/pageObjects/component" to PascalCase
-                let component_name = path.split('/').last().unwrap_or(path);
+                let component_name = path.split('/').next_back().unwrap_or(path);
                 let ident = format_ident!("{}", to_pascal_case(component_name));
                 quote! { #ident }
             }
@@ -675,17 +613,19 @@ impl CodeGenerator {
 
     /// Generate element getter body
     fn generate_element_body(&self, element: &ElementAst) -> TokenStream {
-        let selector = element.selector.as_ref()
+        let selector = element
+            .selector
+            .as_ref()
             .and_then(|s| s.css.as_ref())
             .map(|s| s.as_str())
             .unwrap_or("");
 
         let is_shadow = self.is_shadow_element(element);
-        
+
         if element.list {
             // List of elements
             let wrapper_code = self.generate_element_wrapper(element);
-            
+
             if is_shadow {
                 quote! {
                     let shadow = self.root.get_shadow_root().await?;
@@ -711,7 +651,7 @@ impl CodeGenerator {
         } else {
             // Single element
             let wrapper_code = self.generate_element_wrapper(element);
-            
+
             if is_shadow {
                 quote! {
                     let shadow = self.root.get_shadow_root().await?;
@@ -789,9 +729,8 @@ impl CodeGenerator {
 
     /// Generate compose methods
     fn generate_methods(&self, _struct_name: &proc_macro2::Ident) -> TokenStream {
-        let methods: Vec<_> = self.ast.methods.iter()
-            .map(|method| self.generate_compose_method(method))
-            .collect();
+        let methods: Vec<_> =
+            self.ast.methods.iter().map(|method| self.generate_compose_method(method)).collect();
 
         quote! { #(#methods)* }
     }
@@ -802,13 +741,16 @@ impl CodeGenerator {
         let args = self.generate_method_args(method);
         let return_type = self.method_return_type(method);
         let body = self.generate_compose_body(&method.compose);
-        
+
         let doc = match &method.description {
             Some(DescriptionAst::Simple(text)) => quote! { #[doc = #text] },
             Some(DescriptionAst::Detailed { text, .. }) => {
-                let doc_lines: Vec<_> = text.iter().map(|line| {
-                    quote! { #[doc = #line] }
-                }).collect();
+                let doc_lines: Vec<_> = text
+                    .iter()
+                    .map(|line| {
+                        quote! { #[doc = #line] }
+                    })
+                    .collect();
                 quote! { #(#doc_lines)* }
             }
             None => {
@@ -828,11 +770,15 @@ impl CodeGenerator {
     /// Generate method arguments
     fn generate_method_args(&self, method: &MethodAst) -> TokenStream {
         // First, add explicit method args if they exist
-        let mut args: Vec<TokenStream> = method.args.iter().map(|arg| {
-            let arg_name = format_ident!("{}", to_snake_case(&arg.name));
-            let arg_type = self.rust_type_from_string(&arg.arg_type);
-            quote! { #arg_name: #arg_type }
-        }).collect();
+        let mut args: Vec<TokenStream> = method
+            .args
+            .iter()
+            .map(|arg| {
+                let arg_name = format_ident!("{}", to_snake_case(&arg.name));
+                let arg_type = self.rust_type_from_string(&arg.arg_type);
+                quote! { #arg_name: #arg_type }
+            })
+            .collect();
 
         // Then collect unique args from compose statements
         let mut arg_names = std::collections::HashSet::new();
@@ -885,11 +831,15 @@ impl CodeGenerator {
 
     /// Generate compose method body
     fn generate_compose_body(&self, statements: &[ComposeStatementAst]) -> TokenStream {
-        let stmts: Vec<_> = statements.iter().enumerate().map(|(i, stmt)| {
-            let is_last = i == statements.len() - 1;
-            let last_result = if is_last { Some("result") } else { None };
-            self.generate_compose_statement(stmt, last_result)
-        }).collect();
+        let stmts: Vec<_> = statements
+            .iter()
+            .enumerate()
+            .map(|(i, stmt)| {
+                let is_last = i == statements.len() - 1;
+                let last_result = if is_last { Some("result") } else { None };
+                self.generate_compose_statement(stmt, last_result)
+            })
+            .collect();
 
         if statements.is_empty() {
             quote! { Ok(()) }
@@ -908,14 +858,18 @@ impl CodeGenerator {
     }
 
     /// Generate a single compose statement
-    fn generate_compose_statement(&self, stmt: &ComposeStatementAst, result_var: Option<&str>) -> TokenStream {
+    fn generate_compose_statement(
+        &self,
+        stmt: &ComposeStatementAst,
+        result_var: Option<&str>,
+    ) -> TokenStream {
         if let Some(element_name) = &stmt.element {
             let getter_name = format_ident!("get_{}", to_snake_case(element_name));
-            
+
             if let Some(apply) = &stmt.apply {
                 let method_name = format_ident!("{}", to_snake_case(apply));
                 let args = self.generate_compose_args(&stmt.args);
-                
+
                 if stmt.return_element || result_var.is_some() {
                     let var_name = format_ident!("{}", result_var.unwrap_or("result"));
                     quote! {
@@ -945,7 +899,7 @@ impl CodeGenerator {
             // External method call
             let method_name = format_ident!("{}", to_snake_case(&apply_external.method));
             let args = self.generate_compose_args(&apply_external.args);
-            
+
             quote! {
                 #method_name(#args).await?;
             }
@@ -953,7 +907,7 @@ impl CodeGenerator {
             // Direct apply without element (like waitFor on root)
             let method_name = format_ident!("{}", to_snake_case(apply));
             let args = self.generate_compose_args(&stmt.args);
-            
+
             quote! {
                 self.root.#method_name(#args).await?;
             }
@@ -964,31 +918,34 @@ impl CodeGenerator {
 
     /// Generate arguments for compose statement
     fn generate_compose_args(&self, args: &[ComposeArgAst]) -> TokenStream {
-        let arg_tokens: Vec<_> = args.iter().map(|arg| {
-            match arg {
-                ComposeArgAst::Named { name, .. } => {
-                    let ident = format_ident!("{}", to_snake_case(name));
-                    quote! { #ident }
-                }
-                ComposeArgAst::Value(value) => {
-                    // Convert JSON value to Rust literal
-                    match value {
-                        serde_json::Value::String(s) => quote! { #s },
-                        serde_json::Value::Number(n) => {
-                            if let Some(i) = n.as_i64() {
-                                quote! { #i }
-                            } else if let Some(f) = n.as_f64() {
-                                quote! { #f }
-                            } else {
-                                quote! { 0 }
+        let arg_tokens: Vec<_> = args
+            .iter()
+            .map(|arg| {
+                match arg {
+                    ComposeArgAst::Named { name, .. } => {
+                        let ident = format_ident!("{}", to_snake_case(name));
+                        quote! { #ident }
+                    }
+                    ComposeArgAst::Value(value) => {
+                        // Convert JSON value to Rust literal
+                        match value {
+                            serde_json::Value::String(s) => quote! { #s },
+                            serde_json::Value::Number(n) => {
+                                if let Some(i) = n.as_i64() {
+                                    quote! { #i }
+                                } else if let Some(f) = n.as_f64() {
+                                    quote! { #f }
+                                } else {
+                                    quote! { 0 }
+                                }
                             }
+                            serde_json::Value::Bool(b) => quote! { #b },
+                            _ => quote! { () },
                         }
-                        serde_json::Value::Bool(b) => quote! { #b },
-                        _ => quote! { () },
                     }
                 }
-            }
-        }).collect();
+            })
+            .collect();
 
         quote! { #(#arg_tokens),* }
     }
@@ -1025,14 +982,8 @@ mod tests {
 
     #[test]
     fn test_utam_type_to_rust_custom() {
-        assert_eq!(
-            utam_type_to_rust("utam-applications/pageObjects/component"),
-            "Component"
-        );
-        assert_eq!(
-            utam_type_to_rust("package/pageObjects/my-button"),
-            "MyButton"
-        );
+        assert_eq!(utam_type_to_rust("utam-applications/pageObjects/component"), "Component");
+        assert_eq!(utam_type_to_rust("package/pageObjects/my-button"), "MyButton");
     }
 
     #[test]
@@ -1041,14 +992,8 @@ mod tests {
             name: "loginUser".to_string(),
             description: None,
             args: vec![
-                MethodArgAst {
-                    name: "username".to_string(),
-                    arg_type: "string".to_string(),
-                },
-                MethodArgAst {
-                    name: "password".to_string(),
-                    arg_type: "string".to_string(),
-                },
+                MethodArgAst { name: "username".to_string(), arg_type: "string".to_string() },
+                MethodArgAst { name: "password".to_string(), arg_type: "string".to_string() },
             ],
             compose: vec![],
             return_type: None,
@@ -1078,10 +1023,8 @@ mod tests {
             name: "username".to_string(),
             arg_type: "argumentReference".to_string(),
         };
-        let method_args = vec![MethodArgAst {
-            name: "username".to_string(),
-            arg_type: "string".to_string(),
-        }];
+        let method_args =
+            vec![MethodArgAst { name: "username".to_string(), arg_type: "string".to_string() }];
         let compiled = compile_single_arg(&arg, &method_args).unwrap();
         assert_eq!(compiled, CompiledArg::ArgumentReference("username".to_string()));
     }
@@ -1131,10 +1074,8 @@ mod tests {
             predicate: None,
         }];
 
-        let method_args = vec![MethodArgAst {
-            name: "username".to_string(),
-            arg_type: "string".to_string(),
-        }];
+        let method_args =
+            vec![MethodArgAst { name: "username".to_string(), arg_type: "string".to_string() }];
 
         let compiled = compile_compose_statements(&statements, &method_args, &[]).unwrap();
         assert_eq!(compiled.len(), 1);
@@ -1145,6 +1086,8 @@ mod tests {
             }
             _ => panic!("Expected ApplyAction"),
         }
+    }
+
     use crate::ast::SelectorArgAst;
 
     #[test]
@@ -1222,6 +1165,9 @@ mod tests {
         let code_str = code.to_string();
         assert!(code_str.contains("thirtyfour :: By :: Id"));
         assert!(code_str.contains("submit-button"));
+    }
+
+    #[test]
     fn test_generate_simple_page_object() {
         let ast = PageObjectAst {
             description: Some(DescriptionAst::Simple("Test page".to_string())),
@@ -1246,9 +1192,7 @@ mod tests {
             metadata: None,
         };
 
-        let config = CodeGenConfig {
-            module_name: Some("TestPage".to_string()),
-        };
+        let config = CodeGenConfig { module_name: Some("TestPage".to_string()) };
 
         let generator = CodeGenerator::new(ast, config);
         let code = generator.generate().unwrap();
@@ -1304,9 +1248,7 @@ mod tests {
             metadata: None,
         };
 
-        let config = CodeGenConfig {
-            module_name: Some("TestForm".to_string()),
-        };
+        let config = CodeGenConfig { module_name: Some("TestForm".to_string()) };
 
         let generator = CodeGenerator::new(ast, config);
         let code = generator.generate().unwrap();
@@ -1334,29 +1276,27 @@ mod tests {
             implements: None,
             is_interface: false,
             shadow: None,
-            elements: vec![
-                ElementAst {
-                    name: "usernameInput".to_string(),
-                    element_type: Some(ElementTypeAst::ActionTypes(vec!["editable".to_string()])),
-                    selector: Some(SelectorAst {
-                        css: Some("input[name='username']".to_string()),
-                        accessid: None,
-                        classchain: None,
-                        uiautomator: None,
-                        args: vec![],
-                        return_all: false,
-                    }),
-                    public: false,
-                    nullable: false,
-                    generate_wait: false,
-                    load: false,
-                    shadow: None,
-                    elements: vec![],
-                    filter: None,
-                    description: None,
-                    list: false,
-                },
-            ],
+            elements: vec![ElementAst {
+                name: "usernameInput".to_string(),
+                element_type: Some(ElementTypeAst::ActionTypes(vec!["editable".to_string()])),
+                selector: Some(SelectorAst {
+                    css: Some("input[name='username']".to_string()),
+                    accessid: None,
+                    classchain: None,
+                    uiautomator: None,
+                    args: vec![],
+                    return_all: false,
+                }),
+                public: false,
+                nullable: false,
+                generate_wait: false,
+                load: false,
+                shadow: None,
+                elements: vec![],
+                filter: None,
+                description: None,
+                list: false,
+            }],
             methods: vec![MethodAst {
                 name: "setUsername".to_string(),
                 description: None,
@@ -1384,9 +1324,7 @@ mod tests {
             metadata: None,
         };
 
-        let config = CodeGenConfig {
-            module_name: Some("LoginForm".to_string()),
-        };
+        let config = CodeGenConfig { module_name: Some("LoginForm".to_string()) };
 
         let generator = CodeGenerator::new(ast, config);
         let code = generator.generate().unwrap();

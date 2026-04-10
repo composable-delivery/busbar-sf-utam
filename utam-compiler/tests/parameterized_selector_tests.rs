@@ -75,10 +75,7 @@ fn test_parse_multiple_parameters_selector() {
         assert_eq!(element.name, "dynamicInput");
 
         if let Some(selector) = &element.selector {
-            assert_eq!(
-                selector.css,
-                Some("input[data-type='%s'][data-index='%d']".to_string())
-            );
+            assert_eq!(selector.css, Some("input[data-type='%s'][data-index='%d']".to_string()));
             assert_eq!(selector.args.len(), 2);
             assert_eq!(selector.args[0].name, "inputType");
             assert_eq!(selector.args[0].arg_type, "string");
@@ -124,14 +121,8 @@ fn test_validate_parameter_mismatch() {
         classchain: None,
         uiautomator: None,
         args: vec![
-            SelectorArgAst {
-                name: "id1".to_string(),
-                arg_type: "string".to_string(),
-            },
-            SelectorArgAst {
-                name: "id2".to_string(),
-                arg_type: "string".to_string(),
-            },
+            SelectorArgAst { name: "id1".to_string(), arg_type: "string".to_string() },
+            SelectorArgAst { name: "id2".to_string(), arg_type: "string".to_string() },
         ],
         return_all: false,
     };
