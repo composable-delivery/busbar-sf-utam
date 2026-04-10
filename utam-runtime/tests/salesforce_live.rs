@@ -360,12 +360,22 @@ async fn test_salesforce_live() {
 
     // Try to find and click "Account" in the menu.
     // Search from document root since menus render as popups outside containers.
-    let account_selector =
-        Selector::Css("[class*=oneGlobalCreateItem] a[title='Account']".to_string());
-    match driver.find_element(&account_selector).await {
-        Ok(menu_item) => {
+    // Try multiple selectors — the menu item location varies by Salesforce version.
+    let menu_selectors = [
+        "[class*=oneGlobalCreateItem] a[title='Account']",
+        ".forceActionLink[title='Account']",
+        "a[title='New Account']",
+        "a[data-item-id='Account']",
+        ".actionMenu a[title='Account']",
+        ".uiPopupTarget a[title='Account']",
+    ];
+
+    let mut menu_item_found = false;
+    for sel in &menu_selectors {
+        if let Ok(menu_item) = driver.find_element(&Selector::Css(sel.to_string())).await {
             menu_item.click().await.expect("Click on Account menu item must succeed");
-            eprintln!("  Clicked 'Account' in create menu");
+            eprintln!("  Clicked 'Account' via selector: {sel}");
+            menu_item_found = true;
             tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
             // Record creation modal should now be open
@@ -374,8 +384,6 @@ async fn test_salesforce_live() {
             {
                 Ok(record_modal) => {
                     eprintln!("  recordActionWrapper loaded (modal is open)");
-
-                    // Try clickFooterButton("Save") — exercises the full compose chain
                     let mut save_args = HashMap::new();
                     save_args.insert(
                         "labelText".to_string(),
@@ -387,7 +395,7 @@ async fn test_salesforce_live() {
                     }
                 }
                 Err(e) => {
-                    eprintln!("  recordActionWrapper not found (modal may not have opened): {e}")
+                    eprintln!("  recordActionWrapper not found: {e}");
                 }
             }
 
@@ -395,25 +403,29 @@ async fn test_salesforce_live() {
             let _ = driver
                 .execute_script(
                     "document.querySelector('.modal-container .slds-modal__close')?.click() || \
-                 document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}))",
+                     document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}))",
                     vec![],
                 )
                 .await;
             tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+            break;
         }
-        Err(e) => {
-            // Log what's actually in the menu so we can fix the selector
-            let menu_html = driver
-                .execute_script(
-                    "return document.querySelector('.actionMenu, .popupMenu, .globalCreatePopup, [class*=globalCreate]')?.innerHTML?.substring(0, 500) || 'no menu found'",
-                    vec![],
-                )
-                .await
-                .unwrap_or(serde_json::Value::String("JS error".into()));
-            eprintln!("  Menu item not found: {e}");
-            eprintln!("  Menu DOM snippet: {menu_html}");
-            // Don't fail — this tells us what selector to use
-        }
+    }
+
+    if !menu_item_found {
+        // Dump actual menu content for debugging
+        let menu_dump = driver
+            .execute_script(
+                "const items = document.querySelectorAll('a[title], .forceActionLink, [class*=CreateItem], [class*=createItem]'); \
+                 return Array.from(items).slice(0, 20).map(e => ({tag: e.tagName, title: e.title, class: e.className.substring(0, 80), text: e.textContent.trim().substring(0, 50)}));",
+                vec![],
+            )
+            .await;
+        panic!(
+            "Could not find Account menu item with any known selector.\n\
+             Tried: {menu_selectors:?}\n\
+             Available clickable items: {menu_dump:?}"
+        );
     }
 
     // Dismiss anything open
