@@ -45,6 +45,27 @@ pub async fn setup_test_driver(config: TestDriverConfig) -> UtamResult<WebDriver
     Ok(driver)
 }
 
+/// Setup a `ThirtyfourDriver` adapter for integration tests.
+///
+/// Wraps [`setup_test_driver`] and returns the higher-level driver adapter
+/// that is used by the parameterised live-test helpers.
+#[allow(dead_code)]
+pub async fn setup_thirtyfour_driver(config: TestDriverConfig) -> UtamResult<ThirtyfourDriver> {
+    ThirtyfourDriver::connect("http://localhost:9515", config.headless, config.implicit_wait_ms)
+        .await
+}
+
+/// Setup a `CdpDriver` adapter for integration tests.
+///
+/// Launches a headless Chrome instance directly via the Chrome DevTools
+/// Protocol.  No ChromeDriver is required — Chrome must be installed and
+/// on `$PATH`.
+#[cfg(feature = "cdp")]
+#[allow(dead_code)]
+pub async fn setup_cdp_driver() -> UtamResult<CdpDriver> {
+    CdpDriver::launch_headless().await
+}
+
 /// Get the file:// URL for a test HTML file
 #[allow(dead_code)]
 pub fn get_test_file_url(filename: &str) -> String {

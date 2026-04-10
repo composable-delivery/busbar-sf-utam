@@ -78,6 +78,70 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # ── Live driver tests (WebDriver + CDP) ───────────────────────────────
+  live-driver-tests:
+    name: Live Driver Tests (${{ matrix.driver }})
+    runs-on: ubuntu-latest
+    # Live tests require a real browser and external services; only run on
+    # workflow_dispatch (manual trigger) so they don't block PR checks.
+    if: github.event_name == 'workflow_dispatch'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - driver: webdriver
+            features: ""
+            ignored_pattern: "webdriver"
+            setup: |
+              # Install Chrome and ChromeDriver for WebDriver tests
+              wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+              echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
+                | sudo tee /etc/apt/sources.list.d/google-chrome.list
+              sudo apt-get update -q
+              sudo apt-get install -y google-chrome-stable
+              CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+              # Install matching chromedriver
+              wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_VERSION}/linux64/chromedriver-linux64.zip"
+              unzip -q chromedriver-linux64.zip
+              sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+              chromedriver --version
+              # Start chromedriver in background
+              chromedriver --port=9515 &
+              sleep 2
+
+          - driver: cdp
+            features: "--features cdp"
+            ignored_pattern: "cdp"
+            setup: |
+              # Install Chrome for CDP tests (no ChromeDriver needed)
+              wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+              echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
+                | sudo tee /etc/apt/sources.list.d/google-chrome.list
+              sudo apt-get update -q
+              sudo apt-get install -y google-chrome-stable
+              google-chrome --version
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Set up browser (${{ matrix.driver }})
+        run: ${{ matrix.setup }}
+
+      - name: Run live driver tests (${{ matrix.driver }})
+        run: |
+          cargo test -p utam-core ${{ matrix.features }} \
+            --test live_driver_tests \
+            -- --ignored ${{ matrix.ignored_pattern }}
+
+      - name: Summarize results
+        if: always()
+        run: |
+          echo "### Live Driver Tests: ${{ matrix.driver }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Driver: \`${{ matrix.driver }}\`" >> "$GITHUB_STEP_SUMMARY"
+
   # ── Documentation ─────────────────────────────────────────────────────
   docs:
     name: Documentation

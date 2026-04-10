@@ -43,24 +43,25 @@ fn extract_module_name(path: &str) -> String {
 
 /// Assert that compilation succeeds for a given fixture
 #[track_caller]
+#[allow(dead_code)]
 pub fn assert_compiles(path: &str) {
-    match compile_fixture(path) {
-        Ok(_code) => {},
-        Err(e) => panic!("Expected fixture {} to compile successfully, but got error: {}", path, e),
+    if let Err(e) = compile_fixture(path) {
+        panic!("Expected fixture {} to compile successfully, but got error: {}", path, e);
     }
 }
 
 /// Assert that compilation fails for a given fixture
 #[track_caller]
+#[allow(dead_code)]
 pub fn assert_fails_to_compile(path: &str) {
-    match compile_fixture(path) {
-        Ok(_) => panic!("Expected fixture {} to fail compilation, but it succeeded", path),
-        Err(_) => {},
+    if compile_fixture(path).is_ok() {
+        panic!("Expected fixture {} to fail compilation, but it succeeded", path);
     }
 }
 
 /// Assert that compilation produces specific error
 #[track_caller]
+#[allow(dead_code)]
 pub fn assert_compile_error_contains(path: &str, expected_msg: &str) {
     match compile_fixture(path) {
         Ok(_) => panic!("Expected fixture {} to fail compilation, but it succeeded", path),

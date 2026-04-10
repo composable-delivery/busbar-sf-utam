@@ -8,8 +8,14 @@ repository.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
+[features]
+cdp = ["dep:chromiumoxide", "dep:futures"]
+
 [dependencies]
 thirtyfour.workspace = true
+chromiumoxide = { version = "0.9.1", optional = true }
+futures = { version = "0.3", optional = true }
+serde_json.workspace = true
 tokio.workspace = true
 async-trait.workspace = true
 thiserror.workspace = true

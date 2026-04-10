@@ -777,6 +777,9 @@ mod tests {
         match selector.selector_type() {
             SelectorType::Css(s) => assert_eq!(s, "button.submit"),
             _ => panic!("Expected Css selector type"),
+        }
+    }
+
     // Element kind tests
     #[test]
     fn test_element_kind_basic() {
@@ -822,6 +825,10 @@ mod tests {
         match selector.selector_type() {
             SelectorType::AccessibilityId(s) => assert_eq!(s, "submit-btn"),
             _ => panic!("Expected AccessibilityId selector type"),
+        }
+    }
+
+    #[test]
     fn test_element_kind_typed() {
         let element = ElementAst {
             name: "button".to_string(),
@@ -865,6 +872,10 @@ mod tests {
         match selector.selector_type() {
             SelectorType::IosClassChain(s) => assert_eq!(s, "XCUIElementTypeButton[1]"),
             _ => panic!("Expected IosClassChain selector type"),
+        }
+    }
+
+    #[test]
     fn test_element_kind_custom() {
         let element = ElementAst {
             name: "customBtn".to_string(),
@@ -909,6 +920,10 @@ mod tests {
                 assert_eq!(s, "new UiSelector().text(\"Submit\")")
             }
             _ => panic!("Expected AndroidUiAutomator selector type"),
+        }
+    }
+
+    #[test]
     fn test_element_kind_container() {
         let element = ElementAst {
             name: "container".to_string(),
@@ -1155,6 +1170,9 @@ mod tests {
                 assert_eq!(actual, 1);
             }
         }
+    }
+
+    #[test]
     fn test_element_kind_frame() {
         let element = ElementAst {
             name: "iframe".to_string(),
@@ -1566,3 +1584,4 @@ mod tests {
         assert!(!super::is_valid_rust_identifier("struct"));
     }
 }
+

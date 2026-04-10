@@ -242,9 +242,8 @@ fn compile_single_arg(arg: &ComposeArgAst, method_args: &[MethodArgAst]) -> Comp
                 format!("\"{}\"", v.as_str().unwrap_or(""))
             } else if v.is_boolean() {
                 v.as_bool().unwrap_or(false).to_string()
-            } else if v.is_number() {
-                v.to_string()
             } else {
+                // Handles numbers (i64/f64) and other JSON types via Display
                 v.to_string()
             };
             Ok(CompiledArg::Literal(literal))
@@ -255,9 +254,8 @@ fn compile_single_arg(arg: &ComposeArgAst, method_args: &[MethodArgAst]) -> Comp
 /// Convert a string to snake_case
 pub fn to_snake_case(s: &str) -> String {
     let mut result = String::new();
-    let mut chars = s.chars().peekable();
 
-    while let Some(c) = chars.next() {
+    for c in s.chars() {
         if c.is_uppercase() {
             if !result.is_empty() {
                 result.push('_');
@@ -288,20 +286,11 @@ pub fn to_pascal_case(s: &str) -> String {
     }
 
     result
-//! Generates Rust source code from parsed AST using the quote crate.
+}
 
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
-
 use crate::ast::*;
-use crate::error::{CompilerError, CompilerResult};
-use crate::utils::{to_pascal_case, to_snake_case};//! Codegen module for generating Rust code from UTAM AST
-//!
-//! This module provides functions to generate Rust code from parsed UTAM page objects.
-
-use crate::ast::SelectorAst;
-use proc_macro2::TokenStream;
-use quote::{format_ident, quote};
 
 /// Generates Rust code for a selector, handling parameterized selectors
 ///
@@ -360,19 +349,14 @@ pub fn generate_selector_code(selector: &SelectorAst) -> TokenStream {
             quote! { compile_error!("Selector must have at least one selector type") }
         }
     }
+}
 
 
 /// Configuration for code generation
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct CodeGenConfig {
     /// Module name for the generated code
     pub module_name: Option<String>,
-}
-
-impl Default for CodeGenConfig {
-    fn default() -> Self {
-        Self { module_name: None }
-    }
 }
 
 /// Main code generator
@@ -540,11 +524,11 @@ impl CodeGenerator {
 
         // Get all elements including shadow elements
         for element in self.all_elements() {
-            getters.push(self.generate_element_getter(&element));
+            getters.push(self.generate_element_getter(element));
 
             // If wait is true, generate a wait method
             if element.generate_wait {
-                getters.push(self.generate_wait_method(&element));
+                getters.push(self.generate_wait_method(element));
             }
         }
 
@@ -648,15 +632,13 @@ impl CodeGenerator {
                     quote! { EditableElement }
                 } else if types.iter().any(|t| t == "clickable") {
                     quote! { ClickableElement }
-                } else if types.iter().any(|t| t == "actionable") {
-                    quote! { BaseElement }
                 } else {
                     quote! { BaseElement }
                 }
             }
             Some(ElementTypeAst::CustomComponent(path)) => {
                 // Convert path like "package/pageObjects/component" to PascalCase
-                let component_name = path.split('/').last().unwrap_or(path);
+                let component_name = path.split('/').next_back().unwrap_or(path);
                 let ident = format_ident!("{}", to_pascal_case(component_name));
                 quote! { #ident }
             }
@@ -1145,6 +1127,8 @@ mod tests {
             }
             _ => panic!("Expected ApplyAction"),
         }
+    }
+
     use crate::ast::SelectorArgAst;
 
     #[test]
@@ -1222,6 +1206,9 @@ mod tests {
         let code_str = code.to_string();
         assert!(code_str.contains("thirtyfour :: By :: Id"));
         assert!(code_str.contains("submit-button"));
+    }
+
+    #[test]
     fn test_generate_simple_page_object() {
         let ast = PageObjectAst {
             description: Some(DescriptionAst::Simple("Test page".to_string())),

@@ -73,6 +73,8 @@ pub enum CompilerError {
         src: NamedSource<String>,
         #[label("selector with {expected} placeholder(s)")]
         span: SourceSpan,
+    },
+
     /// Selector validation error
     #[error("Selector validation error: {0}")]
     Selector(#[from] SelectorError),
@@ -123,6 +125,7 @@ fn format_validation_errors(errors: &[ValidationError]) -> String {
 ///
 /// Provides both human-readable terminal output and machine-readable JSON format.
 pub struct ErrorReporter {
+    #[allow(dead_code)]
     source: String,
     file_path: String,
 }
