@@ -10,6 +10,7 @@
 //! - [`error`] - Error types (UtamError, UtamResult)
 //! - [`shadow`] - Shadow DOM support (ShadowRoot, traverse_shadow_path)
 //! - [`wait`] - Wait utilities (WaitConfig, wait_for)
+//! - [`drivers`] - Driver adapters (ThirtyfourDriver, CdpDriver)
 //!
 //! # Example
 //!
@@ -21,6 +22,7 @@
 //! login.login("user", "pass").await?;
 //! ```
 
+pub mod drivers;
 pub mod elements;
 pub mod error;
 pub mod shadow;
@@ -28,6 +30,7 @@ pub mod traits;
 pub mod wait;
 
 pub mod prelude {
+    pub use crate::drivers::{DriverKind, ThirtyfourDriver};
     pub use crate::elements::*;
     pub use crate::error::{UtamError, UtamResult};
     pub use crate::shadow::*;
@@ -35,4 +38,7 @@ pub mod prelude {
     pub use crate::wait::*;
     // Re-export thirtyfour essentials explicitly to avoid Key name collision
     pub use thirtyfour::prelude::{By, WebDriver, WebDriverError, WebElement};
+
+    #[cfg(feature = "cdp")]
+    pub use crate::drivers::CdpDriver;
 }

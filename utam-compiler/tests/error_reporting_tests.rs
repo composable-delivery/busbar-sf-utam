@@ -136,11 +136,7 @@ fn test_error_reporter_json_format_is_valid() {
 
     // Parse JSON to verify it's valid
     let parsed: Result<serde_json::Value, _> = serde_json::from_str(&json_output);
-    assert!(
-        parsed.is_ok(),
-        "JSON output should be valid: {}",
-        json_output
-    );
+    assert!(parsed.is_ok(), "JSON output should be valid: {}", json_output);
 
     let json_value = parsed.unwrap();
     assert!(json_value.is_array());
