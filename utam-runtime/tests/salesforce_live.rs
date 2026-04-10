@@ -29,23 +29,22 @@ fn is_login_page(url: &str) -> bool {
 }
 
 async fn wait_for_lightning(driver: &dyn UtamDriver) -> bool {
+    let selectors = [
+        Selector::Css(".oneHeader".to_string()),
+        Selector::Css(".desktop.container.forceStyle".to_string()),
+        Selector::Css("one-app-nav-bar".to_string()),
+    ];
     for attempt in 1..=20 {
         tokio::time::sleep(std::time::Duration::from_secs(2)).await;
         let url = driver.current_url().await.unwrap_or_default();
         if is_login_page(&url) {
             return false;
         }
-        let result = driver
-            .execute_script(
-                "return !!(document.querySelector('.oneHeader') || \
-                 document.querySelector('.desktop.container.forceStyle') || \
-                 document.querySelector('one-app-nav-bar'))",
-                vec![],
-            )
-            .await;
-        if matches!(result, Ok(serde_json::Value::Bool(true))) {
-            eprintln!("  Lightning detected on attempt {attempt}");
-            return true;
+        for sel in &selectors {
+            if driver.find_element(sel).await.is_ok() {
+                eprintln!("  Lightning detected on attempt {attempt}");
+                return true;
+            }
         }
         if attempt % 5 == 0 {
             eprintln!("  Attempt {attempt}/20 — waiting... URL: {url}");
