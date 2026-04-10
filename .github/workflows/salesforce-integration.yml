@@ -101,10 +101,13 @@ jobs:
           echo $! > /tmp/ffmpeg.pid
 
           FILTER="${{ inputs.test_filter }}"
+
+          # Run with CDP adapter (more reliable clicks, native shadow DOM piercing)
+          echo "=== Salesforce Live Tests (CDP) ==="
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
+            UTAM_DRIVER=cdp cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
           else
-            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
+            UTAM_DRIVER=cdp cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
           fi
 
       - name: Compiled page object tests

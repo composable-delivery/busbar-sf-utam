@@ -185,14 +185,25 @@ async fn cleanup_test_data(client: &SalesforceClient, records: &[(String, String
     }
 }
 
-fn chromedriver_url() -> String {
-    std::env::var("CHROMEDRIVER_URL").unwrap_or_else(|_| "http://localhost:9515".to_string())
+/// Determine which driver backend to use.
+/// Set UTAM_DRIVER=cdp to use CDP, otherwise defaults to webdriver.
+fn use_cdp() -> bool {
+    std::env::var("UTAM_DRIVER").map(|v| v.eq_ignore_ascii_case("cdp")).unwrap_or(false)
+}
+
+async fn create_driver() -> Arc<dyn UtamDriver> {
+    if use_cdp() {
+        create_cdp_driver().await
+    } else {
+        create_webdriver().await
+    }
 }
 
 #[cfg(feature = "webdriver")]
-async fn create_driver() -> Arc<dyn UtamDriver> {
+async fn create_webdriver() -> Arc<dyn UtamDriver> {
     use thirtyfour::prelude::*;
-    let url = chromedriver_url();
+    let url =
+        std::env::var("CHROMEDRIVER_URL").unwrap_or_else(|_| "http://localhost:9515".to_string());
     let mut caps = DesiredCapabilities::chrome();
     let has_display = std::env::var("DISPLAY").is_ok();
     if !has_display {
@@ -210,6 +221,30 @@ async fn create_driver() -> Arc<dyn UtamDriver> {
         .await
         .unwrap_or_else(|e| panic!("WebDriver connection to {url} failed: {e}"));
     Arc::new(ThirtyfourDriver::new(driver))
+}
+
+#[cfg(feature = "cdp")]
+async fn create_cdp_driver() -> Arc<dyn UtamDriver> {
+    let has_display = std::env::var("DISPLAY").is_ok();
+    let mut builder = chromiumoxide::BrowserConfig::builder();
+    if !has_display {
+        builder = builder.arg("--headless");
+    }
+    builder = builder
+        .arg("--no-sandbox")
+        .arg("--disable-gpu")
+        .arg("--disable-dev-shm-usage")
+        .window_size(1920, 1080);
+
+    let config = builder.build().expect("Failed to build CDP browser config");
+    let driver = CdpDriver::launch_with_config(config).await.expect("Failed to launch CDP driver");
+    eprintln!("CDP driver launched (headless={})", !has_display);
+    Arc::new(driver)
+}
+
+#[cfg(not(feature = "cdp"))]
+async fn create_cdp_driver() -> Arc<dyn UtamDriver> {
+    panic!("CDP feature not enabled. Build with --features cdp");
 }
 
 fn load_registry() -> PageObjectRegistry {
@@ -359,17 +394,14 @@ async fn test_salesforce_live() {
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
     // Click "New Contact" in the global create menu.
-    // DOM inspection shows menu items use class="highlightButton" with title attributes.
-    // "Account" is NOT a global action — only New Event/Task/Contact/Opportunity/Case/Lead/Note.
-    // Use JS click — the a.highlightButton is found but not interactable
-    // (covered by parent li or has zero dimensions). JS click bypasses this.
-    driver
-        .execute_script(
-            "document.querySelector(\"a.highlightButton[title='New Contact']\").click()",
-            vec![],
-        )
+    // DOM inspection shows items use class="highlightButton" with title attributes.
+    // CDP's click() handles scroll-into-view + pixel-coordinate dispatch automatically,
+    // avoiding the "element not interactable" error that WebDriver gives.
+    let menu_item = driver
+        .find_element(&Selector::Css("a.highlightButton[title='New Contact']".to_string()))
         .await
-        .expect("JS click on 'New Contact' must succeed");
+        .expect("'New Contact' must exist in global create menu");
+    menu_item.click().await.expect("Click on 'New Contact' must succeed");
     eprintln!("  Clicked 'New Contact' in create menu");
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 

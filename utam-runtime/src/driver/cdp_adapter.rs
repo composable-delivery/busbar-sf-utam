@@ -57,12 +57,15 @@ impl CdpDriver {
 
     /// Launch a headless Chrome and open a blank page.
     pub async fn launch() -> RuntimeResult<Self> {
-        let (browser, mut handler) =
-            Browser::launch(chromiumoxide::BrowserConfig::builder().build().map_err(|e| {
-                RuntimeError::UnsupportedAction { action: "launch".into(), element_type: e }
-            })?)
-            .await
-            .map_err(to_rt)?;
+        Self::launch_with_config(chromiumoxide::BrowserConfig::builder().build().map_err(|e| {
+            RuntimeError::UnsupportedAction { action: "launch".into(), element_type: e }
+        })?)
+        .await
+    }
+
+    /// Launch Chrome with custom config and open a blank page.
+    pub async fn launch_with_config(config: chromiumoxide::BrowserConfig) -> RuntimeResult<Self> {
+        let (browser, mut handler) = Browser::launch(config).await.map_err(to_rt)?;
 
         tokio::spawn(async move { while handler.next().await.is_some() {} });
 
