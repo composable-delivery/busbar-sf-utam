@@ -358,78 +358,43 @@ async fn test_salesforce_live() {
     eprintln!("  clickGlobalActions opened menu");
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
-    // Try to find and click "Account" in the menu.
-    // Search from document root since menus render as popups outside containers.
-    // Try multiple selectors — the menu item location varies by Salesforce version.
-    let menu_selectors = [
-        "[class*=oneGlobalCreateItem] a[title='Account']",
-        ".forceActionLink[title='Account']",
-        "a[title='New Account']",
-        "a[data-item-id='Account']",
-        ".actionMenu a[title='Account']",
-        ".uiPopupTarget a[title='Account']",
-    ];
+    // Click "New Contact" in the global create menu.
+    // DOM inspection shows menu items use class="highlightButton" with title attributes.
+    // "Account" is NOT a global action — only New Event/Task/Contact/Opportunity/Case/Lead/Note.
+    let menu_item = driver
+        .find_element(&Selector::Css("a.highlightButton[title='New Contact']".to_string()))
+        .await
+        .expect("'New Contact' must exist in global create menu");
+    menu_item.click().await.expect("Click on 'New Contact' must succeed");
+    eprintln!("  Clicked 'New Contact' in create menu");
+    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
-    let mut menu_item_found = false;
-    for sel in &menu_selectors {
-        if let Ok(menu_item) = driver.find_element(&Selector::Css(sel.to_string())).await {
-            menu_item.click().await.expect("Click on Account menu item must succeed");
-            eprintln!("  Clicked 'Account' via selector: {sel}");
-            menu_item_found = true;
-            tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+    // Record creation modal should now be open
+    let record_modal =
+        load_page_object(Arc::clone(&driver), &registry, "global/recordActionWrapper")
+            .await
+            .expect("recordActionWrapper must load — modal didn't open after clicking New Contact");
+    eprintln!("  recordActionWrapper loaded (modal is open)");
 
-            // Record creation modal should now be open
-            match load_page_object(Arc::clone(&driver), &registry, "global/recordActionWrapper")
-                .await
-            {
-                Ok(record_modal) => {
-                    eprintln!("  recordActionWrapper loaded (modal is open)");
-                    let mut save_args = HashMap::new();
-                    save_args.insert(
-                        "labelText".to_string(),
-                        utam_runtime::RuntimeValue::String("Save".to_string()),
-                    );
-                    match record_modal.call_method("clickFooterButton", &save_args).await {
-                        Ok(_) => eprintln!("  clickFooterButton('Save') executed"),
-                        Err(e) => eprintln!("  clickFooterButton('Save') chain error: {e}"),
-                    }
-                }
-                Err(e) => {
-                    eprintln!("  recordActionWrapper not found: {e}");
-                }
-            }
-
-            // Dismiss modal
-            let _ = driver
-                .execute_script(
-                    "document.querySelector('.modal-container .slds-modal__close')?.click() || \
-                     document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}))",
-                    vec![],
-                )
-                .await;
-            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-            break;
-        }
+    // Try clickFooterButton("Save") — exercises the compose chain
+    let mut save_args = HashMap::new();
+    save_args
+        .insert("labelText".to_string(), utam_runtime::RuntimeValue::String("Save".to_string()));
+    match record_modal.call_method("clickFooterButton", &save_args).await {
+        Ok(_) => eprintln!("  clickFooterButton('Save') executed"),
+        Err(e) => eprintln!("  clickFooterButton('Save') chain error: {e}"),
     }
 
-    if !menu_item_found {
-        // Dump actual menu content for debugging
-        let menu_dump = driver
-            .execute_script(
-                "const items = document.querySelectorAll('a[title], .forceActionLink, [class*=CreateItem], [class*=createItem]'); \
-                 return Array.from(items).slice(0, 20).map(e => ({tag: e.tagName, title: e.title, class: e.className.substring(0, 80), text: e.textContent.trim().substring(0, 50)}));",
-                vec![],
-            )
-            .await;
-        panic!(
-            "Could not find Account menu item with any known selector.\n\
-             Tried: {menu_selectors:?}\n\
-             Available clickable items: {menu_dump:?}"
-        );
-    }
+    // Dismiss modal
+    let _ = driver
+        .execute_script(
+            "document.querySelector('.modal-container .slds-modal__close')?.click() || \
+             document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}))",
+            vec![],
+        )
+        .await;
+    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
 
-    // Dismiss anything open
-    let _ = driver.execute_script("document.body.click()", vec![]).await;
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
     // ── Test: Navigate to Account detail, verify seeded data visible ──
