@@ -365,6 +365,9 @@ async fn test_salesforce_live() {
         .find_element(&Selector::Css("a.highlightButton[title='New Contact']".to_string()))
         .await
         .expect("'New Contact' must exist in global create menu");
+    // Scroll into view and wait for the menu animation to complete
+    menu_item.scroll_into_view().await.expect("scroll into view");
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
     menu_item.click().await.expect("Click on 'New Contact' must succeed");
     eprintln!("  Clicked 'New Contact' in create menu");
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
