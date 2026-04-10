@@ -393,20 +393,23 @@ async fn test_salesforce_live() {
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
     // Click "New Contact" in the global create menu.
-    // Uses focus()+click() via JS — the CumulusCI pattern for reliable Lightning clicks.
-    // WebDriver's native click fails with "element not interactable" on menu items
-    // because the <a> is visually rendered by the parent <li>.
+    // The menu items are <li class="uiMenuItem oneGlobalCreateItem"> containing
+    // <a class="highlightButton">. Click the <li> (the actual Aura event target),
+    // not the <a> (which may not propagate the event correctly).
     driver
         .execute_script(
-            "const el = document.querySelector(\"a.highlightButton[title='New Contact']\"); \
-             if (!el) throw new Error('New Contact not found'); \
-             el.focus(); el.click();",
+            "const items = document.querySelectorAll('li.uiMenuItem.oneGlobalCreateItem'); \
+             for (const li of items) { \
+                 if (li.textContent.includes('New Contact')) { \
+                     li.focus(); li.click(); break; \
+                 } \
+             }",
             vec![],
         )
         .await
-        .expect("'New Contact' focus+click must succeed");
+        .expect("Click on 'New Contact' li must succeed");
     eprintln!("  Clicked 'New Contact' in create menu");
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
     // Record creation modal should now be open
     let record_modal =
