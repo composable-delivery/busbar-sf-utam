@@ -417,7 +417,8 @@ async fn test_salesforce_live() {
         .execute_script(
             "return JSON.stringify({ \
                 hasModal: !!document.querySelector('.oneRecordActionWrapper, .modal-container, .uiModal, .slds-modal'), \
-                modalClasses: Array.from(document.querySelectorAll('.uiModal, .slds-modal, [class*=modal], [class*=Modal]')).map(e => e.className.substring(0, 80)).slice(0, 5), \
+                modalClasses: Array.from(document.querySelectorAll('[class*=modal], [class*=Modal], [class*=panel], .uiPanel')).map(e => e.className.substring(0, 100)).slice(0, 10), \
+                modalHTML: (document.querySelector('.modal-glass')?.parentElement?.innerHTML || 'none').substring(0, 500), \
                 url: location.href \
             })",
             vec![],
