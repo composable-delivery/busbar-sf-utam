@@ -411,6 +411,22 @@ async fn test_salesforce_live() {
     eprintln!("  Clicked 'New Contact' in create menu");
     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
+    // Dump page state to diagnose whether the click actually did anything
+    let post_click_url = driver.current_url().await.unwrap_or_default();
+    let modal_check = driver
+        .execute_script(
+            "return JSON.stringify({ \
+                hasModal: !!document.querySelector('.oneRecordActionWrapper, .modal-container, .uiModal, .slds-modal'), \
+                modalClasses: Array.from(document.querySelectorAll('.uiModal, .slds-modal, [class*=modal], [class*=Modal]')).map(e => e.className.substring(0, 80)).slice(0, 5), \
+                url: location.href \
+            })",
+            vec![],
+        )
+        .await
+        .unwrap_or(serde_json::Value::Null);
+    eprintln!("  Post-click state: url={post_click_url}");
+    eprintln!("  Modal check: {modal_check}");
+
     // Record creation modal should now be open
     let record_modal =
         load_page_object(Arc::clone(&driver), &registry, "global/recordActionWrapper")
