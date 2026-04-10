@@ -128,12 +128,8 @@ async fn run_page_title_test(kind: DriverKind) -> UtamResult<()> {
         DriverKind::Cdp => {
             let driver = CdpDriver::launch_headless().await?;
             driver.goto(&test_url).await?;
-            let title: String = driver
-                .evaluate_js("document.title")
-                .await?
-                .as_str()
-                .unwrap_or("")
-                .to_owned();
+            let title: String =
+                driver.evaluate_js("document.title").await?.as_str().unwrap_or("").to_owned();
             assert!(!title.is_empty(), "[cdp] Expected a non-empty page title");
             driver.quit().await?;
         }

@@ -142,8 +142,7 @@ impl CdpDriver {
             )
             .await?;
 
-        let logs: Vec<(String, String)> =
-            serde_json::from_value(result).unwrap_or_default();
+        let logs: Vec<(String, String)> = serde_json::from_value(result).unwrap_or_default();
         Ok(logs)
     }
 

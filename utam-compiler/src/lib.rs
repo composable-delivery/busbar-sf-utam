@@ -30,7 +30,7 @@ pub use ast::*;
 pub fn compile(json: &str, config: CodeGenConfig) -> CompilerResult<String> {
     // Parse JSON to AST
     let ast: PageObjectAst = serde_json::from_str(json)?;
-    
+
     // Generate code
     let generator = CodeGenerator::new(ast, config);
     generator.generate()

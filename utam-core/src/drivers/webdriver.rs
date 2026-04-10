@@ -14,7 +14,7 @@ use crate::error::{UtamError, UtamResult};
 /// WebDriver adapter wrapping a `thirtyfour::WebDriver`.
 ///
 /// Created via [`ThirtyfourDriver::connect`] or
-/// [`ThirtyfourDriver::connect_headless`].  Derefs to the inner
+/// [`ThirtyfourDriver::connect_default`].  Derefs to the inner
 /// `WebDriver` so all thirtyfour APIs are usable directly.
 pub struct ThirtyfourDriver {
     inner: WebDriver,
@@ -45,9 +45,7 @@ impl ThirtyfourDriver {
 
         let driver = WebDriver::new(chromedriver_url, caps).await.map_err(UtamError::WebDriver)?;
 
-        driver
-            .set_implicit_wait_timeout(Duration::from_millis(implicit_wait_ms))
-            .await?;
+        driver.set_implicit_wait_timeout(Duration::from_millis(implicit_wait_ms)).await?;
 
         Ok(Self { inner: driver })
     }

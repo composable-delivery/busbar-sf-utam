@@ -84,12 +84,11 @@ pub enum CompilerError {
 #[derive(Error, Debug, Diagnostic)]
 pub enum SelectorError {
     /// Parameter count mismatch between placeholders and args
-    #[error("Parameter count mismatch: expected {expected} placeholders but got {actual} arguments")]
+    #[error(
+        "Parameter count mismatch: expected {expected} placeholders but got {actual} arguments"
+    )]
     #[diagnostic(help("Ensure the number of %s and %d placeholders matches the number of args"))]
-    ParameterMismatch {
-        expected: usize,
-        actual: usize,
-    },
+    ParameterMismatch { expected: usize, actual: usize },
 }
 
 /// Detailed validation error with path and message
@@ -154,8 +153,7 @@ impl ErrorReporter {
 
         // Create a graphical report handler with fancy theme
         let mut output = String::new();
-        let handler =
-            GraphicalReportHandler::new_themed(GraphicalTheme::unicode()).with_width(80);
+        let handler = GraphicalReportHandler::new_themed(GraphicalTheme::unicode()).with_width(80);
 
         // Format the error using miette's fancy formatting
         if let Err(e) = handler.render_report(&mut output, error) {
@@ -190,7 +188,6 @@ impl ErrorReporter {
             })
             .collect();
 
-        serde_json::to_string_pretty(&error_objects)
-            .unwrap_or_else(|_| "[]".to_string())
+        serde_json::to_string_pretty(&error_objects).unwrap_or_else(|_| "[]".to_string())
     }
 }

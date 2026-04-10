@@ -25,11 +25,11 @@ fn test_parse_element_with_nested_elements() {
 
     let shadow = page.shadow.unwrap();
     assert_eq!(shadow.elements.len(), 1);
-    
+
     let container = &shadow.elements[0];
     assert_eq!(container.name, "container");
     assert!(matches!(container.element_kind(), ElementKind::Container));
-    
+
     // Check nested element
     assert_eq!(container.elements.len(), 1);
     let nested = &container.elements[0];
@@ -54,7 +54,7 @@ fn test_parse_custom_component_element() {
     let page: PageObjectAst = serde_json::from_str(json).unwrap();
     let shadow = page.shadow.unwrap();
     let element = &shadow.elements[0];
-    
+
     match element.element_kind() {
         ElementKind::Custom(ref comp_ref) => {
             assert_eq!(comp_ref.package, "utam-applications");
@@ -80,7 +80,7 @@ fn test_parse_frame_element() {
 
     let page: PageObjectAst = serde_json::from_str(json).unwrap();
     let element = &page.elements[0];
-    
+
     assert_eq!(element.name, "contentFrame");
     assert!(matches!(element.element_kind(), ElementKind::Frame));
 }
@@ -99,7 +99,7 @@ fn test_validate_frame_no_return_all() {
 
     let page: PageObjectAst = serde_json::from_str(json).unwrap();
     let element = &page.elements[0];
-    
+
     // Should pass validation (no returnAll)
     assert!(element.validate().is_ok());
 }
@@ -185,8 +185,7 @@ fn test_validate_all_elements() {
 
     // All elements should pass validation
     for element in &shadow.elements {
-        assert!(element.validate().is_ok(), 
-            "Element '{}' failed validation", element.name);
+        assert!(element.validate().is_ok(), "Element '{}' failed validation", element.name);
     }
 }
 
@@ -209,7 +208,7 @@ fn test_element_filter_parsing() {
 
     let page: PageObjectAst = serde_json::from_str(json).unwrap();
     let element = &page.elements[0];
-    
+
     assert!(element.filter.is_some());
     let filter = element.filter.as_ref().unwrap();
     assert_eq!(filter.matcher.matcher_type, "stringEquals");
@@ -228,7 +227,7 @@ fn test_container_default_behavior() {
 
     let page: PageObjectAst = serde_json::from_str(json).unwrap();
     let element = &page.elements[0];
-    
+
     assert_eq!(element.name, "container");
     assert!(matches!(element.element_kind(), ElementKind::Container));
     // Note: Default selector ":scope > *:first-child" would be applied during code generation
@@ -267,7 +266,6 @@ fn test_to_rust_type_conversions() {
             path: vec![],
             name: input.to_string(),
         };
-        assert_eq!(comp_ref.to_rust_type(), expected, 
-            "Failed for input: {}", input);
+        assert_eq!(comp_ref.to_rust_type(), expected, "Failed for input: {}", input);
     }
 }
