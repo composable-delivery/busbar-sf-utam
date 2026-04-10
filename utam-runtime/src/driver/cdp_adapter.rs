@@ -202,7 +202,14 @@ impl UtamDriver for CdpDriver {
         script: &str,
         _args: Vec<serde_json::Value>,
     ) -> RuntimeResult<serde_json::Value> {
-        let result = self.page.evaluate(script).await.map_err(to_rt)?;
+        // WebDriver's executeScript wraps code in a function body where "return"
+        // is valid. CDP's Runtime.evaluate evaluates an expression where "return"
+        // is a syntax error. Strip leading "return " for compatibility.
+        let expr = script.trim();
+        let expr = expr.strip_prefix("return ").unwrap_or(expr);
+        let expr = expr.strip_suffix(';').unwrap_or(expr);
+
+        let result = self.page.evaluate(expr).await.map_err(to_rt)?;
         Ok(result.into_value::<serde_json::Value>().unwrap_or(serde_json::Value::Null))
     }
 
