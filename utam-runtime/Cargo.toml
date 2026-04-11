@@ -28,4 +28,5 @@ thiserror.workspace = true
 [dev-dependencies]
 insta.workspace = true
 busbar-sf-api = { path = "../busbar-sf-api" }
+utam-test = { path = "../utam-test" }
 walkdir = "2"

@@ -521,7 +521,11 @@ impl CodeGenerator {
         let return_type = self.element_return_type(element);
         let body = self.generate_element_body(element);
         let doc = if let Some(desc) = &element.description {
-            quote! { #[doc = #desc] }
+            let doc_text = match desc {
+                crate::ast::DescriptionAst::Simple(s) => s.clone(),
+                crate::ast::DescriptionAst::Detailed { text, .. } => text.join(" "),
+            };
+            quote! { #[doc = #doc_text] }
         } else {
             let doc_text = format!("Get the {} element", element.name);
             quote! { #[doc = #doc_text] }
@@ -897,8 +901,8 @@ impl CodeGenerator {
             }
         } else if let Some(apply_external) = &stmt.apply_external {
             // External method call
-            let method_name = format_ident!("{}", to_snake_case(&apply_external.method));
-            let args = self.generate_compose_args(&apply_external.args);
+            let method_name = format_ident!("{}", to_snake_case(apply_external.method()));
+            let args = self.generate_compose_args(apply_external.args());
 
             quote! {
                 #method_name(#args).await?;

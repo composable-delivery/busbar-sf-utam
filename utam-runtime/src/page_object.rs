@@ -459,12 +459,12 @@ fn execute_compose<'a>(
 
             // 2. Handle applyExternal — cross-page-object method call
             if let Some(external) = &stmt.apply_external {
-                let ext_args = resolve_compose_args(&external.args, method_args)?;
+                let ext_args = resolve_compose_args(external.args(), method_args)?;
                 // For now, if we have a registry we can try to resolve the external method.
                 // The external method name format varies; store result and continue.
                 last_result = RuntimeValue::String(format!(
                     "<external: {} with {} args>",
-                    external.method,
+                    external.method(),
                     ext_args.len()
                 ));
                 continue;

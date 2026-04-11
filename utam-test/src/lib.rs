@@ -28,6 +28,7 @@
 //! }
 //! ```
 
+pub mod allure;
 pub mod assertions;
 pub mod harness;
 
@@ -37,6 +38,10 @@ pub use assertions::{
 pub use harness::{Browser, HarnessConfig, TestHarness};
 
 pub mod prelude {
+    pub use crate::allure::{
+        AllureAttachment, AllureCategory, AllureStatus, AllureStep, AllureWriter, StepBuilder,
+        TestResultBuilder,
+    };
     pub use crate::assertions::{
         assert_element, CollectionAssertions, ElementAssertion, PageObjectAssertions,
     };

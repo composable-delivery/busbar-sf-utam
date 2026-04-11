@@ -24,6 +24,37 @@ where
     }
 }
 
+/// Deserialize a field that can be a string, array of strings, or absent.
+///
+/// When the JSON value is an array like `["clickable", "actionable"]`, the
+/// highest-capability type is selected (draggable > editable > clickable > first).
+/// This handles the Salesforce mobile pattern where `returnType` specifies
+/// element action capabilities as an array.
+fn deserialize_optional_string_or_vec<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum StringOrVec {
+        Single(String),
+        Multiple(Vec<String>),
+    }
+    let opt: Option<StringOrVec> = Option::deserialize(deserializer)?;
+    Ok(opt.map(|v| match v {
+        StringOrVec::Single(s) => s,
+        StringOrVec::Multiple(v) => {
+            // Pick the highest-capability action type, or fall back to the first element
+            for preferred in &["draggable", "editable", "clickable", "actionable"] {
+                if v.iter().any(|s| s == preferred) {
+                    return preferred.to_string();
+                }
+            }
+            v.into_iter().next().unwrap_or_default()
+        }
+    }))
+}
+
 /// Root page object definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PageObjectAst {
@@ -98,7 +129,7 @@ pub struct ElementAst {
     #[serde(default)]
     pub filter: Option<FilterAst>,
     #[serde(default)]
-    pub description: Option<String>,
+    pub description: Option<DescriptionAst>,
     #[serde(default)]
     pub list: bool,
 }
@@ -275,7 +306,7 @@ pub struct MethodAst {
     pub args: Vec<MethodArgAst>,
     #[serde(default)]
     pub compose: Vec<ComposeStatementAst>,
-    #[serde(rename = "returnType")]
+    #[serde(rename = "returnType", default, deserialize_with = "deserialize_optional_string_or_vec")]
     pub return_type: Option<String>,
     #[serde(rename = "returnAll", default)]
     pub return_all: bool,
@@ -329,11 +360,43 @@ pub enum ComposeArgAst {
 }
 
 /// External method application
+///
+/// Supports two JSON formats:
+/// - `{"method": "doStuff", "args": [...]}`
+/// - `{"type": "utam-pkg/utils/Foo", "invoke": "bar"}` (Salesforce mobile pattern)
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ApplyExternalAst {
-    pub method: String,
-    #[serde(default)]
-    pub args: Vec<ComposeArgAst>,
+#[serde(untagged)]
+pub enum ApplyExternalAst {
+    Method {
+        method: String,
+        #[serde(default)]
+        args: Vec<ComposeArgAst>,
+    },
+    TypeInvoke {
+        #[serde(rename = "type")]
+        type_path: String,
+        invoke: String,
+        #[serde(default)]
+        args: Vec<ComposeArgAst>,
+    },
+}
+
+impl ApplyExternalAst {
+    /// The method/function name to call.
+    pub fn method(&self) -> &str {
+        match self {
+            ApplyExternalAst::Method { method, .. } => method,
+            ApplyExternalAst::TypeInvoke { invoke, .. } => invoke,
+        }
+    }
+
+    /// The arguments to pass.
+    pub fn args(&self) -> &[ComposeArgAst] {
+        match self {
+            ApplyExternalAst::Method { args, .. } => args,
+            ApplyExternalAst::TypeInvoke { args, .. } => args,
+        }
+    }
 }
 
 /// Filter for element selection
