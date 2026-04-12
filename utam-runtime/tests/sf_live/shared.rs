@@ -8,19 +8,12 @@
 //!
 //! This module solves it: a single `LazyLock<Runtime>` owns one multi-thread
 //! runtime for the whole test binary, a mutex serializes tests (single
-//! browser → one at a time), and a `OnceCell`-like session holds the
-//! auth+browser+registry across tests.
+//! browser → one at a time), and the session is lazy-initialized on first
+//! access then leaked into `&'static` so browser resources outlive the
+//! test that created them.
 //!
-//! Usage:
-//! ```ignore
-//! #[test]
-//! fn test_foo() {
-//!     shared::with_session(|session| async move {
-//!         let coverage = coverage::discover_and_test(&session, "foo").await;
-//!         // ...
-//!     });
-//! }
-//! ```
+//! Integration tests **require** a Salesforce org.  Missing credentials
+//! panic with a clear message — there is no silent skip.
 
 use std::sync::{LazyLock, Mutex};
 
@@ -39,116 +32,80 @@ static RUNTIME: LazyLock<Runtime> = LazyLock::new(|| {
 /// Serialization mutex — only one test may hold the browser at a time.
 static TEST_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
-/// Lazy-initialized session.  `None` means "no credentials → skip."
-/// Populated on first access by whichever test runs first.
-static SESSION: LazyLock<Mutex<SessionSlot>> =
-    LazyLock::new(|| Mutex::new(SessionSlot::Uninitialized));
+/// Lazy-initialized session.  Populated on first access by whichever test
+/// runs first; then every subsequent test re-uses the same session.
+static SESSION: LazyLock<Mutex<Option<&'static SalesforceSession>>> =
+    LazyLock::new(|| Mutex::new(None));
 
-enum SessionSlot {
-    Uninitialized,
-    Skipped,
-    Ready(&'static SalesforceSession),
-}
-
-/// Run a test against the shared session.
+/// Run a test against the shared Salesforce session.
 ///
-/// Serializes all tests via `TEST_LOCK`, lazy-initializes the session on
-/// first access, and drives the given future on the shared runtime.
-///
-/// If credentials are absent, returns without calling the closure (skip).
+/// Serializes all tests via `TEST_LOCK` (single browser), lazy-initializes
+/// the session on first access (panics loudly if auth fails), and drives
+/// the given future on the shared runtime.
 pub fn with_session<F, Fut>(f: F)
 where
     F: FnOnce(&'static SalesforceSession) -> Fut,
     Fut: std::future::Future<Output = ()>,
 {
-    // Poisoned mutex is unreachable in normal test runs; unwrap is fine.
+    // Poisoned mutex is unreachable in normal test runs; recover anyway.
     let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
 
     RUNTIME.block_on(async {
-        let session = acquire_or_skip().await;
-        match &session {
-            Some(_) => eprintln!("[with_session] session ready — running test"),
-            None => eprintln!(
-                "[with_session] SKIP — no session (SF_AUTH_URL set={}, CHROMEDRIVER_URL set={})",
-                std::env::var("SF_AUTH_URL").map(|v| !v.is_empty()).unwrap_or(false),
-                std::env::var("CHROMEDRIVER_URL").is_ok(),
-            ),
-        }
-        if let Some(session) = session {
-            f(session).await;
-        }
+        let session = acquire().await;
+        eprintln!("[with_session] session ready — running test");
+        f(session).await;
     });
 }
 
-/// Populate the session lazily on first call; subsequent calls return
-/// the same reference.  Returns `None` if credentials aren't configured.
-async fn acquire_or_skip() -> Option<&'static SalesforceSession> {
-    // Fast path: already initialized.
+/// Acquire (or initialize) the shared session.  Panics if auth or
+/// browser setup fails — integration tests MUST have a real org.
+async fn acquire() -> &'static SalesforceSession {
     {
         let slot = SESSION.lock().unwrap();
-        match &*slot {
-            SessionSlot::Ready(s) => return Some(*s),
-            SessionSlot::Skipped => return None,
-            SessionSlot::Uninitialized => {}
+        if let Some(s) = &*slot {
+            return *s;
         }
     }
-
-    // Slow path: perform the one-time setup.  We release the lock during
-    // setup so we can hold it across await points safely via a
-    // double-checked pattern.  Tests are already serialized by TEST_LOCK,
+    // First caller performs setup — TEST_LOCK already serializes callers,
     // so only one setup attempt can be in flight.
-    let setup = SalesforceSession::setup().await;
-    let mut slot = SESSION.lock().unwrap();
-    match setup {
-        Some(session) => {
-            // Leak the session into a 'static reference.  The session owns
-            // a browser driver whose cleanup requires a running runtime;
-            // we handle cleanup at process exit via `finalize_on_exit`.
-            let leaked: &'static SalesforceSession = Box::leak(Box::new(session));
-            *slot = SessionSlot::Ready(leaked);
-            Some(leaked)
-        }
-        None => {
-            *slot = SessionSlot::Skipped;
-            None
-        }
-    }
+    let session = SalesforceSession::setup().await;
+    let leaked: &'static SalesforceSession = Box::leak(Box::new(session));
+    *SESSION.lock().unwrap() = Some(leaked);
+    leaked
 }
 
-/// Access the shared session's Allure writer directly (without running a test).
-/// Useful for summary writes that aren't tied to a specific page context.
+/// Access the shared session's Allure writer directly.
+/// Returns None only if called before any test has initialized the session.
 pub fn with_allure<F, R>(f: F) -> Option<R>
 where
     F: FnOnce(&utam_test::allure::AllureWriter) -> R,
 {
     let slot = SESSION.lock().unwrap();
-    match &*slot {
-        SessionSlot::Ready(s) => Some(f(&s.allure)),
-        _ => None,
-    }
+    slot.map(|s| f(&s.allure))
 }
 
-/// Best-effort cleanup hook: drops seeded records when the process exits.
-///
-/// Called explicitly by a `ZZ_teardown` test that runs last.  Rust's test
-/// harness has no true "after all" hook, so we rely on alphabetical
-/// ordering within a test binary.
+/// Best-effort teardown: delete seeded records + quit the browser.
+/// Invoked by the alphabetically-last `zz_teardown` test.
 pub fn teardown() {
     let slot = SESSION.lock().unwrap();
-    if let SessionSlot::Ready(session) = &*slot {
-        RUNTIME.block_on(async {
-            if !session.seeded_records.is_empty() {
-                eprintln!("\n=== Teardown: delete seeded records ===");
-                for (sobject_type, id) in session.seeded_records.iter().rev() {
-                    match session.sf_client.delete(sobject_type, id).await {
-                        Ok(()) => eprintln!("  Deleted {sobject_type}/{id}"),
-                        Err(e) => eprintln!("  Failed to delete {sobject_type}/{id}: {e}"),
-                    }
+    let Some(session) = *slot else {
+        // Teardown runs even if no other test initialized the session
+        // (e.g. all other tests panicked before reaching `acquire`).
+        eprintln!("[teardown] no session was initialized — nothing to clean up");
+        return;
+    };
+    RUNTIME.block_on(async {
+        if !session.seeded_records.is_empty() {
+            eprintln!("\n=== Teardown: delete seeded records ===");
+            for (sobject_type, id) in session.seeded_records.iter().rev() {
+                match session.sf_client.delete(sobject_type, id).await {
+                    Ok(()) => eprintln!("  Deleted {sobject_type}/{id}"),
+                    Err(e) => eprintln!("  Failed to delete {sobject_type}/{id}: {e}"),
                 }
             }
-            if let Err(e) = session.driver.quit().await {
-                eprintln!("  Failed to quit driver: {e}");
-            }
-        });
-    }
+        }
+        if let Err(e) = session.driver.quit().await {
+            eprintln!("  Failed to quit driver: {e}");
+        }
+    });
 }

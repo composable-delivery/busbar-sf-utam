@@ -25,35 +25,29 @@ pub struct SalesforceSession {
 impl SalesforceSession {
     /// Set up the full session: authenticate, seed data, launch browser.
     ///
-    /// Returns `None` when credentials are absent (local dev skip).
-    /// Panics in CI (CHROMEDRIVER_URL set) if SF_AUTH_URL is missing.
-    pub async fn setup() -> Option<Self> {
+    /// Integration tests REQUIRE a Salesforce org — this panics loudly
+    /// if credentials are missing, if auth fails, or if the browser
+    /// can't reach Lightning.  There is no silent skip path.  Tests
+    /// that "pass" without a real org give false confidence.
+    pub async fn setup() -> Self {
         // ── Salesforce auth ────────────────────────────────────────────
-        let sf_auth_var = std::env::var("SF_AUTH_URL");
-        let chromedriver_var = std::env::var("CHROMEDRIVER_URL");
-        eprintln!(
-            "[setup] env: SF_AUTH_URL set={} (len={}), CHROMEDRIVER_URL set={}",
-            sf_auth_var.as_ref().map(|v| !v.is_empty()).unwrap_or(false),
-            sf_auth_var.as_ref().map(|v| v.len()).unwrap_or(0),
-            chromedriver_var.is_ok(),
-        );
-        let auth_url = match sf_auth_var {
-            Ok(url) if !url.is_empty() => url,
-            _ => {
-                if chromedriver_var.is_ok() {
-                    panic!(
-                        "SF_AUTH_URL must be set in CI (CHROMEDRIVER_URL is set, \
-                         so we expected to run integration tests)"
-                    );
-                }
-                eprintln!("SKIP: SF credentials not set");
-                return None;
-            }
-        };
-        let parsed = SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
+        let auth_url = std::env::var("SF_AUTH_URL")
+            .ok()
+            .filter(|s| !s.is_empty())
+            .unwrap_or_else(|| {
+                panic!(
+                    "SF_AUTH_URL is required.  Integration tests need a real \
+                     Salesforce org.  Set SF_AUTH_URL to an sfdx auth URL \
+                     (force://<clientId>:<secret>:<refreshToken>@<instance>)."
+                )
+            });
+        eprintln!("[setup] SF_AUTH_URL present (len={})", auth_url.len());
+
+        let parsed =
+            SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
         let sf_client = SalesforceClient::from_auth_url(&parsed)
             .await
-            .expect("Failed to exchange refresh token");
+            .expect("Failed to exchange refresh token — check SF_AUTH_URL is valid");
         let instance_url = sf_client.instance_url.clone();
         eprintln!("Authenticated to {instance_url}");
 
@@ -128,7 +122,7 @@ impl SalesforceSession {
         let _ = std::fs::create_dir_all("/tmp/allure-results");
         let _ = std::fs::write("/tmp/allure-results/browser-ready", "1");
 
-        Some(Self {
+        Self {
             driver,
             registry,
             allure,
@@ -136,7 +130,7 @@ impl SalesforceSession {
             instance_url,
             seeded_records,
             driver_name: driver_name.to_string(),
-        })
+        }
     }
 
     /// Which driver adapter is in use.
@@ -348,8 +342,11 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
             pairs
         }
         Err(e) => {
-            eprintln!("WARNING: Failed to seed test data: {e}");
-            Vec::new()
+            panic!(
+                "Failed to seed test data: {e}.  The Salesforce org \
+                 rejected record creation — check permissions, object-level \
+                 access, or required fields on Account/Contact/Opportunity/Lead/Case."
+            );
         }
     }
 }

@@ -116,17 +116,18 @@ jobs:
         if: always()
         run: cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture 2>&1
 
-      # Run dual adapter tests separately (experimental, non-blocking)
+      # Run dual adapter tests separately.  NOT continue-on-error — a
+      # failure here means WebDriver or CDP adapter is broken against
+      # the live DOM, which is a real problem worth failing the job for.
       - name: Dual adapter tests (WebDriver + CDP)
         if: always()
-        continue-on-error: true
         env:
           SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           DISPLAY: ":99"
         run: |
           echo "=== Dual Adapter Tests ==="
-          cargo test -p utam-runtime --test dual_adapter --all-features -- --nocapture 2>&1 || true
+          cargo test -p utam-runtime --test dual_adapter --all-features -- --nocapture --test-threads=1
 
       # ── Stop recording + attach video ─────────────────────────────────
       - name: Stop recording and attach video

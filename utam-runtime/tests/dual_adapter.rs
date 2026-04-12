@@ -15,10 +15,14 @@ use utam_runtime::prelude::*;
 #[allow(unused_imports)]
 use std::collections::HashMap;
 
-fn require_env(var: &str) -> Option<String> {
+/// Integration tests REQUIRE these env vars — no silent skip.
+fn require_env(var: &str) -> String {
     match std::env::var(var) {
-        Ok(v) if !v.is_empty() => Some(v),
-        _ => None,
+        Ok(v) if !v.is_empty() => v,
+        _ => panic!(
+            "{var} is required for the dual adapter integration test.  \
+             Set it to run against a real Salesforce org."
+        ),
     }
 }
 
@@ -184,11 +188,8 @@ async fn run_page_object_tests(
 #[tokio::test]
 #[cfg(feature = "webdriver")]
 async fn test_webdriver_adapter() {
-    let Some(auth_url) = require_env("SF_AUTH_URL") else {
-        eprintln!("SKIP: SF_AUTH_URL not set");
-        return;
-    };
-    let _ = require_env("CHROMEDRIVER_URL").expect("CHROMEDRIVER_URL required");
+    let auth_url = require_env("SF_AUTH_URL");
+    let _ = require_env("CHROMEDRIVER_URL");
 
     // Auth
     let parsed = busbar_sf_api::SfdxAuthUrl::parse(&auth_url).expect("parse auth");
@@ -231,10 +232,7 @@ async fn test_webdriver_adapter() {
 #[tokio::test]
 #[cfg(feature = "cdp")]
 async fn test_cdp_adapter() {
-    let Some(auth_url) = require_env("SF_AUTH_URL") else {
-        eprintln!("SKIP: SF_AUTH_URL not set");
-        return;
-    };
+    let auth_url = require_env("SF_AUTH_URL");
 
     // Auth via API
     let parsed = busbar_sf_api::SfdxAuthUrl::parse(&auth_url).expect("parse auth");

@@ -6,16 +6,16 @@
 //! session and one set of seeded records via `sf_live::shared`, which uses
 //! a single `LazyLock<Runtime>` + a mutex to serialize browser access.
 //!
-//! The tests run in alphabetical order within a cargo test binary; the
-//! final `zz_teardown` test runs last and drops seeded records + quits the
-//! browser.  To run a single phase:
+//! Tests run in alphabetical order; the final `zz_teardown` test runs
+//! last and drops seeded records + quits the browser.  Run a single
+//! phase:
 //!
-//!     cargo test -p utam-runtime --test salesforce_live -- a_home
-//!     cargo test -p utam-runtime --test salesforce_live -- b_account_detail
-//!     cargo test -p utam-runtime --test salesforce_live -- c_setup
+//!     cargo test -p utam-runtime --test salesforce_live -- a_home --test-threads=1
+//!     cargo test -p utam-runtime --test salesforce_live -- b_account_detail --test-threads=1
+//!     cargo test -p utam-runtime --test salesforce_live -- c_setup --test-threads=1
 //!
-//! A skipped session (no `SF_AUTH_URL`) causes every test to early-return
-//! without panicking.
+//! `SF_AUTH_URL` is REQUIRED.  No silent-skip path: tests that "pass"
+//! without a real Salesforce org give false confidence.
 
 mod sf_live;
 
@@ -41,11 +41,15 @@ fn a_home_coverage() {
 #[test]
 fn b_account_detail_coverage() {
     shared::with_session(|session| async move {
-        let Some((_, account_id)) = session.seeded_records.iter().find(|(t, _)| t == "Account")
-        else {
-            eprintln!("SKIP account_detail: no seeded Account");
-            return;
-        };
+        let account_id = session
+            .seeded_records
+            .iter()
+            .find(|(t, _)| t == "Account")
+            .map(|(_, id)| id.clone())
+            .expect(
+                "seeded Account is required — data seeding failed during setup, \
+                 which means the Salesforce org rejected record creation",
+            );
         let url = format!("{}/lightning/r/Account/{account_id}/view", session.instance_url);
         session.navigate(&url).await;
         tokio::time::sleep(std::time::Duration::from_secs(3)).await;
