@@ -29,11 +29,22 @@ impl SalesforceSession {
     /// Panics in CI (CHROMEDRIVER_URL set) if SF_AUTH_URL is missing.
     pub async fn setup() -> Option<Self> {
         // ── Salesforce auth ────────────────────────────────────────────
-        let auth_url = match std::env::var("SF_AUTH_URL") {
+        let sf_auth_var = std::env::var("SF_AUTH_URL");
+        let chromedriver_var = std::env::var("CHROMEDRIVER_URL");
+        eprintln!(
+            "[setup] env: SF_AUTH_URL set={} (len={}), CHROMEDRIVER_URL set={}",
+            sf_auth_var.as_ref().map(|v| !v.is_empty()).unwrap_or(false),
+            sf_auth_var.as_ref().map(|v| v.len()).unwrap_or(0),
+            chromedriver_var.is_ok(),
+        );
+        let auth_url = match sf_auth_var {
             Ok(url) if !url.is_empty() => url,
             _ => {
-                if std::env::var("CHROMEDRIVER_URL").is_ok() {
-                    panic!("SF_AUTH_URL must be set in CI!");
+                if chromedriver_var.is_ok() {
+                    panic!(
+                        "SF_AUTH_URL must be set in CI (CHROMEDRIVER_URL is set, \
+                         so we expected to run integration tests)"
+                    );
                 }
                 eprintln!("SKIP: SF credentials not set");
                 return None;

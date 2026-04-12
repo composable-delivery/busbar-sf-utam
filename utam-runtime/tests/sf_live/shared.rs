@@ -66,6 +66,14 @@ where
 
     RUNTIME.block_on(async {
         let session = acquire_or_skip().await;
+        match &session {
+            Some(_) => eprintln!("[with_session] session ready — running test"),
+            None => eprintln!(
+                "[with_session] SKIP — no session (SF_AUTH_URL set={}, CHROMEDRIVER_URL set={})",
+                std::env::var("SF_AUTH_URL").map(|v| !v.is_empty()).unwrap_or(false),
+                std::env::var("CHROMEDRIVER_URL").is_ok(),
+            ),
+        }
         if let Some(session) = session {
             f(session).await;
         }

@@ -104,11 +104,12 @@ jobs:
 
           # Run with WebDriver adapter (default, stable)
           # CDP adapter has a clone_handle stale element issue — tracked in #86
+          # --test-threads=1 so the single browser session is used serially.
           echo "=== Salesforce Live Tests (WebDriver) ==="
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture --test-threads=1 2>&1
           else
-            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture --test-threads=1 2>&1
           fi
 
       - name: Compiled page object tests
