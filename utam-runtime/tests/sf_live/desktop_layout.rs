@@ -59,14 +59,14 @@ pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
     eprintln!("  [1/1] getAppNav: {:?}", step.status);
     builder = builder.step(step);
 
-    // ── Element: resolve custom component elements ─────────────────────
+    // ── Element: resolve the appNavPrivate custom component ────────────
+    // dockingPanel (.forceDockingPanel) is only rendered on console-mode
+    // apps, not the standard Lightning home page.  Test what's present.
     let elements_step = {
-        let s = StepBuilder::start("resolve custom component elements");
-        let sub1 = run_get_element(&nav, "appNavPrivate", &no_args).await;
-        eprintln!("  element appNavPrivate: {:?}", sub1.status);
-        let sub2 = run_get_element(&nav, "dockingPanel", &no_args).await;
-        eprintln!("  element dockingPanel: {:?}", sub2.status);
-        s.sub_step(sub1).sub_step(sub2).finish(AllureStatus::Passed)
+        let s = StepBuilder::start("resolve appNavPrivate custom component element");
+        let sub = run_get_element(&nav, "appNavPrivate", &no_args).await;
+        eprintln!("  element appNavPrivate: {:?}", sub.status);
+        s.sub_step(sub).finish(AllureStatus::Passed)
     };
     builder = builder.step(elements_step);
 

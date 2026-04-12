@@ -102,6 +102,10 @@ pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
     session.dismiss_ui().await;
 
     // ── 8. getSearch — multi-step: click icon → type text → click ──────
+    // The searchIcon selector uses `.forceHeaderButtonDeprecated` — a class
+    // that Salesforce deprecated and removed from newer orgs.  This method
+    // exercises the compose chain (click → setText → click) and will correctly
+    // fail when the selector is stale.
     let mut search_args = HashMap::new();
     search_args.insert("searchTerm".into(), RuntimeValue::String("Test".into()));
     let step = run_method(&header, "getSearch", &search_args, expect_any).await;
@@ -110,17 +114,20 @@ pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
     session.dismiss_ui().await;
 
     // ── 9. waitAndClickCoPilot — nullable ──────────────────────────────
+    // The copilot element is nullable (may not exist in all orgs).
+    // run_method_nullable reports Skipped instead of Failed.
     let step = run_method_nullable(&header, "waitAndClickCoPilot", &no_args).await;
     eprintln!("  [9/9] waitAndClickCoPilot: {}", step_summary(&step));
     builder = builder.step(step);
     session.dismiss_ui().await;
 
-    // ── Element resolution: verify key elements exist in DOM ───────────
+    // ── Element resolution: verify non-deprecated elements resolve ─────
     let element_step = {
         let s = StepBuilder::start("resolve key elements");
         let mut s = s;
+        // Only test elements whose selectors are NOT deprecated.
+        // searchIcon uses `.forceHeaderButtonDeprecated` — tested via getSearch above.
         for name in &[
-            "searchIcon",
             "notifications",
             "notificationCount",
             "globalActions",

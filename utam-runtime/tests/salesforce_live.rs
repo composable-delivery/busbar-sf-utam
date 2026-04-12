@@ -66,14 +66,10 @@ async fn test_salesforce_live() {
     // ── Cleanup ────────────────────────────────────────────────────────
     session.cleanup().await;
 
-    // Only fail the test run if a page object couldn't LOAD at all (Broken).
-    // Individual method failures (stale selectors, etc.) are reported in the
-    // Allure results — they indicate page objects that need selector updates,
-    // not test infrastructure problems.
     assert!(
-        broken == 0,
-        "{broken} page object(s) failed to load — see Allure report for details"
+        failed == 0 && broken == 0,
+        "{failed} failed, {broken} broken out of {total} — see Allure report for details"
     );
 
-    eprintln!("\n=== Done: {passed}/{total} page objects fully passed, {failed} had method failures ===");
+    eprintln!("\n=== All {total} page object test suites passed ===");
 }
