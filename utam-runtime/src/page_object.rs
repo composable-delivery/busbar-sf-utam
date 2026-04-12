@@ -160,15 +160,26 @@ impl DynamicPageObject {
             })?;
         let selector = resolve_selector(selector_ast, &HashMap::new())?;
 
-        // If there are beforeLoad steps, wait for the root element
-        let root = if !ast.before_load.is_empty() {
+        let has_before_load = !ast.before_load.is_empty();
+        let root = if has_before_load {
             driver.wait_for_element(&selector, std::time::Duration::from_secs(10)).await?
         } else {
             driver.find_element(&selector).await?
         };
 
         let element_index = build_element_index(&ast);
-        Ok(Self { ast, root, driver, element_index, registry: None })
+        let before_load = ast.before_load.clone();
+        let page = Self { ast, root, driver, element_index, registry: None };
+
+        // Execute beforeLoad compose statements now that the page object
+        // is fully constructed.  These are predicates that validate the
+        // page is in the expected state — e.g. waiting for a child element
+        // to be present before the page object is considered loaded.
+        if has_before_load {
+            execute_compose(&page, &before_load, &HashMap::new()).await?;
+        }
+
+        Ok(page)
     }
 
     /// Wrap an existing element as a page object.
@@ -212,13 +223,86 @@ impl DynamicPageObject {
         self.registry.as_deref()
     }
 
+    /// Resolve the scope that a nested element should be searched within.
+    ///
+    /// Walks the parent chain from the target element's direct parent back
+    /// up to the root, collecting each ancestor in order.  Then descends
+    /// from the root, finding each ancestor in turn, traversing a shadow
+    /// root at each hop where the ancestor is marked `in_shadow=true`.
+    ///
+    /// If `target_parent` is `None`, returns the root handle unchanged.
+    async fn resolve_scope(
+        &self,
+        target_parent: Option<&str>,
+        args: &HashMap<String, RuntimeValue>,
+    ) -> RuntimeResult<Box<dyn ElementHandle>> {
+        let Some(parent_name) = target_parent else {
+            return Ok(self.root.clone_handle());
+        };
+
+        // Build the chain: [outermost_ancestor, ..., direct_parent].
+        let mut chain: Vec<String> = Vec::new();
+        let mut cursor: Option<String> = Some(parent_name.to_string());
+        while let Some(name) = cursor {
+            // Guard against cycles or missing entries.
+            if chain.contains(&name) {
+                break;
+            }
+            let next_parent = self.element_index.get(&name).and_then(|(_, _, p)| p.clone());
+            chain.push(name);
+            cursor = next_parent;
+        }
+        chain.reverse();
+
+        // Descend from the root, finding each ancestor in turn.
+        let mut current: Box<dyn ElementHandle> = self.root.clone_handle();
+        for ancestor in chain {
+            let (anc_ast, anc_in_shadow, _) = match self.element_index.get(&ancestor) {
+                Some(entry) => entry,
+                None => continue,
+            };
+            let anc_sel_ast = match &anc_ast.selector {
+                Some(s) => s,
+                None => continue,
+            };
+            let anc_sel = resolve_selector(anc_sel_ast, args)?;
+
+            // Traverse a shadow root at this hop if the ancestor was
+            // declared inside its parent's `shadow` block.
+            let search_root: Box<dyn ElementHandle> = if *anc_in_shadow {
+                match current.shadow_root().await? {
+                    Some(sr) => {
+                        // Convert ShadowRootHandle → ElementHandle-like by
+                        // delegating the next find into the shadow.
+                        let found = sr.find_element(&anc_sel).await?;
+                        current = found;
+                        continue;
+                    }
+                    None => {
+                        return Err(RuntimeError::UnsupportedAction {
+                            action: "shadow_root".into(),
+                            element_type: format!(
+                                "ancestor '{ancestor}' expected shadow root but parent has none"
+                            ),
+                        });
+                    }
+                }
+            } else {
+                current
+            };
+            current = search_root.find_element(&anc_sel).await?;
+        }
+
+        Ok(current)
+    }
+
     /// Resolve a list of elements matching a selector (for `returnAll`/`list` elements).
     async fn resolve_elements(
         &self,
         name: &str,
         args: &HashMap<String, RuntimeValue>,
     ) -> RuntimeResult<Vec<DynamicElement>> {
-        let (elem_ast, in_shadow, ref parent_name) =
+        let (elem_ast, _in_shadow, ref parent_name) =
             self.element_index.get(name).ok_or_else(|| RuntimeError::ElementNotDefined {
                 page_object: self.struct_name(),
                 element: name.to_string(),
@@ -236,34 +320,11 @@ impl DynamicPageObject {
             _ => vec![],
         };
 
-        // Resolve the search scope — if this element has a parent,
-        // search within the parent element instead of the root.
-        let scope: Box<dyn ElementHandle> = if let Some(pname) = parent_name {
-            if let Some((parent_ast, parent_in_shadow, _)) = self.element_index.get(pname) {
-                if let Some(parent_sel_ast) = &parent_ast.selector {
-                    let parent_sel = resolve_selector(parent_sel_ast, args)?;
-                    if *parent_in_shadow {
-                        let shadow = self.root.shadow_root().await?.ok_or_else(|| {
-                            RuntimeError::UnsupportedAction {
-                                action: "shadow_root".into(),
-                                element_type: "root has no shadow root".into(),
-                            }
-                        })?;
-                        shadow.find_element(&parent_sel).await?
-                    } else {
-                        self.root.find_element(&parent_sel).await?
-                    }
-                } else {
-                    self.root.clone_handle()
-                }
-            } else {
-                self.root.clone_handle()
-            }
-        } else {
-            self.root.clone_handle()
-        };
+        // Resolve the full scope chain (walks parents back to root).
+        let in_shadow = *_in_shadow;
+        let scope = self.resolve_scope(parent_name.as_deref(), args).await?;
 
-        let handles = if *in_shadow {
+        let handles = if in_shadow {
             let shadow =
                 scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
                     action: "shadow_root".into(),
@@ -302,32 +363,8 @@ impl DynamicPageObject {
 
         let selector = resolve_selector(selector_ast, args)?;
 
-        // Resolve search scope — nested elements search within their parent.
-        // We resolve the parent's selector directly to avoid async recursion.
-        let scope: Box<dyn ElementHandle> = if let Some(pname) = parent_elem_name {
-            if let Some((parent_ast, parent_in_shadow, _)) = self.element_index.get(pname) {
-                if let Some(parent_sel_ast) = &parent_ast.selector {
-                    let parent_sel = resolve_selector(parent_sel_ast, args)?;
-                    if *parent_in_shadow {
-                        let shadow = self.root.shadow_root().await?.ok_or_else(|| {
-                            RuntimeError::UnsupportedAction {
-                                action: "shadow_root".into(),
-                                element_type: "root has no shadow root".into(),
-                            }
-                        })?;
-                        shadow.find_element(&parent_sel).await?
-                    } else {
-                        self.root.find_element(&parent_sel).await?
-                    }
-                } else {
-                    self.root.clone_handle()
-                }
-            } else {
-                self.root.clone_handle()
-            }
-        } else {
-            self.root.clone_handle()
-        };
+        // Resolve the full scope chain by walking parents back to root.
+        let scope = self.resolve_scope(parent_elem_name.as_deref(), args).await?;
 
         // Determine where to search.
         //
@@ -434,10 +471,16 @@ fn collect_elements(
     index: &mut HashMap<String, (ElementAst, bool, Option<String>)>,
 ) {
     index.insert(elem.name.clone(), (elem.clone(), in_shadow, parent.map(|s| s.to_string())));
+    // Non-shadow children are regular DOM descendants of `elem`.  The
+    // shadow boundary (if any) was already crossed when we reached `elem`
+    // itself — its children are in the same DOM frame as `elem`, so
+    // their `in_shadow` flag is false relative to their direct parent.
     for child in &elem.elements {
-        collect_elements(child, in_shadow, Some(&elem.name), index);
+        collect_elements(child, false, Some(&elem.name), index);
     }
-    // Also recurse into element-level shadow
+    // Element-level shadow block: these children require a shadow_root()
+    // hop from `elem` to find them.  That's exactly what `in_shadow=true`
+    // signals to `resolve_element`.
     if let Some(shadow) = &elem.shadow {
         for child in &shadow.elements {
             collect_elements(child, true, Some(&elem.name), index);
