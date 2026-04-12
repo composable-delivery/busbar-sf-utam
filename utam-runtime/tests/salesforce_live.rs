@@ -87,14 +87,13 @@ fn zz_teardown() {
 // ───────────────────────────────────────────────────────────────────────────
 
 /// Write all Allure results from a coverage run and assert the suite
-/// didn't fail catastrophically (discovery broken or zero POs matched).
+/// passed — ANY page object that is Failed or Broken fails the test.
+///
+/// The goal of these tests is to find real issues.  Silent passes or
+/// majority-based pass rates let real failures rot.  If a page object
+/// is declared in the registry, matches the DOM, and our runtime can't
+/// load + exercise it cleanly, that's a bug we must surface.
 fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
-    let writer = shared::with_allure(|w| w.results_dir().to_path_buf());
-    let dir_desc = writer
-        .as_ref()
-        .map(|p| p.display().to_string())
-        .unwrap_or_else(|| "<no writer>".into());
-
     let total = coverage.results.len();
     let passed =
         coverage.results.iter().filter(|r| r.status == AllureStatus::Passed).count();
@@ -103,7 +102,7 @@ fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
     let broken =
         coverage.results.iter().filter(|r| r.status == AllureStatus::Broken).count();
 
-    // Write each per-PO result and the summary.
+    // Write each per-PO result and the summary to Allure.
     shared::with_allure(|writer| {
         for result in &coverage.results {
             if let Err(e) = writer.write_result(result) {
@@ -115,17 +114,48 @@ fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
         }
     });
 
+    let dir_desc = shared::with_allure(|w| w.results_dir().to_path_buf())
+        .as_ref()
+        .map(|p| p.display().to_string())
+        .unwrap_or_else(|| "<no writer>".into());
     eprintln!(
         "\n=== {context} summary: {passed}/{total} passed, {failed} failed, {broken} broken \
-         (results in {dir_desc}) ===\n"
+         (results in {dir_desc}) ==="
     );
 
-    // Fail the cargo test if discovery itself broke (coverage summary is
-    // Broken), or if zero page objects matched (auth/navigation failure).
+    // Hard-fail conditions, in order of severity.
     if coverage.summary.status == AllureStatus::Broken {
         panic!("discovery infrastructure failed for {context}");
     }
     if total == 0 {
-        panic!("zero page objects matched on {context} — auth or navigation failed");
+        panic!(
+            "zero page objects matched on {context} — auth or navigation failed, \
+             or the registry is empty"
+        );
     }
+
+    // Any Failed or Broken PO fails the test.  Build a detailed message
+    // that names each failing page object so the cargo output is enough
+    // to diagnose without opening Allure.
+    if failed > 0 || broken > 0 {
+        let mut details = String::new();
+        for r in &coverage.results {
+            if r.status == AllureStatus::Failed || r.status == AllureStatus::Broken {
+                details.push_str(&format!(
+                    "\n  [{:?}] {}",
+                    r.status, r.name
+                ));
+                if let Some(sd) = &r.status_details {
+                    if let Some(msg) = &sd.message {
+                        details.push_str(&format!("\n    {}", msg.lines().next().unwrap_or("")));
+                    }
+                }
+            }
+        }
+        panic!(
+            "{context}: {failed} failed, {broken} broken out of {total} page objects:{details}"
+        );
+    }
+
+    eprintln!("=== {context}: all {total} page objects passed ===\n");
 }

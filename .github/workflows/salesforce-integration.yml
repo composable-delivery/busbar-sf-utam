@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       test_filter:
-        description: "Test name filter (e.g. 'test_sf_header' or empty for all)"
+        description: "Test name filter (e.g. 'a_home_coverage' or empty for all)"
         required: false
         default: ""
   pull_request:
@@ -35,65 +35,79 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  salesforce-tests:
-    name: Salesforce Live Tests
+  # ──────────────────────────────────────────────────────────────────────────
+  # Driver-independent: validates that all ~1454 page object JSONs compile.
+  # No browser, no Salesforce — pure codegen correctness.
+  # ──────────────────────────────────────────────────────────────────────────
+  codegen:
+    name: Codegen (all page objects)
     runs-on: ubuntu-latest
-    environment: salesforce
-
     steps:
       - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Compile every page object
+        run: cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture
 
+  # ──────────────────────────────────────────────────────────────────────────
+  # Live integration tests.  Matrix over driver — every page context runs
+  # once per driver.  Each matrix cell uploads its Allure results as an
+  # artifact; the `report` job merges them for a single comparison report.
+  # ──────────────────────────────────────────────────────────────────────────
+  live:
+    name: Live (${{ matrix.driver }})
+    runs-on: ubuntu-latest
+    environment: salesforce
+    strategy:
+      fail-fast: false
+      matrix:
+        driver: [webdriver, cdp]
+    steps:
+      - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
-      - name: Build tests
-        run: |
-          cargo test -p utam-runtime --test salesforce_live --all-features --no-run
-          cargo test -p utam-runtime --test compiled_page_objects --all-features --no-run
-          cargo test -p utam-runtime --test dual_adapter --all-features --no-run
+      - name: Build test binary
+        run: cargo test -p utam-runtime --test salesforce_live --all-features --no-run
 
-      # ── Xvfb + Chrome + video ─────────────────────────────────────────
-      - name: Start Xvfb and chromedriver
+      - name: Start Xvfb + chromedriver
         run: |
           sudo apt-get update -qq > /dev/null 2>&1
           sudo apt-get install -y -qq xvfb ffmpeg fluxbox > /dev/null 2>&1
 
-          # Start virtual display
+          # Virtual display — both adapters render here so ffmpeg can capture.
           Xvfb :99 -screen 0 1920x1080x24 &
           sleep 1
-
-          # Start a window manager so Chrome windows render properly
           DISPLAY=:99 fluxbox &
           sleep 1
 
-          # Start chromedriver on the virtual display
+          # WebDriver adapter needs chromedriver; CDP launches its own Chrome.
+          # We start chromedriver always so both adapters have what they need.
           DISPLAY=:99 chromedriver --port=9515 &
           sleep 2
           curl -sf http://localhost:9515/status | jq .ready || echo "WARNING: chromedriver not ready"
 
-      - name: Prepare allure results directory
+      - name: Prepare allure-results directory
         run: mkdir -p /tmp/allure-results
 
-      # ── Run tests ────────────────────────────────────────────────────
-      # Video recording starts AFTER auth (inside the test run step)
-      # to avoid recording the frontdoor URL which contains credentials.
-      - name: Run Salesforce integration tests
+      - name: Run live tests
         env:
           SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           ALLURE_RESULTS_DIR: "/tmp/allure-results"
           DISPLAY: ":99"
+          UTAM_DRIVER: ${{ matrix.driver }}
         run: |
-          # Start video recording in background — waits for browser-ready signal
-          # This ensures we never record the frontdoor URL (contains credentials)
+          # Video recording starts AFTER auth to avoid recording the
+          # frontdoor URL (contains credentials).  The test writes a
+          # browser-ready marker once Lightning has loaded.
           (
-            # Wait for the test to signal that auth is complete
             for i in $(seq 1 120); do
               [ -f /tmp/allure-results/browser-ready ] && break
               sleep 1
             done
             rm -f /tmp/allure-results/browser-ready
-            echo "Starting video recording (auth complete)"
+            echo "Starting video recording (auth complete, driver=${UTAM_DRIVER})"
             DISPLAY=:99 ffmpeg -y -f x11grab -video_size 1920x1080 -framerate 10 \
               -i :99.0 -c:v libx264 -preset ultrafast -crf 25 -pix_fmt yuv420p \
               /tmp/allure-results/screencast.mp4 </dev/null 2>/tmp/ffmpeg.log
@@ -101,36 +115,14 @@ jobs:
           echo $! > /tmp/ffmpeg.pid
 
           FILTER="${{ inputs.test_filter }}"
-
-          # Run with WebDriver adapter (default, stable)
-          # CDP adapter has a clone_handle stale element issue — tracked in #86
-          # --test-threads=1 so the single browser session is used serially.
-          echo "=== Salesforce Live Tests (WebDriver) ==="
+          echo "=== Salesforce Live Tests (UTAM_DRIVER=${UTAM_DRIVER}) ==="
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture --test-threads=1 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture --test-threads=1
           else
-            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture --test-threads=1 2>&1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture --test-threads=1
           fi
 
-      - name: Compiled page object tests
-        if: always()
-        run: cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture 2>&1
-
-      # Run dual adapter tests separately.  NOT continue-on-error — a
-      # failure here means WebDriver or CDP adapter is broken against
-      # the live DOM, which is a real problem worth failing the job for.
-      - name: Dual adapter tests (WebDriver + CDP)
-        if: always()
-        env:
-          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
-          CHROMEDRIVER_URL: "http://localhost:9515"
-          DISPLAY: ":99"
-        run: |
-          echo "=== Dual Adapter Tests ==="
-          cargo test -p utam-runtime --test dual_adapter --all-features -- --nocapture --test-threads=1
-
-      # ── Stop recording + attach video ─────────────────────────────────
-      - name: Stop recording and attach video
+      - name: Stop video recording
         if: always()
         run: |
           if [ -f /tmp/ffmpeg.pid ]; then
@@ -142,26 +134,71 @@ jobs:
             kill -9 "$(cat /tmp/ffmpeg.pid)" 2>/dev/null || true
           fi
 
+      - name: Attach video + driver parameter to Allure results
+        if: always()
+        run: |
           VIDEO="/tmp/allure-results/screencast.mp4"
-          if [ -f "$VIDEO" ] && [ -s "$VIDEO" ]; then
-            SIZE=$(du -h "$VIDEO" | cut -f1)
-            echo "Video recorded: $SIZE"
-            # Attach video to ALL Allure result files
-            for RESULT_FILE in /tmp/allure-results/*-result.json; do
-              [ -f "$RESULT_FILE" ] || continue
+          for RESULT_FILE in /tmp/allure-results/*-result.json; do
+            [ -f "$RESULT_FILE" ] || continue
+            # Attach the screencast
+            if [ -f "$VIDEO" ] && [ -s "$VIDEO" ]; then
               jq '.attachments += [{"name": "Screencast", "source": "screencast.mp4", "type": "video/mp4"}]' \
                 "$RESULT_FILE" > "${RESULT_FILE}.tmp" && mv "${RESULT_FILE}.tmp" "$RESULT_FILE"
-            done
-            echo "Video attached to $(ls /tmp/allure-results/*-result.json 2>/dev/null | wc -l) Allure results"
+            fi
+          done
+          if [ -f "$VIDEO" ] && [ -s "$VIDEO" ]; then
+            SIZE=$(du -h "$VIDEO" | cut -f1)
+            echo "Video: ${SIZE}"
           else
-            echo "WARNING: No video recorded"
+            echo "WARNING: no video recorded"
             cat /tmp/ffmpeg.log 2>/dev/null || true
           fi
 
-      # ── Generate Allure report ────────────────────────────────────────
+      - name: Upload Allure results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.driver }}
+          path: /tmp/allure-results/
+          retention-days: 14
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Merges both matrix cells' Allure results into one report, deploys to
+  # gh-pages.  Runs even if live tests failed — we want the report either
+  # way, and it shows the failures clearly.
+  # ──────────────────────────────────────────────────────────────────────────
+  report:
+    name: Publish Allure report
+    needs: [live]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download all Allure result artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          path: /tmp/artifacts/
+
+      - name: Merge results into a single directory
+        run: |
+          mkdir -p /tmp/allure-results
+          if [ -d /tmp/artifacts ]; then
+            # Each matrix cell uploaded its own allure-results-<driver>/
+            # directory.  Copy them all into a single results dir — Allure
+            # uses the `driver` parameter on each result for comparison.
+            for dir in /tmp/artifacts/allure-results-*/; do
+              [ -d "$dir" ] || continue
+              echo "Merging $(basename "$dir")"
+              cp -rn "$dir"* /tmp/allure-results/ 2>/dev/null || true
+            done
+          fi
+          COUNT=$(ls /tmp/allure-results/*-result.json 2>/dev/null | wc -l)
+          echo "Merged ${COUNT} result files"
+
       - name: Generate Allure report
         id: allure
-        if: always()
         run: |
           npm install -g allure-commandline
 
@@ -173,27 +210,21 @@ jobs:
           BRANCH_DIR=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
           echo "branch_dir=$BRANCH_DIR" >> "$GITHUB_OUTPUT"
 
-          # Fetch previous history from gh-pages for trend tracking
+          # Pull previous history from gh-pages for trend tracking.
           git fetch origin gh-pages:gh-pages 2>/dev/null || true
           if git rev-parse --verify gh-pages 2>/dev/null; then
-            # Extract the entire history/ directory from the previous report
             mkdir -p /tmp/prev-report
             git archive gh-pages -- "${BRANCH_DIR}/history" 2>/dev/null | tar -x -C /tmp/prev-report 2>/dev/null || true
             if [ -d "/tmp/prev-report/${BRANCH_DIR}/history" ]; then
               mkdir -p /tmp/allure-results/history
               cp -r "/tmp/prev-report/${BRANCH_DIR}/history/"* /tmp/allure-results/history/
-              echo "Loaded previous history ($(ls /tmp/allure-results/history/ | wc -l) files)"
-            else
-              echo "No previous history found for branch ${BRANCH_DIR}"
             fi
           fi
 
           allure generate /tmp/allure-results -o /tmp/allure-report --clean
           echo "Report generated"
 
-      # ── Deploy to GitHub Pages (push to gh-pages branch) ──────────────
-      - name: Deploy to GitHub Pages
-        if: always()
+      - name: Deploy to gh-pages
         run: |
           BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
           [ -z "$BRANCH_DIR" ] && BRANCH_DIR="unknown"
@@ -201,19 +232,17 @@ jobs:
           DEPLOY_DIR="/tmp/pages-deploy"
           mkdir -p "$DEPLOY_DIR"
 
-          # Fetch existing Pages content
           if git rev-parse --verify gh-pages 2>/dev/null; then
             git archive gh-pages | tar -x -C "$DEPLOY_DIR" 2>/dev/null || true
           fi
 
-          # Replace this branch's report
           rm -rf "$DEPLOY_DIR/${BRANCH_DIR}"
           mkdir -p "$DEPLOY_DIR/${BRANCH_DIR}"
           if [ -d /tmp/allure-report ]; then
             cp -r /tmp/allure-report/* "$DEPLOY_DIR/${BRANCH_DIR}/"
           fi
 
-          # Create index page
+          # Index page listing all branch reports.
           {
             echo '<!DOCTYPE html><html><head><title>Allure Reports — busbar-sf-utam</title>'
             echo '<style>'
@@ -223,7 +252,7 @@ jobs:
             echo '.current { font-weight: bold; background: #ddf4ff; }'
             echo '</style></head><body>'
             echo '<h1>Salesforce Integration Test Reports</h1>'
-            echo '<p>Each branch publishes its own Allure report with screenshots, video, and history.</p>'
+            echo '<p>Each branch publishes a combined report with results from the WebDriver and CDP driver matrix.</p>'
             for dir in "$DEPLOY_DIR"/*/; do
               [ -d "$dir" ] || continue
               name=$(basename "$dir")
@@ -235,7 +264,6 @@ jobs:
             echo '</body></html>'
           } > "$DEPLOY_DIR/index.html"
 
-          # Push to gh-pages branch
           cd "$DEPLOY_DIR"
           git init
           git checkout -b gh-pages
@@ -245,22 +273,18 @@ jobs:
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           git push --force origin gh-pages
 
-      # ── Job Summary ──────────────────────────────────────────────────
-      - name: Generate summary
-        if: always()
+      - name: Job summary
         run: |
           BRANCH_DIR="${{ steps.allure.outputs.branch_dir }}"
           [ -z "$BRANCH_DIR" ] && BRANCH_DIR="unknown"
           PAGES_URL="https://composable-delivery.github.io/busbar-sf-utam"
-
           {
             echo "## Salesforce Integration Tests"
             echo ""
             echo "| Detail | Value |"
             echo "|--------|-------|"
-            echo "| Driver | Chrome on Xvfb (video recorded) |"
-            echo "| Auth | busbar-sf-api (direct OAuth, no SF CLI) |"
-            echo "| Allure Report | [View report](${PAGES_URL}/${BRANCH_DIR}/) |"
-            echo "| All Reports | [Report index](${PAGES_URL}/) |"
+            echo "| Matrix | WebDriver + CDP (both drivers exercised) |"
+            echo "| Allure Report | [View](${PAGES_URL}/${BRANCH_DIR}/) |"
+            echo "| All Reports | [Index](${PAGES_URL}/) |"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
