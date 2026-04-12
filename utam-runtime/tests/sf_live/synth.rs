@@ -211,38 +211,19 @@ pub fn default_value_for_type(utam_type: &str) -> RuntimeValue {
     }
 }
 
-/// Smarter default: use the arg name as a hint for a reasonable value.
+/// Default runtime value for an arg based on name + type.
 ///
-/// An empty string is useless for parameterized CSS selectors that look for
-/// `[aria-label='%s']` — the substitution produces `[aria-label='']` which
-/// matches nothing.  A name-based guess gives us a non-empty value that's
-/// at least likely to match *something* in a typical Salesforce org.
-pub fn smart_default(arg_name: &str, utam_type: &str) -> RuntimeValue {
-    match utam_type {
-        "string" => {
-            let n = arg_name.to_lowercase();
-            // Common parameter names → reasonable defaults
-            let s: &str = if n.contains("arialabel") || n.contains("label") {
-                "Users"
-            } else if n.contains("title") || n.contains("name") {
-                "Users"
-            } else if n.contains("url") {
-                "Setup"
-            } else if n.contains("text") || n.contains("term") || n.contains("search") {
-                "Accounts"
-            } else if n.contains("index") || n.contains("idx") {
-                "0"
-            } else {
-                // Unknown arg name — a single-character string is usually safer
-                // than empty for contains/starts-with selectors.
-                " "
-            };
-            RuntimeValue::String(s.to_string())
-        }
-        "number" => RuntimeValue::Number(0),
-        "boolean" => RuntimeValue::Bool(false),
-        _ => RuntimeValue::Null,
-    }
+/// We deliberately use empty strings for `string` args when there's no
+/// curated override.  Name-based "smart" guesses (e.g. "Users" for
+/// ariaLabel) are worse than empty strings in practice: empty matches
+/// nothing deterministically (`[aria-label='']` → no match → clean
+/// "not found" error, easily classified), while a specific value like
+/// "Users" matches inconsistently across pages and produces flaky
+/// stale-selector errors that aren't actually selector bugs.
+///
+/// For methods where a specific value matters, use `override_args`.
+pub fn smart_default(_arg_name: &str, utam_type: &str) -> RuntimeValue {
+    default_value_for_type(utam_type)
 }
 
 /// Page-object-specific argument overrides for methods that need real values.
@@ -302,7 +283,15 @@ pub fn synth_element_args(
 }
 
 /// Validate that a runtime value matches a declared UTAM return type.
+///
+/// `Null` is always accepted — it represents the nullable-absent case
+/// per the UTAM spec.  The runtime short-circuits nullable absence to
+/// Null, and that's a valid return from the method's perspective.
 pub fn validate_return(value: &RuntimeValue, declared: &str) -> Result<(), String> {
+    // Null is always valid — nullable-absent case.
+    if matches!(value, RuntimeValue::Null) {
+        return Ok(());
+    }
     let primary = declared.split(',').next().unwrap_or(declared).trim();
     let ok = match primary {
         "string" => matches!(value, RuntimeValue::String(_)),
@@ -315,10 +304,9 @@ pub fn validate_return(value: &RuntimeValue, declared: &str) -> Result<(), Strin
                 RuntimeValue::Element(_)
                     | RuntimeValue::Elements(_)
                     | RuntimeValue::CustomComponent { .. }
-                    | RuntimeValue::Null
             )
         }
-        _ if primary.contains('/') => !matches!(value, RuntimeValue::Null),
+        _ if primary.contains('/') => true,
         _ => true,
     };
     if ok {
@@ -334,26 +322,12 @@ mod tests {
     use utam_runtime::page_object::ArgInfo;
 
     #[test]
-    fn test_smart_default_for_arialabel() {
+    fn test_smart_default_returns_empty_string() {
+        // Smart defaults deliberately return type defaults (empty string for
+        // strings) rather than name-based guesses — see doc comment.
         match smart_default("ariaLabel", "string") {
-            RuntimeValue::String(s) => assert_eq!(s, "Users"),
-            other => panic!("expected String, got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn test_smart_default_for_url() {
-        match smart_default("partialLandingUrl", "string") {
-            RuntimeValue::String(s) => assert_eq!(s, "Setup"),
-            other => panic!("expected String, got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn test_smart_default_for_search_term() {
-        match smart_default("searchTerm", "string") {
-            RuntimeValue::String(s) => assert_eq!(s, "Accounts"),
-            other => panic!("expected String, got {other:?}"),
+            RuntimeValue::String(s) => assert!(s.is_empty()),
+            other => panic!("expected empty String, got {other:?}"),
         }
     }
 
@@ -497,8 +471,15 @@ mod tests {
             "utam-global/pageObjects/appNav"
         )
         .is_ok());
-        assert!(
-            validate_return(&RuntimeValue::Null, "utam-global/pageObjects/appNav").is_err()
-        );
+    }
+
+    #[test]
+    fn test_validate_return_null_always_ok() {
+        // Null represents nullable-absent and is valid for any declared type.
+        assert!(validate_return(&RuntimeValue::Null, "string").is_ok());
+        assert!(validate_return(&RuntimeValue::Null, "boolean").is_ok());
+        assert!(validate_return(&RuntimeValue::Null, "number").is_ok());
+        assert!(validate_return(&RuntimeValue::Null, "clickable").is_ok());
+        assert!(validate_return(&RuntimeValue::Null, "utam-x/pageObjects/y").is_ok());
     }
 }
