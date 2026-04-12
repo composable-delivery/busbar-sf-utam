@@ -125,9 +125,9 @@ pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
     let element_step = {
         let s = StepBuilder::start("resolve key elements");
         let mut s = s;
-        // Only test elements whose selectors are NOT deprecated.
-        // searchIcon uses `.forceHeaderButtonDeprecated` — tested via getSearch above.
+        // Only test elements whose selectors should be present.
         for name in &[
+            "searchIcon",
             "notifications",
             "notificationCount",
             "globalActions",
