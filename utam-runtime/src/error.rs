@@ -18,6 +18,15 @@ pub enum RuntimeError {
     #[error("Element '{element}' not defined in page object '{page_object}'")]
     ElementNotDefined { page_object: String, element: String },
 
+    /// Nullable element was not present in the DOM (expected absence).
+    ///
+    /// The UTAM `"nullable": true` flag on an element means "this element
+    /// may or may not exist; the method should handle absence gracefully."
+    /// Compose execution catches this error, sets the current result to
+    /// Null, and continues with subsequent statements.
+    #[error("Nullable element '{element}' is absent from the DOM")]
+    NullableAbsent { element: String },
+
     /// Action not supported for this element type
     #[error("Action '{action}' not supported for element type '{element_type}'")]
     UnsupportedAction { action: String, element_type: String },

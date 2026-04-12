@@ -329,21 +329,29 @@ impl DynamicPageObject {
             self.root.clone_handle()
         };
 
-        // Determine where to search
+        // Determine where to search.
+        //
+        // Nullable elements that don't match return `RuntimeError::NullableAbsent`
+        // so the compose-method interpreter can short-circuit to Null rather
+        // than executing actions against a fake base element.
         let found: Box<dyn ElementHandle> = if *in_shadow {
-            let shadow =
-                scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
-                    action: "shadow_root".into(),
-                    element_type: "element has no shadow root".into(),
-                })?;
+            let shadow = match scope.shadow_root().await? {
+                Some(sr) => sr,
+                None if elem_ast.nullable => {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+                }
+                None => {
+                    return Err(RuntimeError::UnsupportedAction {
+                        action: "shadow_root".into(),
+                        element_type: "element has no shadow root".into(),
+                    });
+                }
+            };
             if selector_ast.return_all {
                 let handles = shadow.find_elements(&selector).await?;
-                if elem_ast.nullable && handles.is_empty() {
-                    return Ok(DynamicElement::base(self.root.clone_handle()));
+                if handles.is_empty() && elem_ast.nullable {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
                 }
-                // For returnAll, wrap as Elements via RuntimeValue
-                // But DynamicElement is singular — return the first for now
-                // (the caller should use get_elements for lists)
                 return Ok(wrap_element(
                     handles.into_iter().next().ok_or_else(|| RuntimeError::ElementNotDefined {
                         page_object: self.struct_name(),
@@ -352,11 +360,17 @@ impl DynamicPageObject {
                     elem_ast,
                 ));
             }
-            shadow.find_element(&selector).await?
+            match shadow.find_element(&selector).await {
+                Ok(el) => el,
+                Err(_) if elem_ast.nullable => {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+                }
+                Err(e) => return Err(e),
+            }
         } else if selector_ast.return_all {
             let handles = scope.find_elements(&selector).await?;
-            if elem_ast.nullable && handles.is_empty() {
-                return Ok(DynamicElement::base(scope));
+            if handles.is_empty() && elem_ast.nullable {
+                return Err(RuntimeError::NullableAbsent { element: name.to_string() });
             }
             return Ok(wrap_element(
                 handles.into_iter().next().ok_or_else(|| RuntimeError::ElementNotDefined {
@@ -368,9 +382,8 @@ impl DynamicPageObject {
         } else {
             match scope.find_element(&selector).await {
                 Ok(el) => el,
-                Err(e) if elem_ast.nullable => {
-                    let _ = e;
-                    return Ok(DynamicElement::base(self.root.clone_handle()));
+                Err(_) if elem_ast.nullable => {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
                 }
                 Err(e) => return Err(e),
             }
@@ -475,12 +488,25 @@ fn execute_compose<'a>(
             // When the element has a CustomComponent type and a registry is
             // available, look up the referenced page object AST so chained
             // method calls can resolve through the child page object.
+            //
+            // Nullable elements that are absent produce `NullableAbsent`
+            // errors; we catch them here, set the current result to Null,
+            // and skip this statement.  This preserves the UTAM contract
+            // that `nullable: true` means "method handles absence gracefully."
             let mut resolved_as_custom = false;
             let element = if let Some(elem_name) = &stmt.element {
                 if elem_name == "document" {
                     None
                 } else {
-                    let el = page.resolve_element(elem_name, method_args).await?;
+                    let el = match page.resolve_element(elem_name, method_args).await {
+                        Ok(el) => el,
+                        Err(RuntimeError::NullableAbsent { .. }) => {
+                            last_result = RuntimeValue::Null;
+                            last_element = None;
+                            continue;
+                        }
+                        Err(e) => return Err(e),
+                    };
 
                     // Check if this element is a custom component type
                     if let Some((elem_ast, _, _)) = page.element_index.get(elem_name) {
