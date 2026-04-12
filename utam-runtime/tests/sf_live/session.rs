@@ -152,14 +152,6 @@ impl SalesforceSession {
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
     }
 
-    /// Clean up: delete seeded records and quit the browser.
-    pub async fn cleanup(self) {
-        if !self.seeded_records.is_empty() {
-            eprintln!("\n=== Cleanup ===");
-            cleanup_test_data(&self.sf_client, &self.seeded_records).await;
-        }
-        self.driver.quit().await.expect("Failed to quit");
-    }
 }
 
 // ---------------------------------------------------------------------------
