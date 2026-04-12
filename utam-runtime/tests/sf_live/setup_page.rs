@@ -5,20 +5,26 @@
 //!
 //! Page objects tested:
 //!   - setup/setupNavTree — the left-hand navigation tree
+//!     - getAndWaitForNavTreeNodeByName(ariaLabel) — waitFor predicate + parameterized element
+//!     - waitForUrl(url) — waitFor predicate + document URL matcher
+//!     - navTreeNodeByName(ariaLabel) — parameterized element resolution
 
 use std::collections::HashMap;
 
 use super::helpers::*;
 use super::session::SalesforceSession;
+use utam_runtime::element::RuntimeValue;
 use utam_runtime::page_object::PageObjectRuntime;
 use utam_test::allure::*;
 
 pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
-    let mut builder = TestResultBuilder::new("setup/setupNavTree — load + introspect")
+    let mut builder = TestResultBuilder::new("setup/setupNavTree — methods + parameterized elements")
         .full_name("salesforce_live::setup_page::test_all_methods")
         .description(
-            "Navigate to Setup Home, load setup/setupNavTree, introspect its \
-             elements and methods, and resolve elements against the live DOM.",
+            "Navigate to Setup Home, load setup/setupNavTree, then exercise both \
+             methods with real arguments: getAndWaitForNavTreeNodeByName searches for \
+             a nav node by aria-label, waitForUrl waits for the URL to contain a \
+             substring.  Also resolves the parameterized navTreeNodeByName element.",
         )
         .label("epic", "Salesforce Browser Testing")
         .label("feature", "Page Object Methods")
@@ -42,8 +48,7 @@ pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
             s.parameter("url", url).finish(AllureStatus::Passed)
         } else {
             eprintln!("  WARNING: URL doesn't contain 'setup': {url}");
-            s.parameter("url", url)
-                .finish_err("URL does not contain 'setup'")
+            s.parameter("url", url).finish_err("URL does not contain 'setup'")
         }
     };
     builder = builder.step(nav_step);
@@ -58,61 +63,87 @@ pub async fn test_all_methods(session: &SalesforceSession) -> AllureTestResult {
     };
     eprintln!("  Loaded setup/setupNavTree");
 
-    // ── Introspect: list methods and elements ──────────────────────────
+    // ── Introspect ─────────────────────────────────────────────────────
     let introspect_step = {
-        let s = StepBuilder::start("introspect methods and elements");
         let methods = setup_nav.method_signatures();
         let elements = setup_nav.element_names();
         let desc = setup_nav.description().unwrap_or_else(|| "<none>".into());
-
         eprintln!("  Description: {desc}");
-        eprintln!("  Methods ({}): {:?}", methods.len(), methods.iter().map(|m| &m.name).collect::<Vec<_>>());
+        eprintln!(
+            "  Methods ({}): {:?}",
+            methods.len(),
+            methods.iter().map(|m| &m.name).collect::<Vec<_>>()
+        );
         eprintln!("  Elements ({}): {:?}", elements.len(), elements);
 
-        s.parameter("method_count", methods.len().to_string())
+        StepBuilder::start("introspect methods and elements")
+            .parameter("method_count", methods.len().to_string())
             .parameter("element_count", elements.len().to_string())
             .parameter("description", desc)
             .finish(AllureStatus::Passed)
     };
     builder = builder.step(introspect_step);
 
-    // ── Resolve all public elements ────────────────────────────────────
-    let no_args = HashMap::new();
-    let elements_step = {
-        let s = StepBuilder::start("resolve elements against live DOM");
-        let mut s = s;
-        for name in setup_nav.element_names() {
-            let sub = run_get_element(&setup_nav, name, &no_args).await;
-            eprintln!("  element {name}: {:?}", sub.status);
-            s = s.sub_step(sub);
-        }
-        s.finish(AllureStatus::Passed)
-    };
-    builder = builder.step(elements_step);
-
-    // ── Call all methods (if any) ──────────────────────────────────────
-    let method_sigs = setup_nav.method_signatures();
-    if !method_sigs.is_empty() {
-        let methods_step = {
-            let s = StepBuilder::start("call all methods");
-            let mut s = s;
-            for method in &method_sigs {
-                // Only call no-arg methods automatically; skip methods that need args
-                if method.args.is_empty() {
-                    let sub = run_method(&setup_nav, &method.name, &no_args, expect_any).await;
-                    eprintln!("  method {}: {:?}", method.name, sub.status);
-                    s = s.sub_step(sub);
-                } else {
-                    let sub = StepBuilder::start(format!("SKIP {} (requires args: {:?})", method.name,
-                        method.args.iter().map(|a| format!("{}: {}", a.name, a.arg_type)).collect::<Vec<_>>()))
-                        .finish(AllureStatus::Skipped);
-                    s = s.sub_step(sub);
-                }
+    // ── Element: navTreeNodeByName with ariaLabel="Users" ──────────────
+    // Selector: .onesetupNavTreeNode[aria-label*='%s']
+    // The "Users" node should be present on Setup Home.
+    let element_step = {
+        let s = StepBuilder::start("resolve navTreeNodeByName(ariaLabel=\"Users\")");
+        let mut args = HashMap::new();
+        args.insert("ariaLabel".into(), RuntimeValue::String("Users".into()));
+        match setup_nav.get_element("navTreeNodeByName", &args).await {
+            Ok(el) => {
+                eprintln!("  element navTreeNodeByName(\"Users\"): PASS ({})", el.type_name());
+                s.parameter("capability", el.type_name()).finish(AllureStatus::Passed)
             }
-            s.finish(AllureStatus::Passed)
-        };
-        builder = builder.step(methods_step);
-    }
+            Err(e) => {
+                eprintln!("  element navTreeNodeByName(\"Users\"): FAIL ({e})");
+                s.finish_err(format!("{e}"))
+            }
+        }
+    };
+    builder = builder.step(element_step);
+
+    // ── Method: getAndWaitForNavTreeNodeByName ──────────────────────────
+    // This method references the navTreeNodeByName element, which requires
+    // ariaLabel.  The arg flows through the compose predicate → element
+    // selector substitution.
+    let method1_step = {
+        let s = StepBuilder::start("call_method(\"getAndWaitForNavTreeNodeByName\") with ariaLabel=\"Users\"");
+        let mut args = HashMap::new();
+        args.insert("ariaLabel".into(), RuntimeValue::String("Users".into()));
+        match setup_nav.call_method("getAndWaitForNavTreeNodeByName", &args).await {
+            Ok(value) => {
+                eprintln!("  getAndWaitForNavTreeNodeByName(\"Users\"): PASS = {value}");
+                s.parameter("returned", format!("{value}")).finish(AllureStatus::Passed)
+            }
+            Err(e) => {
+                eprintln!("  getAndWaitForNavTreeNodeByName(\"Users\"): FAIL = {e}");
+                s.finish_err(format!("{e}"))
+            }
+        }
+    };
+    builder = builder.step(method1_step);
+
+    // ── Method: waitForUrl ─────────────────────────────────────────────
+    // The compose predicate checks document.getUrl contains the "url" arg.
+    // We're already on the Setup page, so "Setup" should match.
+    let method2_step = {
+        let s = StepBuilder::start("call_method(\"waitForUrl\") with url=\"Setup\"");
+        let mut args = HashMap::new();
+        args.insert("url".into(), RuntimeValue::String("Setup".into()));
+        match setup_nav.call_method("waitForUrl", &args).await {
+            Ok(value) => {
+                eprintln!("  waitForUrl(\"Setup\"): PASS = {value}");
+                s.parameter("returned", format!("{value}")).finish(AllureStatus::Passed)
+            }
+            Err(e) => {
+                eprintln!("  waitForUrl(\"Setup\"): FAIL = {e}");
+                s.finish_err(format!("{e}"))
+            }
+        }
+    };
+    builder = builder.step(method2_step);
 
     builder.finish_from_steps()
 }
