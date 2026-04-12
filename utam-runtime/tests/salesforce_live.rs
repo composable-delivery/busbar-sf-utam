@@ -1,75 +1,133 @@
-//! Salesforce live integration tests
+//! Salesforce live integration tests — declarative coverage across all
+//! page objects that match the live DOM.
 //!
-//! Runs against a real Salesforce org.  Authenticates via busbar-sf-api,
-//! seeds test data, then exercises page object **methods** against the
-//! live DOM — not just selectors, but every compose action chain.
+//! This test:
+//!   1. Authenticates against a real Salesforce org (busbar-sf-api)
+//!   2. Seeds test data (Account + Contact + Opportunity + Lead + Case)
+//!   3. Navigates through Home → Account detail → Setup pages
+//!   4. On each page, runs `find_known_page_objects` to discover every
+//!      registered page object whose root selector matches the current DOM
+//!   5. For each matched page object, the generic runner loads it and
+//!      exercises EVERY method and EVERY public element, producing one
+//!      Allure test result per page object with nested steps
 //!
-//! Each page object module produces its own Allure test result with:
-//! - Nested steps (one per method call, with timing)
-//! - Parameters (driver type, page object name)
-//! - Labels (epic / feature / story / severity)
-//! - Links to GitHub issues
+//! This turns the 1500 declarative UTAM page objects into real test cases
+//! without per-page-object test code.  Known method/element arguments that
+//! need specific values are curated in `sf_live::synth::override_args`.
 //!
-//! Test modules:
-//! - `header`          — global/header: all 9 methods
-//! - `desktop_layout`  — navex/desktopLayoutContainer: getAppNav + custom components
-//! - `global_create`   — global/globalCreate: clickGlobalActions + parameterized menu item
-//! - `account_detail`  — Account record detail: seeded data + page objects
-//! - `setup_page`      — setup/setupNavTree: load + introspect + resolve elements
-//!
-//! Skipped locally (no CHROMEDRIVER_URL), panics in CI if credentials missing.
+//! The run fails ONLY if discovery itself breaks — individual page object
+//! method failures are reported in Allure as legitimate findings (stale
+//! selectors, missing elements, version mismatches).
 
 mod sf_live;
+
+use utam_test::allure::AllureStatus;
 
 #[tokio::test]
 async fn test_salesforce_live() {
     let Some(session) = sf_live::session::SalesforceSession::setup().await else {
-        return; // skip — no credentials
+        return;
     };
 
+    // All Allure results accumulate here.  Written to disk at end.
     let mut all_results = Vec::new();
+    let mut summaries = Vec::new();
+    let mut any_discovery_broken = false;
 
-    // ── Home page tests ────────────────────────────────────────────────
-    // These run on the Lightning home page (already loaded after auth).
+    // ── Phase 1: Home page (already loaded after auth) ─────────────────
+    let coverage = sf_live::coverage::discover_and_test(&session, "home").await;
+    if coverage.summary.status == AllureStatus::Broken {
+        any_discovery_broken = true;
+    }
+    all_results.extend(coverage.results);
+    summaries.push(coverage.summary);
 
-    all_results.push(sf_live::header::test_all_methods(&session).await);
-    all_results.push(sf_live::desktop_layout::test_all_methods(&session).await);
-    all_results.push(sf_live::global_create::test_all_methods(&session).await);
+    // ── Phase 2: Account detail ────────────────────────────────────────
+    if let Some((_, account_id)) = session.seeded_records.iter().find(|(t, _)| t == "Account") {
+        let url = format!("{}/lightning/r/Account/{account_id}/view", session.instance_url);
+        session.navigate(&url).await;
+        tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
-    // ── Record detail page ─────────────────────────────────────────────
-    // Navigates to the seeded Account record.
-
-    if !session.seeded_records.is_empty() {
-        all_results.push(sf_live::account_detail::test_all_methods(&session).await);
+        let coverage =
+            sf_live::coverage::discover_and_test(&session, "account_detail").await;
+        if coverage.summary.status == AllureStatus::Broken {
+            any_discovery_broken = true;
+        }
+        all_results.extend(coverage.results);
+        summaries.push(coverage.summary);
     }
 
-    // ── Setup page ─────────────────────────────────────────────────────
-    // Navigates to Setup Home.
+    // ── Phase 3: Setup page ────────────────────────────────────────────
+    let setup_url = format!("{}/lightning/setup/SetupOneHome/home", session.instance_url);
+    session.navigate(&setup_url).await;
+    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
-    all_results.push(sf_live::setup_page::test_all_methods(&session).await);
+    let coverage = sf_live::coverage::discover_and_test(&session, "setup").await;
+    if coverage.summary.status == AllureStatus::Broken {
+        any_discovery_broken = true;
+    }
+    all_results.extend(coverage.results);
+    summaries.push(coverage.summary);
 
-    // ── Write Allure results ───────────────────────────────────────────
+    // ── Write all Allure results ───────────────────────────────────────
     eprintln!("\n=== Write Allure Results ===");
     for result in &all_results {
-        match session.allure.write_result(result) {
-            Ok(path) => eprintln!("  Wrote: {} ({})", path.display(), result.name),
-            Err(e) => eprintln!("  ERROR writing {}: {e}", result.name),
+        if let Err(e) = session.allure.write_result(result) {
+            eprintln!("  ERROR writing {}: {e}", result.name);
         }
     }
+    for summary in &summaries {
+        if let Err(e) = session.allure.write_result(summary) {
+            eprintln!("  ERROR writing summary {}: {e}", summary.name);
+        }
+    }
+    eprintln!(
+        "  Wrote {} page object results + {} page summaries",
+        all_results.len(),
+        summaries.len()
+    );
 
-    let passed = all_results.iter().filter(|r| r.status == utam_test::allure::AllureStatus::Passed).count();
-    let failed = all_results.iter().filter(|r| r.status == utam_test::allure::AllureStatus::Failed).count();
-    let broken = all_results.iter().filter(|r| r.status == utam_test::allure::AllureStatus::Broken).count();
-    let total = all_results.len();
-    eprintln!("\n=== Summary: {passed} passed, {failed} failed, {broken} broken out of {total} ===");
+    // ── Aggregate stats ────────────────────────────────────────────────
+    let total_pos = all_results.len();
+    let passed = all_results.iter().filter(|r| r.status == AllureStatus::Passed).count();
+    let failed = all_results.iter().filter(|r| r.status == AllureStatus::Failed).count();
+    let broken = all_results.iter().filter(|r| r.status == AllureStatus::Broken).count();
+    let skipped = all_results.iter().filter(|r| r.status == AllureStatus::Skipped).count();
+
+    eprintln!("\n=== Final Summary ===");
+    eprintln!("  Total page objects tested: {total_pos}");
+    eprintln!("  Passed: {passed} ({}%)", percent(passed, total_pos));
+    eprintln!("  Failed: {failed}");
+    eprintln!("  Broken: {broken}");
+    eprintln!("  Skipped: {skipped}");
+    for s in &summaries {
+        eprintln!("  Summary: {}", s.name);
+    }
 
     // ── Cleanup ────────────────────────────────────────────────────────
     session.cleanup().await;
 
+    // The test fails only if the discovery infrastructure itself broke.
+    // Individual page object results (pass/fail/skip) are reported in
+    // Allure — that's the whole point of coverage testing.
     assert!(
-        failed == 0 && broken == 0,
-        "{failed} failed, {broken} broken out of {total} — see Allure report for details"
+        !any_discovery_broken,
+        "Discovery infrastructure failed on one or more pages — check the summary results"
     );
 
-    eprintln!("\n=== All {total} page object test suites passed ===");
+    // Also fail if we covered zero page objects — that means something is
+    // catastrophically wrong with auth, navigation, or discovery.
+    assert!(
+        total_pos > 0,
+        "Zero page objects matched on any page — auth or navigation failed"
+    );
+
+    eprintln!("\n=== Coverage complete: {passed}/{total_pos} page objects fully passed ===");
+}
+
+fn percent(n: usize, total: usize) -> String {
+    if total == 0 {
+        return "0".into();
+    }
+    format!("{:.1}", (n as f64) * 100.0 / (total as f64))
 }

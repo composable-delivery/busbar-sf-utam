@@ -152,22 +152,6 @@ impl SalesforceSession {
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
     }
 
-    /// Dismiss any open menus, modals, or overlays via Escape + body click.
-    pub async fn dismiss_ui(&self) {
-        let _ = self.driver.execute_script(
-            "document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))",
-            vec![],
-        ).await;
-        tokio::time::sleep(std::time::Duration::from_millis(300)).await;
-        let _ = self.driver.execute_script("document.body.click()", vec![]).await;
-        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-    }
-
-    /// Take a screenshot and write it as an Allure attachment.
-    pub fn screenshot_attachment(&self, png: &[u8], name: &str) -> Option<utam_test::allure::AllureAttachment> {
-        self.allure.write_attachment(name, "image/png", png).ok()
-    }
-
     /// Clean up: delete seeded records and quit the browser.
     pub async fn cleanup(self) {
         if !self.seeded_records.is_empty() {
