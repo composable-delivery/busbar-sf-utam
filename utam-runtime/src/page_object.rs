@@ -824,12 +824,37 @@ fn resolve_compose_args(
 }
 
 /// Convert a serde_json::Value to a RuntimeValue.
+///
+/// Handles UTAM-specific typed literals like `{"type": "locator", "value": {"css": ".foo"}}`
+/// by extracting the underlying string, so actions like `containsElement(locator)` receive
+/// the CSS string they expect instead of a JSON-encoded object.
 fn json_to_runtime_value(v: &serde_json::Value) -> RuntimeValue {
     match v {
         serde_json::Value::Null => RuntimeValue::Null,
         serde_json::Value::Bool(b) => RuntimeValue::Bool(*b),
         serde_json::Value::Number(n) => RuntimeValue::Number(n.as_i64().unwrap_or(0)),
         serde_json::Value::String(s) => RuntimeValue::String(s.clone()),
+        serde_json::Value::Object(map) => {
+            // UTAM typed-value wrappers: {"type": "locator", "value": {"css": "..."}}
+            if let Some(typ) = map.get("type").and_then(|t| t.as_str()) {
+                if typ == "locator" {
+                    if let Some(val) = map.get("value") {
+                        if let Some(css) = val.get("css").and_then(|c| c.as_str()) {
+                            return RuntimeValue::String(css.to_string());
+                        }
+                        if let Some(aid) = val.get("accessid").and_then(|a| a.as_str()) {
+                            return RuntimeValue::String(aid.to_string());
+                        }
+                    }
+                }
+                // {"type": "string"|"number"|"boolean", "value": ...} typed literals.
+                if let Some(val) = map.get("value") {
+                    return json_to_runtime_value(val);
+                }
+            }
+            // Unknown object shape — stringify as a last resort.
+            RuntimeValue::String(v.to_string())
+        }
         _ => RuntimeValue::String(v.to_string()),
     }
 }
@@ -1036,6 +1061,37 @@ mod tests {
         assert!(
             matches!(json_to_runtime_value(&serde_json::json!("hi")), RuntimeValue::String(s) if s == "hi")
         );
+    }
+
+    #[test]
+    fn test_json_to_runtime_value_locator_css() {
+        // Typed locator literal: {"type": "locator", "value": {"css": ".foo"}}
+        // must produce RuntimeValue::String(".foo") so actions like
+        // containsElement(locator) receive the CSS string they expect.
+        let v = serde_json::json!({ "type": "locator", "value": { "css": ".foo" } });
+        match json_to_runtime_value(&v) {
+            RuntimeValue::String(s) => assert_eq!(s, ".foo"),
+            other => panic!("expected String(.foo), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_json_to_runtime_value_typed_literal() {
+        // {"type": "string", "value": "hi"} unwraps to the inner value.
+        let v = serde_json::json!({ "type": "string", "value": "hi" });
+        match json_to_runtime_value(&v) {
+            RuntimeValue::String(s) => assert_eq!(s, "hi"),
+            other => panic!("expected String(hi), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_json_to_runtime_value_locator_accessid() {
+        let v = serde_json::json!({ "type": "locator", "value": { "accessid": "my-id" } });
+        match json_to_runtime_value(&v) {
+            RuntimeValue::String(s) => assert_eq!(s, "my-id"),
+            other => panic!("expected String, got {other:?}"),
+        }
     }
 
     #[test]

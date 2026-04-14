@@ -59,7 +59,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: salesforce
     strategy:
+      # Serialize matrix cells — both drivers share one Salesforce org.
+      # Running in parallel races on seed/cleanup of the same records
+      # (all use Name='Acme Corp' etc), so one cell deletes records
+      # the other just created.
       fail-fast: false
+      max-parallel: 1
       matrix:
         driver: [webdriver, cdp]
     steps:
