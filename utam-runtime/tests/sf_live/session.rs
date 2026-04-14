@@ -3,13 +3,70 @@
 //! [`SalesforceSession`] owns the browser, the page object registry, and the
 //! Allure writer.  Each test module receives a `&SalesforceSession` and returns
 //! one or more `AllureTestResult`s that the orchestrator writes to disk.
+//!
+//! Test data uses a **session-scoped tag** embedded in record names so
+//! concurrent test runs (e.g. the webdriver and cdp matrix cells hitting
+//! the same org in parallel) can seed and clean up without colliding.
+//! See [`RunTag`] for the format.
 
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use busbar_sf_api::{SObjectRecord, SalesforceClient, SfdxAuthUrl};
 use utam_runtime::prelude::*;
 use utam_test::allure::{AllureCategory, AllureStatus, AllureWriter};
+
+/// Identifies the test records created by this process so concurrent
+/// runs don't delete each other's data.
+///
+/// Format: `{driver}-{unix-millis-hex}` e.g. `webdriver-19a4c7b8f12`.
+///
+/// - `{driver}` comes from `UTAM_DRIVER` (or `"local"`) so the matrix
+///   cells are guaranteed to disagree.
+/// - `{unix-millis-hex}` disambiguates consecutive runs with the same
+///   driver — each run gets its own tag; old runs' data can still be
+///   queried and cleaned via a LIKE pattern.
+///
+/// Example record names:
+///   Account.Name     = "Acme Corp [webdriver-19a4c7b8f12]"
+///   Contact.LastName = "Doe-webdriver-19a4c7b8f12"
+///   Opportunity.Name = "Acme Deal [cdp-19a4c7b900a]"
+#[derive(Debug, Clone)]
+pub struct RunTag {
+    pub driver: String,
+    pub stamp: String,
+}
+
+impl RunTag {
+    pub fn generate(driver: &str) -> Self {
+        let stamp = format!(
+            "{:x}",
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|d| d.as_millis())
+                .unwrap_or(0)
+        );
+        Self { driver: driver.to_string(), stamp }
+    }
+
+    /// Full tag — unique per (driver, process start time).
+    pub fn full(&self) -> String {
+        format!("{}-{}", self.driver, self.stamp)
+    }
+
+    /// Pattern matching THIS driver's records across runs (including
+    /// orphans from crashed runs).  Used for age-based cleanup.
+    pub fn driver_like(&self) -> String {
+        format!("%[{}-%]", self.driver)
+    }
+
+    /// Pattern matching exactly THIS run's records.
+    #[allow(dead_code)]
+    pub fn exact_like(&self) -> String {
+        format!("%[{}]", self.full())
+    }
+}
 
 /// Shared state for the entire Salesforce live test run.
 pub struct SalesforceSession {
@@ -19,6 +76,10 @@ pub struct SalesforceSession {
     pub sf_client: SalesforceClient,
     pub instance_url: String,
     pub seeded_records: Vec<(String, String)>,
+    /// Held so tests that want to reference the run tag (for ad-hoc
+    /// Allure parameters or custom cleanup) can read it.
+    #[allow(dead_code)]
+    pub run_tag: RunTag,
     driver_name: String,
 }
 
@@ -51,12 +112,18 @@ impl SalesforceSession {
         let instance_url = sf_client.instance_url.clone();
         eprintln!("Authenticated to {instance_url}");
 
+        // Generate a per-run tag so concurrent matrix cells don't collide
+        // on seed/cleanup.  Must happen BEFORE seeding so records can be
+        // tagged as we create them.
+        let driver_name = if use_cdp() { "cdp" } else { "webdriver" };
+        let run_tag = RunTag::generate(driver_name);
+        eprintln!("[setup] run_tag = {}", run_tag.full());
+
         // ── Seed test data ─────────────────────────────────────────────
         eprintln!("\n=== Seed Test Data ===");
-        let seeded_records = seed_test_data(&sf_client).await;
+        let seeded_records = seed_test_data(&sf_client, &run_tag).await;
 
         // ── Browser + registry ─────────────────────────────────────────
-        let driver_name = if use_cdp() { "cdp" } else { "webdriver" };
         let driver = create_driver().await;
         let registry = Arc::new(load_registry());
 
@@ -129,6 +196,7 @@ impl SalesforceSession {
             sf_client,
             instance_url,
             seeded_records,
+            run_tag,
             driver_name: driver_name.to_string(),
         }
     }
@@ -270,16 +338,31 @@ fn load_registry() -> PageObjectRegistry {
     registry
 }
 
-async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
-    eprintln!("Seeding test data...");
-    cleanup_old_test_data(client).await;
+async fn seed_test_data(
+    client: &SalesforceClient,
+    tag: &RunTag,
+) -> Vec<(String, String)> {
+    eprintln!("Seeding test data (tag={})", tag.full());
+    cleanup_old_test_data(client, tag).await;
+
+    // Each record embeds the run tag in a queryable field so cleanup
+    // can find it unambiguously.  Names are `base [tag]`; tag-on-Name
+    // fields work on any object.
+    let t = tag.full();
+    let account_name = format!("Acme Corp [{t}]");
+    let contact_last = format!("Doe [{t}]");
+    let contact_email = format!("jane.doe+{t}@example.com");
+    let opp_name = format!("Acme Deal [{t}]");
+    let lead_last = format!("Smith [{t}]");
+    let lead_company = format!("Smith Industries [{t}]");
+    let case_subject = format!("Test Support Case [{t}]");
 
     let records = vec![
         (
             "account1",
             "Account",
             SObjectRecord::new()
-                .field("Name", "Acme Corp")
+                .field("Name", account_name.as_str())
                 .field("Industry", "Technology")
                 .field("Phone", "(555) 123-4567"),
         ),
@@ -288,15 +371,15 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
             "Contact",
             SObjectRecord::new()
                 .field("FirstName", "Jane")
-                .field("LastName", "Doe")
-                .field("Email", "jane.doe@example.com")
+                .field("LastName", contact_last.as_str())
+                .field("Email", contact_email.as_str())
                 .field("AccountId", "@{account1.id}"),
         ),
         (
             "opportunity1",
             "Opportunity",
             SObjectRecord::new()
-                .field("Name", "Acme Deal")
+                .field("Name", opp_name.as_str())
                 .field("StageName", "Prospecting")
                 .field("CloseDate", "2026-12-31")
                 .field("AccountId", "@{account1.id}"),
@@ -306,14 +389,14 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
             "Lead",
             SObjectRecord::new()
                 .field("FirstName", "John")
-                .field("LastName", "Smith")
-                .field("Company", "Smith Industries"),
+                .field("LastName", lead_last.as_str())
+                .field("Company", lead_company.as_str()),
         ),
         (
             "case1",
             "Case",
             SObjectRecord::new()
-                .field("Subject", "Test Support Case")
+                .field("Subject", case_subject.as_str())
                 .field("Status", "New")
                 .field("Origin", "Web")
                 .field("AccountId", "@{account1.id}"),
@@ -351,13 +434,23 @@ async fn seed_test_data(client: &SalesforceClient) -> Vec<(String, String)> {
     }
 }
 
-async fn cleanup_old_test_data(client: &SalesforceClient) {
-    let queries = [
-        ("Case", "SELECT Id FROM Case WHERE Subject = 'Test Support Case'"),
-        ("Opportunity", "SELECT Id FROM Opportunity WHERE Name = 'Acme Deal'"),
-        ("Contact", "SELECT Id FROM Contact WHERE Email = 'jane.doe@example.com'"),
-        ("Lead", "SELECT Id FROM Lead WHERE Company = 'Smith Industries' AND FirstName = 'John'"),
-        ("Account", "SELECT Id FROM Account WHERE Name = 'Acme Corp'"),
+/// Delete orphaned records from *this driver's* previous crashed runs.
+///
+/// Matches on `Name LIKE '...[%driver%]'` so we only touch records this
+/// driver created — never records another driver's concurrent run just
+/// seeded.  Child records (Case/Opportunity/Contact) are deleted before
+/// Account to avoid FK-cascade surprises.
+async fn cleanup_old_test_data(client: &SalesforceClient, tag: &RunTag) {
+    let dl = tag.driver_like();
+    let queries: [(&str, String); 5] = [
+        ("Case", format!("SELECT Id FROM Case WHERE Subject LIKE '{dl}'")),
+        ("Opportunity", format!("SELECT Id FROM Opportunity WHERE Name LIKE '{dl}'")),
+        (
+            "Contact",
+            format!("SELECT Id FROM Contact WHERE LastName LIKE '{dl}'"),
+        ),
+        ("Lead", format!("SELECT Id FROM Lead WHERE Company LIKE '{dl}'")),
+        ("Account", format!("SELECT Id FROM Account WHERE Name LIKE '{dl}'")),
     ];
     for (sobject_type, soql) in &queries {
         if let Ok(records) = client.query(soql).await {
