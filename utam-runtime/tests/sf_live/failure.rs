@@ -62,6 +62,13 @@ pub fn classify(message: &str) -> FailureKind {
     if m.contains("return type mismatch") || m.contains("declared returntype") {
         return FailureKind::ReturnTypeMismatch;
     }
+    // "scope has no shadow root" → element wasn't in DOM (PO matched a
+    // generic selector on the wrong element).  Classify as stale selector.
+    if m.contains("parent scope has no shadow root")
+        || m.contains("expected to be in a shadow root")
+    {
+        return FailureKind::StaleSelector;
+    }
     if m.contains("has no shadow root") || m.contains("element has no shadow") {
         return FailureKind::ShadowRootMissing;
     }
@@ -78,6 +85,7 @@ pub fn classify(message: &str) -> FailureKind {
         || m.contains("element not found")
         || m.contains("elementnotdefined")
         || m.contains("not in the dom")
+        || m.contains("not found in dom")
         || m.contains("unable to locate element")
     {
         return FailureKind::StaleSelector;
@@ -133,9 +141,28 @@ mod tests {
 
     #[test]
     fn test_classify_shadow_root() {
+        // Generic shadow-root errors (not our own ElementNotFound).
         assert_eq!(
             classify("Unsupported: element has no shadow root"),
             FailureKind::ShadowRootMissing
+        );
+    }
+
+    #[test]
+    fn test_classify_missing_shadow_is_stale_selector() {
+        // Our ElementNotFound error from `parent scope has no shadow root`
+        // means the page object matched a generic root on the wrong element.
+        // Classify as StaleSelector so the pattern jumps out in aggregate.
+        assert_eq!(
+            classify("Element 'foo' not found in DOM: parent scope has no shadow root"),
+            FailureKind::StaleSelector
+        );
+        assert_eq!(
+            classify(
+                "Element 'bar' not found in DOM: ancestor 'p' expected to be in a shadow root, \
+                 but its parent has no shadow"
+            ),
+            FailureKind::StaleSelector
         );
     }
 

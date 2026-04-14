@@ -27,6 +27,15 @@ pub enum RuntimeError {
     #[error("Nullable element '{element}' is absent from the DOM")]
     NullableAbsent { element: String },
 
+    /// A required element couldn't be found in the DOM.
+    ///
+    /// Produced when a scope's shadow root is missing but expected, or
+    /// when a selector matches nothing in the search scope.  Reported as
+    /// a "not found" failure (classified as StaleSelector by tests)
+    /// rather than an architectural error.
+    #[error("Element '{element}' not found in DOM: {reason}")]
+    ElementNotFound { element: String, reason: String },
+
     /// Action not supported for this element type
     #[error("Action '{action}' not supported for element type '{element_type}'")]
     UnsupportedAction { action: String, element_type: String },

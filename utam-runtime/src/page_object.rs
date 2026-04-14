@@ -279,10 +279,12 @@ impl DynamicPageObject {
                         continue;
                     }
                     None => {
-                        return Err(RuntimeError::UnsupportedAction {
-                            action: "shadow_root".into(),
-                            element_type: format!(
-                                "ancestor '{ancestor}' expected shadow root but parent has none"
+                        return Err(RuntimeError::ElementNotFound {
+                            element: ancestor.to_string(),
+                            reason: format!(
+                                "ancestor '{ancestor}' expected to be in a shadow root, \
+                                 but its parent has no shadow — page object likely matched \
+                                 a wrong/generic root selector"
                             ),
                         });
                     }
@@ -326,9 +328,9 @@ impl DynamicPageObject {
 
         let handles = if in_shadow {
             let shadow =
-                scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
-                    action: "shadow_root".into(),
-                    element_type: "element has no shadow root".into(),
+                scope.shadow_root().await?.ok_or_else(|| RuntimeError::ElementNotFound {
+                    element: name.to_string(),
+                    reason: "parent scope has no shadow root".into(),
                 })?;
             shadow.find_elements(&selector).await?
         } else {
@@ -378,9 +380,9 @@ impl DynamicPageObject {
                     return Err(RuntimeError::NullableAbsent { element: name.to_string() });
                 }
                 None => {
-                    return Err(RuntimeError::UnsupportedAction {
-                        action: "shadow_root".into(),
-                        element_type: "element has no shadow root".into(),
+                    return Err(RuntimeError::ElementNotFound {
+                        element: name.to_string(),
+                        reason: "parent scope has no shadow root".into(),
                     });
                 }
             };
