@@ -83,8 +83,15 @@ pub struct DiscoveredChild {
 
 /// Find which registered page objects are present on the current page.
 ///
-/// Tests each root page object's selector against the live DOM.
-/// Returns only those that match.
+/// Two-phase match:
+///   1. Root selector matches at least one DOM element.
+///   2. At least one of the PO's *required* (non-nullable) public
+///      sub-elements also resolves against that root.  This filters
+///      false positives where a PO has an overly generic root
+///      selector (e.g. `.container`) that happens to match something
+///      on the page that isn't actually the declared component.
+///
+/// Returns only page objects that pass both phases.
 pub async fn find_known_page_objects(
     driver: &dyn UtamDriver,
     registry: &PageObjectRegistry,
@@ -97,11 +104,11 @@ pub async fn find_known_page_objects(
             Err(_) => continue,
         };
 
-        // Only check root page objects
         if !ast.root {
             continue;
         }
 
+        // Phase 1: root selector must match at least one element.
         let selector_css = match &ast.selector {
             Some(sel) => match &sel.css {
                 Some(css) => css.clone(),
@@ -110,24 +117,109 @@ pub async fn find_known_page_objects(
             None => continue,
         };
 
-        // Check if the selector matches anything on the page
-        let found = driver.find_elements(&Selector::Css(selector_css.clone())).await;
+        let root_elements = match driver.find_elements(&Selector::Css(selector_css.clone())).await
+        {
+            Ok(els) if !els.is_empty() => els,
+            _ => continue,
+        };
 
-        if let Ok(elements) = found {
-            if !elements.is_empty() {
-                let element_count =
-                    ast.elements.len() + ast.shadow.as_ref().map_or(0, |s| s.elements.len());
-                matched.push(MatchedPageObject {
-                    name,
-                    selector: selector_css,
-                    method_count: ast.methods.len(),
-                    element_count,
-                });
+        // Phase 2: confirm the match is real, not a false positive from a
+        // generic root selector.  Try to resolve at least one required
+        // (non-nullable, no parameterized selector) child element against
+        // the first candidate root.  If we can't find any verification
+        // anchor, skip this PO — we have no way to confirm it's the real
+        // component.
+        let first_root = &root_elements[0];
+        if !confirm_page_object_match(first_root.as_ref(), &ast).await {
+            continue;
+        }
+
+        let element_count =
+            ast.elements.len() + ast.shadow.as_ref().map_or(0, |s| s.elements.len());
+        matched.push(MatchedPageObject {
+            name,
+            selector: selector_css,
+            method_count: ast.methods.len(),
+            element_count,
+        });
+    }
+
+    Ok(matched)
+}
+
+/// Probe a candidate root element with a required child selector from
+/// the PO's declaration.  Returns true iff at least one anchor found.
+///
+/// This confirms the root match is the REAL component declared in the
+/// JSON, not a random element that happens to share a common class.
+async fn confirm_page_object_match(
+    root: &dyn crate::driver::ElementHandle,
+    ast: &PageObjectAst,
+) -> bool {
+    // Collect verification anchors: non-nullable top-level elements with
+    // a non-parameterized CSS selector.  We try both light-DOM children
+    // and shadow-DOM children (depending on how the PO declared them).
+    let light_anchors: Vec<&ElementAst> = ast
+        .elements
+        .iter()
+        .filter(|e| is_verification_anchor(e))
+        .collect();
+    let shadow_anchors: Vec<&ElementAst> = ast
+        .shadow
+        .as_ref()
+        .map(|s| s.elements.iter().filter(|e| is_verification_anchor(e)).collect())
+        .unwrap_or_default();
+
+    // If the PO declares no usable anchor (e.g. all elements are nullable
+    // or parameterized, or no sub-elements at all), fall through to
+    // "trust the root selector" — we can't distinguish this case from a
+    // false positive without running the PO's own load flow, which the
+    // caller will do anyway.
+    if light_anchors.is_empty() && shadow_anchors.is_empty() {
+        return true;
+    }
+
+    // Try each light-DOM anchor directly under root.
+    for anchor in &light_anchors {
+        if let Some(sel) = &anchor.selector {
+            if let Some(css) = &sel.css {
+                if root.find_elements(&Selector::Css(css.clone())).await.map(|v| !v.is_empty())
+                    .unwrap_or(false)
+                {
+                    return true;
+                }
             }
         }
     }
 
-    Ok(matched)
+    // Try each shadow anchor inside root.shadowRoot if available.
+    if let Ok(Some(shadow)) = root.shadow_root().await {
+        for anchor in &shadow_anchors {
+            if let Some(sel) = &anchor.selector {
+                if let Some(css) = &sel.css {
+                    if shadow
+                        .find_elements(&Selector::Css(css.clone()))
+                        .await
+                        .map(|v| !v.is_empty())
+                        .unwrap_or(false)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    false
+}
+
+fn is_verification_anchor(e: &ElementAst) -> bool {
+    !e.nullable
+        && e.selector
+            .as_ref()
+            .and_then(|s| s.css.as_deref())
+            .map(|css| !css.contains("%s") && !css.contains("%d"))
+            .unwrap_or(false)
 }
 
 // ---------------------------------------------------------------------------

@@ -182,7 +182,14 @@ impl DynamicPageObject {
         Ok(page)
     }
 
-    /// Wrap an existing element as a page object.
+    /// Wrap an existing element as a page object (synchronous — no load).
+    ///
+    /// Most callers should prefer [`from_element_loaded`] which runs the
+    /// PO's `beforeLoad` predicates the same way UTAM-Java's
+    /// `CustomElementBuilder.build()` calls `poInstance.load()` after
+    /// bootstrap.  This sync constructor exists for cases where the
+    /// caller explicitly wants to skip load (e.g. a root page object
+    /// load that runs beforeLoad externally).
     pub fn from_element(
         driver: impl Into<Arc<dyn UtamDriver>>,
         ast: PageObjectAst,
@@ -190,6 +197,23 @@ impl DynamicPageObject {
     ) -> Self {
         let element_index = build_element_index(&ast);
         Self { ast, root, driver: driver.into(), element_index, registry: None }
+    }
+
+    /// Wrap an existing element as a page object and execute its
+    /// `beforeLoad` compose statements — mirrors UTAM-Java's
+    /// `poInstance.load()` call after custom-component bootstrap.
+    pub async fn from_element_loaded(
+        driver: impl Into<Arc<dyn UtamDriver>>,
+        ast: PageObjectAst,
+        root: Box<dyn ElementHandle>,
+    ) -> RuntimeResult<Self> {
+        let has_before_load = !ast.before_load.is_empty();
+        let before_load = ast.before_load.clone();
+        let page = Self::from_element(driver, ast, root);
+        if has_before_load {
+            execute_compose(&page, &before_load, &HashMap::new()).await?;
+        }
+        Ok(page)
     }
 
     /// Attach a registry for cross-page-object resolution.
@@ -647,15 +671,21 @@ fn execute_compose<'a>(
 
                 // If the last result is a CustomComponent and we're chaining,
                 // delegate the method call to a nested DynamicPageObject.
+                //
+                // Mirrors UTAM-Java's CustomElementBuilder.build:
+                //   find → bootstrap → poInstance.load()
+                // The `load()` step runs the child PO's `beforeLoad` compose,
+                // so we use `from_element_loaded` (async) not `from_element`.
                 if stmt.chain {
                     if let RuntimeValue::CustomComponent { ref element, ref ast, ref registry } =
                         last_result
                     {
-                        let child = DynamicPageObject::from_element(
+                        let child = DynamicPageObject::from_element_loaded(
                             page.driver_arc(),
                             *ast.clone(),
                             element.handle().clone_handle(),
-                        );
+                        )
+                        .await?;
                         let child = if let Some(reg) = registry {
                             child.with_registry(Arc::clone(reg))
                         } else {
