@@ -26,10 +26,16 @@ use crate::error::{RuntimeError, RuntimeResult};
 fn to_rt(e: chromiumoxide::error::CdpError) -> RuntimeError {
     let msg = format!("{e}");
     let lower = msg.to_lowercase();
-    if lower.contains("no such element")
-        || lower.contains("element not found")
+    // Broad "not found" match — chromiumoxide's variants include:
+    //   CdpError::NotFound              → "Element was not found"
+    //   "no such element"               (Chrome DevTools protocol error)
+    //   "node with given id not found"  (runtime domain)
+    //   "could not find node"           (DOM domain)
+    //   "unable to locate"              (high-level)
+    if lower.contains("not found")
+        || lower.contains("no such element")
         || lower.contains("unable to locate")
-        || lower.contains("node with given id not found")
+        || lower.contains("could not find")
     {
         return RuntimeError::ElementNotFound {
             element: "<cdp>".into(),

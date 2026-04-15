@@ -172,18 +172,20 @@ pub async fn find_known_page_objects(
     Ok(matched)
 }
 
-/// Probe a candidate root element with a required child selector from
-/// the PO's declaration.  Returns true iff at least one anchor found.
+/// Probe a candidate root element with required child selectors from the
+/// PO's declaration.  Returns true iff **a majority** of the PO's anchors
+/// resolve — single anchor hits are insufficient to distinguish a real
+/// match from a coincidence (e.g. `aura/body` has 30 unrelated elements,
+/// one of which happens to be on the home page).
 ///
-/// This confirms the root match is the REAL component declared in the
-/// JSON, not a random element that happens to share a common class.
+/// The majority threshold: at least 50% of anchors, rounded up, with a
+/// minimum of 1.  POs with only 1 anchor require that anchor to match
+/// (same behaviour as before).  POs with no usable anchors fall through
+/// to "trust the root" — we can't distinguish without running load().
 async fn confirm_page_object_match(
     root: &dyn crate::driver::ElementHandle,
     ast: &PageObjectAst,
 ) -> bool {
-    // Collect verification anchors: non-nullable top-level elements with
-    // a non-parameterized CSS selector.  We try both light-DOM children
-    // and shadow-DOM children (depending on how the PO declared them).
     let light_anchors: Vec<&ElementAst> = ast
         .elements
         .iter()
@@ -195,29 +197,33 @@ async fn confirm_page_object_match(
         .map(|s| s.elements.iter().filter(|e| is_verification_anchor(e)).collect())
         .unwrap_or_default();
 
-    // If the PO declares no usable anchor (e.g. all elements are nullable
-    // or parameterized, or no sub-elements at all), fall through to
-    // "trust the root selector" — we can't distinguish this case from a
-    // false positive without running the PO's own load flow, which the
-    // caller will do anyway.
-    if light_anchors.is_empty() && shadow_anchors.is_empty() {
+    let total_anchors = light_anchors.len() + shadow_anchors.len();
+    if total_anchors == 0 {
         return true;
     }
+    // Ceiling of total/2: {1→1, 2→1, 3→2, 4→2, 5→3, ..., 30→15}
+    let required_hits = total_anchors.div_ceil(2);
 
-    // Try each light-DOM anchor directly under root.
+    let mut hits = 0usize;
+
     for anchor in &light_anchors {
         if let Some(sel) = &anchor.selector {
             if let Some(css) = &sel.css {
-                if root.find_elements(&Selector::Css(css.clone())).await.map(|v| !v.is_empty())
+                if root
+                    .find_elements(&Selector::Css(css.clone()))
+                    .await
+                    .map(|v| !v.is_empty())
                     .unwrap_or(false)
                 {
-                    return true;
+                    hits += 1;
+                    if hits >= required_hits {
+                        return true;
+                    }
                 }
             }
         }
     }
 
-    // Try each shadow anchor inside root.shadowRoot if available.
     if let Ok(Some(shadow)) = root.shadow_root().await {
         for anchor in &shadow_anchors {
             if let Some(sel) = &anchor.selector {
@@ -228,7 +234,10 @@ async fn confirm_page_object_match(
                         .map(|v| !v.is_empty())
                         .unwrap_or(false)
                     {
-                        return true;
+                        hits += 1;
+                        if hits >= required_hits {
+                            return true;
+                        }
                     }
                 }
             }

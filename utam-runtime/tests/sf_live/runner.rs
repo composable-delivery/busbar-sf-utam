@@ -232,6 +232,17 @@ async fn exercise_element(
         Err(e) => {
             let msg = format!("{e}");
             let kind = classify(&msg);
+
+            // NullableAbsent is the spec-correct outcome for `nullable: true`
+            // elements that aren't in the DOM — it's NOT a failure.  Report
+            // it as Passed with a note.
+            if kind == FailureKind::NullableAbsent {
+                return step
+                    .parameter("args", format_args(&args))
+                    .parameter("note", "nullable element absent (expected)")
+                    .finish(AllureStatus::Passed);
+            }
+
             outcome.record_failure(kind);
             let mut finished = step
                 .parameter("args", format_args(&args))

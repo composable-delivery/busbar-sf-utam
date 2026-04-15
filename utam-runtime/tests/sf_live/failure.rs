@@ -24,6 +24,9 @@ pub enum FailureKind {
     ShadowRootMissing,
     /// The page object references a custom component that couldn't resolve.
     CustomComponentUnresolved,
+    /// Nullable element was correctly absent — not a failure per the UTAM
+    /// spec (`"nullable": true` means "handle absence gracefully").
+    NullableAbsent,
     /// Anything we haven't classified yet.
     Other,
 }
@@ -38,6 +41,7 @@ impl FailureKind {
             FailureKind::ReturnTypeMismatch => "ReturnTypeMismatch",
             FailureKind::ShadowRootMissing => "ShadowRootMissing",
             FailureKind::CustomComponentUnresolved => "CustomComponentUnresolved",
+            FailureKind::NullableAbsent => "NullableAbsent",
             FailureKind::Other => "Other",
         }
     }
@@ -52,6 +56,13 @@ impl fmt::Display for FailureKind {
 /// Classify an error message into a `FailureKind`.
 pub fn classify(message: &str) -> FailureKind {
     let m = message.to_lowercase();
+
+    // Nullable-absent is the spec-correct outcome for nullable elements
+    // that aren't present in the DOM.  Not a failure — the runtime
+    // returns this so compose can short-circuit to Null.
+    if m.contains("nullableabsent") || m.contains("is absent from the dom") {
+        return FailureKind::NullableAbsent;
+    }
 
     if m.contains("argumentmissing") || m.contains("argument missing") {
         return FailureKind::ArgumentMissing;
@@ -81,11 +92,12 @@ pub fn classify(message: &str) -> FailureKind {
     {
         return FailureKind::Timeout;
     }
+    // Broader "not found" match — handles variants like
+    // "Element was not found" (chromiumoxide) and "NotFound" enum display.
     if m.contains("no such element")
-        || m.contains("element not found")
+        || m.contains("not found")
         || m.contains("elementnotdefined")
         || m.contains("not in the dom")
-        || m.contains("not found in dom")
         || m.contains("unable to locate element")
     {
         return FailureKind::StaleSelector;
@@ -169,5 +181,27 @@ mod tests {
     #[test]
     fn test_classify_other() {
         assert_eq!(classify("some random error"), FailureKind::Other);
+    }
+
+    #[test]
+    fn test_classify_nullable_absent() {
+        // The runtime returns `RuntimeError::NullableAbsent { element }`
+        // whose Display is "Nullable element '{name}' is absent from the DOM".
+        assert_eq!(
+            classify("Nullable element 'copilot' is absent from the DOM"),
+            FailureKind::NullableAbsent
+        );
+        assert_eq!(
+            classify("RuntimeError::NullableAbsent { element: 'x' }"),
+            FailureKind::NullableAbsent
+        );
+    }
+
+    #[test]
+    fn test_classify_cdp_element_was_not_found() {
+        // chromiumoxide emits "Element was not found" — the space makes
+        // "element not found" not contiguous, so the broader "not found"
+        // check needs to catch it.
+        assert_eq!(classify("Element was not found"), FailureKind::StaleSelector);
     }
 }
