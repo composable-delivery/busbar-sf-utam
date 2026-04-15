@@ -33,9 +33,8 @@ pub async fn setup_test_driver(config: TestDriverConfig) -> UtamResult<WebDriver
     }
 
     // Try to connect to ChromeDriver on default port
-    let driver = WebDriver::new("http://localhost:9515", caps)
-        .await
-        .map_err(UtamError::WebDriver)?;
+    let driver =
+        WebDriver::new("http://localhost:9515", caps).await.map_err(UtamError::WebDriver)?;
 
     // Set implicit wait
     driver

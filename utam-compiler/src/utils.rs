@@ -2,14 +2,28 @@
 //!
 //! Common helpers used across the compiler codebase.
 
-/// Convert string to snake_case
+/// Rust reserved keywords that cannot be used as identifiers.
+const RUST_KEYWORDS: &[&str] = &[
+    "as", "async", "await", "break", "const", "continue", "crate", "dyn", "else", "enum",
+    "extern", "false", "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod", "move",
+    "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true",
+    "type", "unsafe", "use", "where", "while", "yield",
+];
+
+/// Returns true if the given identifier is a Rust reserved keyword.
+pub fn is_rust_keyword(s: &str) -> bool {
+    RUST_KEYWORDS.contains(&s)
+}
+
+/// Convert string to snake_case.
 ///
 /// Converts camelCase and PascalCase strings to snake_case.
 /// Consecutive uppercase letters are kept together (e.g., "HTTPRequest" -> "httprequest").
+/// If the result is a Rust keyword, appends `_` to avoid conflicts.
 pub fn to_snake_case(s: &str) -> String {
     let mut result = String::new();
     let mut prev_lowercase = false;
-    
+
     for (i, ch) in s.chars().enumerate() {
         if ch.is_uppercase() {
             if i > 0 && prev_lowercase {
@@ -22,7 +36,12 @@ pub fn to_snake_case(s: &str) -> String {
             prev_lowercase = ch.is_lowercase();
         }
     }
-    
+
+    // Escape Rust keywords by appending underscore
+    if is_rust_keyword(&result) {
+        result.push('_');
+    }
+
     result
 }
 
@@ -33,7 +52,7 @@ pub fn to_snake_case(s: &str) -> String {
 pub fn to_pascal_case(s: &str) -> String {
     let mut result = String::new();
     let mut capitalize_next = true;
-    
+
     for ch in s.chars() {
         if ch == '_' || ch == '-' || ch == '/' || ch == '.' {
             capitalize_next = true;
@@ -44,7 +63,7 @@ pub fn to_pascal_case(s: &str) -> String {
             result.push(ch);
         }
     }
-    
+
     result
 }
 
