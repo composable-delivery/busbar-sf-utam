@@ -16,8 +16,30 @@ use serde::{Deserialize, Serialize};
 use super::{ElementHandle, Selector, ShadowRootHandle, UtamDriver};
 use crate::error::{RuntimeError, RuntimeResult};
 
+/// Map a chromiumoxide CDP error into the closest-matching RuntimeError
+/// variant so classify() can bucket failures correctly.
+///
+/// - Element-not-found / selector misses → `ElementNotFound` (→ StaleSelector)
+/// - Timeouts / wait failures → `Utam(Timeout)` (→ Timeout)
+/// - Everything else → `UnsupportedAction { action: "CDP", ... }` as a
+///   last-resort catch-all for genuinely unexpected driver errors.
 fn to_rt(e: chromiumoxide::error::CdpError) -> RuntimeError {
-    RuntimeError::UnsupportedAction { action: "CDP".into(), element_type: format!("{e}") }
+    let msg = format!("{e}");
+    let lower = msg.to_lowercase();
+    if lower.contains("no such element")
+        || lower.contains("element not found")
+        || lower.contains("unable to locate")
+        || lower.contains("node with given id not found")
+    {
+        return RuntimeError::ElementNotFound {
+            element: "<cdp>".into(),
+            reason: msg,
+        };
+    }
+    if lower.contains("timeout") || lower.contains("timed out") {
+        return RuntimeError::Utam(utam_core::error::UtamError::Timeout { condition: msg });
+    }
+    RuntimeError::UnsupportedAction { action: "CDP".into(), element_type: msg }
 }
 
 fn css_selector(sel: &Selector) -> &str {

@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use utam_compiler::ast::*;
 
 use crate::driver::{Selector, UtamDriver};
-use crate::error::RuntimeResult;
+use crate::error::{RuntimeError, RuntimeResult};
 use crate::registry::PageObjectRegistry;
 
 // ---------------------------------------------------------------------------
@@ -84,7 +84,10 @@ pub struct DiscoveredChild {
 /// Find which registered page objects are present on the current page.
 ///
 /// Two-phase match:
-///   1. Root selector matches at least one DOM element.
+///   1. Root selector matches at least one DOM element.  ALL 1454+
+///      selectors are tested in a SINGLE `execute_script` call —
+///      one-shot batch, not one find_elements per PO, which would be
+///      thousands of driver round-trips and take 10+ minutes.
 ///   2. At least one of the PO's *required* (non-nullable) public
 ///      sub-elements also resolves against that root.  This filters
 ///      false positives where a PO has an overly generic root
@@ -96,39 +99,61 @@ pub async fn find_known_page_objects(
     driver: &dyn UtamDriver,
     registry: &PageObjectRegistry,
 ) -> RuntimeResult<Vec<MatchedPageObject>> {
-    let mut matched = Vec::new();
-
+    // ── Phase 1: batch selector test in one JS round trip ─────────────
+    // Gather (name, css_selector) pairs for every root PO that has a
+    // CSS root selector.
+    let mut candidates: Vec<(String, String, PageObjectAst)> = Vec::new();
     for name in registry.list() {
         let ast = match registry.get(&name) {
             Ok(ast) => ast,
             Err(_) => continue,
         };
-
         if !ast.root {
             continue;
         }
-
-        // Phase 1: root selector must match at least one element.
-        let selector_css = match &ast.selector {
-            Some(sel) => match &sel.css {
-                Some(css) => css.clone(),
-                None => continue,
-            },
-            None => continue,
+        let Some(css) = ast.selector.as_ref().and_then(|s| s.css.clone()) else {
+            continue;
         };
+        candidates.push((name, css, ast));
+    }
 
-        let root_elements = match driver.find_elements(&Selector::Css(selector_css.clone())).await
-        {
-            Ok(els) if !els.is_empty() => els,
-            _ => continue,
-        };
+    // One JS call: for each selector, return true iff it matches anything.
+    // The browser does the work locally — no round-trip per selector.
+    let selectors_json = serde_json::to_string(
+        &candidates.iter().map(|(_, css, _)| css.as_str()).collect::<Vec<_>>(),
+    )
+    .map_err(RuntimeError::Json)?;
+    let script = format!(
+        "return (function() {{ \
+             const sels = {selectors_json}; \
+             const out = new Array(sels.length); \
+             for (let i = 0; i < sels.length; i++) {{ \
+                 try {{ out[i] = !!document.querySelector(sels[i]); }} \
+                 catch (e) {{ out[i] = false; }} \
+             }} \
+             return out; \
+         }})()"
+    );
+    let result = driver.execute_script(&script, vec![]).await?;
+    let matches_bitmap: Vec<bool> = result
+        .as_array()
+        .map(|arr| arr.iter().map(|v| v.as_bool().unwrap_or(false)).collect())
+        .unwrap_or_default();
 
-        // Phase 2: confirm the match is real, not a false positive from a
-        // generic root selector.  Try to resolve at least one required
-        // (non-nullable, no parameterized selector) child element against
-        // the first candidate root.  If we can't find any verification
-        // anchor, skip this PO — we have no way to confirm it's the real
-        // component.
+    // ── Phase 2: verify each phase-1 match with an anchor child ───────
+    // For POs where root matches, do a per-candidate find_elements to get
+    // a handle, then probe one required child selector to confirm the
+    // match is the real component (not a generic false positive).
+    let mut matched = Vec::new();
+    for (i, (name, selector_css, ast)) in candidates.into_iter().enumerate() {
+        if !matches_bitmap.get(i).copied().unwrap_or(false) {
+            continue;
+        }
+        let root_elements =
+            match driver.find_elements(&Selector::Css(selector_css.clone())).await {
+                Ok(els) if !els.is_empty() => els,
+                _ => continue,
+            };
         let first_root = &root_elements[0];
         if !confirm_page_object_match(first_root.as_ref(), &ast).await {
             continue;
