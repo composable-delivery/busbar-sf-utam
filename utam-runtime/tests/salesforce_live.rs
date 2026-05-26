@@ -12,7 +12,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use busbar_sf_api::{SObjectRecord, SalesforceClient, SfdxAuthUrl};
+use busbar_sf_api::{SObjectRecord, SalesforceClient, SfApiError, SfdxAuthUrl};
 use utam_runtime::prelude::*;
 
 // (Allure reporting removed — tests use direct assertions now)
@@ -68,8 +68,19 @@ async fn connect_salesforce() -> Option<SalesforceClient> {
         }
     };
     let parsed = SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
-    let client =
-        SalesforceClient::from_auth_url(&parsed).await.expect("Failed to exchange refresh token");
+    let client = match SalesforceClient::from_auth_url(&parsed).await {
+        Ok(client) => client,
+        Err(SfApiError::TokenExchange(message))
+            if message.contains("invalid_grant")
+                || message.contains("expired access/refresh token") =>
+        {
+            eprintln!(
+                "SKIP: Salesforce auth token is expired or revoked; rotate SF_AUTH_URL secret"
+            );
+            return None;
+        }
+        Err(error) => panic!("Failed to exchange refresh token: {error}"),
+    };
     eprintln!("Authenticated to {}", client.instance_url);
     Some(client)
 }
