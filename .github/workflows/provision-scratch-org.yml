@@ -84,7 +84,11 @@ jobs:
             ${{ github.event.repository.name }}
 
       - name: Install Salesforce CLI
-        uses: salesforcecli/actions/setup-sf@v1
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install -g @salesforce/cli
+          sf --version
 
       - name: Decide whether to reuse existing org
         id: reuse
