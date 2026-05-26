@@ -36,7 +36,7 @@ on:
         type: string
         default: bbutamshared1
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '0 5 * * *' # Refresh daily before the shared scratch org nears expiration.
 
 permissions:
   contents: read
@@ -208,7 +208,7 @@ jobs:
           fi
 
           if [[ "$snapshot_status" == "Active" ]]; then
-            sf org create scratch --snapshot "$snapshot_name" --target-dev-hub devhub --alias "$scratch_alias" --wait 30 --json > "$create_output_path"
+            sf org create scratch --snapshot "$snapshot_name" --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
             cleanup_target="$scratch_alias"
             source="snapshot"
           else
