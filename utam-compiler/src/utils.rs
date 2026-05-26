@@ -41,7 +41,6 @@ pub fn to_snake_case(s: &str) -> String {
     if is_rust_keyword(&result) {
         result.push('_');
     }
-
     result
 }
 

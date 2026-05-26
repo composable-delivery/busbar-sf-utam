@@ -37,9 +37,8 @@ fn extract_module_name(path: &str) -> String {
 #[track_caller]
 #[allow(dead_code)]
 pub fn assert_compiles(path: &str) {
-    match compile_fixture(path) {
-        Ok(_code) => {}
-        Err(e) => panic!("Expected fixture {} to compile successfully, but got error: {}", path, e),
+    if let Err(e) = compile_fixture(path) {
+        panic!("Expected fixture {} to compile successfully, but got error: {}", path, e);
     }
 }
 
