@@ -231,6 +231,7 @@ fn compile_single_arg(
             } else if v.is_boolean() {
                 v.as_bool().unwrap_or(false).to_string()
             } else {
+                // Handles numbers (i64/f64) and other JSON types via Display
                 v.to_string()
             };
             Ok(CompiledArg::Literal(literal))
