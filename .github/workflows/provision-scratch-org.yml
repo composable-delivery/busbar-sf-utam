@@ -104,24 +104,28 @@ jobs:
           current_snapshot="$(gh variable get "$SCRATCH_SNAPSHOT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
 
           should_reuse=false
+          current_expires_epoch=""
           if [[ "$force_recreate" != "true" && -n "$current_username" && -n "$current_expires_at" ]]; then
             current_expires_epoch="$(python - <<'PY' "$current_expires_at"
-from datetime import datetime, timezone
-import sys
-value = sys.argv[1]
-try:
-    dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
-except ValueError:
-    raise SystemExit(1)
-if dt.tzinfo is None:
-    dt = dt.replace(tzinfo=timezone.utc)
-print(int(dt.timestamp()))
-PY
-)"
-            now_epoch="$(date -u +%s)"
-            buffer_seconds=$((SCRATCH_EXPIRY_BUFFER_MINUTES * 60))
-            if (( current_expires_epoch - now_epoch > buffer_seconds )); then
-              should_reuse=true
+            from datetime import datetime, timezone
+            import sys
+            value = sys.argv[1]
+            try:
+                dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
+            except ValueError:
+                print('')
+                raise SystemExit(0)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            print(int(dt.timestamp()))
+            PY
+            )"
+            if [[ -n "$current_expires_epoch" ]]; then
+              now_epoch="$(date -u +%s)"
+              buffer_seconds=$((SCRATCH_EXPIRY_BUFFER_MINUTES * 60))
+              if (( current_expires_epoch - now_epoch > buffer_seconds )); then
+                should_reuse=true
+              fi
             fi
           fi
 
@@ -192,21 +196,23 @@ PY
           snapshot_status=""
           if sf org get snapshot --snapshot "$snapshot_name" --target-dev-hub devhub --json > "$RUNNER_TEMP/snapshot.json" 2>/dev/null; then
             snapshot_status="$(python - <<'PY' "$RUNNER_TEMP/snapshot.json"
-import json
-import sys
-with open(sys.argv[1], 'r', encoding='utf-8') as handle:
-    data = json.load(handle)
-result = data.get('result', {})
-print(result.get('Status') or result.get('status') or '')
-PY
-)"
+            import json
+            import sys
+            with open(sys.argv[1], 'r', encoding='utf-8') as handle:
+                data = json.load(handle)
+            result = data.get('result', {})
+            print(result.get('Status') or result.get('status') or '')
+            PY
+            )"
           fi
 
           if [[ "$snapshot_status" == "Active" ]]; then
             sf org create scratch --snapshot "$snapshot_name" --target-dev-hub devhub --alias "$scratch_alias" --wait 30 --json > "$create_output_path"
+            created_username="$scratch_alias"
             source="snapshot"
           else
             sf org create scratch --definition-file config/project-scratch-def.json --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
+            created_username="$scratch_alias"
             source="definition"
             refresh_snapshot=true
           fi
@@ -214,38 +220,38 @@ PY
           sfdx force:org:display --targetusername "$scratch_alias" --verbose --json > "$org_output_path"
 
           created_username="$(python - <<'PY' "$org_output_path"
-import json
-import sys
-with open(sys.argv[1], 'r', encoding='utf-8') as handle:
-    data = json.load(handle)
-result = data.get('result', {})
-print(result.get('username', ''))
-PY
-)"
+          import json
+          import sys
+          with open(sys.argv[1], 'r', encoding='utf-8') as handle:
+              data = json.load(handle)
+          result = data.get('result', {})
+          print(result.get('username', ''))
+          PY
+          )"
           auth_url="$(python - <<'PY' "$org_output_path"
-import json
-import sys
-with open(sys.argv[1], 'r', encoding='utf-8') as handle:
-    data = json.load(handle)
-result = data.get('result', {})
-print(result.get('sfdxAuthUrl', ''))
-PY
-)"
+          import json
+          import sys
+          with open(sys.argv[1], 'r', encoding='utf-8') as handle:
+              data = json.load(handle)
+          result = data.get('result', {})
+          print(result.get('sfdxAuthUrl', ''))
+          PY
+          )"
           expires_at="$(python - <<'PY' "$org_output_path" "$create_output_path"
-import json
-import sys
-for path in sys.argv[1:]:
-    with open(path, 'r', encoding='utf-8') as handle:
-        data = json.load(handle)
-    result = data.get('result', {})
-    value = result.get('expirationDate') or result.get('expiration_date') or ''
-    if value:
-        print(value)
-        break
-else:
-    print('')
-PY
-)"
+          import json
+          import sys
+          for path in sys.argv[1:]:
+              with open(path, 'r', encoding='utf-8') as handle:
+                  data = json.load(handle)
+              result = data.get('result', {})
+              value = result.get('expirationDate') or result.get('expiration_date') or ''
+              if value:
+                  print(value)
+                  break
+          else:
+              print('')
+          PY
+          )"
 
           if [[ -z "$created_username" || -z "$auth_url" || -z "$expires_at" ]]; then
             echo "Failed to derive scratch org credentials or expiration metadata." >&2
