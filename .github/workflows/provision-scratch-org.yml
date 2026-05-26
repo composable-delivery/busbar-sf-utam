@@ -174,6 +174,7 @@ jobs:
           create_output_path="$RUNNER_TEMP/scratch-org-create.json"
           current_username="$(gh variable get "$SCRATCH_USERNAME_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
           scratch_alias="$SCRATCH_ALIAS_PREFIX-$(date -u +%Y%m%d%H%M%S)"
+          cleanup_target=""
           created_username=""
 
           if [[ ! "$snapshot_name" =~ ^[A-Za-z0-9]{1,15}$ ]]; then
@@ -182,8 +183,8 @@ jobs:
           fi
 
           cleanup() {
-            if [[ -n "$created_username" ]]; then
-              sf org delete scratch --target-org "$created_username" --no-prompt || true
+            if [[ -n "$cleanup_target" ]]; then
+              sf org delete scratch --target-org "$cleanup_target" --no-prompt || true
             fi
           }
 
@@ -208,11 +209,11 @@ jobs:
 
           if [[ "$snapshot_status" == "Active" ]]; then
             sf org create scratch --snapshot "$snapshot_name" --target-dev-hub devhub --alias "$scratch_alias" --wait 30 --json > "$create_output_path"
-            created_username="$scratch_alias"
+            cleanup_target="$scratch_alias"
             source="snapshot"
           else
             sf org create scratch --definition-file config/project-scratch-def.json --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
-            created_username="$scratch_alias"
+            cleanup_target="$scratch_alias"
             source="definition"
             refresh_snapshot=true
           fi
