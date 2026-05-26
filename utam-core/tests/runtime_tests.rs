@@ -339,6 +339,83 @@ fn test_all_error_variants_constructible() {
     let _e4 = UtamError::InvalidSelector { selector: String::new() };
     let _e5 = UtamError::FrameNotFound { name: String::new() };
     let _e6 = UtamError::AssertionFailed { expected: String::new(), actual: String::new() };
+    let _e7 = UtamError::Cdp("cdp error message".to_string());
+}
+
+#[test]
+fn test_cdp_error_display() {
+    let error = UtamError::Cdp("failed to launch Chrome".to_string());
+    let msg = error.to_string();
+    assert!(msg.contains("CDP error"));
+    assert!(msg.contains("failed to launch Chrome"));
+}
+
+// ========== DriverKind Tests ==========
+
+#[test]
+fn test_driver_kind_display() {
+    use utam_core::drivers::DriverKind;
+
+    let kind = DriverKind::WebDriver;
+    assert_eq!(kind.to_string(), "webdriver");
+}
+
+#[test]
+fn test_driver_kind_debug() {
+    use utam_core::drivers::DriverKind;
+
+    let kind = DriverKind::WebDriver;
+    let debug = format!("{:?}", kind);
+    assert!(debug.contains("WebDriver"));
+}
+
+#[test]
+fn test_driver_kind_eq() {
+    use utam_core::drivers::DriverKind;
+
+    let a = DriverKind::WebDriver;
+    let b = DriverKind::WebDriver;
+    assert_eq!(a, b);
+}
+
+#[test]
+fn test_driver_kind_copy() {
+    use utam_core::drivers::DriverKind;
+
+    let kind = DriverKind::WebDriver;
+    let copy = kind;
+    assert_eq!(kind, copy);
+}
+
+#[test]
+fn test_driver_kind_exported_from_prelude() {
+    // Verify DriverKind is accessible from the prelude
+    use utam_core::prelude::DriverKind;
+    let _ = DriverKind::WebDriver;
+}
+
+#[test]
+fn test_thirtyfour_driver_exported_from_prelude() {
+    // Verify ThirtyfourDriver is accessible from the prelude
+    use utam_core::prelude::ThirtyfourDriver;
+    let _ = std::any::type_name::<ThirtyfourDriver>();
+}
+
+#[cfg(feature = "cdp")]
+#[test]
+fn test_cdp_driver_exported_from_prelude() {
+    // Verify CdpDriver is accessible from the prelude when the cdp feature is enabled
+    use utam_core::prelude::CdpDriver;
+    let _ = std::any::type_name::<CdpDriver>();
+}
+
+#[cfg(feature = "cdp")]
+#[test]
+fn test_driver_kind_cdp_display() {
+    use utam_core::drivers::DriverKind;
+
+    let kind = DriverKind::Cdp;
+    assert_eq!(kind.to_string(), "cdp");
 }
 
 #[test]
