@@ -17,6 +17,10 @@ pub enum UtamError {
     #[error("WebDriver error: {0}")]
     WebDriver(#[from] thirtyfour::error::WebDriverError),
 
+    /// CDP (Chrome DevTools Protocol) operation failed
+    #[error("CDP error: {0}")]
+    Cdp(String),
+
     /// Shadow root not found
     #[error("Shadow root not found for element: {element}")]
     ShadowRootNotFound { element: String },

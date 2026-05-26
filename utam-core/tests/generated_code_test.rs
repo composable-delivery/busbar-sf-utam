@@ -11,13 +11,11 @@ fn test_generated_code_compiles() {
         "selector": { "css": ".test-page" },
         "type": ["clickable"]
     }"#;
-    
-    let config = CodeGenConfig {
-        module_name: Some("TestPage".to_string()),
-    };
-    
+
+    let config = CodeGenConfig { module_name: Some("TestPage".to_string()) };
+
     let code = compile(json, config).expect("Failed to compile");
-    
+
     // Just verify it generates something
     assert!(code.contains("pub struct TestPage"));
     assert!(code.contains("impl PageObject for TestPage"));
@@ -38,13 +36,11 @@ fn test_generated_code_with_elements() {
             }
         ]
     }"#;
-    
-    let config = CodeGenConfig {
-        module_name: Some("FormPage".to_string()),
-    };
-    
+
+    let config = CodeGenConfig { module_name: Some("FormPage".to_string()) };
+
     let code = compile(json, config).expect("Failed to compile");
-    
+
     assert!(code.contains("pub async fn get_submit_button"));
     assert!(code.contains("ClickableElement"));
 }

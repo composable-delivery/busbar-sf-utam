@@ -20,7 +20,7 @@ pub mod utils;
 pub mod validator;
 
 pub use codegen::{CodeGenConfig, CodeGenerator};
-pub use error::{CompilerError, CompilerResult, ErrorReporter, SelectError, ValidationError};
+pub use error::{CompilerError, CompilerResult, ErrorReporter, SelectorError, ValidationError};
 pub use validator::SchemaValidator;
 
 // Re-export AST types for convenience
@@ -30,7 +30,7 @@ pub use ast::*;
 pub fn compile(json: &str, config: CodeGenConfig) -> CompilerResult<String> {
     // Parse JSON to AST
     let ast: PageObjectAst = serde_json::from_str(json)?;
-    
+
     // Generate code
     let generator = CodeGenerator::new(ast, config);
     generator.generate()

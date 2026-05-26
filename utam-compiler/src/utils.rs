@@ -9,7 +9,7 @@
 pub fn to_snake_case(s: &str) -> String {
     let mut result = String::new();
     let mut prev_lowercase = false;
-    
+
     for (i, ch) in s.chars().enumerate() {
         if ch.is_uppercase() {
             if i > 0 && prev_lowercase {
@@ -22,7 +22,7 @@ pub fn to_snake_case(s: &str) -> String {
             prev_lowercase = ch.is_lowercase();
         }
     }
-    
+
     result
 }
 
@@ -33,7 +33,7 @@ pub fn to_snake_case(s: &str) -> String {
 pub fn to_pascal_case(s: &str) -> String {
     let mut result = String::new();
     let mut capitalize_next = true;
-    
+
     for ch in s.chars() {
         if ch == '_' || ch == '-' || ch == '/' || ch == '.' {
             capitalize_next = true;
@@ -44,7 +44,7 @@ pub fn to_pascal_case(s: &str) -> String {
             result.push(ch);
         }
     }
-    
+
     result
 }
 
