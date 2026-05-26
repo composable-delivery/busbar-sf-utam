@@ -1,0 +1,329 @@
+name: Provision Scratch Org
+
+on:
+  workflow_call:
+    inputs:
+      force_recreate:
+        description: Recreate the shared scratch org even when the current org is still valid.
+        required: false
+        type: boolean
+        default: false
+      refresh_snapshot:
+        description: Force a fresh snapshot after provisioning completes.
+        required: false
+        type: boolean
+        default: false
+      snapshot_name:
+        description: Scratch org snapshot name to restore from or refresh.
+        required: false
+        type: string
+        default: bbutamshared1
+  workflow_dispatch:
+    inputs:
+      force_recreate:
+        description: Recreate the shared scratch org even when the current org is still valid.
+        required: false
+        type: boolean
+        default: false
+      refresh_snapshot:
+        description: Force a fresh snapshot after provisioning completes.
+        required: false
+        type: boolean
+        default: false
+      snapshot_name:
+        description: Scratch org snapshot name to restore from or refresh.
+        required: false
+        type: string
+        default: bbutamshared1
+  schedule:
+    - cron: '0 5 * * *' # Refresh daily before the shared scratch org nears expiration.
+
+permissions:
+  contents: read
+
+concurrency:
+  group: devhub-scratch-org
+  cancel-in-progress: false
+
+env:
+  SCRATCH_ENVIRONMENT: DevHub Scratch
+  SCRATCH_ALIAS_PREFIX: busbar-utam-shared
+  SCRATCH_SECRET_NAME: SCRATCH_ORG_AUTH_URL
+  SCRATCH_USERNAME_VARIABLE: SCRATCH_ORG_USERNAME
+  SCRATCH_CREATED_AT_VARIABLE: SCRATCH_ORG_CREATED_AT
+  SCRATCH_EXPIRES_AT_VARIABLE: SCRATCH_ORG_EXPIRES_AT
+  SCRATCH_SOURCE_VARIABLE: SCRATCH_ORG_SOURCE
+  SCRATCH_SNAPSHOT_VARIABLE: SCRATCH_ORG_SNAPSHOT
+  SCRATCH_DURATION_DAYS: '30'
+  SCRATCH_EXPIRY_BUFFER_MINUTES: '120'
+  DEFAULT_SNAPSHOT_NAME: bbutamshared1
+
+jobs:
+  provision:
+    name: Provision shared scratch org
+    runs-on: ubuntu-latest
+    environment: DevHub Scratch
+    outputs:
+      reused: ${{ steps.reuse.outputs.reused || steps.provision.outputs.reused }}
+      scratch_username: ${{ steps.reuse.outputs.scratch_username || steps.provision.outputs.scratch_username }}
+      expires_at: ${{ steps.reuse.outputs.expires_at || steps.provision.outputs.expires_at }}
+      source: ${{ steps.reuse.outputs.source || steps.provision.outputs.source }}
+      snapshot_name: ${{ steps.reuse.outputs.snapshot_name || steps.provision.outputs.snapshot_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Mint GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+
+      - name: Install Salesforce CLI
+        uses: salesforcecli/actions/setup-sf@v1
+
+      - name: Decide whether to reuse existing org
+        id: reuse
+        env:
+          FORCE_RECREATE: ${{ inputs.force_recreate }}
+          SNAPSHOT_NAME_INPUT: ${{ inputs.snapshot_name }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          force_recreate="${FORCE_RECREATE:-false}"
+          snapshot_name="${SNAPSHOT_NAME_INPUT:-$DEFAULT_SNAPSHOT_NAME}"
+          current_username="$(gh variable get "$SCRATCH_USERNAME_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
+          current_expires_at="$(gh variable get "$SCRATCH_EXPIRES_AT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
+          current_source="$(gh variable get "$SCRATCH_SOURCE_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
+          current_snapshot="$(gh variable get "$SCRATCH_SNAPSHOT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
+
+          should_reuse=false
+          current_expires_epoch=""
+          if [[ "$force_recreate" != "true" && -n "$current_username" && -n "$current_expires_at" ]]; then
+            current_expires_epoch="$(python - <<'PY' "$current_expires_at"
+            from datetime import datetime, timezone
+            import sys
+            value = sys.argv[1]
+            try:
+                dt = datetime.fromisoformat(value.replace('Z', '+00:00'))
+            except ValueError:
+                print('')
+                raise SystemExit(0)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            print(int(dt.timestamp()))
+            PY
+            )"
+            if [[ -n "$current_expires_epoch" ]]; then
+              now_epoch="$(date -u +%s)"
+              buffer_seconds=$((SCRATCH_EXPIRY_BUFFER_MINUTES * 60))
+              if (( current_expires_epoch - now_epoch > buffer_seconds )); then
+                should_reuse=true
+              fi
+            fi
+          fi
+
+          if [[ "$should_reuse" == "true" ]]; then
+            echo "reused=true" >> "$GITHUB_OUTPUT"
+            echo "scratch_username=$current_username" >> "$GITHUB_OUTPUT"
+            echo "expires_at=$current_expires_at" >> "$GITHUB_OUTPUT"
+            echo "source=${current_source:-existing}" >> "$GITHUB_OUTPUT"
+            echo "snapshot_name=${current_snapshot:-$snapshot_name}" >> "$GITHUB_OUTPUT"
+          else
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            echo "scratch_username=" >> "$GITHUB_OUTPUT"
+            echo "expires_at=" >> "$GITHUB_OUTPUT"
+            echo "source=" >> "$GITHUB_OUTPUT"
+            echo "snapshot_name=$snapshot_name" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Authenticate Dev Hub
+        if: steps.reuse.outputs.reused != 'true'
+        env:
+          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          auth_file="$RUNNER_TEMP/devhub-auth-url.txt"
+          printf '%s' "$SF_AUTH_URL" > "$auth_file"
+          sf org login sfdx-url --sfdx-url-file "$auth_file" --alias devhub --set-default-dev-hub
+          rm -f "$auth_file"
+
+      - name: Provision scratch org
+        if: steps.reuse.outputs.reused != 'true'
+        id: provision
+        env:
+          FORCE_RECREATE: ${{ inputs.force_recreate }}
+          REFRESH_SNAPSHOT: ${{ inputs.refresh_snapshot }}
+          SNAPSHOT_NAME_INPUT: ${{ inputs.snapshot_name }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          snapshot_name="${SNAPSHOT_NAME_INPUT:-$DEFAULT_SNAPSHOT_NAME}"
+          refresh_snapshot="${REFRESH_SNAPSHOT:-false}"
+          auth_output_path="$RUNNER_TEMP/scratch-org-auth-url.txt"
+          org_output_path="$RUNNER_TEMP/scratch-org-display.json"
+          create_output_path="$RUNNER_TEMP/scratch-org-create.json"
+          current_username="$(gh variable get "$SCRATCH_USERNAME_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
+          scratch_alias="$SCRATCH_ALIAS_PREFIX-$(date -u +%Y%m%d%H%M%S)"
+          cleanup_target=""
+          created_username=""
+
+          if [[ ! "$snapshot_name" =~ ^[A-Za-z0-9]{1,15}$ ]]; then
+            echo "Snapshot names must be 1-15 alphanumeric characters." >&2
+            exit 1
+          fi
+
+          cleanup() {
+            if [[ -n "$cleanup_target" ]]; then
+              sf org delete scratch --target-org "$cleanup_target" --no-prompt || true
+            fi
+          }
+
+          trap 'status=$?; if [[ $status -ne 0 ]]; then cleanup; fi; exit $status' EXIT
+
+          if [[ -n "$current_username" ]]; then
+            sf org delete scratch --target-org "$current_username" --no-prompt || true
+          fi
+
+          snapshot_status=""
+          if sf org get snapshot --snapshot "$snapshot_name" --target-dev-hub devhub --json > "$RUNNER_TEMP/snapshot.json" 2>/dev/null; then
+            snapshot_status="$(python - <<'PY' "$RUNNER_TEMP/snapshot.json"
+            import json
+            import sys
+            with open(sys.argv[1], 'r', encoding='utf-8') as handle:
+                data = json.load(handle)
+            result = data.get('result', {})
+            print(result.get('Status') or result.get('status') or '')
+            PY
+            )"
+          fi
+
+          if [[ "$snapshot_status" == "Active" ]]; then
+            sf org create scratch --snapshot "$snapshot_name" --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
+            cleanup_target="$scratch_alias"
+            source="snapshot"
+          else
+            sf org create scratch --definition-file config/project-scratch-def.json --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
+            cleanup_target="$scratch_alias"
+            source="definition"
+            refresh_snapshot=true
+          fi
+
+          sfdx force:org:display --targetusername "$scratch_alias" --verbose --json > "$org_output_path"
+
+          created_username="$(python - <<'PY' "$org_output_path"
+          import json
+          import sys
+          with open(sys.argv[1], 'r', encoding='utf-8') as handle:
+              data = json.load(handle)
+          result = data.get('result', {})
+          print(result.get('username', ''))
+          PY
+          )"
+          auth_url="$(python - <<'PY' "$org_output_path"
+          import json
+          import sys
+          with open(sys.argv[1], 'r', encoding='utf-8') as handle:
+              data = json.load(handle)
+          result = data.get('result', {})
+          print(result.get('sfdxAuthUrl', ''))
+          PY
+          )"
+          expires_at="$(python - <<'PY' "$org_output_path" "$create_output_path"
+          import json
+          import sys
+          for path in sys.argv[1:]:
+              with open(path, 'r', encoding='utf-8') as handle:
+                  data = json.load(handle)
+              result = data.get('result', {})
+              value = result.get('expirationDate') or result.get('expiration_date') or ''
+              if value:
+                  print(value)
+                  break
+          else:
+              print('')
+          PY
+          )"
+
+          if [[ -z "$created_username" || -z "$auth_url" || -z "$expires_at" ]]; then
+            echo "Failed to derive scratch org credentials or expiration metadata." >&2
+            exit 1
+          fi
+
+          echo "::add-mask::$auth_url"
+          printf '%s' "$auth_url" > "$auth_output_path"
+
+          if [[ "$refresh_snapshot" == "true" ]]; then
+            if sf org get snapshot --snapshot "$snapshot_name" --target-dev-hub devhub --json > /dev/null 2>&1; then
+              sf org delete snapshot --snapshot "$snapshot_name" --target-dev-hub devhub --no-prompt || true
+            fi
+            sf org create snapshot --name "$snapshot_name" --source-org "$created_username" --target-dev-hub devhub --description "Shared scratch org snapshot for $GITHUB_REPOSITORY"
+          fi
+
+          echo "reused=false" >> "$GITHUB_OUTPUT"
+          echo "scratch_username=$created_username" >> "$GITHUB_OUTPUT"
+          echo "expires_at=$expires_at" >> "$GITHUB_OUTPUT"
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+          echo "snapshot_name=$snapshot_name" >> "$GITHUB_OUTPUT"
+
+      - name: Publish scratch org credentials
+        if: steps.reuse.outputs.reused != 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          auth_output_path="$RUNNER_TEMP/scratch-org-auth-url.txt"
+          if [[ ! -s "$auth_output_path" ]]; then
+            echo "Scratch org auth URL was not generated." >&2
+            exit 1
+          fi
+
+          gh secret set "$SCRATCH_SECRET_NAME" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" < "$auth_output_path"
+          gh variable set "$SCRATCH_USERNAME_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.scratch_username }}"
+          gh variable set "$SCRATCH_CREATED_AT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh variable set "$SCRATCH_EXPIRES_AT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.expires_at }}"
+          gh variable set "$SCRATCH_SOURCE_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.source }}"
+          gh variable set "$SCRATCH_SNAPSHOT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.snapshot_name }}"
+          rm -f "$auth_output_path"
+
+      - name: Delete partially provisioned scratch org
+        if: failure() && steps.reuse.outputs.reused != 'true' && steps.provision.outputs.scratch_username != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          sf org delete scratch --target-org "${{ steps.provision.outputs.scratch_username }}" --no-prompt || true
+
+      - name: Summarize result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo '### Scratch Org Provisioning'
+            echo
+            if [[ '${{ steps.reuse.outputs.reused }}' == 'true' ]]; then
+              echo '- Reused existing shared scratch org.'
+              echo '- Username: `${{ steps.reuse.outputs.scratch_username }}`'
+              echo '- Expires: `${{ steps.reuse.outputs.expires_at }}`'
+              echo '- Snapshot: `${{ steps.reuse.outputs.snapshot_name }}`'
+            elif [[ '${{ steps.provision.outcome }}' == 'success' ]]; then
+              echo '- Provisioned a shared scratch org and refreshed environment metadata.'
+              echo '- Username: `${{ steps.provision.outputs.scratch_username }}`'
+              echo '- Expires: `${{ steps.provision.outputs.expires_at }}`'
+              echo '- Source: `${{ steps.provision.outputs.source }}`'
+              echo '- Snapshot: `${{ steps.provision.outputs.snapshot_name }}`'
+            else
+              echo '- Provisioning failed. Review the job logs for details.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
