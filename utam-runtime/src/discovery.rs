@@ -149,11 +149,10 @@ pub async fn find_known_page_objects(
         if !matches_bitmap.get(i).copied().unwrap_or(false) {
             continue;
         }
-        let root_elements =
-            match driver.find_elements(&Selector::Css(selector_css.clone())).await {
-                Ok(els) if !els.is_empty() => els,
-                _ => continue,
-            };
+        let root_elements = match driver.find_elements(&Selector::Css(selector_css.clone())).await {
+            Ok(els) if !els.is_empty() => els,
+            _ => continue,
+        };
         let first_root = &root_elements[0];
         if !confirm_page_object_match(first_root.as_ref(), &ast).await {
             continue;
@@ -186,11 +185,8 @@ async fn confirm_page_object_match(
     root: &dyn crate::driver::ElementHandle,
     ast: &PageObjectAst,
 ) -> bool {
-    let light_anchors: Vec<&ElementAst> = ast
-        .elements
-        .iter()
-        .filter(|e| is_verification_anchor(e))
-        .collect();
+    let light_anchors: Vec<&ElementAst> =
+        ast.elements.iter().filter(|e| is_verification_anchor(e)).collect();
     let shadow_anchors: Vec<&ElementAst> = ast
         .shadow
         .as_ref()

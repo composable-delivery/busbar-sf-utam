@@ -19,10 +19,7 @@ pub struct CoverageResults {
     pub summary: AllureTestResult,
 }
 
-pub async fn discover_and_test(
-    session: &SalesforceSession,
-    page_context: &str,
-) -> CoverageResults {
+pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) -> CoverageResults {
     eprintln!("\n=== Discover + test on page: {page_context} ===");
 
     let matched = match find_known_page_objects(session.driver.as_ref(), &session.registry).await {
@@ -94,7 +91,7 @@ pub async fn discover_and_test(
     // Sort failure kinds by count (descending) for the summary
     let mut sorted_kinds: Vec<(FailureKind, usize)> =
         totals.failure_kinds.iter().map(|(k, v)| (*k, *v)).collect();
-    sorted_kinds.sort_by(|a, b| b.1.cmp(&a.1));
+    sorted_kinds.sort_by_key(|b| std::cmp::Reverse(b.1));
 
     eprintln!(
         "\n  Summary [{page_context}]: {} POs matched, {} loaded, {} broken",
@@ -106,10 +103,7 @@ pub async fn discover_and_test(
         "    Methods: {} passed, {} failed, {} skipped",
         totals.methods_passed, totals.methods_failed, totals.methods_skipped
     );
-    eprintln!(
-        "    Elements: {} passed, {} failed",
-        totals.elements_passed, totals.elements_failed
-    );
+    eprintln!("    Elements: {} passed, {} failed", totals.elements_passed, totals.elements_failed);
     if !sorted_kinds.is_empty() {
         eprintln!("    Failure breakdown:");
         for (kind, count) in &sorted_kinds {

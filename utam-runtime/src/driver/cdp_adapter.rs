@@ -37,10 +37,7 @@ fn to_rt(e: chromiumoxide::error::CdpError) -> RuntimeError {
         || lower.contains("unable to locate")
         || lower.contains("could not find")
     {
-        return RuntimeError::ElementNotFound {
-            element: "<cdp>".into(),
-            reason: msg,
-        };
+        return RuntimeError::ElementNotFound { element: "<cdp>".into(), reason: msg };
     }
     if lower.contains("timeout") || lower.contains("timed out") {
         return RuntimeError::Utam(utam_core::error::UtamError::Timeout { condition: msg });

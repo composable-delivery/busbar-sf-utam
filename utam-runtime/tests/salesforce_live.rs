@@ -14,6 +14,9 @@
 //!     cargo test -p utam-runtime --test salesforce_live -- b_account_detail --test-threads=1
 //!     cargo test -p utam-runtime --test salesforce_live -- c_setup --test-threads=1
 //!
+//! These tests are ignored by default and are run explicitly by CI with
+//! `--ignored` because they require real Salesforce credentials.
+//!
 //! `SF_AUTH_URL` is REQUIRED.  No silent-skip path: tests that "pass"
 //! without a real Salesforce org give false confidence.
 
@@ -27,6 +30,7 @@ use sf_live::{coverage, shared};
 // Test 1: Home page — runs first, leaves browser on Lightning home
 // ───────────────────────────────────────────────────────────────────────────
 #[test]
+#[ignore = "requires real Salesforce org credentials (SF_AUTH_URL)"]
 fn a_home_coverage() {
     shared::with_session(|session| async move {
         // session is already navigated to /lightning/page/home during setup
@@ -39,6 +43,7 @@ fn a_home_coverage() {
 // Test 2: Account detail — navigates to the seeded Acme Corp record
 // ───────────────────────────────────────────────────────────────────────────
 #[test]
+#[ignore = "requires real Salesforce org credentials (SF_AUTH_URL)"]
 fn b_account_detail_coverage() {
     shared::with_session(|session| async move {
         let account_id = session
@@ -63,6 +68,7 @@ fn b_account_detail_coverage() {
 // Test 3: Setup page — navigates to Setup Home
 // ───────────────────────────────────────────────────────────────────────────
 #[test]
+#[ignore = "requires real Salesforce org credentials (SF_AUTH_URL)"]
 fn c_setup_coverage() {
     shared::with_session(|session| async move {
         let url = format!("{}/lightning/setup/SetupOneHome/home", session.instance_url);
@@ -95,12 +101,9 @@ fn zz_teardown() {
 /// load + exercise it cleanly, that's a bug we must surface.
 fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
     let total = coverage.results.len();
-    let passed =
-        coverage.results.iter().filter(|r| r.status == AllureStatus::Passed).count();
-    let failed =
-        coverage.results.iter().filter(|r| r.status == AllureStatus::Failed).count();
-    let broken =
-        coverage.results.iter().filter(|r| r.status == AllureStatus::Broken).count();
+    let passed = coverage.results.iter().filter(|r| r.status == AllureStatus::Passed).count();
+    let failed = coverage.results.iter().filter(|r| r.status == AllureStatus::Failed).count();
+    let broken = coverage.results.iter().filter(|r| r.status == AllureStatus::Broken).count();
 
     // Write each per-PO result and the summary to Allure.
     shared::with_allure(|writer| {
@@ -141,10 +144,7 @@ fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
         let mut details = String::new();
         for r in &coverage.results {
             if r.status == AllureStatus::Failed || r.status == AllureStatus::Broken {
-                details.push_str(&format!(
-                    "\n  [{:?}] {}",
-                    r.status, r.name
-                ));
+                details.push_str(&format!("\n  [{:?}] {}", r.status, r.name));
                 if let Some(sd) = &r.status_details {
                     if let Some(msg) = &sd.message {
                         details.push_str(&format!("\n    {}", msg.lines().next().unwrap_or("")));
@@ -152,9 +152,7 @@ fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
                 }
             }
         }
-        panic!(
-            "{context}: {failed} failed, {broken} broken out of {total} page objects:{details}"
-        );
+        panic!("{context}: {failed} failed, {broken} broken out of {total} page objects:{details}");
     }
 
     eprintln!("=== {context}: all {total} page objects passed ===\n");

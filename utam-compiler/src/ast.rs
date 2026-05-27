@@ -306,7 +306,11 @@ pub struct MethodAst {
     pub args: Vec<MethodArgAst>,
     #[serde(default)]
     pub compose: Vec<ComposeStatementAst>,
-    #[serde(rename = "returnType", default, deserialize_with = "deserialize_optional_string_or_vec")]
+    #[serde(
+        rename = "returnType",
+        default,
+        deserialize_with = "deserialize_optional_string_or_vec"
+    )]
     pub return_type: Option<String>,
     #[serde(rename = "returnAll", default)]
     pub return_all: bool,

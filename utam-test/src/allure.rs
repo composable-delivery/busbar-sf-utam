@@ -401,9 +401,10 @@ impl TestResultBuilder {
 
     /// Derive overall status from step results: failed if any step failed.
     pub fn finish_from_steps(self) -> AllureTestResult {
-        let has_failure = self.steps.iter().any(|s| {
-            s.status == AllureStatus::Failed || s.status == AllureStatus::Broken
-        });
+        let has_failure = self
+            .steps
+            .iter()
+            .any(|s| s.status == AllureStatus::Failed || s.status == AllureStatus::Broken);
         let status = if has_failure { AllureStatus::Failed } else { AllureStatus::Passed };
         self.finish(status)
     }
@@ -556,7 +557,6 @@ impl AllureWriter {
             .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
         std::fs::write(self.results_dir.join("categories.json"), json)
     }
-
 }
 
 /// Failure category definition for categories.json
@@ -641,12 +641,10 @@ mod tests {
         let pass = StepBuilder::start("ok").finish(AllureStatus::Passed);
         let fail = StepBuilder::start("bad").finish(AllureStatus::Failed);
 
-        let all_pass =
-            TestResultBuilder::new("t1").step(pass.clone()).finish_from_steps();
+        let all_pass = TestResultBuilder::new("t1").step(pass.clone()).finish_from_steps();
         assert_eq!(all_pass.status, AllureStatus::Passed);
 
-        let has_fail =
-            TestResultBuilder::new("t2").step(pass).step(fail).finish_from_steps();
+        let has_fail = TestResultBuilder::new("t2").step(pass).step(fail).finish_from_steps();
         assert_eq!(has_fail.status, AllureStatus::Failed);
     }
 

@@ -184,7 +184,7 @@ impl DynamicPageObject {
 
     /// Wrap an existing element as a page object (synchronous — no load).
     ///
-    /// Most callers should prefer [`from_element_loaded`] which runs the
+    /// Most callers should prefer [`Self::from_element_loaded`] which runs the
     /// PO's `beforeLoad` predicates the same way UTAM-Java's
     /// `CustomElementBuilder.build()` calls `poInstance.load()` after
     /// bootstrap.  This sync constructor exists for cases where the

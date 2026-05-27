@@ -58,10 +58,7 @@ where
         // iterates the full registry (1454 POs) × DOM checks, which is
         // slow but bounded; anything exceeding 10 min is a real hang.
         let test_fut = f(session);
-        if tokio::time::timeout(std::time::Duration::from_secs(600), test_fut)
-            .await
-            .is_err()
-        {
+        if tokio::time::timeout(std::time::Duration::from_secs(600), test_fut).await.is_err() {
             panic!(
                 "test exceeded 10-minute timeout — driver probably hung \
                  (stale element, dead browser session, or runaway selector)"

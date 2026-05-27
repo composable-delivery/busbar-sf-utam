@@ -86,10 +86,7 @@ pub fn classify(message: &str) -> FailureKind {
     if m.contains("pageobjectnotfound") || m.contains("page object not found") {
         return FailureKind::CustomComponentUnresolved;
     }
-    if m.contains("timed out")
-        || m.contains("timeout")
-        || m.contains("waitfor predicate")
-    {
+    if m.contains("timed out") || m.contains("timeout") || m.contains("waitfor predicate") {
         return FailureKind::Timeout;
     }
     // Broader "not found" match — handles variants like
@@ -115,10 +112,7 @@ mod tests {
             classify("WebDriver error: no such element: Unable to locate element"),
             FailureKind::StaleSelector
         );
-        assert_eq!(
-            classify("ElementNotDefined: foo not in the DOM"),
-            FailureKind::StaleSelector
-        );
+        assert_eq!(classify("ElementNotDefined: foo not in the DOM"), FailureKind::StaleSelector);
     }
 
     #[test]

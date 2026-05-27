@@ -42,10 +42,7 @@ impl RunTag {
     pub fn generate(driver: &str) -> Self {
         let stamp = format!(
             "{:x}",
-            SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .map(|d| d.as_millis())
-                .unwrap_or(0)
+            SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0)
         );
         Self { driver: driver.to_string(), stamp }
     }
@@ -92,10 +89,8 @@ impl SalesforceSession {
     /// that "pass" without a real org give false confidence.
     pub async fn setup() -> Self {
         // ── Salesforce auth ────────────────────────────────────────────
-        let auth_url = std::env::var("SF_AUTH_URL")
-            .ok()
-            .filter(|s| !s.is_empty())
-            .unwrap_or_else(|| {
+        let auth_url =
+            std::env::var("SF_AUTH_URL").ok().filter(|s| !s.is_empty()).unwrap_or_else(|| {
                 panic!(
                     "SF_AUTH_URL is required.  Integration tests need a real \
                      Salesforce org.  Set SF_AUTH_URL to an sfdx auth URL \
@@ -104,8 +99,7 @@ impl SalesforceSession {
             });
         eprintln!("[setup] SF_AUTH_URL present (len={})", auth_url.len());
 
-        let parsed =
-            SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
+        let parsed = SfdxAuthUrl::parse(&auth_url).expect("Failed to parse SF_AUTH_URL");
         let sf_client = SalesforceClient::from_auth_url(&parsed)
             .await
             .expect("Failed to exchange refresh token — check SF_AUTH_URL is valid");
@@ -142,10 +136,7 @@ impl SalesforceSession {
 
         let home_url = format!("{instance_url}/lightning/page/home");
         driver.navigate(&home_url).await.expect("Failed to navigate to home");
-        assert!(
-            wait_for_lightning(driver.as_ref()).await,
-            "Lightning did not load after auth"
-        );
+        assert!(wait_for_lightning(driver.as_ref()).await, "Lightning did not load after auth");
         eprintln!("Lightning loaded");
 
         // ── Allure setup ───────────────────────────────────────────────
@@ -224,7 +215,6 @@ impl SalesforceSession {
         self.driver.navigate(url).await.expect("navigation failed");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
     }
-
 }
 
 // ---------------------------------------------------------------------------
@@ -266,9 +256,7 @@ async fn wait_for_lightning(driver: &dyn UtamDriver) -> bool {
 }
 
 fn use_cdp() -> bool {
-    std::env::var("UTAM_DRIVER")
-        .map(|v| v.eq_ignore_ascii_case("cdp"))
-        .unwrap_or(false)
+    std::env::var("UTAM_DRIVER").map(|v| v.eq_ignore_ascii_case("cdp")).unwrap_or(false)
 }
 
 async fn create_driver() -> Arc<dyn UtamDriver> {
@@ -316,8 +304,7 @@ async fn create_cdp_driver() -> Arc<dyn UtamDriver> {
         .arg("--disable-dev-shm-usage")
         .window_size(1920, 1080);
     let config = builder.build().expect("Failed to build CDP browser config");
-    let driver =
-        CdpDriver::launch_with_config(config).await.expect("Failed to launch CDP driver");
+    let driver = CdpDriver::launch_with_config(config).await.expect("Failed to launch CDP driver");
     eprintln!("CDP driver launched (headless={})", !has_display);
     Arc::new(driver)
 }
@@ -338,10 +325,7 @@ fn load_registry() -> PageObjectRegistry {
     registry
 }
 
-async fn seed_test_data(
-    client: &SalesforceClient,
-    tag: &RunTag,
-) -> Vec<(String, String)> {
+async fn seed_test_data(client: &SalesforceClient, tag: &RunTag) -> Vec<(String, String)> {
     eprintln!("Seeding test data (tag={})", tag.full());
     cleanup_old_test_data(client, tag).await;
 
@@ -445,10 +429,7 @@ async fn cleanup_old_test_data(client: &SalesforceClient, tag: &RunTag) {
     let queries: [(&str, String); 5] = [
         ("Case", format!("SELECT Id FROM Case WHERE Subject LIKE '{dl}'")),
         ("Opportunity", format!("SELECT Id FROM Opportunity WHERE Name LIKE '{dl}'")),
-        (
-            "Contact",
-            format!("SELECT Id FROM Contact WHERE LastName LIKE '{dl}'"),
-        ),
+        ("Contact", format!("SELECT Id FROM Contact WHERE LastName LIKE '{dl}'")),
         ("Lead", format!("SELECT Id FROM Lead WHERE Company LIKE '{dl}'")),
         ("Account", format!("SELECT Id FROM Account WHERE Name LIKE '{dl}'")),
     ];

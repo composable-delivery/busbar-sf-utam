@@ -121,9 +121,9 @@ jobs:
           FILTER="${{ inputs.test_filter }}"
           echo "=== Salesforce Live Tests (UTAM_DRIVER=${UTAM_DRIVER}) ==="
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --nocapture --test-threads=1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --ignored --nocapture --test-threads=1
           else
-            cargo test -p utam-runtime --test salesforce_live --all-features -- --nocapture --test-threads=1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --ignored --nocapture --test-threads=1
           fi
 
       - name: Stop video recording

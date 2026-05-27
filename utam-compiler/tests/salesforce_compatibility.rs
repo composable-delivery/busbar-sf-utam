@@ -84,7 +84,7 @@ fn test_salesforce_pageobjects_parse() {
         eprintln!();
         eprintln!("--- Failure categories ---");
         let mut cats: Vec<_> = parse_errors.iter().collect();
-        cats.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
+        cats.sort_by_key(|b| std::cmp::Reverse(b.1.len()));
         for (cat, paths) in &cats {
             eprintln!("[{:>4}] {cat}", paths.len());
             for p in paths.iter().take(3) {
@@ -149,7 +149,7 @@ fn test_salesforce_pageobjects_codegen() {
         eprintln!();
         eprintln!("--- Codegen failure categories ---");
         let mut cats: Vec<_> = codegen_errors.iter().collect();
-        cats.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
+        cats.sort_by_key(|b| std::cmp::Reverse(b.1.len()));
         for (cat, paths) in &cats {
             eprintln!("[{:>4}] {cat}", paths.len());
             for p in paths.iter().take(3) {

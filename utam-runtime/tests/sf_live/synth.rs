@@ -30,10 +30,7 @@ pub struct RequiredArg {
 /// This is the systemic fix for "ArgumentMissing" failures: UTAM's declared
 /// `method.args` is often empty, but the method body references named args
 /// via compose statements.  We discover them by tree-walking.
-pub fn collect_required_args(
-    method: &MethodAst,
-    po_ast: &PageObjectAst,
-) -> Vec<RequiredArg> {
+pub fn collect_required_args(method: &MethodAst, po_ast: &PageObjectAst) -> Vec<RequiredArg> {
     let mut out = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
 
@@ -126,10 +123,7 @@ fn collect_from_compose_args(
                 if is_type_literal {
                     // This is a declared arg — name is the arg name, arg_type is its type.
                     if seen.insert(name.clone()) {
-                        out.push(RequiredArg {
-                            name: name.clone(),
-                            arg_type: arg_type.clone(),
-                        });
+                        out.push(RequiredArg { name: name.clone(), arg_type: arg_type.clone() });
                     }
                 }
             }
@@ -414,7 +408,9 @@ mod tests {
 
     #[test]
     fn test_default_values() {
-        assert!(matches!(default_value_for_type("string"), RuntimeValue::String(s) if s.is_empty()));
+        assert!(
+            matches!(default_value_for_type("string"), RuntimeValue::String(s) if s.is_empty())
+        );
         assert!(matches!(default_value_for_type("number"), RuntimeValue::Number(0)));
         assert!(matches!(default_value_for_type("boolean"), RuntimeValue::Bool(false)));
         assert!(matches!(default_value_for_type("mystery"), RuntimeValue::Null));
