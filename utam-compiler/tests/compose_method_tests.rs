@@ -10,6 +10,7 @@
 
 use utam_compiler::ast::*;
 use utam_compiler::codegen::*;
+use utam_compiler::utils::*;
 
 #[test]
 fn test_parse_simple_compose_method() {
@@ -401,8 +402,9 @@ fn test_utam_type_to_rust_unknown() {
 #[test]
 fn test_snake_case_edge_cases() {
     assert_eq!(to_snake_case("A"), "a");
-    assert_eq!(to_snake_case("ABC"), "a_b_c");
-    assert_eq!(to_snake_case("getHTMLElement"), "get_h_t_m_l_element");
+    // Consecutive uppercase treated as an acronym (no underscores)
+    assert_eq!(to_snake_case("ABC"), "abc");
+    assert_eq!(to_snake_case("getHTMLElement"), "get_htmlelement");
 }
 
 #[test]

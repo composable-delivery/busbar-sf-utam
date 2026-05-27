@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["utam-core", "utam-compiler", "utam-cli"]
+members = ["utam-core", "utam-compiler", "utam-cli", "utam-test", "utam-runtime", "busbar-sf-api"]
 
 [workspace.package]
 version = "0.1.0"
@@ -12,8 +12,9 @@ keywords = ["testing", "webdriver", "page-object", "automation"]
 categories = ["development-tools::testing", "web-programming"]
 
 [workspace.dependencies]
-# Runtime
+# Browser automation
 thirtyfour = "0.36.1"
+chromiumoxide = { version = "0.9", features = ["bytes"], default-features = false }
 tokio = { version = "1", features = ["full"] }
 async-trait = "0.1"
 
@@ -46,3 +47,5 @@ insta = { version = "1", features = ["json"] }
 # Workspace crates
 utam-core = { path = "utam-core" }
 utam-compiler = { path = "utam-compiler" }
+utam-test = { path = "utam-test" }
+utam-runtime = { path = "utam-runtime" }
