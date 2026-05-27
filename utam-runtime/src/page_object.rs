@@ -160,18 +160,36 @@ impl DynamicPageObject {
             })?;
         let selector = resolve_selector(selector_ast, &HashMap::new())?;
 
-        // If there are beforeLoad steps, wait for the root element
-        let root = if !ast.before_load.is_empty() {
+        let has_before_load = !ast.before_load.is_empty();
+        let root = if has_before_load {
             driver.wait_for_element(&selector, std::time::Duration::from_secs(10)).await?
         } else {
             driver.find_element(&selector).await?
         };
 
         let element_index = build_element_index(&ast);
-        Ok(Self { ast, root, driver, element_index, registry: None })
+        let before_load = ast.before_load.clone();
+        let page = Self { ast, root, driver, element_index, registry: None };
+
+        // Execute beforeLoad compose statements now that the page object
+        // is fully constructed.  These are predicates that validate the
+        // page is in the expected state — e.g. waiting for a child element
+        // to be present before the page object is considered loaded.
+        if has_before_load {
+            execute_compose(&page, &before_load, &HashMap::new()).await?;
+        }
+
+        Ok(page)
     }
 
-    /// Wrap an existing element as a page object.
+    /// Wrap an existing element as a page object (synchronous — no load).
+    ///
+    /// Most callers should prefer [`Self::from_element_loaded`] which runs the
+    /// PO's `beforeLoad` predicates the same way UTAM-Java's
+    /// `CustomElementBuilder.build()` calls `poInstance.load()` after
+    /// bootstrap.  This sync constructor exists for cases where the
+    /// caller explicitly wants to skip load (e.g. a root page object
+    /// load that runs beforeLoad externally).
     pub fn from_element(
         driver: impl Into<Arc<dyn UtamDriver>>,
         ast: PageObjectAst,
@@ -179,6 +197,23 @@ impl DynamicPageObject {
     ) -> Self {
         let element_index = build_element_index(&ast);
         Self { ast, root, driver: driver.into(), element_index, registry: None }
+    }
+
+    /// Wrap an existing element as a page object and execute its
+    /// `beforeLoad` compose statements — mirrors UTAM-Java's
+    /// `poInstance.load()` call after custom-component bootstrap.
+    pub async fn from_element_loaded(
+        driver: impl Into<Arc<dyn UtamDriver>>,
+        ast: PageObjectAst,
+        root: Box<dyn ElementHandle>,
+    ) -> RuntimeResult<Self> {
+        let has_before_load = !ast.before_load.is_empty();
+        let before_load = ast.before_load.clone();
+        let page = Self::from_element(driver, ast, root);
+        if has_before_load {
+            execute_compose(&page, &before_load, &HashMap::new()).await?;
+        }
+        Ok(page)
     }
 
     /// Attach a registry for cross-page-object resolution.
@@ -212,13 +247,88 @@ impl DynamicPageObject {
         self.registry.as_deref()
     }
 
+    /// Resolve the scope that a nested element should be searched within.
+    ///
+    /// Walks the parent chain from the target element's direct parent back
+    /// up to the root, collecting each ancestor in order.  Then descends
+    /// from the root, finding each ancestor in turn, traversing a shadow
+    /// root at each hop where the ancestor is marked `in_shadow=true`.
+    ///
+    /// If `target_parent` is `None`, returns the root handle unchanged.
+    async fn resolve_scope(
+        &self,
+        target_parent: Option<&str>,
+        args: &HashMap<String, RuntimeValue>,
+    ) -> RuntimeResult<Box<dyn ElementHandle>> {
+        let Some(parent_name) = target_parent else {
+            return Ok(self.root.clone_handle());
+        };
+
+        // Build the chain: [outermost_ancestor, ..., direct_parent].
+        let mut chain: Vec<String> = Vec::new();
+        let mut cursor: Option<String> = Some(parent_name.to_string());
+        while let Some(name) = cursor {
+            // Guard against cycles or missing entries.
+            if chain.contains(&name) {
+                break;
+            }
+            let next_parent = self.element_index.get(&name).and_then(|(_, _, p)| p.clone());
+            chain.push(name);
+            cursor = next_parent;
+        }
+        chain.reverse();
+
+        // Descend from the root, finding each ancestor in turn.
+        let mut current: Box<dyn ElementHandle> = self.root.clone_handle();
+        for ancestor in chain {
+            let (anc_ast, anc_in_shadow, _) = match self.element_index.get(&ancestor) {
+                Some(entry) => entry,
+                None => continue,
+            };
+            let anc_sel_ast = match &anc_ast.selector {
+                Some(s) => s,
+                None => continue,
+            };
+            let anc_sel = resolve_selector(anc_sel_ast, args)?;
+
+            // Traverse a shadow root at this hop if the ancestor was
+            // declared inside its parent's `shadow` block.
+            let search_root: Box<dyn ElementHandle> = if *anc_in_shadow {
+                match current.shadow_root().await? {
+                    Some(sr) => {
+                        // Convert ShadowRootHandle → ElementHandle-like by
+                        // delegating the next find into the shadow.
+                        let found = sr.find_element(&anc_sel).await?;
+                        current = found;
+                        continue;
+                    }
+                    None => {
+                        return Err(RuntimeError::ElementNotFound {
+                            element: ancestor.to_string(),
+                            reason: format!(
+                                "ancestor '{ancestor}' expected to be in a shadow root, \
+                                 but its parent has no shadow — page object likely matched \
+                                 a wrong/generic root selector"
+                            ),
+                        });
+                    }
+                }
+            } else {
+                current
+            };
+            current = search_root.find_element(&anc_sel).await?;
+        }
+
+        Ok(current)
+    }
+
     /// Resolve a list of elements matching a selector (for `returnAll`/`list` elements).
     async fn resolve_elements(
         &self,
         name: &str,
         args: &HashMap<String, RuntimeValue>,
     ) -> RuntimeResult<Vec<DynamicElement>> {
-        let (elem_ast, in_shadow, ref parent_name) =
+        let (elem_ast, _in_shadow, ref parent_name) =
             self.element_index.get(name).ok_or_else(|| RuntimeError::ElementNotDefined {
                 page_object: self.struct_name(),
                 element: name.to_string(),
@@ -236,38 +346,15 @@ impl DynamicPageObject {
             _ => vec![],
         };
 
-        // Resolve the search scope — if this element has a parent,
-        // search within the parent element instead of the root.
-        let scope: Box<dyn ElementHandle> = if let Some(pname) = parent_name {
-            if let Some((parent_ast, parent_in_shadow, _)) = self.element_index.get(pname) {
-                if let Some(parent_sel_ast) = &parent_ast.selector {
-                    let parent_sel = resolve_selector(parent_sel_ast, args)?;
-                    if *parent_in_shadow {
-                        let shadow = self.root.shadow_root().await?.ok_or_else(|| {
-                            RuntimeError::UnsupportedAction {
-                                action: "shadow_root".into(),
-                                element_type: "root has no shadow root".into(),
-                            }
-                        })?;
-                        shadow.find_element(&parent_sel).await?
-                    } else {
-                        self.root.find_element(&parent_sel).await?
-                    }
-                } else {
-                    self.root.clone_handle()
-                }
-            } else {
-                self.root.clone_handle()
-            }
-        } else {
-            self.root.clone_handle()
-        };
+        // Resolve the full scope chain (walks parents back to root).
+        let in_shadow = *_in_shadow;
+        let scope = self.resolve_scope(parent_name.as_deref(), args).await?;
 
-        let handles = if *in_shadow {
+        let handles = if in_shadow {
             let shadow =
-                scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
-                    action: "shadow_root".into(),
-                    element_type: "element has no shadow root".into(),
+                scope.shadow_root().await?.ok_or_else(|| RuntimeError::ElementNotFound {
+                    element: name.to_string(),
+                    reason: "parent scope has no shadow root".into(),
                 })?;
             shadow.find_elements(&selector).await?
         } else {
@@ -302,48 +389,32 @@ impl DynamicPageObject {
 
         let selector = resolve_selector(selector_ast, args)?;
 
-        // Resolve search scope — nested elements search within their parent.
-        // We resolve the parent's selector directly to avoid async recursion.
-        let scope: Box<dyn ElementHandle> = if let Some(pname) = parent_elem_name {
-            if let Some((parent_ast, parent_in_shadow, _)) = self.element_index.get(pname) {
-                if let Some(parent_sel_ast) = &parent_ast.selector {
-                    let parent_sel = resolve_selector(parent_sel_ast, args)?;
-                    if *parent_in_shadow {
-                        let shadow = self.root.shadow_root().await?.ok_or_else(|| {
-                            RuntimeError::UnsupportedAction {
-                                action: "shadow_root".into(),
-                                element_type: "root has no shadow root".into(),
-                            }
-                        })?;
-                        shadow.find_element(&parent_sel).await?
-                    } else {
-                        self.root.find_element(&parent_sel).await?
-                    }
-                } else {
-                    self.root.clone_handle()
-                }
-            } else {
-                self.root.clone_handle()
-            }
-        } else {
-            self.root.clone_handle()
-        };
+        // Resolve the full scope chain by walking parents back to root.
+        let scope = self.resolve_scope(parent_elem_name.as_deref(), args).await?;
 
-        // Determine where to search
+        // Determine where to search.
+        //
+        // Nullable elements that don't match return `RuntimeError::NullableAbsent`
+        // so the compose-method interpreter can short-circuit to Null rather
+        // than executing actions against a fake base element.
         let found: Box<dyn ElementHandle> = if *in_shadow {
-            let shadow =
-                scope.shadow_root().await?.ok_or_else(|| RuntimeError::UnsupportedAction {
-                    action: "shadow_root".into(),
-                    element_type: "element has no shadow root".into(),
-                })?;
+            let shadow = match scope.shadow_root().await? {
+                Some(sr) => sr,
+                None if elem_ast.nullable => {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+                }
+                None => {
+                    return Err(RuntimeError::ElementNotFound {
+                        element: name.to_string(),
+                        reason: "parent scope has no shadow root".into(),
+                    });
+                }
+            };
             if selector_ast.return_all {
                 let handles = shadow.find_elements(&selector).await?;
-                if elem_ast.nullable && handles.is_empty() {
-                    return Ok(DynamicElement::base(self.root.clone_handle()));
+                if handles.is_empty() && elem_ast.nullable {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
                 }
-                // For returnAll, wrap as Elements via RuntimeValue
-                // But DynamicElement is singular — return the first for now
-                // (the caller should use get_elements for lists)
                 return Ok(wrap_element(
                     handles.into_iter().next().ok_or_else(|| RuntimeError::ElementNotDefined {
                         page_object: self.struct_name(),
@@ -352,11 +423,17 @@ impl DynamicPageObject {
                     elem_ast,
                 ));
             }
-            shadow.find_element(&selector).await?
+            match shadow.find_element(&selector).await {
+                Ok(el) => el,
+                Err(_) if elem_ast.nullable => {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+                }
+                Err(e) => return Err(e),
+            }
         } else if selector_ast.return_all {
             let handles = scope.find_elements(&selector).await?;
-            if elem_ast.nullable && handles.is_empty() {
-                return Ok(DynamicElement::base(scope));
+            if handles.is_empty() && elem_ast.nullable {
+                return Err(RuntimeError::NullableAbsent { element: name.to_string() });
             }
             return Ok(wrap_element(
                 handles.into_iter().next().ok_or_else(|| RuntimeError::ElementNotDefined {
@@ -368,9 +445,8 @@ impl DynamicPageObject {
         } else {
             match scope.find_element(&selector).await {
                 Ok(el) => el,
-                Err(e) if elem_ast.nullable => {
-                    let _ = e;
-                    return Ok(DynamicElement::base(self.root.clone_handle()));
+                Err(_) if elem_ast.nullable => {
+                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
                 }
                 Err(e) => return Err(e),
             }
@@ -421,10 +497,16 @@ fn collect_elements(
     index: &mut HashMap<String, (ElementAst, bool, Option<String>)>,
 ) {
     index.insert(elem.name.clone(), (elem.clone(), in_shadow, parent.map(|s| s.to_string())));
+    // Non-shadow children are regular DOM descendants of `elem`.  The
+    // shadow boundary (if any) was already crossed when we reached `elem`
+    // itself — its children are in the same DOM frame as `elem`, so
+    // their `in_shadow` flag is false relative to their direct parent.
     for child in &elem.elements {
-        collect_elements(child, in_shadow, Some(&elem.name), index);
+        collect_elements(child, false, Some(&elem.name), index);
     }
-    // Also recurse into element-level shadow
+    // Element-level shadow block: these children require a shadow_root()
+    // hop from `elem` to find them.  That's exactly what `in_shadow=true`
+    // signals to `resolve_element`.
     if let Some(shadow) = &elem.shadow {
         for child in &shadow.elements {
             collect_elements(child, true, Some(&elem.name), index);
@@ -459,12 +541,12 @@ fn execute_compose<'a>(
 
             // 2. Handle applyExternal — cross-page-object method call
             if let Some(external) = &stmt.apply_external {
-                let ext_args = resolve_compose_args(&external.args, method_args)?;
+                let ext_args = resolve_compose_args(external.args(), method_args)?;
                 // For now, if we have a registry we can try to resolve the external method.
                 // The external method name format varies; store result and continue.
                 last_result = RuntimeValue::String(format!(
                     "<external: {} with {} args>",
-                    external.method,
+                    external.method(),
                     ext_args.len()
                 ));
                 continue;
@@ -475,12 +557,25 @@ fn execute_compose<'a>(
             // When the element has a CustomComponent type and a registry is
             // available, look up the referenced page object AST so chained
             // method calls can resolve through the child page object.
+            //
+            // Nullable elements that are absent produce `NullableAbsent`
+            // errors; we catch them here, set the current result to Null,
+            // and skip this statement.  This preserves the UTAM contract
+            // that `nullable: true` means "method handles absence gracefully."
             let mut resolved_as_custom = false;
             let element = if let Some(elem_name) = &stmt.element {
                 if elem_name == "document" {
                     None
                 } else {
-                    let el = page.resolve_element(elem_name, method_args).await?;
+                    let el = match page.resolve_element(elem_name, method_args).await {
+                        Ok(el) => el,
+                        Err(RuntimeError::NullableAbsent { .. }) => {
+                            last_result = RuntimeValue::Null;
+                            last_element = None;
+                            continue;
+                        }
+                        Err(e) => return Err(e),
+                    };
 
                     // Check if this element is a custom component type
                     if let Some((elem_ast, _, _)) = page.element_index.get(elem_name) {
@@ -576,15 +671,21 @@ fn execute_compose<'a>(
 
                 // If the last result is a CustomComponent and we're chaining,
                 // delegate the method call to a nested DynamicPageObject.
+                //
+                // Mirrors UTAM-Java's CustomElementBuilder.build:
+                //   find → bootstrap → poInstance.load()
+                // The `load()` step runs the child PO's `beforeLoad` compose,
+                // so we use `from_element_loaded` (async) not `from_element`.
                 if stmt.chain {
                     if let RuntimeValue::CustomComponent { ref element, ref ast, ref registry } =
                         last_result
                     {
-                        let child = DynamicPageObject::from_element(
+                        let child = DynamicPageObject::from_element_loaded(
                             page.driver_arc(),
                             *ast.clone(),
                             element.handle().clone_handle(),
-                        );
+                        )
+                        .await?;
                         let child = if let Some(reg) = registry {
                             child.with_registry(Arc::clone(reg))
                         } else {
@@ -755,12 +856,37 @@ fn resolve_compose_args(
 }
 
 /// Convert a serde_json::Value to a RuntimeValue.
+///
+/// Handles UTAM-specific typed literals like `{"type": "locator", "value": {"css": ".foo"}}`
+/// by extracting the underlying string, so actions like `containsElement(locator)` receive
+/// the CSS string they expect instead of a JSON-encoded object.
 fn json_to_runtime_value(v: &serde_json::Value) -> RuntimeValue {
     match v {
         serde_json::Value::Null => RuntimeValue::Null,
         serde_json::Value::Bool(b) => RuntimeValue::Bool(*b),
         serde_json::Value::Number(n) => RuntimeValue::Number(n.as_i64().unwrap_or(0)),
         serde_json::Value::String(s) => RuntimeValue::String(s.clone()),
+        serde_json::Value::Object(map) => {
+            // UTAM typed-value wrappers: {"type": "locator", "value": {"css": "..."}}
+            if let Some(typ) = map.get("type").and_then(|t| t.as_str()) {
+                if typ == "locator" {
+                    if let Some(val) = map.get("value") {
+                        if let Some(css) = val.get("css").and_then(|c| c.as_str()) {
+                            return RuntimeValue::String(css.to_string());
+                        }
+                        if let Some(aid) = val.get("accessid").and_then(|a| a.as_str()) {
+                            return RuntimeValue::String(aid.to_string());
+                        }
+                    }
+                }
+                // {"type": "string"|"number"|"boolean", "value": ...} typed literals.
+                if let Some(val) = map.get("value") {
+                    return json_to_runtime_value(val);
+                }
+            }
+            // Unknown object shape — stringify as a last resort.
+            RuntimeValue::String(v.to_string())
+        }
         _ => RuntimeValue::String(v.to_string()),
     }
 }
@@ -967,6 +1093,37 @@ mod tests {
         assert!(
             matches!(json_to_runtime_value(&serde_json::json!("hi")), RuntimeValue::String(s) if s == "hi")
         );
+    }
+
+    #[test]
+    fn test_json_to_runtime_value_locator_css() {
+        // Typed locator literal: {"type": "locator", "value": {"css": ".foo"}}
+        // must produce RuntimeValue::String(".foo") so actions like
+        // containsElement(locator) receive the CSS string they expect.
+        let v = serde_json::json!({ "type": "locator", "value": { "css": ".foo" } });
+        match json_to_runtime_value(&v) {
+            RuntimeValue::String(s) => assert_eq!(s, ".foo"),
+            other => panic!("expected String(.foo), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_json_to_runtime_value_typed_literal() {
+        // {"type": "string", "value": "hi"} unwraps to the inner value.
+        let v = serde_json::json!({ "type": "string", "value": "hi" });
+        match json_to_runtime_value(&v) {
+            RuntimeValue::String(s) => assert_eq!(s, "hi"),
+            other => panic!("expected String(hi), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_json_to_runtime_value_locator_accessid() {
+        let v = serde_json::json!({ "type": "locator", "value": { "accessid": "my-id" } });
+        match json_to_runtime_value(&v) {
+            RuntimeValue::String(s) => assert_eq!(s, "my-id"),
+            other => panic!("expected String, got {other:?}"),
+        }
     }
 
     #[test]

@@ -239,6 +239,43 @@ fn compile_single_arg(
     }
 }
 
+/// Convert a string to snake_case
+pub fn to_snake_case(s: &str) -> String {
+    let mut result = String::new();
+
+    for c in s.chars() {
+        if c.is_uppercase() {
+            if !result.is_empty() {
+                result.push('_');
+            }
+            result.push(c.to_lowercase().next().unwrap());
+        } else {
+            result.push(c);
+        }
+    }
+
+    result
+}
+
+/// Convert a string to PascalCase
+pub fn to_pascal_case(s: &str) -> String {
+    let mut result = String::new();
+    let mut capitalize_next = true;
+
+    for c in s.chars() {
+        if c == '_' || c == '-' {
+            capitalize_next = true;
+        } else if capitalize_next {
+            result.push(c.to_uppercase().next().unwrap());
+            capitalize_next = false;
+        } else {
+            result.push(c);
+        }
+    }
+
+    result
+}
+
 /// Generates Rust code for a selector, handling parameterized selectors
 ///
 /// For parameterized selectors (with args), generates a format! call that
@@ -522,7 +559,11 @@ impl CodeGenerator {
         let return_type = self.element_return_type(element);
         let body = self.generate_element_body(element);
         let doc = if let Some(desc) = &element.description {
-            quote! { #[doc = #desc] }
+            let doc_text = match desc {
+                crate::ast::DescriptionAst::Simple(s) => s.clone(),
+                crate::ast::DescriptionAst::Detailed { text, .. } => text.join(" "),
+            };
+            quote! { #[doc = #doc_text] }
         } else {
             let doc_text = format!("Get the {} element", element.name);
             quote! { #[doc = #doc_text] }
@@ -898,8 +939,8 @@ impl CodeGenerator {
             }
         } else if let Some(apply_external) = &stmt.apply_external {
             // External method call
-            let method_name = format_ident!("{}", to_snake_case(&apply_external.method));
-            let args = self.generate_compose_args(&apply_external.args);
+            let method_name = format_ident!("{}", to_snake_case(apply_external.method()));
+            let args = self.generate_compose_args(apply_external.args());
 
             quote! {
                 #method_name(#args).await?;

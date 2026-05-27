@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use utam_compiler::ast::*;
 
 use crate::driver::{Selector, UtamDriver};
-use crate::error::RuntimeResult;
+use crate::error::{RuntimeError, RuntimeResult};
 use crate::registry::PageObjectRegistry;
 
 // ---------------------------------------------------------------------------
@@ -83,51 +83,173 @@ pub struct DiscoveredChild {
 
 /// Find which registered page objects are present on the current page.
 ///
-/// Tests each root page object's selector against the live DOM.
-/// Returns only those that match.
+/// Two-phase match:
+///   1. Root selector matches at least one DOM element.  ALL 1454+
+///      selectors are tested in a SINGLE `execute_script` call —
+///      one-shot batch, not one find_elements per PO, which would be
+///      thousands of driver round-trips and take 10+ minutes.
+///   2. At least one of the PO's *required* (non-nullable) public
+///      sub-elements also resolves against that root.  This filters
+///      false positives where a PO has an overly generic root
+///      selector (e.g. `.container`) that happens to match something
+///      on the page that isn't actually the declared component.
+///
+/// Returns only page objects that pass both phases.
 pub async fn find_known_page_objects(
     driver: &dyn UtamDriver,
     registry: &PageObjectRegistry,
 ) -> RuntimeResult<Vec<MatchedPageObject>> {
-    let mut matched = Vec::new();
-
+    // ── Phase 1: batch selector test in one JS round trip ─────────────
+    // Gather (name, css_selector) pairs for every root PO that has a
+    // CSS root selector.
+    let mut candidates: Vec<(String, String, PageObjectAst)> = Vec::new();
     for name in registry.list() {
         let ast = match registry.get(&name) {
             Ok(ast) => ast,
             Err(_) => continue,
         };
-
-        // Only check root page objects
         if !ast.root {
             continue;
         }
-
-        let selector_css = match &ast.selector {
-            Some(sel) => match &sel.css {
-                Some(css) => css.clone(),
-                None => continue,
-            },
-            None => continue,
+        let Some(css) = ast.selector.as_ref().and_then(|s| s.css.clone()) else {
+            continue;
         };
+        candidates.push((name, css, ast));
+    }
 
-        // Check if the selector matches anything on the page
-        let found = driver.find_elements(&Selector::Css(selector_css.clone())).await;
+    // One JS call: for each selector, return true iff it matches anything.
+    // The browser does the work locally — no round-trip per selector.
+    let selectors_json = serde_json::to_string(
+        &candidates.iter().map(|(_, css, _)| css.as_str()).collect::<Vec<_>>(),
+    )
+    .map_err(RuntimeError::Json)?;
+    let script = format!(
+        "return (function() {{ \
+             const sels = {selectors_json}; \
+             const out = new Array(sels.length); \
+             for (let i = 0; i < sels.length; i++) {{ \
+                 try {{ out[i] = !!document.querySelector(sels[i]); }} \
+                 catch (e) {{ out[i] = false; }} \
+             }} \
+             return out; \
+         }})()"
+    );
+    let result = driver.execute_script(&script, vec![]).await?;
+    let matches_bitmap: Vec<bool> = result
+        .as_array()
+        .map(|arr| arr.iter().map(|v| v.as_bool().unwrap_or(false)).collect())
+        .unwrap_or_default();
 
-        if let Ok(elements) = found {
-            if !elements.is_empty() {
-                let element_count =
-                    ast.elements.len() + ast.shadow.as_ref().map_or(0, |s| s.elements.len());
-                matched.push(MatchedPageObject {
-                    name,
-                    selector: selector_css,
-                    method_count: ast.methods.len(),
-                    element_count,
-                });
+    // ── Phase 2: verify each phase-1 match with an anchor child ───────
+    // For POs where root matches, do a per-candidate find_elements to get
+    // a handle, then probe one required child selector to confirm the
+    // match is the real component (not a generic false positive).
+    let mut matched = Vec::new();
+    for (i, (name, selector_css, ast)) in candidates.into_iter().enumerate() {
+        if !matches_bitmap.get(i).copied().unwrap_or(false) {
+            continue;
+        }
+        let root_elements = match driver.find_elements(&Selector::Css(selector_css.clone())).await {
+            Ok(els) if !els.is_empty() => els,
+            _ => continue,
+        };
+        let first_root = &root_elements[0];
+        if !confirm_page_object_match(first_root.as_ref(), &ast).await {
+            continue;
+        }
+
+        let element_count =
+            ast.elements.len() + ast.shadow.as_ref().map_or(0, |s| s.elements.len());
+        matched.push(MatchedPageObject {
+            name,
+            selector: selector_css,
+            method_count: ast.methods.len(),
+            element_count,
+        });
+    }
+
+    Ok(matched)
+}
+
+/// Probe a candidate root element with required child selectors from the
+/// PO's declaration.  Returns true iff **a majority** of the PO's anchors
+/// resolve — single anchor hits are insufficient to distinguish a real
+/// match from a coincidence (e.g. `aura/body` has 30 unrelated elements,
+/// one of which happens to be on the home page).
+///
+/// The majority threshold: at least 50% of anchors, rounded up, with a
+/// minimum of 1.  POs with only 1 anchor require that anchor to match
+/// (same behaviour as before).  POs with no usable anchors fall through
+/// to "trust the root" — we can't distinguish without running load().
+async fn confirm_page_object_match(
+    root: &dyn crate::driver::ElementHandle,
+    ast: &PageObjectAst,
+) -> bool {
+    let light_anchors: Vec<&ElementAst> =
+        ast.elements.iter().filter(|e| is_verification_anchor(e)).collect();
+    let shadow_anchors: Vec<&ElementAst> = ast
+        .shadow
+        .as_ref()
+        .map(|s| s.elements.iter().filter(|e| is_verification_anchor(e)).collect())
+        .unwrap_or_default();
+
+    let total_anchors = light_anchors.len() + shadow_anchors.len();
+    if total_anchors == 0 {
+        return true;
+    }
+    // Ceiling of total/2: {1→1, 2→1, 3→2, 4→2, 5→3, ..., 30→15}
+    let required_hits = total_anchors.div_ceil(2);
+
+    let mut hits = 0usize;
+
+    for anchor in &light_anchors {
+        if let Some(sel) = &anchor.selector {
+            if let Some(css) = &sel.css {
+                if root
+                    .find_elements(&Selector::Css(css.clone()))
+                    .await
+                    .map(|v| !v.is_empty())
+                    .unwrap_or(false)
+                {
+                    hits += 1;
+                    if hits >= required_hits {
+                        return true;
+                    }
+                }
             }
         }
     }
 
-    Ok(matched)
+    if let Ok(Some(shadow)) = root.shadow_root().await {
+        for anchor in &shadow_anchors {
+            if let Some(sel) = &anchor.selector {
+                if let Some(css) = &sel.css {
+                    if shadow
+                        .find_elements(&Selector::Css(css.clone()))
+                        .await
+                        .map(|v| !v.is_empty())
+                        .unwrap_or(false)
+                    {
+                        hits += 1;
+                        if hits >= required_hits {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    false
+}
+
+fn is_verification_anchor(e: &ElementAst) -> bool {
+    !e.nullable
+        && e.selector
+            .as_ref()
+            .and_then(|s| s.css.as_deref())
+            .map(|css| !css.contains("%s") && !css.contains("%d"))
+            .unwrap_or(false)
 }
 
 // ---------------------------------------------------------------------------
