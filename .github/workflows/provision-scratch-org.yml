@@ -46,7 +46,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SCRATCH_ENVIRONMENT: DevHub Scratch
+  # Two distinct GitHub environments are in play:
+  #   - `DevHub Scratch` (the job's `environment:` below) holds the Dev Hub
+  #     auth URL and GitHub-App secrets used to MINT scratch orgs.
+  #   - `Scratch Org` (SCRATCH_ENVIRONMENT) is where the PROVISIONED scratch
+  #     org's auth URL + metadata are published for the live tests to consume.
+  SCRATCH_ENVIRONMENT: Scratch Org
   SCRATCH_ALIAS_PREFIX: busbar-utam-shared
   SCRATCH_SECRET_NAME: SCRATCH_ORG_AUTH_URL
   SCRATCH_USERNAME_VARIABLE: SCRATCH_ORG_USERNAME

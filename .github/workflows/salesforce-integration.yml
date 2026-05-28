@@ -50,6 +50,19 @@ jobs:
         run: cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture
 
   # ──────────────────────────────────────────────────────────────────────────
+  # Ensure a valid shared scratch org exists and its auth URL is published
+  # to the `DevHub Scratch` environment as SCRATCH_ORG_AUTH_URL.  Reuses the
+  # existing org when it is still well within its lifetime, otherwise creates
+  # a fresh one (from snapshot or definition).  The `live` job reads the
+  # resulting secret so the tests always run against a current org instead of
+  # a hand-managed SF_AUTH_URL that silently expires.
+  # ──────────────────────────────────────────────────────────────────────────
+  provision:
+    name: Provision shared scratch org
+    uses: ./.github/workflows/provision-scratch-org.yml
+    secrets: inherit
+
+  # ──────────────────────────────────────────────────────────────────────────
   # Live integration tests.  Matrix over driver — every page context runs
   # once per driver.  Each matrix cell uploads its Allure results as an
   # artifact; the `report` job merges them for a single comparison report.
@@ -57,7 +70,13 @@ jobs:
   live:
     name: Live (${{ matrix.driver }})
     runs-on: ubuntu-latest
-    environment: salesforce
+    # Low-privilege environment: holds ONLY the provisioned scratch org's
+    # auth URL (SCRATCH_ORG_AUTH_URL), published by the provision workflow.
+    # The Dev Hub management credentials (Dev Hub auth + GitHub-App key) stay
+    # isolated in the `DevHub Scratch` environment, which the live tests never
+    # touch — they just need a Salesforce org to drive.
+    environment: Scratch Org
+    needs: provision
     strategy:
       # Both matrix cells share one Salesforce org but safely: each run
       # tags its seeded records with a unique `{driver}-{timestamp}`
@@ -96,7 +115,8 @@ jobs:
 
       - name: Run live tests
         env:
-          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
+          # Auth URL for the shared scratch org, refreshed by the provision job.
+          SF_AUTH_URL: ${{ secrets.SCRATCH_ORG_AUTH_URL }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           ALLURE_RESULTS_DIR: "/tmp/allure-results"
           DISPLAY: ":99"
