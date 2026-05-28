@@ -140,10 +140,35 @@ jobs:
 
           FILTER="${{ inputs.test_filter }}"
           echo "=== Salesforce Live Tests (UTAM_DRIVER=${UTAM_DRIVER}) ==="
+          # `cargo test -- --ignored` exits 0 even when it runs ZERO tests
+          # (e.g. a filter that matches nothing), which would let the job go
+          # green without ever touching the org.  Capture output so we can
+          # assert real work happened — no silent pass.
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --ignored --nocapture --test-threads=1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --ignored --nocapture --test-threads=1 2>&1 | tee /tmp/cargo-test.log
           else
-            cargo test -p utam-runtime --test salesforce_live --all-features -- --ignored --nocapture --test-threads=1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --ignored --nocapture --test-threads=1 2>&1 | tee /tmp/cargo-test.log
+          fi
+
+          # Guard against a silent no-op: at least one test must have run.
+          # `tee` preserves cargo's exit code via pipefail (GitHub's default
+          # bash runs with -o pipefail), so a real failure already failed
+          # above; this only catches the "nothing ran" case.
+          if ! grep -qE 'running [1-9][0-9]* test' /tmp/cargo-test.log; then
+            echo "::error::Live test run executed 0 tests (filter='${FILTER}') — the Salesforce org was never exercised. Failing to avoid a silent pass."
+            exit 1
+          fi
+
+          # On the default (unfiltered) CI path the coverage tests MUST emit
+          # per-page-object Allure results.  Zero result files means auth or
+          # navigation failed before any assertion ran — fail loudly.
+          if [ -z "$FILTER" ]; then
+            RESULT_COUNT=$(ls /tmp/allure-results/*-result.json 2>/dev/null | wc -l)
+            if [ "$RESULT_COUNT" -eq 0 ]; then
+              echo "::error::No Allure results were produced — the org did not yield any page-object coverage. Failing to avoid a silent pass."
+              exit 1
+            fi
+            echo "Produced ${RESULT_COUNT} Allure result file(s)."
           fi
 
       - name: Stop video recording
