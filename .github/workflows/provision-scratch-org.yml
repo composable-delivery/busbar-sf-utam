@@ -88,6 +88,19 @@ jobs:
           repositories: |
             ${{ github.event.repository.name }}
 
+      - name: Ensure scratch org environment exists
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Environment secrets/variables can only be written to an existing
+          # environment, so create the low-privilege `Scratch Org` environment
+          # idempotently (PUT is create-or-update) before publishing creds to
+          # it.  Requires the GitHub App's `administration: write` permission.
+          encoded="$(python -c 'import urllib.parse,os; print(urllib.parse.quote(os.environ["SCRATCH_ENVIRONMENT"], safe=""))')"
+          gh api --method PUT "repos/$GITHUB_REPOSITORY/environments/$encoded" >/dev/null
+
       - name: Install Salesforce CLI
         shell: bash
         run: |
