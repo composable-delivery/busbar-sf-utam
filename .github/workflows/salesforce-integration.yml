@@ -15,12 +15,14 @@ on:
       - "utam-core/**"
       - "salesforce-pageobjects/**"
       - ".github/workflows/salesforce-integration.yml"
+      - ".github/workflows/provision-scratch-org.yml"
   push:
     branches: [main]
     paths:
       - "utam-runtime/**"
       - "salesforce-pageobjects/**"
       - ".github/workflows/salesforce-integration.yml"
+      - ".github/workflows/provision-scratch-org.yml"
 
 # contents: write needed to push to gh-pages branch
 permissions:
