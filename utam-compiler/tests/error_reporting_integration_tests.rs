@@ -45,9 +45,6 @@ fn test_json_parse_error_reporting() {
         let array = parsed.as_array().unwrap();
         assert_eq!(array.len(), 1);
         assert_eq!(array[0]["file"], "invalid.utam.json");
-        assert!(array[0]["message"]
-            .as_str()
-            .unwrap()
-            .contains("Failed to parse JSON"));
+        assert!(array[0]["message"].as_str().unwrap().contains("Failed to parse JSON"));
     }
 }

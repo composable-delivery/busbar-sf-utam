@@ -1,0 +1,32 @@
+[package]
+name = "utam-runtime"
+description = "Runtime interpreter for UTAM page objects — load JSON, call methods dynamically"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[features]
+default = ["webdriver"]
+webdriver = ["thirtyfour"]
+cdp = ["chromiumoxide", "futures"]
+
+[dependencies]
+utam-core = { path = "../utam-core" }
+utam-compiler = { path = "../utam-compiler" }
+thirtyfour = { workspace = true, optional = true }
+chromiumoxide = { workspace = true, optional = true }
+futures = { version = "0.3", optional = true }
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+insta.workspace = true
+busbar-sf-api = { path = "../busbar-sf-api" }
+utam-test = { path = "../utam-test" }
+walkdir = "2"

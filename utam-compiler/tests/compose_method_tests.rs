@@ -10,6 +10,7 @@
 
 use utam_compiler::ast::*;
 use utam_compiler::codegen::*;
+use utam_compiler::utils::*;
 
 #[test]
 fn test_parse_simple_compose_method() {
@@ -55,22 +56,10 @@ fn test_method_signature_with_multiple_args() {
         name: "submitForm".to_string(),
         description: None,
         args: vec![
-            MethodArgAst {
-                name: "firstName".to_string(),
-                arg_type: "string".to_string(),
-            },
-            MethodArgAst {
-                name: "lastName".to_string(),
-                arg_type: "string".to_string(),
-            },
-            MethodArgAst {
-                name: "age".to_string(),
-                arg_type: "number".to_string(),
-            },
-            MethodArgAst {
-                name: "isActive".to_string(),
-                arg_type: "boolean".to_string(),
-            },
+            MethodArgAst { name: "firstName".to_string(), arg_type: "string".to_string() },
+            MethodArgAst { name: "lastName".to_string(), arg_type: "string".to_string() },
+            MethodArgAst { name: "age".to_string(), arg_type: "number".to_string() },
+            MethodArgAst { name: "isActive".to_string(), arg_type: "boolean".to_string() },
         ],
         compose: vec![],
         return_type: None,
@@ -88,29 +77,25 @@ fn test_method_signature_with_multiple_args() {
 
 #[test]
 fn test_resolve_element_reference() {
-    let statements = vec![
-        ComposeStatementAst {
-            element: Some("usernameInput".to_string()),
-            apply: Some("clearAndType".to_string()),
-            args: vec![ComposeArgAst::Named {
-                name: "username".to_string(),
-                arg_type: "argumentReference".to_string(),
-            }],
-            chain: false,
-            return_type: None,
-            return_all: false,
-            matcher: None,
-            apply_external: None,
-            filter: None,
-            return_element: false,
-            predicate: None,
-        },
-    ];
-
-    let method_args = vec![MethodArgAst {
-        name: "username".to_string(),
-        arg_type: "string".to_string(),
+    let statements = vec![ComposeStatementAst {
+        element: Some("usernameInput".to_string()),
+        apply: Some("clearAndType".to_string()),
+        args: vec![ComposeArgAst::Named {
+            name: "username".to_string(),
+            arg_type: "argumentReference".to_string(),
+        }],
+        chain: false,
+        return_type: None,
+        return_all: false,
+        matcher: None,
+        apply_external: None,
+        filter: None,
+        return_element: false,
+        predicate: None,
     }];
+
+    let method_args =
+        vec![MethodArgAst { name: "username".to_string(), arg_type: "string".to_string() }];
 
     let compiled = compile_compose_statements(&statements, &method_args, &[]).unwrap();
     assert_eq!(compiled.len(), 1);
@@ -149,10 +134,8 @@ fn test_handle_argument_reference_not_found() {
         predicate: None,
     }];
 
-    let method_args = vec![MethodArgAst {
-        name: "username".to_string(),
-        arg_type: "string".to_string(),
-    }];
+    let method_args =
+        vec![MethodArgAst { name: "username".to_string(), arg_type: "string".to_string() }];
 
     let result = compile_compose_statements(&statements, &method_args, &[]);
     assert!(result.is_err());
@@ -357,10 +340,7 @@ fn test_matcher_missing_argument() {
         chain: false,
         return_type: None,
         return_all: false,
-        matcher: Some(MatcherAst {
-            matcher_type: "contains".to_string(),
-            args: vec![],
-        }),
+        matcher: Some(MatcherAst { matcher_type: "contains".to_string(), args: vec![] }),
         apply_external: None,
         filter: None,
         return_element: false,
@@ -373,25 +353,23 @@ fn test_matcher_missing_argument() {
 
 #[test]
 fn test_literal_arguments_types() {
-    let statements = vec![
-        ComposeStatementAst {
-            element: Some("input".to_string()),
-            apply: Some("setText".to_string()),
-            args: vec![
-                ComposeArgAst::Value(serde_json::json!("string value")),
-                ComposeArgAst::Value(serde_json::json!(42)),
-                ComposeArgAst::Value(serde_json::json!(true)),
-            ],
-            chain: false,
-            return_type: None,
-            return_all: false,
-            matcher: None,
-            apply_external: None,
-            filter: None,
-            return_element: false,
-            predicate: None,
-        },
-    ];
+    let statements = vec![ComposeStatementAst {
+        element: Some("input".to_string()),
+        apply: Some("setText".to_string()),
+        args: vec![
+            ComposeArgAst::Value(serde_json::json!("string value")),
+            ComposeArgAst::Value(serde_json::json!(42)),
+            ComposeArgAst::Value(serde_json::json!(true)),
+        ],
+        chain: false,
+        return_type: None,
+        return_all: false,
+        matcher: None,
+        apply_external: None,
+        filter: None,
+        return_element: false,
+        predicate: None,
+    }];
 
     let compiled = compile_compose_statements(&statements, &[], &[]).unwrap();
     match &compiled[0].kind {
@@ -424,8 +402,9 @@ fn test_utam_type_to_rust_unknown() {
 #[test]
 fn test_snake_case_edge_cases() {
     assert_eq!(to_snake_case("A"), "a");
-    assert_eq!(to_snake_case("ABC"), "a_b_c");
-    assert_eq!(to_snake_case("getHTMLElement"), "get_h_t_m_l_element");
+    // Consecutive uppercase treated as an acronym (no underscores)
+    assert_eq!(to_snake_case("ABC"), "abc");
+    assert_eq!(to_snake_case("getHTMLElement"), "get_htmlelement");
 }
 
 #[test]

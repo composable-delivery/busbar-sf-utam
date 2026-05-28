@@ -100,7 +100,7 @@
                 "actionable"
             ],
             "selector": {
-                "css": "[data-key=search].forceHeaderButtonDeprecated"
+                "css": "button[data-key=search]"
             }
         },
         {
