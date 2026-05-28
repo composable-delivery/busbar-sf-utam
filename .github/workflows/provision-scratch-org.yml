@@ -211,21 +211,18 @@ jobs:
             sf org delete scratch --target-org "$current_username" --no-prompt || true
           fi
 
-          snapshot_status=""
-          if sf org get snapshot --snapshot "$snapshot_name" --target-dev-hub devhub --json > "$RUNNER_TEMP/snapshot.json" 2>/dev/null; then
-            snapshot_status="$(python scripts/extract_json_field.py "Status,status" "$RUNNER_TEMP/snapshot.json")"
-          fi
-
-          if [[ "$snapshot_status" == "Active" ]]; then
-            sf org create scratch --snapshot "$snapshot_name" --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
-            cleanup_target="$scratch_alias"
-            source="snapshot"
-          else
-            sf org create scratch --definition-file config/project-scratch-def.json --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
-            cleanup_target="$scratch_alias"
-            source="definition"
-            refresh_snapshot=true
-          fi
+          # Always create from the definition file.  Scratch orgs created
+          # from a snapshot do NOT return a usable `sfdxAuthUrl` from
+          # `org display` (the value comes back instance-URL-shaped, not
+          # force://...), which left the live tests with an unparseable
+          # secret.  This repo's scratch def installs no packages, so the
+          # snapshot fast-path bought nothing — definition creation reliably
+          # yields a real auth URL.  `refresh_snapshot` stays false so we
+          # never create a snapshot that a future run would build from.
+          sf org create scratch --definition-file config/project-scratch-def.json --target-dev-hub devhub --alias "$scratch_alias" --duration-days "$SCRATCH_DURATION_DAYS" --wait 30 --json > "$create_output_path"
+          cleanup_target="$scratch_alias"
+          source="definition"
+          refresh_snapshot=false
 
           # Use the current `sf org display` command (the deprecated
           # `sfdx force:org:display` is unreliable across CLI versions — it
