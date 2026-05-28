@@ -59,6 +59,10 @@ env:
   SCRATCH_EXPIRES_AT_VARIABLE: SCRATCH_ORG_EXPIRES_AT
   SCRATCH_SOURCE_VARIABLE: SCRATCH_ORG_SOURCE
   SCRATCH_SNAPSHOT_VARIABLE: SCRATCH_ORG_SNAPSHOT
+  # Set to "true" only after the published auth URL is validated as a real
+  # sfdx auth URL.  Reuse requires it, so an org provisioned by older code
+  # that published a bad secret is never reused — it self-heals on next run.
+  SCRATCH_VALID_VARIABLE: SCRATCH_ORG_AUTH_VALID
   SCRATCH_DURATION_DAYS: '30'
   SCRATCH_EXPIRY_BUFFER_MINUTES: '120'
   DEFAULT_SNAPSHOT_NAME: bbutamshared1
@@ -124,10 +128,14 @@ jobs:
           current_expires_at="$(gh variable get "$SCRATCH_EXPIRES_AT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
           current_source="$(gh variable get "$SCRATCH_SOURCE_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
           current_snapshot="$(gh variable get "$SCRATCH_SNAPSHOT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
+          current_valid="$(gh variable get "$SCRATCH_VALID_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
 
           should_reuse=false
           current_expires_epoch=""
-          if [[ "$force_recreate" != "true" && -n "$current_username" && -n "$current_expires_at" ]]; then
+          # Only reuse an org whose published auth URL was validated.  This
+          # forces a re-provision when the stored secret is missing/bad (e.g.
+          # written by older code) instead of handing the tests a broken URL.
+          if [[ "$force_recreate" != "true" && "$current_valid" == "true" && -n "$current_username" && -n "$current_expires_at" ]]; then
             current_expires_epoch="$(python scripts/parse_iso_epoch.py "$current_expires_at")"
             if [[ -n "$current_expires_epoch" ]]; then
               now_epoch="$(date -u +%s)"
@@ -219,7 +227,11 @@ jobs:
             refresh_snapshot=true
           fi
 
-          sfdx force:org:display --targetusername "$scratch_alias" --verbose --json > "$org_output_path"
+          # Use the current `sf org display` command (the deprecated
+          # `sfdx force:org:display` is unreliable across CLI versions — it
+          # was returning a value that was not the sfdx auth URL at all).
+          # `--verbose` is required for `sfdxAuthUrl` to be included.
+          sf org display --target-org "$scratch_alias" --verbose --json > "$org_output_path"
 
           created_username="$(python scripts/extract_json_field.py "username" "$org_output_path")"
           auth_url="$(python scripts/extract_json_field.py "sfdxAuthUrl" "$org_output_path")"
@@ -227,6 +239,17 @@ jobs:
 
           if [[ -z "$created_username" || -z "$auth_url" || -z "$expires_at" ]]; then
             echo "Failed to derive scratch org credentials or expiration metadata." >&2
+            exit 1
+          fi
+
+          # Validate the auth URL BEFORE publishing it — never hand the live
+          # tests a broken secret silently.  A real sfdx auth URL looks like
+          # force://<clientId>:<secret>:<refreshToken>@<instance>.
+          if [[ "$auth_url" != force://* ]]; then
+            echo "::error::Derived auth URL is not a valid sfdx auth URL (does not start with force://)." >&2
+            echo "auth_url length: ${#auth_url}" >&2
+            echo "Keys present in 'org display' result:" >&2
+            python -c "import json,sys; print(sorted(json.load(open(sys.argv[1])).get('result',{}).keys()))" "$org_output_path" >&2 || true
             exit 1
           fi
 
@@ -266,6 +289,9 @@ jobs:
           gh variable set "$SCRATCH_EXPIRES_AT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.expires_at }}"
           gh variable set "$SCRATCH_SOURCE_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.source }}"
           gh variable set "$SCRATCH_SNAPSHOT_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "${{ steps.provision.outputs.snapshot_name }}"
+          # Mark valid LAST — only reached if the secret + all metadata were
+          # published successfully (set -e aborts earlier on any failure).
+          gh variable set "$SCRATCH_VALID_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" --body "true"
           rm -f "$auth_output_path"
 
       - name: Delete partially provisioned scratch org
