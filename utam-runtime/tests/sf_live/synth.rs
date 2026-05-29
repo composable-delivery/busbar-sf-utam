@@ -207,17 +207,57 @@ pub fn default_value_for_type(utam_type: &str) -> RuntimeValue {
 
 /// Default runtime value for an arg based on name + type.
 ///
-/// We deliberately use empty strings for `string` args when there's no
-/// curated override.  Name-based "smart" guesses (e.g. "Users" for
-/// ariaLabel) are worse than empty strings in practice: empty matches
-/// nothing deterministically (`[aria-label='']` → no match → clean
-/// "not found" error, easily classified), while a specific value like
-/// "Users" matches inconsistently across pages and produces flaky
-/// stale-selector errors that aren't actually selector bugs.
+/// Used only for non-string args (numbers default to 0, booleans to false),
+/// where the default is a legitimate value to exercise with.
 ///
-/// For methods where a specific value matters, use `override_args`.
+/// String args are different: an empty string makes a parameterized selector
+/// (`[aria-label='%s']` → `[aria-label='']`) match nothing, so "calling" the
+/// member with an empty string isn't a real test — it's a guaranteed
+/// not-found that masquerades as a selector failure.  The runner therefore
+/// *skips* string-parameterized members that have no curated value (see
+/// `method_string_arg_names` / `element_selector_arg_names`) rather than
+/// fabricating one here.  Supply real values via `override_args` /
+/// `override_element_args` to actually exercise them.
 pub fn smart_default(_arg_name: &str, utam_type: &str) -> RuntimeValue {
     default_value_for_type(utam_type)
+}
+
+/// Names of an element's parameterized selector args (empty when the element
+/// has a fixed selector).  A parameterized selector can't be exercised
+/// meaningfully without a real value, so the runner skips such elements
+/// unless a curated override supplies one.
+pub fn element_selector_arg_names(po_ast: &PageObjectAst, element_name: &str) -> Vec<String> {
+    find_element(po_ast, element_name)
+        .and_then(|el| el.selector.as_ref())
+        .map(|sel| sel.args.iter().map(|a| a.name.clone()).collect())
+        .unwrap_or_default()
+}
+
+/// String-typed args a method requires (discovered by walking its compose
+/// tree + referenced element selectors).  An empty string can't satisfy
+/// these meaningfully, so the runner skips such methods unless a curated
+/// override supplies real values.
+pub fn method_string_arg_names(method: &MethodAst, po_ast: &PageObjectAst) -> Vec<String> {
+    collect_required_args(method, po_ast)
+        .into_iter()
+        .filter(|a| a.arg_type == "string")
+        .map(|a| a.name)
+        .collect()
+}
+
+/// Members of *standard* page objects that nonetheless require a feature a
+/// standard scratch org doesn't have.  Reported as Skipped-with-reason, never
+/// failed — the object itself is standard, but this particular member is
+/// feature-gated.
+pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
+    match (po_name, member) {
+        // The Copilot trigger only renders when Einstein Copilot is enabled;
+        // the wait-and-click method hard-waits for it and would time out.
+        ("global/header", "waitAndClickCoPilot") => {
+            Some("Einstein Copilot not enabled in a standard scratch org")
+        }
+        _ => None,
+    }
 }
 
 /// Page-object-specific argument overrides for methods that need real values.
@@ -436,6 +476,53 @@ mod tests {
     fn test_override_args_known() {
         let args = override_args("global/header", "getSearch").unwrap();
         assert!(matches!(args.get("searchTerm"), Some(RuntimeValue::String(_))));
+    }
+
+    #[test]
+    fn test_element_selector_arg_names() {
+        // Parameterized selector → its arg names are reported (so the runner
+        // skips it unless a curated value exists).
+        let po_json = r#"{
+            "root": true,
+            "selector": { "css": ".root" },
+            "elements": [
+                {
+                    "name": "byApi",
+                    "public": true,
+                    "selector": {
+                        "css": "div[data-id*='%s']",
+                        "args": [{ "name": "apiName", "type": "string" }]
+                    }
+                },
+                { "name": "fixed", "public": true, "selector": { "css": ".fixed" } }
+            ]
+        }"#;
+        let po: PageObjectAst = serde_json::from_str(po_json).unwrap();
+        assert_eq!(element_selector_arg_names(&po, "byApi"), vec!["apiName".to_string()]);
+        assert!(element_selector_arg_names(&po, "fixed").is_empty());
+    }
+
+    #[test]
+    fn test_method_string_arg_names() {
+        let po_json = r#"{
+            "root": true,
+            "selector": { "css": ".root" },
+            "methods": [{
+                "name": "getSearch",
+                "args": [{ "name": "searchTerm", "type": "string" }],
+                "compose": []
+            }]
+        }"#;
+        let po: PageObjectAst = serde_json::from_str(po_json).unwrap();
+        let m = &po.methods[0];
+        assert_eq!(method_string_arg_names(m, &po), vec!["searchTerm".to_string()]);
+    }
+
+    #[test]
+    fn test_member_skip_reason() {
+        assert!(member_skip_reason("global/header", "waitAndClickCoPilot").is_some());
+        assert!(member_skip_reason("global/header", "getSearch").is_none());
+        assert!(member_skip_reason("some/other", "whatever").is_none());
     }
 
     #[test]

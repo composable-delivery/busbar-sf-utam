@@ -18,8 +18,9 @@ use std::collections::HashMap;
 use super::failure::{classify, FailureKind};
 use super::session::SalesforceSession;
 use super::synth::{
-    collect_required_args, override_args, override_element_args, smart_default, synth_args,
-    synth_element_args, validate_return,
+    collect_required_args, element_selector_arg_names, member_skip_reason, method_string_arg_names,
+    override_args, override_element_args, smart_default, synth_args, synth_element_args,
+    validate_return,
 };
 use utam_runtime::element::RuntimeValue;
 use utam_runtime::page_object::{DynamicPageObject, MethodInfo, PageObjectRuntime};
@@ -33,6 +34,7 @@ pub struct Outcome {
     pub methods_skipped: usize,
     pub elements_passed: usize,
     pub elements_failed: usize,
+    pub elements_skipped: usize,
     pub loaded: bool,
     /// Histogram of failure kinds encountered across methods + elements.
     pub failure_kinds: HashMap<FailureKind, usize>,
@@ -46,6 +48,7 @@ impl Outcome {
             methods_skipped: 0,
             elements_passed: 0,
             elements_failed: 0,
+            elements_skipped: 0,
             loaded: true,
             failure_kinds: HashMap::new(),
         }
@@ -137,6 +140,7 @@ pub async fn test_page_object(
         let step = exercise_element(&po, po_name, element_name, &mut outcome, session).await;
         match step.status {
             AllureStatus::Passed => outcome.elements_passed += 1,
+            AllureStatus::Skipped => outcome.elements_skipped += 1,
             _ => outcome.elements_failed += 1,
         }
         builder = builder.step(step);
@@ -164,6 +168,22 @@ async fn capture(session: &SalesforceSession, name: &str) -> Option<AllureAttach
     }
 }
 
+/// Finish a step as `Skipped` with a reason, marked `known` so Allure treats
+/// it as an intentional skip rather than an unexpected gap.  This is how the
+/// harness records "out of scope for a standard scratch org" — visible and
+/// reasoned, never a silent pass and never a fabricated failure.
+fn skipped_step(step: StepBuilder, reason: &str) -> AllureStep {
+    let mut s = step.parameter("skip_reason", reason.to_string()).finish(AllureStatus::Skipped);
+    s.status_details = Some(AllureStatusDetails {
+        message: Some(reason.to_string()),
+        trace: None,
+        known: Some(true),
+        muted: None,
+        flaky: None,
+    });
+    s
+}
+
 async fn exercise_method(
     po: &DynamicPageObject,
     po_name: &str,
@@ -172,6 +192,24 @@ async fn exercise_method(
     session: &SalesforceSession,
 ) -> AllureStep {
     let step = StepBuilder::start(format!("method: {}", info.name));
+
+    // Honest scoping (never a silent pass, never a fabricated failure):
+    //  1. members of standard POs that need an unavailable feature → Skipped.
+    if let Some(reason) = member_skip_reason(po_name, &info.name) {
+        return skipped_step(step, reason);
+    }
+    //  2. methods that need a real string value with no curated override would
+    //     be called with "" (a guaranteed not-found that isn't a real test) →
+    //     Skipped with the arg(s) we still need to curate.
+    if override_args(po_name, &info.name).is_none() {
+        let ast = po.ast();
+        if let Some(method_ast) = ast.methods.iter().find(|m| m.name == info.name) {
+            let needed = method_string_arg_names(method_ast, ast);
+            if !needed.is_empty() {
+                return skipped_step(step, &format!("needs curated arg(s): {}", needed.join(", ")));
+            }
+        }
+    }
 
     // Build args using the systemic approach:
     // 1. If there's a curated override, use it directly.
@@ -254,6 +292,22 @@ async fn exercise_element(
     session: &SalesforceSession,
 ) -> AllureStep {
     let step = StepBuilder::start(format!("element: {element_name}"));
+
+    // Honest scoping, mirroring exercise_method:
+    if let Some(reason) = member_skip_reason(po_name, element_name) {
+        return skipped_step(step, reason);
+    }
+    // A parameterized selector with no curated value would resolve to e.g.
+    // `[data-id='']` and never match — skip instead of fabricating "".
+    if override_element_args(po_name, element_name).is_none() {
+        let sel_args = element_selector_arg_names(po.ast(), element_name);
+        if !sel_args.is_empty() {
+            return skipped_step(
+                step,
+                &format!("needs curated selector arg(s): {}", sel_args.join(", ")),
+            );
+        }
+    }
 
     // Synthesize element args from its declared selector parameters.
     let args = if let Some(overridden) = override_element_args(po_name, element_name) {
