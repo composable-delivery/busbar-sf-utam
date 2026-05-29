@@ -91,11 +91,17 @@ pub async fn test_page_object(
             let kind = classify(&e);
             let mut outcome = Outcome::broken();
             outcome.record_failure(kind);
-            let result = builder.finish_err(
+            let mut result = builder.finish_err(
                 AllureStatus::Broken,
                 format!("page object failed to load: {e}"),
                 None,
             );
+            // Screenshot the page state that defeated the load so the
+            // Allure report shows what the DOM looked like.
+            if let Some(att) = capture(session, &format!("BROKEN {po_name} — load failed")).await
+            {
+                result.attachments.push(att);
+            }
             return (result, outcome);
         }
     };
@@ -107,11 +113,17 @@ pub async fn test_page_object(
             .finish(AllureStatus::Passed),
     );
 
+    // Per-page-object context screenshot: one shot of the live page the
+    // moment this PO loaded, attached to the result for visual reference.
+    if let Some(att) = capture(session, &format!("{po_name} — loaded")).await {
+        builder = builder.attachment(att);
+    }
+
     let mut outcome = Outcome::empty();
 
     // ── Exercise every method ──────────────────────────────────────────
     for method_info in po.method_signatures() {
-        let step = exercise_method(&po, po_name, &method_info, &mut outcome).await;
+        let step = exercise_method(&po, po_name, &method_info, &mut outcome, session).await;
         match step.status {
             AllureStatus::Passed => outcome.methods_passed += 1,
             AllureStatus::Skipped => outcome.methods_skipped += 1,
@@ -122,7 +134,7 @@ pub async fn test_page_object(
 
     // ── Exercise every public element ──────────────────────────────────
     for element_name in po.element_names() {
-        let step = exercise_element(&po, po_name, element_name, &mut outcome).await;
+        let step = exercise_element(&po, po_name, element_name, &mut outcome, session).await;
         match step.status {
             AllureStatus::Passed => outcome.elements_passed += 1,
             _ => outcome.elements_failed += 1,
@@ -133,11 +145,31 @@ pub async fn test_page_object(
     (builder.finish_from_steps(), outcome)
 }
 
+/// Capture a screenshot of the current browser state and write it as an
+/// Allure attachment.  Returns `None` (and logs a warning) on any failure —
+/// screenshot capture must never mask or replace the real test outcome.
+async fn capture(session: &SalesforceSession, name: &str) -> Option<AllureAttachment> {
+    match session.driver.screenshot_png().await {
+        Ok(png) => match session.allure.write_attachment(name, "image/png", &png) {
+            Ok(att) => Some(att),
+            Err(e) => {
+                eprintln!("  WARNING: failed to write screenshot '{name}': {e}");
+                None
+            }
+        },
+        Err(e) => {
+            eprintln!("  WARNING: failed to capture screenshot '{name}': {e}");
+            None
+        }
+    }
+}
+
 async fn exercise_method(
     po: &DynamicPageObject,
     po_name: &str,
     info: &MethodInfo,
     outcome: &mut Outcome,
+    session: &SalesforceSession,
 ) -> AllureStep {
     let step = StepBuilder::start(format!("method: {}", info.name));
 
@@ -203,6 +235,11 @@ async fn exercise_method(
                     muted: None,
                     flaky: None,
                 });
+            } else if let Some(att) =
+                capture(session, &format!("FAIL {po_name}::{} [{}]", info.name, kind.name())).await
+            {
+                // Real method failure — attach the page state at failure time.
+                finished.attachments.push(att);
             }
             finished
         }
@@ -214,6 +251,7 @@ async fn exercise_element(
     po_name: &str,
     element_name: &str,
     outcome: &mut Outcome,
+    session: &SalesforceSession,
 ) -> AllureStep {
     let step = StepBuilder::start(format!("element: {element_name}"));
 
@@ -258,6 +296,14 @@ async fn exercise_element(
                     muted: None,
                     flaky: None,
                 });
+            } else if let Some(att) = capture(
+                session,
+                &format!("FAIL {po_name} element '{element_name}' [{}]", kind.name()),
+            )
+            .await
+            {
+                // Real element failure — attach the page state at failure time.
+                finished.attachments.push(att);
             }
             finished
         }
