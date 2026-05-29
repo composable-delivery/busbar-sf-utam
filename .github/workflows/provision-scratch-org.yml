@@ -208,7 +208,20 @@ jobs:
           trap 'status=$?; if [[ $status -ne 0 ]]; then cleanup; fi; exit $status' EXIT
 
           if [[ -n "$current_username" ]]; then
-            sf org delete scratch --target-org "$current_username" --no-prompt || true
+            # Delete the previously-recorded scratch org THROUGH the Dev Hub.
+            # A fresh CI runner has no local auth for that org, so
+            # `sf org delete scratch --target-org <username>` can only no-op
+            # (NamedOrgNotFoundError) — which leaks active scratch orgs and
+            # eventually trips the Dev Hub's active/daily limit.  Find its
+            # ActiveScratchOrg record by username and delete that instead;
+            # removing the ActiveScratchOrg record deletes the scratch org.
+            prev_id="$(sf data query --query "SELECT Id FROM ActiveScratchOrg WHERE SignupUsername = '$current_username'" --target-org devhub --json 2>/dev/null | python scripts/extract_record_id.py || true)"
+            if [[ -n "$prev_id" ]]; then
+              sf data delete record --sobject ActiveScratchOrg --record-id "$prev_id" --target-org devhub || true
+              echo "Deleted previous scratch org $current_username (ActiveScratchOrg/$prev_id) via Dev Hub."
+            else
+              echo "No active scratch org found for $current_username — already expired or deleted."
+            fi
           fi
 
           # Always create from the definition file.  Scratch orgs created
