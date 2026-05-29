@@ -187,6 +187,7 @@ jobs:
           snapshot_name="${SNAPSHOT_NAME_INPUT:-$DEFAULT_SNAPSHOT_NAME}"
           refresh_snapshot="${REFRESH_SNAPSHOT:-false}"
           auth_output_path="$RUNNER_TEMP/scratch-org-auth-url.txt"
+          auth_url_json_path="$RUNNER_TEMP/scratch-org-auth-url.json"
           org_output_path="$RUNNER_TEMP/scratch-org-display.json"
           create_output_path="$RUNNER_TEMP/scratch-org-create.json"
           current_username="$(gh variable get "$SCRATCH_USERNAME_VARIABLE" --env "$SCRATCH_ENVIRONMENT" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true)"
@@ -237,14 +238,22 @@ jobs:
           source="definition"
           refresh_snapshot=false
 
-          # Use the current `sf org display` command (the deprecated
-          # `sfdx force:org:display` is unreliable across CLI versions — it
-          # was returning a value that was not the sfdx auth URL at all).
-          # `--verbose` is required for `sfdxAuthUrl` to be included.
+          # `org display` still carries the non-sensitive metadata we need
+          # (username, expiration).  It no longer carries a usable auth URL:
+          # Salesforce's 2026-05-27 credential-security change
+          # (forcedotcom/cli#3560) strips accessToken / sfdxAuthUrl from the
+          # standard `--json` output of `org display` — the `sfdxAuthUrl` key
+          # is still present but now holds the instance URL, not a
+          # `force://...` value.
           sf org display --target-org "$scratch_alias" --verbose --json > "$org_output_path"
 
+          # Retrieve the real sfdx auth URL with the dedicated command that
+          # replaced the stripped `org display` field.  Its `result.sfdxAuthUrl`
+          # is the genuine `force://<clientId>:<secret>:<refreshToken>@<host>`.
+          sf org auth show-sfdx-auth-url --target-org "$scratch_alias" --json > "$auth_url_json_path"
+
           created_username="$(python scripts/extract_json_field.py "username" "$org_output_path")"
-          auth_url="$(python scripts/extract_json_field.py "sfdxAuthUrl" "$org_output_path")"
+          auth_url="$(python scripts/extract_json_field.py "sfdxAuthUrl" "$auth_url_json_path")"
           expires_at="$(python scripts/extract_json_field.py "expirationDate,expiration_date" "$org_output_path" "$create_output_path")"
 
           if [[ -z "$created_username" || -z "$auth_url" || -z "$expires_at" ]]; then
@@ -258,8 +267,8 @@ jobs:
           if [[ "$auth_url" != force://* ]]; then
             echo "::error::Derived auth URL is not a valid sfdx auth URL (does not start with force://)." >&2
             echo "auth_url length: ${#auth_url}" >&2
-            echo "Keys present in 'org display' result:" >&2
-            python -c "import json,sys; print(sorted(json.load(open(sys.argv[1])).get('result',{}).keys()))" "$org_output_path" >&2 || true
+            echo "Keys present in 'org auth show-sfdx-auth-url' result:" >&2
+            python -c "import json,sys; print(sorted(json.load(open(sys.argv[1])).get('result',{}).keys()))" "$auth_url_json_path" >&2 || true
             exit 1
           fi
 
