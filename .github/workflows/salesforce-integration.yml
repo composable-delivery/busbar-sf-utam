@@ -146,19 +146,30 @@ jobs:
           # (e.g. a filter that matches nothing), which would let the job go
           # green without ever touching the org.  Capture output so we can
           # assert real work happened — no silent pass.
+          test_exit=0
           if [ -n "$FILTER" ]; then
             cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --ignored --nocapture --test-threads=1 2>&1 | tee /tmp/cargo-test.log
+            test_exit=${PIPESTATUS[0]}
           else
             cargo test -p utam-runtime --test salesforce_live --all-features -- --ignored --nocapture --test-threads=1 2>&1 | tee /tmp/cargo-test.log
+            test_exit=${PIPESTATUS[0]}
           fi
 
           # Guard against a silent no-op: at least one test must have run.
-          # `tee` preserves cargo's exit code via pipefail (GitHub's default
-          # bash runs with -o pipefail), so a real failure already failed
-          # above; this only catches the "nothing ran" case.
           if ! grep -qE 'running [1-9][0-9]* test' /tmp/cargo-test.log; then
             echo "::error::Live test run executed 0 tests (filter='${FILTER}') — the Salesforce org was never exercised. Failing to avoid a silent pass."
             exit 1
+          fi
+
+          # Propagate cargo's REAL exit code.  `tee` always exits 0, so the
+          # pipeline's status is tee's, not cargo's — and this runner's
+          # default shell does NOT apply `-o pipefail`, so a failing test run
+          # (e.g. 3 failed coverage tests) was silently swallowed and the job
+          # went green.  `${PIPESTATUS[0]}` captured above is cargo's own
+          # status; fail the step on any non-zero value.
+          if [ "$test_exit" -ne 0 ]; then
+            echo "::error::Live tests failed (cargo test exit ${test_exit}) — see the test failures above."
+            exit "$test_exit"
           fi
 
           # On the default (unfiltered) CI path the coverage tests MUST emit
