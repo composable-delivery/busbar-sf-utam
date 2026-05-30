@@ -422,3 +422,189 @@ fn test_method_signatures_introspection() {
     assert_eq!(sigs[1].return_type, Some("string".into()));
     assert!(page_obj_description.is_none());
 }
+
+// ---------------------------------------------------------------------------
+// Discovery phase-2 loop (find_known_page_objects)
+//
+// This is browser-only orchestration — a phase-1 `execute_script` bitmap, then
+// a per-candidate `find_elements` + `confirm_page_object_match`, each wrapped
+// in a `tokio::time::timeout`. The stub driver below drives that loop
+// deterministically so the timeout branches are exercised by unit tests rather
+// than only on a live org. These doubles live here (a coverage-excluded file)
+// for the same reason as MockDriver/MockElement above: their `unimplemented!()`
+// trait stubs never run and shouldn't count as uncovered production lines.
+// ---------------------------------------------------------------------------
+
+/// Element double for the discovery loop. Reports no shadow root and no
+/// children, so `confirm_page_object_match` resolves anchorless POs to `true`.
+#[derive(Debug)]
+struct DiscoveryStubElement;
+
+#[async_trait]
+impl ElementHandle for DiscoveryStubElement {
+    fn clone_handle(&self) -> Box<dyn ElementHandle> {
+        Box::new(DiscoveryStubElement)
+    }
+    async fn text(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn attribute(&self, _: &str) -> RuntimeResult<Option<String>> {
+        unimplemented!()
+    }
+    async fn class_name(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn css_value(&self, _: &str) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn property_value(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn title(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn is_displayed(&self) -> RuntimeResult<bool> {
+        unimplemented!()
+    }
+    async fn is_enabled(&self) -> RuntimeResult<bool> {
+        unimplemented!()
+    }
+    async fn is_present(&self) -> RuntimeResult<bool> {
+        unimplemented!()
+    }
+    async fn is_focused(&self) -> RuntimeResult<bool> {
+        unimplemented!()
+    }
+    async fn click(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn double_click(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn right_click(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn click_and_hold(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn focus(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn blur(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn send_keys(&self, _: &str) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn clear(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn press_key(&self, _: &str) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn scroll_into_view(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn drag_by_offset(&self, _: i64, _: i64) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn shadow_root(&self) -> RuntimeResult<Option<Box<dyn ShadowRootHandle>>> {
+        Ok(None)
+    }
+    async fn find_element(&self, _: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
+        unimplemented!()
+    }
+    async fn find_elements(&self, _: &Selector) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
+        Ok(Vec::new())
+    }
+}
+
+/// Driver double for the phase-2 loop. `bitmap` is returned verbatim from the
+/// phase-1 `execute_script`; `root_found` controls how many root elements each
+/// per-candidate `find_elements` yields.
+struct DiscoveryStubDriver {
+    bitmap: Vec<bool>,
+    root_found: usize,
+}
+
+#[async_trait]
+impl UtamDriver for DiscoveryStubDriver {
+    async fn navigate(&self, _: &str) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn current_url(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn title(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn screenshot_png(&self) -> RuntimeResult<Vec<u8>> {
+        unimplemented!()
+    }
+    async fn execute_script(
+        &self,
+        _: &str,
+        _: Vec<serde_json::Value>,
+    ) -> RuntimeResult<serde_json::Value> {
+        Ok(serde_json::json!(self.bitmap))
+    }
+    async fn find_element(&self, _: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
+        unimplemented!()
+    }
+    async fn find_elements(&self, _: &Selector) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
+        Ok((0..self.root_found)
+            .map(|_| Box::new(DiscoveryStubElement) as Box<dyn ElementHandle>)
+            .collect())
+    }
+    async fn wait_for_element(
+        &self,
+        _: &Selector,
+        _: std::time::Duration,
+    ) -> RuntimeResult<Box<dyn ElementHandle>> {
+        unimplemented!()
+    }
+    async fn quit(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+}
+
+fn discovery_registry() -> PageObjectRegistry {
+    let registry = PageObjectRegistry::new();
+    // Anchorless root PO: confirm_page_object_match short-circuits to true
+    // (total_anchors == 0), so a found root yields a clean match.
+    registry
+        .register_json("global/thing", r#"{"root":true,"selector":{"css":"div.thing"}}"#)
+        .unwrap();
+    registry
+}
+
+#[tokio::test]
+async fn find_known_page_objects_confirms_matched_candidate() {
+    // Phase-1 says the selector matches; phase-2 finds a root and the
+    // anchorless PO confirms — drives the matched branch end to end.
+    let driver = DiscoveryStubDriver { bitmap: vec![true], root_found: 1 };
+    let registry = discovery_registry();
+    let matched = crate::discovery::find_known_page_objects(&driver, &registry).await.unwrap();
+    assert_eq!(matched.len(), 1);
+    assert_eq!(matched[0].name, "global/thing");
+    assert_eq!(matched[0].selector, "div.thing");
+}
+
+#[tokio::test]
+async fn find_known_page_objects_skips_candidate_with_no_root_element() {
+    // Phase-1 matches but phase-2 `find_elements` returns empty, so the
+    // candidate is skipped via the `_ => continue` arm.
+    let driver = DiscoveryStubDriver { bitmap: vec![true], root_found: 0 };
+    let registry = discovery_registry();
+    let matched = crate::discovery::find_known_page_objects(&driver, &registry).await.unwrap();
+    assert!(matched.is_empty());
+}
+
+#[tokio::test]
+async fn find_known_page_objects_skips_when_bitmap_false() {
+    // Phase-1 reports no match: the candidate is skipped before phase-2.
+    let driver = DiscoveryStubDriver { bitmap: vec![false], root_found: 1 };
+    let registry = discovery_registry();
+    let matched = crate::discovery::find_known_page_objects(&driver, &registry).await.unwrap();
+    assert!(matched.is_empty());
+}
