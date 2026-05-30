@@ -58,12 +58,14 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
 
     for m in &matched {
         // Honest scoping: an object that is out of scope for a standard
-        // scratch org (managed package / Experience / CMS feature) is recorded
-        // as Skipped with the capability it requires — never failed, never a
-        // silent pass.  Discovery rarely surfaces these (their root isn't
-        // present), but when it does we don't fail the standard suite on them.
-        if let Some(reason) = inventory::gated_reason(&m.name) {
-            eprintln!("  [{:6}] {:48} out of scope: {reason}", "SKIP", m.name);
+        // scratch org (managed package / Experience / CMS feature) or that
+        // can't be loaded in these contexts (e.g. a stale-beforeLoad template)
+        // is recorded as Skipped with the reason — never failed, never a
+        // silent pass.
+        let skip_reason =
+            inventory::gated_reason(&m.name).or_else(|| super::synth::po_skip_reason(&m.name));
+        if let Some(reason) = skip_reason {
+            eprintln!("  [{:6}] {:48} skipped: {reason}", "SKIP", m.name);
             results.push(
                 TestResultBuilder::new(m.name.clone())
                     .full_name(format!("salesforce_live::generic::{page_context}::{}", m.name))
@@ -75,8 +77,7 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
                     .parameter("driver", session.driver_name())
                     .parameter("page_object", m.name.clone())
                     .parameter("page_context", page_context)
-                    .parameter("scope", "out-of-scope: standard coverage")
-                    .parameter("required_capability", reason)
+                    .parameter("skip_reason", reason)
                     .finish(AllureStatus::Skipped),
             );
             skipped_count += 1;

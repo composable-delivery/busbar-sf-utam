@@ -295,6 +295,33 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         ("navex/workspace", "closeButton") => {
             Some("workspace-tab close button; present only for a closeable tab")
         }
+        // The bubble's popover body is empty unless a tooltip/popover is
+        // actively displayed; primitiveBubble is a shared, separate root PO
+        // with no method to trigger one, so the content div isn't reliably
+        // drivable on a passive page.
+        ("lightning/primitiveBubble", "invisibleDiv")
+        | ("runtime_sales/lightningPrimitiveBubble", "invisibleDiv") => {
+            Some("popover body content; present only while a tooltip/popover is displayed")
+        }
+        _ => None,
+    }
+}
+
+/// Whole *standard* page objects that can't be exercised in the coverage
+/// contexts and so are Skipped-with-reason (never failed), like the gated
+/// objects. Reserved for objects that legitimately can't be loaded — e.g. a
+/// record-layout template whose `beforeLoad` waits on a selector that no
+/// longer matches current Lightning, so the page object never finishes
+/// loading. Documents the cause rather than silently passing or timing out.
+pub fn po_skip_reason(po_name: &str) -> Option<&'static str> {
+    match po_name {
+        // Both record-home templates share a generic root (`slds-template_*`)
+        // that discovery matches, but their beforeLoad blocks on a
+        // `slds-page-header_record-home` subheader that doesn't match the
+        // current Lightning record DOM, so load times out (~10s each).
+        "global/recordHomeTemplateDesktop" | "global/recordHomeWithSubheaderTemplateDesktop" => {
+            Some("record-home template beforeLoad waits on slds-page-header_record-home, which does not match current Lightning; never loads")
+        }
         _ => None,
     }
 }
@@ -565,6 +592,13 @@ mod tests {
         assert!(member_skip_reason("navex/workspace", "closeButton").is_some());
         assert!(member_skip_reason("global/header", "notifications").is_none());
         assert!(member_skip_reason("some/other", "whatever").is_none());
+    }
+
+    #[test]
+    fn test_po_skip_reason() {
+        assert!(po_skip_reason("global/recordHomeTemplateDesktop").is_some());
+        assert!(po_skip_reason("global/recordHomeWithSubheaderTemplateDesktop").is_some());
+        assert!(po_skip_reason("global/header").is_none());
     }
 
     #[test]
