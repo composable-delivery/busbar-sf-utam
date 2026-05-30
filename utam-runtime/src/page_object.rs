@@ -1142,9 +1142,10 @@ mod tests {
     async fn document_contains_element_reflects_dom_presence() {
         // Present in the DOM -> true.
         let po = mock_page(2);
-        let r = execute_document_action(&po, "containsElement", &[RuntimeValue::String(".x".into())])
-            .await
-            .unwrap();
+        let r =
+            execute_document_action(&po, "containsElement", &[RuntimeValue::String(".x".into())])
+                .await
+                .unwrap();
         assert!(matches!(r, RuntimeValue::Bool(true)));
 
         // Absent from the DOM -> false (not an error).
