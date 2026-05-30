@@ -436,7 +436,15 @@ impl ElementHandle for CdpElement {
     }
 
     async fn click(&self) -> RuntimeResult<()> {
-        self.inner.click().await.map_err(to_rt)?;
+        // Use JavaScript `.click()` rather than CDP's coordinate-based
+        // `Input.dispatchMouseEvent`.  The JS method fires the click event
+        // directly on the element and propagates it through the DOM in the
+        // same way a user click does, which is essential for SPA frameworks
+        // (e.g. Lightning) that intercept click events via event delegation
+        // and route navigation programmatically.  CDP input events can miss
+        // the router when the element's viewport coordinates are imprecise
+        // in headless mode.  `focus`/`blur` already use this pattern.
+        self.inner.call_js_fn("function(){ this.click(); }", false).await.map_err(to_rt)?;
         Ok(())
     }
 

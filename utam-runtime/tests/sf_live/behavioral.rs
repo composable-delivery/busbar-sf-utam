@@ -21,6 +21,7 @@
 //! same discipline the generic runner uses.
 
 use std::collections::HashMap;
+use std::time::Duration;
 
 use super::session::SalesforceSession;
 use utam_runtime::element::RuntimeValue;
@@ -124,14 +125,15 @@ async fn assert_app_nav_tab_navigation(session: &SalesforceSession) -> AllureTes
     }
 
     // Give Lightning a moment to route, then poll the URL for the effect.
-    let mut after = String::new();
-    for _ in 0..20 {
-        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-        after = session.driver.current_url().await.unwrap_or_default();
-        if after.contains("/lightning/o/Account") || after.contains("/Account/") {
-            break;
-        }
-    }
+    let after = match session
+        .wait_for_url_matching("Accounts navigation", Duration::from_secs(10), |url| {
+            url.contains("/lightning/o/Account") || url.contains("/Account/")
+        })
+        .await
+    {
+        Ok(url) => url,
+        Err(_) => session.driver.current_url().await.unwrap_or_default(),
+    };
 
     let navigated =
         after != before && (after.contains("/lightning/o/Account") || after.contains("/Account/"));
@@ -197,14 +199,15 @@ async fn assert_global_search_navigates(session: &SalesforceSession) -> AllureTe
         );
     }
 
-    let mut after = String::new();
-    for _ in 0..20 {
-        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-        after = session.driver.current_url().await.unwrap_or_default();
-        if after.contains("search") && after != before {
-            break;
-        }
-    }
+    let after = match session
+        .wait_for_url_matching("global search navigation", Duration::from_secs(10), |url| {
+            url.contains("search") && url != before
+        })
+        .await
+    {
+        Ok(url) => url,
+        Err(_) => session.driver.current_url().await.unwrap_or_default(),
+    };
 
     let builder = builder
         .parameter("search_term", term)

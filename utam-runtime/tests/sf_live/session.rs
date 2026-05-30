@@ -9,13 +9,18 @@
 //! the same org in parallel) can seed and clean up without colliding.
 //! See [`RunTag`] for the format.
 
+use std::future::Future;
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use busbar_sf_api::{SObjectRecord, SalesforceClient, SfdxAuthUrl};
 use utam_runtime::prelude::*;
 use utam_test::allure::{AllureCategory, AllureStatus, AllureWriter};
+
+const UI_WAIT_TIMEOUT: Duration = Duration::from_secs(20);
+const UI_POLL_INTERVAL: Duration = Duration::from_millis(250);
+const LIGHTNING_WAIT_TIMEOUT: Duration = Duration::from_secs(40);
 
 /// Identifies the test records created by this process so concurrent
 /// runs don't delete each other's data.
@@ -125,9 +130,20 @@ impl SalesforceSession {
         eprintln!("\n=== Authenticate Browser ===");
         let frontdoor_url = sf_client.frontdoor_url();
         driver.navigate(&frontdoor_url).await.expect("Failed to navigate to frontdoor");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-
-        let url = driver.current_url().await.unwrap_or_default();
+        let url = match wait_for_url(
+            driver.as_ref(),
+            "frontdoor authentication redirect",
+            UI_WAIT_TIMEOUT,
+            |url| !url.is_empty() && (is_login_page(url) || url != frontdoor_url),
+        )
+        .await
+        {
+            Ok(url) => url,
+            Err(e) => {
+                cleanup_test_data(&sf_client, &seeded_records).await;
+                panic!("Frontdoor auth did not settle: {e}");
+            }
+        };
         if is_login_page(&url) {
             cleanup_test_data(&sf_client, &seeded_records).await;
             panic!("Frontdoor auth failed — landed on login page: {url}");
@@ -136,7 +152,19 @@ impl SalesforceSession {
 
         let home_url = format!("{instance_url}/lightning/page/home");
         driver.navigate(&home_url).await.expect("Failed to navigate to home");
-        assert!(wait_for_lightning(driver.as_ref()).await, "Lightning did not load after auth");
+        if let Err(e) =
+            wait_for_url(driver.as_ref(), "home page navigation", UI_WAIT_TIMEOUT, |url| {
+                is_login_page(url) || url.contains("/lightning/page/home")
+            })
+            .await
+        {
+            cleanup_test_data(&sf_client, &seeded_records).await;
+            panic!("Failed to reach the Lightning home page: {e}");
+        }
+        if let Err(e) = wait_for_lightning(driver.as_ref()).await {
+            cleanup_test_data(&sf_client, &seeded_records).await;
+            panic!("Lightning did not load after auth: {e}");
+        }
         eprintln!("Lightning loaded");
 
         // ── Allure setup ───────────────────────────────────────────────
@@ -213,7 +241,40 @@ impl SalesforceSession {
     /// Navigate the browser to a URL and wait briefly for load.
     pub async fn navigate(&self, url: &str) {
         self.driver.navigate(url).await.expect("navigation failed");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+        let expected_path = url.strip_prefix(&self.instance_url).unwrap_or(url).to_string();
+        let reached_url = self
+            .wait_for_url_matching("page navigation", UI_WAIT_TIMEOUT, |current| {
+                is_login_page(current) || current.contains(&expected_path)
+            })
+            .await
+            .unwrap_or_else(|e| panic!("navigation to {url} did not settle: {e}"));
+        if is_login_page(&reached_url) {
+            panic!("navigation to {url} landed on the login page: {reached_url}");
+        }
+        wait_for_lightning(self.driver.as_ref())
+            .await
+            .unwrap_or_else(|e| panic!("navigation to {url} never rendered Lightning: {e}"));
+    }
+
+    pub async fn wait_for_url_matching<F>(
+        &self,
+        description: &str,
+        timeout: Duration,
+        predicate: F,
+    ) -> Result<String, String>
+    where
+        F: Fn(&str) -> bool,
+    {
+        wait_for_url(self.driver.as_ref(), description, timeout, predicate).await
+    }
+
+    pub async fn wait_for_element(
+        &self,
+        selector: Selector,
+        description: &str,
+        timeout: Duration,
+    ) -> Result<(), String> {
+        wait_for_element(self.driver.as_ref(), selector, description, timeout).await
     }
 }
 
@@ -230,29 +291,92 @@ fn is_login_page(url: &str) -> bool {
     dominated_by_login && !is_lightning
 }
 
-async fn wait_for_lightning(driver: &dyn UtamDriver) -> bool {
+async fn wait_for_lightning(driver: &dyn UtamDriver) -> Result<(), String> {
     let selectors = [
         Selector::Css(".oneHeader".to_string()),
         Selector::Css(".desktop.container.forceStyle".to_string()),
         Selector::Css("one-app-nav-bar".to_string()),
     ];
-    for attempt in 1..=20 {
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-        let url = driver.current_url().await.unwrap_or_default();
-        if is_login_page(&url) {
-            return false;
-        }
-        for sel in &selectors {
-            if driver.find_element(sel).await.is_ok() {
-                eprintln!("  Lightning detected on attempt {attempt}");
-                return true;
+    wait_for_value(
+        "Lightning shell to render",
+        LIGHTNING_WAIT_TIMEOUT,
+        Duration::from_secs(1),
+        || async {
+            let url = driver.current_url().await.map_err(|e| format!("{e}"))?;
+            if is_login_page(&url) {
+                return Err(format!("landed on login page: {url}"));
             }
+            for selector in &selectors {
+                if driver.find_element(selector).await.is_ok() {
+                    return Ok(Some(()));
+                }
+            }
+            Ok(None)
+        },
+    )
+    .await
+}
+
+async fn wait_for_url<F>(
+    driver: &dyn UtamDriver,
+    description: &str,
+    timeout: Duration,
+    predicate: F,
+) -> Result<String, String>
+where
+    F: Fn(&str) -> bool,
+{
+    wait_for_value(description, timeout, UI_POLL_INTERVAL, || async {
+        let url = driver.current_url().await.map_err(|e| format!("{e}"))?;
+        if predicate(&url) {
+            Ok(Some(url))
+        } else {
+            Ok(None)
         }
-        if attempt % 5 == 0 {
-            eprintln!("  Attempt {attempt}/20 — waiting... URL: {url}");
+    })
+    .await
+}
+
+async fn wait_for_element(
+    driver: &dyn UtamDriver,
+    selector: Selector,
+    description: &str,
+    timeout: Duration,
+) -> Result<(), String> {
+    wait_for_value(description, timeout, UI_POLL_INTERVAL, || async {
+        match driver.find_element(&selector).await {
+            Ok(_) => Ok(Some(())),
+            Err(_) => Ok(None),
         }
+    })
+    .await
+}
+
+async fn wait_for_value<F, Fut, T>(
+    description: &str,
+    timeout: Duration,
+    poll_interval: Duration,
+    mut condition: F,
+) -> Result<T, String>
+where
+    F: FnMut() -> Fut,
+    Fut: Future<Output = Result<Option<T>, String>>,
+{
+    let deadline = tokio::time::Instant::now() + timeout;
+    let mut last_error = None;
+    loop {
+        match condition().await {
+            Ok(Some(value)) => return Ok(value),
+            Ok(None) => {}
+            Err(error) => last_error = Some(error),
+        }
+        if tokio::time::Instant::now() >= deadline {
+            let detail =
+                last_error.map(|error| format!(" Last error: {error}")).unwrap_or_default();
+            return Err(format!("Timed out waiting for {description} after {timeout:?}.{detail}"));
+        }
+        tokio::time::sleep(poll_interval).await;
     }
-    false
 }
 
 fn use_cdp() -> bool {
