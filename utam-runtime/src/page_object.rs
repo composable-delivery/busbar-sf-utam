@@ -623,15 +623,11 @@ fn execute_compose<'a>(
             // 4. Resolve arguments for this statement
             let stmt_args = resolve_compose_args(&stmt.args, method_args)?;
 
-            // 5. Handle matcher assertions (e.g. stringContains on a result)
-            if let Some(matcher) = &stmt.matcher {
-                let matcher_args = resolve_compose_args(&matcher.args, method_args)?;
-                let matched = evaluate_matcher(&matcher.matcher_type, &last_result, &matcher_args);
-                last_result = RuntimeValue::Bool(matched);
-                continue;
-            }
-
-            // 6. Execute the action
+            // 5. Execute the action. A matcher on this statement, if present,
+            //    is applied to the action's result *afterwards* (step 6), not
+            //    before — otherwise the action would be skipped and the matcher
+            //    would test the previous statement's result instead of this
+            //    one's (e.g. `document.getUrl()` stringContains url).
             if let Some(apply) = &stmt.apply {
                 // Handle "waitFor" with predicate specially
                 if apply == "waitFor" {
@@ -751,6 +747,17 @@ fn execute_compose<'a>(
             } else if let Some(el) = element {
                 last_result = RuntimeValue::Element(Box::new(el.clone()));
                 last_element = Some(el);
+            }
+
+            // 6. Apply a matcher to this statement's result, if present. This
+            //    runs AFTER the action so the matcher tests the action's own
+            //    result. A matcher-only statement (no action above) leaves
+            //    last_result untouched, so it tests the previous statement's
+            //    result — the intended assertion form.
+            if let Some(matcher) = &stmt.matcher {
+                let matcher_args = resolve_compose_args(&matcher.args, method_args)?;
+                let matched = evaluate_matcher(&matcher.matcher_type, &last_result, &matcher_args);
+                last_result = RuntimeValue::Bool(matched);
             }
         }
 
@@ -1167,6 +1174,46 @@ mod tests {
     async fn document_action_unknown_is_unsupported() {
         let po = mock_page(1);
         assert!(execute_document_action(&po, "frobnicate", &[]).await.is_err());
+    }
+
+    #[tokio::test]
+    async fn matcher_is_applied_to_the_action_result_not_the_previous_one() {
+        // Regression: a statement with both an action and a matcher
+        // (`document.getUrl()` stringContains url) must run the action first,
+        // then match its result — not short-circuit the matcher against the
+        // previous (empty) result, which made waitFor predicates never pass.
+        let ast: PageObjectAst = serde_json::from_str(
+            r#"{
+                "root": true,
+                "selector": {"css": "body"},
+                "methods": [{
+                    "name": "urlContains",
+                    "args": [{"name": "url", "type": "string"}],
+                    "compose": [{
+                        "element": "document",
+                        "apply": "getUrl",
+                        "matcher": {
+                            "type": "stringContains",
+                            "args": [{"name": "url", "type": "string"}]
+                        }
+                    }]
+                }]
+            }"#,
+        )
+        .unwrap();
+        let driver: Arc<dyn UtamDriver> = Arc::new(MockDriver { found: 0 });
+        let po = DynamicPageObject::from_element(driver, ast, Box::new(MockElement));
+
+        // MockDriver.current_url() contains "lightning".
+        let mut args = HashMap::new();
+        args.insert("url".to_string(), RuntimeValue::String("lightning".into()));
+        let hit = po.call_method("urlContains", &args).await.unwrap();
+        assert!(matches!(hit, RuntimeValue::Bool(true)), "expected true, got {hit:?}");
+
+        let mut miss_args = HashMap::new();
+        miss_args.insert("url".to_string(), RuntimeValue::String("not-in-the-url".into()));
+        let miss = po.call_method("urlContains", &miss_args).await.unwrap();
+        assert!(matches!(miss, RuntimeValue::Bool(false)), "expected false, got {miss:?}");
     }
 
     #[test]
