@@ -17,3 +17,7 @@ lcov.info
 # Insta snapshot review files
 *.snap.new
 .pending-snapshots/
+
+# Salesforce CLI
+.sf/
+.sfdx/
