@@ -292,8 +292,12 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         }
         // The workspace-tab close button only renders for a closeable tab;
         // the Setup workspace tab isn't closeable.
-        ("navex/workspace", "closeButton") => {
-            Some("workspace-tab close button; present only for a closeable tab")
+        // navex/workspace models the record/list workspace; its `listView`
+        // element is the split list-view container, which isn't present on the
+        // Setup page (where this PO's root happens to match). Its sibling
+        // `agenticSetupHome` element is asserted for real.
+        ("navex/workspace", "listView") => {
+            Some("list-view container; not present on the Setup page context")
         }
         // The bubble's popover body is empty unless a tooltip/popover is
         // actively displayed; primitiveBubble is a shared, separate root PO
@@ -589,7 +593,7 @@ mod tests {
         assert!(member_skip_reason("global/header", "waitAndClickCoPilot").is_some());
         assert!(member_skip_reason("global/header", "getSearch").is_some());
         assert!(member_skip_reason("global/header", "backButton").is_some());
-        assert!(member_skip_reason("navex/workspace", "closeButton").is_some());
+        assert!(member_skip_reason("navex/workspace", "listView").is_some());
         assert!(member_skip_reason("global/header", "notifications").is_none());
         assert!(member_skip_reason("some/other", "whatever").is_none());
     }
