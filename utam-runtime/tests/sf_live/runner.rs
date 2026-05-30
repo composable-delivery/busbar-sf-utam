@@ -22,7 +22,7 @@ use super::synth::{
     override_args, override_element_args, smart_default, synth_args, synth_element_args,
     validate_return,
 };
-use utam_runtime::driver::{ElementHandle, Selector, UtamDriver};
+use utam_runtime::driver::Selector;
 use utam_runtime::element::RuntimeValue;
 use utam_runtime::page_object::{DynamicPageObject, MethodInfo, PageObjectRuntime};
 use utam_test::allure::*;
