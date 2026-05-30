@@ -70,6 +70,25 @@ fn message_is_not_found(msg: &str) -> bool {
         || lower.contains("could not find")
 }
 
+/// Whether a chromiumoxide error means "the node handle I queried *through* is
+/// stale" — i.e. the cached parent node ID no longer exists in the DOM.
+///
+/// This is distinct from "selector matched nothing": it happens when a DOM
+/// mutation (e.g. opening a utility-bar panel) detaches/replaces a node that we
+/// captured earlier and are now scoping a child query under. chromiumoxide
+/// reports it via the DevTools "Could not find node with given id" message.
+/// WebDriver's element references survive such mutations, so to match its
+/// behavior we re-resolve the child against the live page when we see this.
+fn is_stale_node(e: &chromiumoxide::error::CdpError) -> bool {
+    message_is_stale_node(&format!("{e}"))
+}
+
+/// Substring test for the stale-node case, split out for unit testing (see
+/// `is_stale_node`; `CdpError` has no public constructor).
+fn message_is_stale_node(msg: &str) -> bool {
+    msg.to_lowercase().contains("node with given id")
+}
+
 fn css_selector(sel: &Selector) -> &str {
     match sel {
         Selector::Css(s)
@@ -515,28 +534,52 @@ impl ElementHandle for CdpElement {
     }
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        let child = self.inner.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
+        let css = css_selector(selector);
+        match self.inner.find_element(css).await {
+            Ok(child) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
+            }
+            // Our cached parent node went stale (the DOM mutated since we
+            // captured it). WebDriver would still resolve the child here, so
+            // re-resolve against the live page to match its behavior.
+            Err(e) if is_stale_node(&e) => {
+                let child = self.page.find_element(css).await.map_err(to_rt)?;
+                Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
+            }
+            Err(e) => Err(to_rt(e)),
+        }
     }
 
     async fn find_elements(
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        // See CdpDriver::find_elements: not-found means "zero matches" → empty
-        // Vec, matching WebDriver and the trait contract, not a hard error.
-        match self.inner.find_elements(css_selector(selector)).await {
-            Ok(children) => Ok(children
-                .into_iter()
-                .map(|e| {
-                    Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                        as Box<dyn ElementHandle>
-                })
-                .collect()),
+        let css = css_selector(selector);
+        match self.inner.find_elements(css).await {
+            Ok(children) => Ok(wrap_elements(children, &self.page)),
+            // Stale cached parent node (DOM mutated since capture): re-resolve
+            // against the live page, mirroring WebDriver, instead of failing.
+            Err(e) if is_stale_node(&e) => match self.page.find_elements(css).await {
+                Ok(children) => Ok(wrap_elements(children, &self.page)),
+                Err(e) if is_not_found(&e) => Ok(Vec::new()),
+                Err(e) => Err(to_rt(e)),
+            },
+            // See CdpDriver::find_elements: not-found means "zero matches" →
+            // empty Vec, matching WebDriver and the trait contract.
             Err(e) if is_not_found(&e) => Ok(Vec::new()),
             Err(e) => Err(to_rt(e)),
         }
     }
+}
+
+/// Wrap chromiumoxide `Element`s into boxed `ElementHandle`s sharing `page`.
+fn wrap_elements(els: Vec<Element>, page: &Arc<Page>) -> Vec<Box<dyn ElementHandle>> {
+    els.into_iter()
+        .map(|e| {
+            Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(page) })
+                as Box<dyn ElementHandle>
+        })
+        .collect()
 }
 
 // ---------------------------------------------------------------------------
@@ -601,6 +644,27 @@ mod tests {
         // "zero matches".
         for m in ["connection refused", "Timeout waiting for response", "protocol error"] {
             assert!(!message_is_not_found(m), "expected real error for {m:?}");
+        }
+    }
+
+    #[test]
+    fn stale_node_messages_are_detected() {
+        // A DOM mutation invalidates a cached parent node id; chromiumoxide
+        // reports it via "Could not find node with given id". We re-resolve the
+        // child against the live page when we see this, matching WebDriver.
+        for m in ["Could not find node with given id", "DOM Error: No node with given id found"] {
+            assert!(message_is_stale_node(m), "expected stale-node for {m:?}");
+        }
+    }
+
+    #[test]
+    fn non_stale_errors_are_not_stale_node() {
+        // Plain "zero matches" and unrelated errors must NOT trigger the
+        // page-level re-resolution fallback — only a genuinely stale parent
+        // node should, so a child legitimately absent from its scope still
+        // propagates as not-found.
+        for m in ["Element was not found", "no such element", "connection refused"] {
+            assert!(!message_is_stale_node(m), "did not expect stale-node for {m:?}");
         }
     }
 }
