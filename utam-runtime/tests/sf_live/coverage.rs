@@ -152,9 +152,12 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
         .full_name(format!("salesforce_live::coverage::{page_context}::summary"))
         .description(format!(
             "Aggregate coverage across {} page objects discovered on the {} page. \
-             Each matched page object was loaded, every method was called with \
-             synthesized or curated arguments, every public element was resolved. \
-             Failure kinds are aggregated below to surface systemic patterns.",
+             Each matched page object was loaded; every method was EXECUTED against the live DOM \
+             with curated or synthesized arguments and its return value type-checked; every \
+             public element was resolved against the live DOM. This is a contract/smoke level \
+             check of the page-object↔DOM binding — it does NOT assert behavioral outcomes, and \
+             parameterized members without a curated value are counted under *_skipped, not \
+             passed. Failure kinds are aggregated below to surface systemic patterns.",
             matched.len(),
             page_context
         ))

@@ -75,10 +75,15 @@ pub async fn test_page_object(
     let builder = TestResultBuilder::new(po_name.to_string())
         .full_name(format!("salesforce_live::generic::{page_context}::{po_name}"))
         .description(format!(
-            "Generic coverage test for {po_name} on the {page_context} page. \
-             Collects every required method argument by walking the compose tree, \
-             synthesizes smart defaults from arg names, calls every method, \
-             resolves every public element, validates return types."
+            "Generic coverage (contract/smoke) test for {po_name} on the {page_context} page. \
+             For each method: collects required args by walking the compose tree, uses a curated \
+             override when one exists else synthesizes defaults, EXECUTES the method against the \
+             live DOM, and type-checks the return value against the declared returnType. For each \
+             public element: resolves it against the live DOM and binds its capability. \
+             This proves the page-object↔DOM binding works against a real org. It does NOT assert \
+             behavioral outcomes (navigation, state changes, value contents); parameterized \
+             actions without a curated arg value are Skipped (see each step's `verification` \
+             parameter and skip reasons) rather than driven with a placeholder."
         ))
         .label("epic", "Salesforce Browser Testing")
         .label("feature", "Page Object Coverage")
@@ -242,7 +247,17 @@ async fn exercise_method(
 
             if let Some(rt) = &info.return_type {
                 match validate_return(&value, rt) {
-                    Ok(()) => step.parameter("returnType", rt.clone()).finish(AllureStatus::Passed),
+                    Ok(()) => step
+                        .parameter("returnType", rt.clone())
+                        .parameter(
+                            "verification",
+                            format!(
+                                "executed against live DOM; return value type-checked against \
+                                 declared returnType '{rt}'. NOT asserted: behavioral outcome \
+                                 (e.g. navigation/state change) or the returned value's contents."
+                            ),
+                        )
+                        .finish(AllureStatus::Passed),
                     Err(e) => {
                         outcome.record_failure(FailureKind::ReturnTypeMismatch);
                         step.parameter("returnType", rt.clone())
@@ -251,7 +266,13 @@ async fn exercise_method(
                     }
                 }
             } else {
-                step.finish(AllureStatus::Passed)
+                step.parameter(
+                    "verification",
+                    "executed against live DOM without error; method declares no returnType, so \
+                     nothing is type-checked. NOT asserted: behavioral outcome or any result value."
+                        .to_string(),
+                )
+                .finish(AllureStatus::Passed)
             }
         }
         Err(e) => {
@@ -363,6 +384,13 @@ async fn exercise_element(
         Ok(el) => step
             .parameter("capability", el.type_name())
             .parameter("args", format_args(&args))
+            .parameter(
+                "verification",
+                "element resolved against the live DOM (selector matched a present node) and its \
+                 declared capability was bound. NOT asserted: visibility, contents, or any \
+                 interaction with the element."
+                    .to_string(),
+            )
             .finish(AllureStatus::Passed),
         Err(e) => {
             let msg = format!("{e}");
