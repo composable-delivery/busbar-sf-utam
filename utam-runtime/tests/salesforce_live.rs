@@ -16,7 +16,7 @@
 
 mod sf_live;
 
-use sf_live::{coverage, shared};
+use sf_live::{behavioral, coverage, shared};
 use utam_test::allure::AllureStatus;
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -98,6 +98,25 @@ fn d_console_coverage() {
 }
 
 // ───────────────────────────────────────────────────────────────────────────
+// Test 5: Behavioral assertions — drives a curated set of real actions and
+// asserts their OUTCOME (navigation/state change), not just that the member
+// resolved.  Runs on the home page, where the app nav bar and global header
+// are both present.  Each check skips cleanly when its precondition isn't met,
+// so this test fails only on a genuine behavioral regression.
+// ───────────────────────────────────────────────────────────────────────────
+#[test]
+#[ignore = "requires real Salesforce org credentials (SF_AUTH_URL)"]
+fn e_behavioral_assertions() {
+    shared::with_session(|session| async move {
+        let url = format!("{}/lightning/page/home", session.instance_url);
+        session.navigate(&url).await;
+
+        let results = behavioral::run_all(session).await;
+        write_behavioral(results);
+    });
+}
+
+// ───────────────────────────────────────────────────────────────────────────
 // Teardown — alphabetically last, drops seeded records + quits browser
 // ───────────────────────────────────────────────────────────────────────────
 #[test]
@@ -174,4 +193,46 @@ fn write_and_assert(coverage: coverage::CoverageResults, context: &str) {
     }
 
     eprintln!("=== {context}: all {total} page objects passed ===\n");
+}
+
+/// Write behavioral results to Allure and assert none Failed/Broken.
+///
+/// A `Skipped` check (precondition absent — e.g. the search box isn't on this
+/// page) is acceptable: behavioral checks self-gate and skip honestly rather
+/// than fabricate a pass.  Only a real behavioral regression (a driven action
+/// whose outcome didn't happen) fails the test, naming each failing check.
+fn write_behavioral(results: behavioral::BehavioralResults) {
+    let total = results.results.len();
+    let passed = results.results.iter().filter(|r| r.status == AllureStatus::Passed).count();
+    let skipped = results.results.iter().filter(|r| r.status == AllureStatus::Skipped).count();
+    let failed = results.results.iter().filter(|r| r.status == AllureStatus::Failed).count();
+    let broken = results.results.iter().filter(|r| r.status == AllureStatus::Broken).count();
+
+    shared::with_allure(|writer| {
+        for result in &results.results {
+            if let Err(e) = writer.write_result(result) {
+                eprintln!("  ERROR writing {}: {e}", result.name);
+            }
+        }
+    });
+
+    eprintln!(
+        "\n=== behavioral summary: {passed} passed, {skipped} skipped, {failed} failed, \
+         {broken} broken (of {total}) ==="
+    );
+
+    if failed > 0 || broken > 0 {
+        let mut details = String::new();
+        for r in &results.results {
+            if r.status == AllureStatus::Failed || r.status == AllureStatus::Broken {
+                details.push_str(&format!("\n  [{:?}] {}", r.status, r.name));
+                if let Some(sd) = &r.status_details {
+                    if let Some(msg) = &sd.message {
+                        details.push_str(&format!("\n    {}", msg.lines().next().unwrap_or("")));
+                    }
+                }
+            }
+        }
+        panic!("behavioral: {failed} failed, {broken} broken of {total} checks:{details}");
+    }
 }

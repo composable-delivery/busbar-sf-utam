@@ -1,3 +1,4 @@
+pub mod behavioral;
 pub mod coverage;
 pub mod failure;
 pub mod inventory;
