@@ -95,14 +95,13 @@ jobs:
     # isolated in the `DevHub Scratch` environment, which the live tests never
     # touch — they just need a Salesforce org to drive.
     environment: Scratch Org
-    # TEMPORARY (iterating on the baseline metadata): live depends on
-    # `provision` only, NOT `deploy_metadata`, so the live tests still run
-    # against the org while we get the deploy green.  `deploy_metadata` still
-    # runs and fatally reports its own status; the live harness records honest
-    # "console/utility-bar absent" reason-skips when the metadata isn't present
-    # yet.  Restore `needs: [provision, deploy_metadata]` once the deploy is
-    # reliably green so the baseline is guaranteed present before tests run.
-    needs: provision
+    # Live runs only AFTER the baseline metadata is deployed: provision mints
+    # the org, deploy_metadata seeds force-app into it, THEN the tests drive an
+    # org guaranteed to contain the seeded surfaces. deploy_metadata is fatal,
+    # so a broken baseline fails the pipeline here instead of silently
+    # degrading coverage to "surface absent". The jobs run in series, never in
+    # parallel.
+    needs: [provision, deploy_metadata]
     strategy:
       # Both matrix cells share one Salesforce org but safely: each run
       # tags its seeded records with a unique `{driver}-{timestamp}`

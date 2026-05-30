@@ -19,6 +19,9 @@
     <uiType>Lightning</uiType>
     <workspaceConfig>
         <mappings>
+            <tab>standard-home</tab>
+        </mappings>
+        <mappings>
             <tab>standard-Account</tab>
         </mappings>
         <mappings>
