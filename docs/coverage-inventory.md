@@ -107,9 +107,37 @@ The live harness adds a **`console`** page context
 was skipped (e.g. a hand-run against an un-seeded org), the app simply doesn't
 load and discovery records honest absence rather than fabricating coverage.
 
+### Curating arguments to widen execution coverage
+
+A parameterized member is only worth curating when its page object is actually
+**discovered**. Discovery anchors on a *fixed* (non-parameterized,
+non-nullable) public element — `discovery::is_verification_anchor` rejects any
+selector containing `%s`/`%d`. So a PO whose only public members are
+parameterized (e.g. `navex/appNavMenu`, both of whose elements are
+`button[title='%s']` / `a[data-label='%s']`) can **never** match the DOM, and
+curating args for it is a no-op.
+
+Filtering to root POs that have a fixed anchor *and* expose parameterized
+members leaves a small, honest target set on the desktop surfaces we visit:
+
+| Page object | Parameterized member(s) | Status |
+| --- | --- | --- |
+| `global/globalCreate` | `globalCreateMenuItem(titleString)` | curated → `"New Contact"` |
+| `setup/setupNavTree` | `navTreeNodeByName(ariaLabel)` | curated → `"Users"` |
+| `global/utilityBarContainer` | `dockablePanel(apiName)`, `utilityBarItem(name)` | unblocked by the seeded utility bar above |
+| `setup/setupAlohaPage` | `*ByName(name)` inputs | classic "Aloha" setup pages only — not the Lightning setup context |
+| `force/multiAdd`, `force/multiEdit` | action buttons | modal/record-action POs, present only mid-interaction |
+
+The takeaway: there is **no large backlog of easy arg-curation wins** on the
+contexts we currently load — the reliably-discovered ones are already curated.
+The real levers for widening *execution* coverage are therefore (a) **seeding
+metadata** (the utility bar above, which unblocks `utilityBarContainer`'s
+parameterized elements) and (b) **adding page contexts** that load the surfaces
+where the remaining parameterized POs render (Aloha setup pages, record-action
+modals), then curating their args against state we control.
+
 ### Still ahead
 
 Notification/favorite state for the header, list-view + related-list surfaces,
-record pages whose subheader layout matches the record-home templates' stale
-`beforeLoad`, and curating real arguments for the parameterized standard
-members the skip reasons enumerate.
+and record pages whose subheader layout matches the record-home templates'
+stale `beforeLoad`.
