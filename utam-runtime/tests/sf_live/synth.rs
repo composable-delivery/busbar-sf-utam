@@ -245,10 +245,11 @@ pub fn method_string_arg_names(method: &MethodAst, po_ast: &PageObjectAst) -> Ve
         .collect()
 }
 
-/// Members of *standard* page objects that nonetheless require a feature a
-/// standard scratch org doesn't have.  Reported as Skipped-with-reason, never
-/// failed — the object itself is standard, but this particular member is
-/// feature-gated.
+/// Members of *standard* page objects that can't be exercised on a settled,
+/// standard desktop page — because they need an unavailable feature, a
+/// different form factor, or a transient/console state that isn't present.
+/// Reported as Skipped-with-reason, never failed: the object itself is
+/// standard and its other members are asserted for real.
 pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
     match (po_name, member) {
         // The Copilot trigger only renders when Einstein Copilot is enabled;
@@ -264,16 +265,35 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         | ("setup/agenticSetupHome", "agenticSetupBroker") => {
             Some("Agentforce not enabled in a standard scratch org")
         }
-        // Physically undrivable on a desktop DOM: the header bundles a
-        // mobile-only search input (`.forceSearchInputMobile`) that never
-        // renders on desktop Lightning.
-        ("global/header", "searchInput") => {
-            Some("mobile-only element (forceSearchInputMobile); not present on desktop")
+        // The header bundles a *mobile* global-search flow — an icon button
+        // (`button[data-key=search]`) and a mobile input
+        // (`.forceSearchInputMobile`) — that never renders on desktop
+        // Lightning (desktop search is a different component this PO doesn't
+        // model). getSearch drives that same mobile flow.
+        ("global/header", "searchInput")
+        | ("global/header", "searchIcon")
+        | ("global/header", "getSearch") => {
+            Some("mobile global-search flow; not present on desktop Lightning")
+        }
+        // The left-nav collapse toggle (`a.toggleNav`) only exists in
+        // console-style app layouts, not on standard desktop pages.
+        ("global/header", "stageLeftToggle") => {
+            Some("console-only nav toggle; absent on standard desktop pages")
+        }
+        // The in-app back button only renders after navigating within the
+        // app; it's absent on a directly-loaded page.
+        ("global/header", "backButton") => {
+            Some("in-app back button; present only after in-app navigation, not on a direct load")
         }
         // Transient load-state element — only in the DOM while the page is
         // still spinning up, so it can't be resolved on a settled page.
         ("setup/agenticSetupHome", "loadingSpinner") => {
             Some("transient loading-state element; absent once the page has settled")
+        }
+        // The workspace-tab close button only renders for a closeable tab;
+        // the Setup workspace tab isn't closeable.
+        ("navex/workspace", "closeButton") => {
+            Some("workspace-tab close button; present only for a closeable tab")
         }
         _ => None,
     }
@@ -540,7 +560,10 @@ mod tests {
     #[test]
     fn test_member_skip_reason() {
         assert!(member_skip_reason("global/header", "waitAndClickCoPilot").is_some());
-        assert!(member_skip_reason("global/header", "getSearch").is_none());
+        assert!(member_skip_reason("global/header", "getSearch").is_some());
+        assert!(member_skip_reason("global/header", "backButton").is_some());
+        assert!(member_skip_reason("navex/workspace", "closeButton").is_some());
+        assert!(member_skip_reason("global/header", "notifications").is_none());
         assert!(member_skip_reason("some/other", "whatever").is_none());
     }
 
