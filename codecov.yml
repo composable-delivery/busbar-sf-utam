@@ -24,3 +24,8 @@ fixes:
 
 ignore:
   - "utam-cli/src/main.rs"
+  # Live Salesforce integration harness: exercised against a real scratch org
+  # under `cargo test -- --ignored` (the coverage job runs without --ignored),
+  # so its driver/coverage branches can't be unit-covered. Excluding the test
+  # files from the report does not change the coverage they credit to src/.
+  - "utam-runtime/tests/**"
