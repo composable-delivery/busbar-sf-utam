@@ -140,8 +140,8 @@ impl SalesforceSession {
         {
             Ok(url) => url,
             Err(e) => {
-            cleanup_test_data(&sf_client, &seeded_records).await;
-            panic!("Frontdoor auth did not settle: {e}");
+                cleanup_test_data(&sf_client, &seeded_records).await;
+                panic!("Frontdoor auth did not settle: {e}");
             }
         };
         if is_login_page(&url) {
@@ -152,10 +152,11 @@ impl SalesforceSession {
 
         let home_url = format!("{instance_url}/lightning/page/home");
         driver.navigate(&home_url).await.expect("Failed to navigate to home");
-        if let Err(e) = wait_for_url(driver.as_ref(), "home page navigation", UI_WAIT_TIMEOUT, |url| {
-            is_login_page(url) || url.contains("/lightning/page/home")
-        })
-        .await
+        if let Err(e) =
+            wait_for_url(driver.as_ref(), "home page navigation", UI_WAIT_TIMEOUT, |url| {
+                is_login_page(url) || url.contains("/lightning/page/home")
+            })
+            .await
         {
             cleanup_test_data(&sf_client, &seeded_records).await;
             panic!("Failed to reach the Lightning home page: {e}");
@@ -370,9 +371,8 @@ where
             Err(error) => last_error = Some(error),
         }
         if tokio::time::Instant::now() >= deadline {
-            let detail = last_error
-                .map(|error| format!(" Last error: {error}"))
-                .unwrap_or_default();
+            let detail =
+                last_error.map(|error| format!(" Last error: {error}")).unwrap_or_default();
             return Err(format!("Timed out waiting for {description} after {timeout:?}.{detail}"));
         }
         tokio::time::sleep(poll_interval).await;

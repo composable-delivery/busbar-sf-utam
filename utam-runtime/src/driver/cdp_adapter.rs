@@ -444,10 +444,7 @@ impl ElementHandle for CdpElement {
         // and route navigation programmatically.  CDP input events can miss
         // the router when the element's viewport coordinates are imprecise
         // in headless mode.  `focus`/`blur` already use this pattern.
-        self.inner
-            .call_js_fn("function(){ this.click(); }", false)
-            .await
-            .map_err(to_rt)?;
+        self.inner.call_js_fn("function(){ this.click(); }", false).await.map_err(to_rt)?;
         Ok(())
     }
 
