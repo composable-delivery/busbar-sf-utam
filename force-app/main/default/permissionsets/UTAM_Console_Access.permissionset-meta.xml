@@ -4,7 +4,7 @@
         <application>UTAM_Console</application>
         <visible>true</visible>
     </applicationVisibilities>
-    <description>Grants the live UTAM test user access to the seeded UTAM Console app so its utility bar and console chrome render during discovery.</description>
+    <description>Grants the live UTAM test user access to the seeded UTAM Console app so its console chrome (console nav, workspace tabs, header stage-left toggle) renders during discovery.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>UTAM Console Access</label>
 </PermissionSet>

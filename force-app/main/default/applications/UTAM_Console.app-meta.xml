@@ -4,7 +4,7 @@
         <headerColor>#0070D2</headerColor>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
-    <description>Lightning console app with a utility bar, seeded so the live UTAM harness can exercise console-only and utility-bar page objects (utilityBarContainer, navex console tabs, header stageLeftToggle).</description>
+    <description>Lightning console app seeded so the live UTAM harness can exercise console-only page objects (navex console tabs, header stageLeftToggle, workspace tabs) that a standard desktop app never renders. A utility bar is intentionally NOT attached yet — the hand-authored utility-bar FlexiPage was removed until its template name can be validated against a live org (two guesses — flexipage:utilityBarTemplateDesktop and flexipage:utilityBar — were both rejected by the Metadata API). The console nav surfaces this app provides are the higher-value, lower-risk target and deploy on their own.</description>
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
@@ -17,7 +17,6 @@
     <tabs>standard-Case</tabs>
     <tabs>standard-Opportunity</tabs>
     <uiType>Lightning</uiType>
-    <utilityBar>UTAM_Console_Utility_Bar</utilityBar>
     <workspaceConfig>
         <mappings>
             <tab>standard-Account</tab>
