@@ -45,6 +45,31 @@ fn to_rt(e: chromiumoxide::error::CdpError) -> RuntimeError {
     RuntimeError::UnsupportedAction { action: "CDP".into(), element_type: msg }
 }
 
+/// Whether a chromiumoxide error means "the selector matched nothing".
+///
+/// chromiumoxide's `find_elements` returns `Err(CdpError::NotFound)` when ZERO
+/// elements match, whereas the `find_elements` contract (and WebDriver, and
+/// every caller in this crate) treats "find all, possibly none" as an empty
+/// Vec. We use this to translate the not-found case back to an empty result so
+/// the CDP and WebDriver adapters behave identically. It deliberately mirrors
+/// the substring set `to_rt` uses to bucket `ElementNotFound`.
+fn is_not_found(e: &chromiumoxide::error::CdpError) -> bool {
+    message_is_not_found(&format!("{e}"))
+}
+
+/// Substring test for "selector matched nothing", split out so it can be
+/// unit-tested without constructing a `CdpError` (which has no public ctor).
+fn message_is_not_found(msg: &str) -> bool {
+    let lower = msg.to_lowercase();
+    // "notfound" (no space) catches chromiumoxide's bare `CdpError::NotFound`
+    // Display; the spaced variants catch the protocol/DOM-domain messages.
+    lower.contains("not found")
+        || lower.contains("notfound")
+        || lower.contains("no such element")
+        || lower.contains("unable to locate")
+        || lower.contains("could not find")
+}
+
 fn css_selector(sel: &Selector) -> &str {
     match sel {
         Selector::Css(s)
@@ -247,14 +272,25 @@ impl UtamDriver for CdpDriver {
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        let els = self.page.find_elements(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(els
-            .into_iter()
-            .map(|e| {
-                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                    as Box<dyn ElementHandle>
-            })
-            .collect())
+        // `find_elements` means "find all matches, possibly none". chromiumoxide
+        // returns Err(CdpError::NotFound) for ZERO matches, but WebDriver — and
+        // this trait's contract, and every caller (discovery's
+        // confirm_page_object_match, get_element's `handles.is_empty()` nullable
+        // check) — expect an empty Vec. Propagating the error here is what made
+        // CDP diverge: an absent element surfaced as a StaleSelector *failure*
+        // under CDP while WebDriver saw a clean empty result and passed. Map
+        // not-found to an empty Vec; any other error still propagates.
+        match self.page.find_elements(css_selector(selector)).await {
+            Ok(els) => Ok(els
+                .into_iter()
+                .map(|e| {
+                    Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
+                        as Box<dyn ElementHandle>
+                })
+                .collect()),
+            Err(e) if is_not_found(&e) => Ok(Vec::new()),
+            Err(e) => Err(to_rt(e)),
+        }
     }
 
     async fn wait_for_element(
@@ -487,14 +523,19 @@ impl ElementHandle for CdpElement {
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        let children = self.inner.find_elements(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(children
-            .into_iter()
-            .map(|e| {
-                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                    as Box<dyn ElementHandle>
-            })
-            .collect())
+        // See CdpDriver::find_elements: not-found means "zero matches" → empty
+        // Vec, matching WebDriver and the trait contract, not a hard error.
+        match self.inner.find_elements(css_selector(selector)).await {
+            Ok(children) => Ok(children
+                .into_iter()
+                .map(|e| {
+                    Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
+                        as Box<dyn ElementHandle>
+                })
+                .collect()),
+            Err(e) if is_not_found(&e) => Ok(Vec::new()),
+            Err(e) => Err(to_rt(e)),
+        }
     }
 }
 
@@ -519,13 +560,47 @@ impl ShadowRootHandle for CdpShadowRootViaPage {
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        let els = self.page.find_elements(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(els
-            .into_iter()
-            .map(|e| {
-                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                    as Box<dyn ElementHandle>
-            })
-            .collect())
+        // See CdpDriver::find_elements: not-found means "zero matches" → empty
+        // Vec, matching WebDriver and the trait contract, not a hard error.
+        match self.page.find_elements(css_selector(selector)).await {
+            Ok(els) => Ok(els
+                .into_iter()
+                .map(|e| {
+                    Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
+                        as Box<dyn ElementHandle>
+                })
+                .collect()),
+            Err(e) if is_not_found(&e) => Ok(Vec::new()),
+            Err(e) => Err(to_rt(e)),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn not_found_messages_map_to_empty() {
+        // The chromiumoxide "zero matches" variants we translate to an empty
+        // Vec so CDP's find_elements matches WebDriver's Ok(vec![]) contract.
+        for m in [
+            "Element was not found",
+            "no such element",
+            "Unable to locate element",
+            "could not find node with given id",
+            "NotFound",
+        ] {
+            assert!(message_is_not_found(m), "expected not-found for {m:?}");
+        }
+    }
+
+    #[test]
+    fn real_errors_do_not_map_to_empty() {
+        // A genuine driver error must still propagate, not be swallowed as
+        // "zero matches".
+        for m in ["connection refused", "Timeout waiting for response", "protocol error"] {
+            assert!(!message_is_not_found(m), "expected real error for {m:?}");
+        }
     }
 }
