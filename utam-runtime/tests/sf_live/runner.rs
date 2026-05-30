@@ -301,7 +301,7 @@ fn element_needs_open_utility_panel(po_name: &str, element_name: &str) -> bool {
 async fn open_utility_panel(session: &SalesforceSession) -> Result<(), String> {
     let buttons = session
         .driver
-        .find_elements(&Selector::Css("li.slds-utility-bar__item button"))
+        .find_elements(&Selector::Css("li.slds-utility-bar__item button".into()))
         .await
         .map_err(|e| format!("{e}"))?;
     let Some(button) = buttons.into_iter().next() else {
