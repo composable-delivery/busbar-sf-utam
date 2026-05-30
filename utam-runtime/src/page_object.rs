@@ -891,15 +891,36 @@ fn json_to_runtime_value(v: &serde_json::Value) -> RuntimeValue {
     }
 }
 
-/// Execute document-level actions (getUrl, getTitle, etc.)
+/// Execute document-level actions (getUrl, getTitle, containsElement, ...).
+///
+/// The UTAM `document` object is the root of the DOM, not a regular element,
+/// so it has its own small dispatch table.  `containsElement` is the key one
+/// page objects use for presence checks (e.g. `isCreateMenuPresent`): it
+/// queries the whole document for a CSS selector and returns a boolean.
 async fn execute_document_action(
     page: &DynamicPageObject,
     action: &str,
-    _args: &[RuntimeValue],
+    args: &[RuntimeValue],
 ) -> RuntimeResult<RuntimeValue> {
     match action {
         "getUrl" => Ok(RuntimeValue::String(page.driver.current_url().await?)),
         "getTitle" => Ok(RuntimeValue::String(page.driver.title().await?)),
+        // `containsElement(locator)` — the compose layer normalizes the
+        // locator arg to its underlying CSS string, so we receive a plain
+        // string here.
+        "containsElement" => {
+            let css = match args.first() {
+                Some(RuntimeValue::String(s)) => s.clone(),
+                _ => {
+                    return Err(RuntimeError::UnsupportedAction {
+                        action: "containsElement".to_string(),
+                        element_type: "document (expected a string/locator argument)".to_string(),
+                    })
+                }
+            };
+            let found = page.driver.find_elements(&Selector::Css(css)).await?;
+            Ok(RuntimeValue::Bool(!found.is_empty()))
+        }
         _ => Err(RuntimeError::UnsupportedAction {
             action: action.to_string(),
             element_type: "document".to_string(),

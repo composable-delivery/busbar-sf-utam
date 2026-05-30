@@ -256,6 +256,14 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         ("global/header", "waitAndClickCoPilot") => {
             Some("Einstein Copilot not enabled in a standard scratch org")
         }
+        // The Agentforce setup home renders its standard chrome (page header,
+        // recent items, setup logo) but its agentic chat surface only exists
+        // when Agentforce is provisioned.
+        ("setup/agenticSetupHome", "agenticShell")
+        | ("setup/agenticSetupHome", "homeChatInput")
+        | ("setup/agenticSetupHome", "agenticSetupBroker") => {
+            Some("Agentforce not enabled in a standard scratch org")
+        }
         _ => None,
     }
 }
