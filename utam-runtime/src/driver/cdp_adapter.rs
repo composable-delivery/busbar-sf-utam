@@ -45,17 +45,6 @@ fn to_rt(e: chromiumoxide::error::CdpError) -> RuntimeError {
     RuntimeError::UnsupportedAction { action: "CDP".into(), element_type: msg }
 }
 
-/// Hard ceiling for a single `navigate` (CDP `goto`).
-///
-/// chromiumoxide's `Page::goto` resolves only once the frame reports load
-/// complete. A Salesforce Lightning page holds long-poll / streaming
-/// connections and can take a long time to (or never) reach that state, so an
-/// un-bounded `goto` blocks until the harness's 10-minute per-test timeout
-/// kills the whole job (the observed CDP-vs-WebDriver asymmetry: the WebDriver
-/// path uses a fixed post-`goto` sleep and never awaits load-complete). Bound
-/// it here so a stalled navigation fails fast and classified instead.
-const NAVIGATE_TIMEOUT: Duration = Duration::from_secs(45);
-
 fn css_selector(sel: &Selector) -> &str {
     match sel {
         Selector::Css(s)
@@ -203,33 +192,8 @@ pub struct BrowserCheckpoint {
 #[async_trait]
 impl UtamDriver for CdpDriver {
     async fn navigate(&self, url: &str) -> RuntimeResult<()> {
-        // `goto` resolves only on frame load-complete, which a Lightning page —
-        // holding long-poll / streaming connections — may take a very long time
-        // to (or never) reach. Left unbounded this blocks until the harness's
-        // 10-minute per-test guillotine, which is the observed CDP-vs-WebDriver
-        // asymmetry (the WebDriver path `goto`s then sleeps a fixed interval and
-        // never awaits load-complete).
-        //
-        // Reaching load-complete is NOT required for the page to be usable: the
-        // callers run their own readiness waits (`wait_for_lightning`) and
-        // discovery has its own element matching. So a load-complete timeout is
-        // treated as non-fatal — we log it and return Ok, letting those waits
-        // proceed against whatever has rendered, exactly as the WebDriver path
-        // does. A real navigation *error* (bad URL, dead session) still fails.
-        match tokio::time::timeout(NAVIGATE_TIMEOUT, self.page.goto(url)).await {
-            Ok(res) => {
-                res.map_err(to_rt)?;
-                Ok(())
-            }
-            Err(_) => {
-                eprintln!(
-                    "  WARNING: CDP navigate to {url} did not reach load-complete within {}s; \
-                     proceeding (caller waits handle readiness)",
-                    NAVIGATE_TIMEOUT.as_secs()
-                );
-                Ok(())
-            }
-        }
+        self.page.goto(url).await.map_err(to_rt)?;
+        Ok(())
     }
 
     async fn current_url(&self) -> RuntimeResult<String> {
