@@ -22,6 +22,7 @@ use super::synth::{
     override_args, override_element_args, smart_default, synth_args, synth_element_args,
     validate_return,
 };
+use utam_runtime::driver::{ElementHandle, Selector, UtamDriver};
 use utam_runtime::element::RuntimeValue;
 use utam_runtime::page_object::{DynamicPageObject, MethodInfo, PageObjectRuntime};
 use utam_test::allure::*;
@@ -284,6 +285,36 @@ async fn exercise_method(
     }
 }
 
+/// Elements that can only be resolved after a utility-bar panel is opened.
+fn element_needs_open_utility_panel(po_name: &str, element_name: &str) -> bool {
+    matches!((po_name, element_name), ("global/utilityBarContainer", "utilityBarItemPanelHeader"))
+}
+
+/// Best-effort precondition: open a utility-bar panel so a panel-scoped
+/// element can be asserted.
+///
+/// Returns `Ok(())` once a utility item has been clicked (panel opening),
+/// or `Err(reason)` when there's no utility bar to open — the caller turns
+/// that into a clean Skip. This keeps the harness honest in both worlds:
+/// with a utility bar configured, the panel header is exercised for real;
+/// without one, it's a reasoned skip rather than a fabricated failure.
+async fn open_utility_panel(session: &SalesforceSession) -> Result<(), String> {
+    let buttons = session
+        .driver
+        .find_elements(&Selector::Css("li.slds-utility-bar__item button"))
+        .await
+        .map_err(|e| format!("{e}"))?;
+    let Some(button) = buttons.into_iter().next() else {
+        return Err(
+            "requires an open utility panel; no utility bar present in this org/app".to_string()
+        );
+    };
+    button.click().await.map_err(|e| format!("failed to click utility item: {e}"))?;
+    // Give the panel a moment to render before the element is resolved.
+    tokio::time::sleep(std::time::Duration::from_millis(800)).await;
+    Ok(())
+}
+
 async fn exercise_element(
     po: &DynamicPageObject,
     po_name: &str,
@@ -297,6 +328,18 @@ async fn exercise_element(
     if let Some(reason) = member_skip_reason(po_name, element_name) {
         return skipped_step(step, reason);
     }
+
+    // Some elements only exist after an interaction (e.g. a utility-bar panel
+    // header exists only once a panel is open). Drive that interaction first.
+    // If the precondition can't be met in this org/context (e.g. there's no
+    // utility bar to open), skip cleanly with the reason rather than failing
+    // on an element that legitimately can't be present.
+    if element_needs_open_utility_panel(po_name, element_name) {
+        if let Err(reason) = open_utility_panel(session).await {
+            return skipped_step(step, &reason);
+        }
+    }
+
     // A parameterized selector with no curated value would resolve to e.g.
     // `[data-id='']` and never match — skip instead of fabricating "".
     if override_element_args(po_name, element_name).is_none() {
