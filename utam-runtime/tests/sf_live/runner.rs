@@ -14,6 +14,7 @@
 //! aggregate report can show systemic patterns across hundreds of POs.
 
 use std::collections::HashMap;
+use std::time::Duration;
 
 use super::failure::{classify, FailureKind};
 use super::session::SalesforceSession;
@@ -331,8 +332,13 @@ async fn open_utility_panel(session: &SalesforceSession) -> Result<(), String> {
         );
     };
     button.click().await.map_err(|e| format!("failed to click utility item: {e}"))?;
-    // Give the panel a moment to render before the element is resolved.
-    tokio::time::sleep(std::time::Duration::from_millis(800)).await;
+    session
+        .wait_for_element(
+            Selector::Css("div.slds-is-open[role='dialog'].slds-utility-panel h2".into()),
+            "utility panel header to render",
+            Duration::from_secs(5),
+        )
+        .await?;
     Ok(())
 }
 
