@@ -74,6 +74,30 @@ fn c_setup_coverage() {
 }
 
 // ───────────────────────────────────────────────────────────────────────────
+// Test 4: Console app — opens the seeded `UTAM_Console` Lightning console app,
+// whose utility bar + console nav render the console-only / utility-bar page
+// objects (utilityBarContainer, navex console tabs) that a standard desktop
+// app never shows.  The app and its utility bar are deployed from force-app by
+// the `deploy-baseline-metadata` workflow; if the deploy was skipped (e.g. a
+// hand-run against an un-seeded org) the app simply won't load and discovery
+// records honest "surface absent" results rather than fabricating coverage.
+// ───────────────────────────────────────────────────────────────────────────
+#[test]
+#[ignore = "requires real Salesforce org credentials (SF_AUTH_URL)"]
+fn d_console_coverage() {
+    shared::with_session(|session| async move {
+        // Custom Lightning apps are reachable by developer name at
+        // /lightning/app/<DeveloperName>.  Landing on the app's default tab
+        // renders its utility bar and console chrome.
+        let url = format!("{}/lightning/app/UTAM_Console", session.instance_url);
+        session.navigate(&url).await;
+
+        let result = coverage::discover_and_test(session, "console").await;
+        write_and_assert(result, "console");
+    });
+}
+
+// ───────────────────────────────────────────────────────────────────────────
 // Teardown — alphabetically last, drops seeded records + quits browser
 // ───────────────────────────────────────────────────────────────────────────
 #[test]

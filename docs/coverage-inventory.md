@@ -71,10 +71,45 @@ non-nullable member that fails to resolve is a genuine failure.
 Skips are marked `known` so Allure shows them as intentional, with the reason —
 never a green that hides a gap.
 
-## Roadmap: growing standard coverage
+## Baseline metadata: growing standard coverage
 
-Honest scoping is the prerequisite; the next step is enriching the scratch org
-so more standard members render in their intended state (a Lightning app with a
-utility bar for `utilityBarContainer`, notification/favorite state for the
-header, etc.) and curating real arguments for the parameterized standard
-members the skip reasons now enumerate.
+Honest scoping is the prerequisite; the next lever is enriching the scratch org
+so more standard members render in their intended state. We seed that as
+committed source metadata under `force-app/` and deploy it into the shared
+scratch org from CI.
+
+### What's seeded
+
+- **`UTAM_Console`** — a Lightning **console** app (`CustomApplication`,
+  `navType=Console`) with a **utility bar**
+  (`UTAM_Console_Utility_Bar.flexipage`, `type=UtilityBar`). Opening this app
+  renders `div[class*=oneUtilityBarContainer]`, so `global/utilityBarContainer`
+  is discovered and its `dockablePanel` / `utilityBarItems` /
+  `utilityBarItemPanelHeader` elements are exercised for real (the runner opens
+  a panel first — see `runner::open_utility_panel`). The console chrome also
+  surfaces `navex/*` console tabs and the header's console-only
+  `stageLeftToggle`.
+- **`UTAM_Console_Access`** — a `PermissionSet` granting the live-test user
+  access to the app, assigned by the deploy workflow so the app is visible.
+
+### How it's deployed
+
+`.github/workflows/deploy-baseline-metadata.yml` is a reusable workflow
+(`workflow_call` + `workflow_dispatch`). The Salesforce Integration workflow
+calls it after `provision` and before `live`, so each run drives an org that
+contains the seeded surfaces. It can also be run by hand (`workflow_dispatch`)
+to push metadata into the current shared org without re-provisioning. Deploy
+failure is **fatal** — a malformed baseline must surface loudly rather than
+letting the live tests silently fall back to "surface absent" skips.
+
+The live harness adds a **`console`** page context
+(`d_console_coverage`) that opens `/lightning/app/UTAM_Console`. If the deploy
+was skipped (e.g. a hand-run against an un-seeded org), the app simply doesn't
+load and discovery records honest absence rather than fabricating coverage.
+
+### Still ahead
+
+Notification/favorite state for the header, list-view + related-list surfaces,
+record pages whose subheader layout matches the record-home templates' stale
+`beforeLoad`, and curating real arguments for the parameterized standard
+members the skip reasons enumerate.

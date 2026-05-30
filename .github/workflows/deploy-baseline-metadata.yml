@@ -1,0 +1,113 @@
+name: Deploy Baseline Metadata
+
+# Deploys the `force-app` baseline metadata (the UTAM Console app + utility
+# bar, and supporting permission set) into the shared scratch org so the live
+# UTAM harness can exercise console-only and utility-bar page objects.
+#
+# Two entry points:
+#   - workflow_call: the Salesforce Integration workflow calls this after the
+#     org is provisioned and before the live tests run, so each test run drives
+#     an org that actually contains the seeded surfaces.
+#   - workflow_dispatch: run it by hand to (re)push metadata into the current
+#     shared org without re-provisioning — e.g. after editing force-app.
+#
+# Deploy failure is FATAL: a malformed baseline must surface loudly rather than
+# letting the live tests silently fall back to "surface absent" skips and hide
+# the regression.
+
+on:
+  workflow_call:
+    inputs:
+      source_dir:
+        description: Source directory to deploy.
+        required: false
+        type: string
+        default: force-app
+  workflow_dispatch:
+    inputs:
+      source_dir:
+        description: Source directory to deploy.
+        required: false
+        type: string
+        default: force-app
+
+permissions:
+  contents: read
+
+# Serialize against other org-mutating jobs on the shared scratch org so a
+# deploy never races a concurrent provision/refresh.
+concurrency:
+  group: devhub-scratch-org
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy baseline metadata
+    runs-on: ubuntu-latest
+    # Reads ONLY the provisioned scratch org's auth URL (SCRATCH_ORG_AUTH_URL),
+    # published by the provision workflow — the same low-privilege environment
+    # the live tests use.  No Dev Hub credentials are needed to deploy into an
+    # already-provisioned org.
+    environment: Scratch Org
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Salesforce CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install -g @salesforce/cli
+          sf --version
+
+      - name: Authenticate to scratch org
+        shell: bash
+        env:
+          SCRATCH_ORG_AUTH_URL: ${{ secrets.SCRATCH_ORG_AUTH_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SCRATCH_ORG_AUTH_URL:-}" ]; then
+            echo "::error::SCRATCH_ORG_AUTH_URL is empty — the org must be provisioned before metadata can be deployed."
+            exit 1
+          fi
+          # Write the auth URL to a file (never echo it) and log in.
+          umask 077
+          printf '%s' "$SCRATCH_ORG_AUTH_URL" > "${RUNNER_TEMP}/scratch-auth.txt"
+          sf org login sfdx-url --sfdx-url-file "${RUNNER_TEMP}/scratch-auth.txt" \
+            --alias scratch --set-default
+          rm -f "${RUNNER_TEMP}/scratch-auth.txt"
+
+      - name: Deploy baseline metadata
+        shell: bash
+        env:
+          SOURCE_DIR: ${{ inputs.source_dir }}
+        run: |
+          set -euo pipefail
+          echo "Deploying '${SOURCE_DIR}' to the shared scratch org…"
+          # Fatal on failure (no `|| true`): a malformed baseline must fail the
+          # job so it can't silently degrade live coverage.
+          sf project deploy start \
+            --source-dir "${SOURCE_DIR}" \
+            --target-org scratch \
+            --wait 30 \
+            --ignore-conflicts
+
+      - name: Assign permission set to running user
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The UTAM Console app is only visible to users granted access.  The
+          # scratch org's auth user IS the live-test user, so assign it here.
+          # Idempotent: a "Duplicate" error means it's already assigned, which
+          # is success for our purposes — anything else is fatal.
+          if ! out="$(sf org assign permset --name UTAM_Console_Access --target-org scratch 2>&1)"; then
+            if printf '%s' "$out" | grep -qiE 'Duplicate|already assigned|DUPLICATE_VALUE'; then
+              echo "Permission set already assigned — continuing."
+            else
+              echo "$out"
+              echo "::error::Failed to assign UTAM_Console_Access permission set."
+              exit 1
+            fi
+          else
+            echo "$out"
+          fi

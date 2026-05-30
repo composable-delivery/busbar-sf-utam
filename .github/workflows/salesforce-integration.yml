@@ -14,15 +14,19 @@ on:
       - "utam-test/**"
       - "utam-core/**"
       - "salesforce-pageobjects/**"
+      - "force-app/**"
       - ".github/workflows/salesforce-integration.yml"
       - ".github/workflows/provision-scratch-org.yml"
+      - ".github/workflows/deploy-baseline-metadata.yml"
   push:
     branches: [main]
     paths:
       - "utam-runtime/**"
       - "salesforce-pageobjects/**"
+      - "force-app/**"
       - ".github/workflows/salesforce-integration.yml"
       - ".github/workflows/provision-scratch-org.yml"
+      - ".github/workflows/deploy-baseline-metadata.yml"
 
 # contents: write needed to push to gh-pages branch
 permissions:
@@ -65,6 +69,19 @@ jobs:
     secrets: inherit
 
   # ──────────────────────────────────────────────────────────────────────────
+  # Deploy the force-app baseline metadata (UTAM Console app + utility bar +
+  # access permission set) into the freshly provisioned org so the live tests
+  # drive an org that actually contains the console/utility-bar surfaces.  Runs
+  # ONCE per workflow (not per matrix cell) and is fatal on failure so a broken
+  # baseline can't silently degrade coverage to "surface absent" skips.
+  # ──────────────────────────────────────────────────────────────────────────
+  deploy_metadata:
+    name: Deploy baseline metadata
+    needs: provision
+    uses: ./.github/workflows/deploy-baseline-metadata.yml
+    secrets: inherit
+
+  # ──────────────────────────────────────────────────────────────────────────
   # Live integration tests.  Matrix over driver — every page context runs
   # once per driver.  Each matrix cell uploads its Allure results as an
   # artifact; the `report` job merges them for a single comparison report.
@@ -78,7 +95,7 @@ jobs:
     # isolated in the `DevHub Scratch` environment, which the live tests never
     # touch — they just need a Salesforce org to drive.
     environment: Scratch Org
-    needs: provision
+    needs: [provision, deploy_metadata]
     strategy:
       # Both matrix cells share one Salesforce org but safely: each run
       # tags its seeded records with a unique `{driver}-{timestamp}`

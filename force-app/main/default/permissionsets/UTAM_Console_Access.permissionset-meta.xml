@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <applicationVisibilities>
+        <application>UTAM_Console</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+    <description>Grants the live UTAM test user access to the seeded UTAM Console app so its utility bar and console chrome render during discovery.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>UTAM Console Access</label>
+</PermissionSet>
