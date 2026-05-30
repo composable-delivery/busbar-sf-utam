@@ -264,6 +264,17 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         | ("setup/agenticSetupHome", "agenticSetupBroker") => {
             Some("Agentforce not enabled in a standard scratch org")
         }
+        // Physically undrivable on a desktop DOM: the header bundles a
+        // mobile-only search input (`.forceSearchInputMobile`) that never
+        // renders on desktop Lightning.
+        ("global/header", "searchInput") => {
+            Some("mobile-only element (forceSearchInputMobile); not present on desktop")
+        }
+        // Transient load-state element — only in the DOM while the page is
+        // still spinning up, so it can't be resolved on a settled page.
+        ("setup/agenticSetupHome", "loadingSpinner") => {
+            Some("transient loading-state element; absent once the page has settled")
+        }
         _ => None,
     }
 }

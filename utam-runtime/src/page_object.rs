@@ -999,6 +999,174 @@ impl PageObjectRuntime for DynamicPageObject {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::driver::ShadowRootHandle;
+
+    // -- Minimal in-memory driver double for unit-testing runtime logic that
+    //    doesn't need a real browser (e.g. document-level actions). --
+
+    #[derive(Debug)]
+    struct MockElement;
+
+    #[async_trait]
+    impl ElementHandle for MockElement {
+        fn clone_handle(&self) -> Box<dyn ElementHandle> {
+            Box::new(MockElement)
+        }
+        async fn text(&self) -> RuntimeResult<String> {
+            unimplemented!()
+        }
+        async fn attribute(&self, _: &str) -> RuntimeResult<Option<String>> {
+            unimplemented!()
+        }
+        async fn class_name(&self) -> RuntimeResult<String> {
+            unimplemented!()
+        }
+        async fn css_value(&self, _: &str) -> RuntimeResult<String> {
+            unimplemented!()
+        }
+        async fn property_value(&self) -> RuntimeResult<String> {
+            unimplemented!()
+        }
+        async fn title(&self) -> RuntimeResult<String> {
+            unimplemented!()
+        }
+        async fn is_displayed(&self) -> RuntimeResult<bool> {
+            unimplemented!()
+        }
+        async fn is_enabled(&self) -> RuntimeResult<bool> {
+            unimplemented!()
+        }
+        async fn is_present(&self) -> RuntimeResult<bool> {
+            unimplemented!()
+        }
+        async fn is_focused(&self) -> RuntimeResult<bool> {
+            unimplemented!()
+        }
+        async fn click(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn double_click(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn right_click(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn click_and_hold(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn focus(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn blur(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn send_keys(&self, _: &str) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn clear(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn press_key(&self, _: &str) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn scroll_into_view(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn drag_by_offset(&self, _: i64, _: i64) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn shadow_root(&self) -> RuntimeResult<Option<Box<dyn ShadowRootHandle>>> {
+            unimplemented!()
+        }
+        async fn find_element(&self, _: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
+            unimplemented!()
+        }
+        async fn find_elements(&self, _: &Selector) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
+            unimplemented!()
+        }
+    }
+
+    /// Driver double whose `find_elements` returns `found` mock elements,
+    /// letting us drive document-level presence checks deterministically.
+    struct MockDriver {
+        found: usize,
+    }
+
+    #[async_trait]
+    impl UtamDriver for MockDriver {
+        async fn navigate(&self, _: &str) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+        async fn current_url(&self) -> RuntimeResult<String> {
+            Ok("https://example.lightning.force.com/lightning/page/home".into())
+        }
+        async fn title(&self) -> RuntimeResult<String> {
+            Ok("Home".into())
+        }
+        async fn screenshot_png(&self) -> RuntimeResult<Vec<u8>> {
+            unimplemented!()
+        }
+        async fn execute_script(
+            &self,
+            _: &str,
+            _: Vec<serde_json::Value>,
+        ) -> RuntimeResult<serde_json::Value> {
+            unimplemented!()
+        }
+        async fn find_element(&self, _: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
+            Ok(Box::new(MockElement))
+        }
+        async fn find_elements(&self, _: &Selector) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
+            Ok((0..self.found).map(|_| Box::new(MockElement) as Box<dyn ElementHandle>).collect())
+        }
+        async fn wait_for_element(
+            &self,
+            _: &Selector,
+            _: std::time::Duration,
+        ) -> RuntimeResult<Box<dyn ElementHandle>> {
+            Ok(Box::new(MockElement))
+        }
+        async fn quit(&self) -> RuntimeResult<()> {
+            unimplemented!()
+        }
+    }
+
+    fn mock_page(found: usize) -> DynamicPageObject {
+        let ast: PageObjectAst =
+            serde_json::from_str(r#"{"root":true,"selector":{"css":"body"}}"#).unwrap();
+        let driver: Arc<dyn UtamDriver> = Arc::new(MockDriver { found });
+        DynamicPageObject::from_element(driver, ast, Box::new(MockElement))
+    }
+
+    #[tokio::test]
+    async fn document_contains_element_reflects_dom_presence() {
+        // Present in the DOM -> true.
+        let po = mock_page(2);
+        let r = execute_document_action(&po, "containsElement", &[RuntimeValue::String(".x".into())])
+            .await
+            .unwrap();
+        assert!(matches!(r, RuntimeValue::Bool(true)));
+
+        // Absent from the DOM -> false (not an error).
+        let po0 = mock_page(0);
+        let r0 =
+            execute_document_action(&po0, "containsElement", &[RuntimeValue::String(".x".into())])
+                .await
+                .unwrap();
+        assert!(matches!(r0, RuntimeValue::Bool(false)));
+    }
+
+    #[tokio::test]
+    async fn document_contains_element_requires_selector_arg() {
+        let po = mock_page(1);
+        assert!(execute_document_action(&po, "containsElement", &[]).await.is_err());
+    }
+
+    #[tokio::test]
+    async fn document_action_unknown_is_unsupported() {
+        let po = mock_page(1);
+        assert!(execute_document_action(&po, "frobnicate", &[]).await.is_err());
+    }
 
     #[test]
     fn test_resolve_selector_simple_css() {
