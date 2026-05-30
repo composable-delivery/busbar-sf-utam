@@ -27,7 +27,7 @@
     </flexiPageRegions>
     <masterLabel>UTAM Console Utility Bar</masterLabel>
     <template>
-        <name>flexipage:utilityBarTemplateDesktop</name>
+        <name>flexipage:utilityBar</name>
     </template>
     <type>UtilityBar</type>
 </FlexiPage>
