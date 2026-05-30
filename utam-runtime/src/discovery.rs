@@ -144,17 +144,34 @@ pub async fn find_known_page_objects(
     // For POs where root matches, do a per-candidate find_elements to get
     // a handle, then probe one required child selector to confirm the
     // match is the real component (not a generic false positive).
+    //
+    // Each candidate is guarded by a 5-second timeout.  On complex pages
+    // (e.g. account detail) some page-object candidates involve shadow-root
+    // CDP calls (`Runtime.callFunctionOn`) that can hang indefinitely when
+    // the target node is mid-mutation.  A timed-out candidate is simply
+    // skipped rather than letting it block the entire discovery phase.
     let mut matched = Vec::new();
     for (i, (name, selector_css, ast)) in candidates.into_iter().enumerate() {
         if !matches_bitmap.get(i).copied().unwrap_or(false) {
             continue;
         }
-        let root_elements = match driver.find_elements(&Selector::Css(selector_css.clone())).await {
-            Ok(els) if !els.is_empty() => els,
+        let root_elements = match tokio::time::timeout(
+            std::time::Duration::from_secs(5),
+            driver.find_elements(&Selector::Css(selector_css.clone())),
+        )
+        .await
+        {
+            Ok(Ok(els)) if !els.is_empty() => els,
             _ => continue,
         };
         let first_root = &root_elements[0];
-        if !confirm_page_object_match(first_root.as_ref(), &ast).await {
+        let confirmed = tokio::time::timeout(
+            std::time::Duration::from_secs(5),
+            confirm_page_object_match(first_root.as_ref(), &ast),
+        )
+        .await
+        .unwrap_or(false);
+        if !confirmed {
             continue;
         }
 
