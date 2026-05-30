@@ -29,3 +29,9 @@ ignore:
   # so its driver/coverage branches can't be unit-covered. Excluding the test
   # files from the report does not change the coverage they credit to src/.
   - "utam-runtime/tests/**"
+  # Unit-test scaffolding that must live under src/ to retain private access
+  # to the items under test (it's a `#[path]` child module of page_object).
+  # It's test code, not production: the in-memory MockDriver/MockElement
+  # doubles are mostly `unimplemented!()` trait stubs that never execute, so
+  # counting them as uncovered would misreport patch coverage.
+  - "utam-runtime/src/page_object_tests.rs"
