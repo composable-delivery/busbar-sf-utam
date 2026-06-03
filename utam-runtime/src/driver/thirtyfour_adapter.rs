@@ -104,6 +104,40 @@ impl UtamDriver for ThirtyfourDriver {
         .map_err(Into::into)
     }
 
+    async fn find_element_deep(&self, css: &str) -> RuntimeResult<Box<dyn ElementHandle>> {
+        // Recursively pierce every shadow root from the document, returning the
+        // first match. Mirrors the MCP `shadow_query` traversal so page objects
+        // can reach overlay/modal content that lives outside the modeled tree.
+        let script = r#"
+var sel = arguments[0];
+function pierce(root, sel) {
+    try {
+        var el = root.querySelector(sel);
+        if (el) return el;
+        var all = root.querySelectorAll('*');
+        for (var i = 0; i < all.length; i++) {
+            if (all[i].shadowRoot) {
+                var found = pierce(all[i].shadowRoot, sel);
+                if (found) return found;
+            }
+        }
+    } catch (e) {}
+    return null;
+}
+return pierce(document, sel);
+"#;
+        let ret = self
+            .inner
+            .execute(script, vec![serde_json::Value::String(css.to_string())])
+            .await
+            .map_err(to_rt)?;
+        let el = ret.element().map_err(|_| crate::error::RuntimeError::ElementNotFound {
+            element: css.to_string(),
+            reason: "no element matched the deep shadow-piercing find".into(),
+        })?;
+        Ok(Box::new(ThirtyfourElement(el)))
+    }
+
     async fn quit(&self) -> RuntimeResult<()> {
         self.inner.clone().quit().await.map_err(to_rt)
     }

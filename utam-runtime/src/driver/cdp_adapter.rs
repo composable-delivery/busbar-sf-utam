@@ -8,6 +8,7 @@ use std::time::Duration;
 
 use async_trait::async_trait;
 use chromiumoxide::browser::Browser;
+use chromiumoxide::cdp::browser_protocol::network::{CookieParam, CookieSameSite, TimeSinceEpoch};
 use chromiumoxide::page::Page;
 use chromiumoxide::Element;
 use futures::StreamExt;
@@ -147,17 +148,45 @@ impl CdpDriver {
         &self.page
     }
 
-    /// Capture a checkpoint of the current browser state.
-    pub async fn save_checkpoint(&self) -> RuntimeResult<BrowserCheckpoint> {
+    /// Capture a [`SessionState`] snapshot of the current browser: the full
+    /// cookie jar plus `localStorage` / `sessionStorage` and the current URL.
+    ///
+    /// Cookies are read via the CDP **Network** domain (`Network.getCookies`),
+    /// *not* `document.cookie`. This is the whole point of the upgrade: the
+    /// Salesforce session cookie (`sid`) is **HttpOnly** and therefore invisible
+    /// to `document.cookie` — a JS-based capture silently drops the very cookie
+    /// that constitutes the authenticated session. The Network domain returns
+    /// HttpOnly/Secure cookies, so the captured state can actually warm-start a
+    /// logged-in org.
+    pub async fn save_checkpoint(&self) -> RuntimeResult<SessionState> {
         let url = self.page.url().await.map_err(to_rt)?.unwrap_or_default();
 
         let cookies = self
             .page
-            .evaluate("document.cookie")
+            .get_cookies()
             .await
             .map_err(to_rt)?
-            .into_value::<String>()
-            .unwrap_or_default();
+            .into_iter()
+            .map(|c| CookieData {
+                name: c.name,
+                value: c.value,
+                domain: c.domain,
+                path: c.path,
+                // CDP reports a negative `expires` (and `session = true`) for
+                // session cookies; normalize those to `None`.
+                expires: if c.session || c.expires < 0.0 { None } else { Some(c.expires) },
+                http_only: c.http_only,
+                secure: c.secure,
+                same_site: c.same_site.map(|s| {
+                    match s {
+                        CookieSameSite::Strict => "Strict",
+                        CookieSameSite::Lax => "Lax",
+                        CookieSameSite::None => "None",
+                    }
+                    .to_string()
+                }),
+            })
+            .collect();
 
         let local_storage = self
             .page
@@ -193,13 +222,52 @@ impl CdpDriver {
             .into_value::<String>()
             .unwrap_or_else(|_| "{}".into());
 
-        Ok(BrowserCheckpoint { url, cookies, local_storage, session_storage })
+        Ok(SessionState { url, cookies, local_storage, session_storage })
     }
 
-    /// Restore a previously captured checkpoint.
-    pub async fn restore_checkpoint(&self, checkpoint: &BrowserCheckpoint) -> RuntimeResult<()> {
+    /// Restore a previously captured [`SessionState`] onto this browser.
+    ///
+    /// Order matters: cookies are set **before** navigation so the page load is
+    /// already authenticated (each `CookieParam` carries its own domain/path, so
+    /// `Network.setCookies` works with no page loaded). Storage is restored
+    /// **after** navigation, because `localStorage`/`sessionStorage` are
+    /// origin-scoped and only writable once the document for that origin exists.
+    pub async fn restore_checkpoint(&self, checkpoint: &SessionState) -> RuntimeResult<()> {
+        // 1) Cookies first — authenticates the navigation in step 2.
+        if !checkpoint.cookies.is_empty() {
+            let params = checkpoint
+                .cookies
+                .iter()
+                .map(|c| {
+                    let mut b = CookieParam::builder()
+                        .name(c.name.clone())
+                        .value(c.value.clone())
+                        .domain(c.domain.clone())
+                        .path(c.path.clone())
+                        .secure(c.secure)
+                        .http_only(c.http_only);
+                    if let Some(exp) = c.expires {
+                        b = b.expires(TimeSinceEpoch::new(exp));
+                    }
+                    if let Some(ss) = &c.same_site {
+                        if let Ok(parsed) = ss.parse::<CookieSameSite>() {
+                            b = b.same_site(parsed);
+                        }
+                    }
+                    b.build()
+                })
+                .collect::<Result<Vec<_>, _>>()
+                .map_err(|e| RuntimeError::UnsupportedAction {
+                    action: "restore_checkpoint cookies".into(),
+                    element_type: e,
+                })?;
+            self.page.set_cookies(params).await.map_err(to_rt)?;
+        }
+
+        // 2) Navigate (now carrying the restored cookies).
         self.page.goto(&checkpoint.url).await.map_err(to_rt)?;
 
+        // 3) Storage — origin-scoped, so only after the document exists.
         let ls_escaped = checkpoint.local_storage.replace('\\', "\\\\").replace('\'', "\\'");
         self.page
             .evaluate(format!(
@@ -220,14 +288,46 @@ impl CdpDriver {
     }
 }
 
-/// Serializable snapshot of browser state for checkpoint/restore.
+/// Serializable snapshot of a browser session — the full cookie jar plus
+/// `localStorage` / `sessionStorage` and the captured URL.
+///
+/// This is designed to round-trip through an **external store** (Neon/Redis):
+/// it derives `Serialize`/`Deserialize` and contains no live handles, so a
+/// stateless/serverless host can persist it between invocations and replay it
+/// onto any fresh (or pooled) remote browser via [`CdpDriver::restore_checkpoint`].
+/// That makes the browser fungible — the authoritative state lives in the store,
+/// not in a long-lived process — which is what serverless hosting requires, and
+/// it doubles as a local warm-start (snapshot a logged-in org once, skip the
+/// re-login on every author→test→heal cycle).
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct BrowserCheckpoint {
+pub struct SessionState {
+    /// Page URL at capture time; the restore target.
     pub url: String,
-    pub cookies: String,
+    /// Full cookie jar, captured via the CDP Network domain so **HttpOnly**
+    /// cookies (notably Salesforce's `sid`) are included.
+    pub cookies: Vec<CookieData>,
+    /// `localStorage` for the captured origin, as a JSON object string.
     pub local_storage: String,
+    /// `sessionStorage` for the captured origin, as a JSON object string.
     pub session_storage: String,
 }
+
+/// A single cookie in a [`SessionState`]. Mirrors the fields needed to faithfully
+/// re-create the cookie on restore (CDP-agnostic so the persisted JSON is stable).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CookieData {
+    pub name: String,
+    pub value: String,
+    pub domain: String,
+    pub path: String,
+    /// Seconds since epoch; `None` for a session cookie.
+    pub expires: Option<f64>,
+    pub http_only: bool,
+    pub secure: bool,
+    /// `"Strict"` | `"Lax"` | `"None"`, if the cookie set one.
+    pub same_site: Option<String>,
+}
+
 
 // ---------------------------------------------------------------------------
 // UtamDriver impl
@@ -674,5 +774,38 @@ mod tests {
         for m in ["Element was not found", "no such element", "connection refused"] {
             assert!(!message_is_stale_node(m), "did not expect stale-node for {m:?}");
         }
+    }
+
+    #[test]
+    fn session_state_round_trips_through_json() {
+        // SessionState is the contract persisted to an external store; lock its
+        // serialized shape and prove an HttpOnly cookie survives the round trip.
+        let state = SessionState {
+            url: "https://example.my.salesforce.com/lightning/page/home".into(),
+            cookies: vec![CookieData {
+                name: "sid".into(),
+                value: "00D...!secret".into(),
+                domain: ".my.salesforce.com".into(),
+                path: "/".into(),
+                expires: None, // session cookie
+                http_only: true,
+                secure: true,
+                same_site: Some("None".into()),
+            }],
+            local_storage: "{}".into(),
+            session_storage: "{}".into(),
+        };
+
+        let json = serde_json::to_string(&state).expect("serialize");
+        let back: SessionState = serde_json::from_str(&json).expect("deserialize");
+
+        assert_eq!(back.url, state.url);
+        assert_eq!(back.cookies.len(), 1);
+        let c = &back.cookies[0];
+        assert_eq!(c.name, "sid");
+        assert!(c.http_only, "HttpOnly flag must survive — it's the whole point");
+        assert!(c.secure);
+        assert_eq!(c.expires, None);
+        assert_eq!(c.same_site.as_deref(), Some("None"));
     }
 }

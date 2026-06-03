@@ -49,6 +49,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: Run tests with coverage
+        env:
+          PAGEOBJECT_COVERAGE_DIR: ${{ github.workspace }}/target/pageobject-coverage
         run: cargo llvm-cov --workspace --all-features --lcov --output-path lcov.info
 
       - name: Run doc tests
@@ -67,6 +69,28 @@ jobs:
         run: |
           echo "### Test Coverage" >> "$GITHUB_STEP_SUMMARY"
           cargo llvm-cov report --summary-only 2>&1 | tail -20 >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Build page object coverage report
+        if: always()
+        run: |
+          DEF="target/pageobject-coverage/definition-coverage.json"
+          if [ -f "$DEF" ]; then
+            python3 scripts/build_pageobject_coverage_report.py \
+              --definition "$DEF" \
+              --output-dir target/pageobject-coverage
+          else
+            python3 scripts/build_pageobject_coverage_report.py \
+              --output-dir target/pageobject-coverage
+          fi
+          cat target/pageobject-coverage/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload page object coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pageobject-coverage-unit
+          path: target/pageobject-coverage/
+          retention-days: 14
 
       - name: Upload coverage to Codecov
         if: always()

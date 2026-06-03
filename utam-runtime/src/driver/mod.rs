@@ -122,6 +122,62 @@ pub trait UtamDriver: Send + Sync {
         selector: &Selector,
         timeout: Duration,
     ) -> RuntimeResult<Box<dyn ElementHandle>>;
+
+    /// Find an element by CSS selector, piercing **all** shadow roots
+    /// recursively (the same traversal the MCP `shadow_query` uses).
+    ///
+    /// This is a fallback for elements rendered outside a page object's modeled
+    /// shadow path — most importantly Salesforce modals/overlays, which mount in
+    /// a separate document-level subtree rather than under the component that
+    /// opened them. The modeled scoped find can't reach those; this can.
+    ///
+    /// Default: unsupported — backends opt in by overriding.
+    async fn find_element_deep(&self, css: &str) -> RuntimeResult<Box<dyn ElementHandle>> {
+        Err(crate::error::RuntimeError::ElementNotFound {
+            element: css.to_string(),
+            reason: "deep shadow-piercing find is not supported on this backend".into(),
+        })
+    }
+
+    /// Wait until the document reaches `readyState === "complete"`.
+    ///
+    /// This is the UTAM-JS `DocumentObject.waitForDocumentReady` primitive
+    /// (which polls `document.readyState === 'complete'`). It gates on the page
+    /// load lifecycle after a *hard* navigation.
+    ///
+    /// Note the boundary of what it can do: for a client-side SPA route change
+    /// (e.g. a Lightning `lightning/n/...` in-app nav) the shell document is
+    /// already `complete`, so this returns near-instantly and is NOT a
+    /// sufficient readiness signal on its own. There, the authoritative gate is
+    /// root-element existence polling in `PageObject::load`. The two compose:
+    /// `wait_for_document_ready` settles a hard load, `load`'s polling settles
+    /// the freshly-rendered page's root.
+    ///
+    /// The default implementation polls `readyState` via `execute_script`,
+    /// matching UTAM-JS. On the CDP backend `navigate` already awaits the load
+    /// lifecycle event (`goto`), so this is a near-instant confirmation there;
+    /// on WebDriver it is the actual gate. Backends may override with a native
+    /// lifecycle subscription.
+    async fn wait_for_document_ready(&self, timeout: Duration) -> RuntimeResult<()> {
+        utam_core::wait::wait_for(
+            || async {
+                // Swallow transient execute errors as "not ready yet" so the
+                // poll retries (mirrors UTAM-JS `wait`: a throw is a retry).
+                match self
+                    .execute_script("return document.readyState === 'complete';", Vec::new())
+                    .await
+                {
+                    Ok(v) if v.as_bool() == Some(true) => Ok(Some(())),
+                    _ => Ok(None),
+                }
+            },
+            &utam_core::wait::WaitConfig { timeout, ..Default::default() },
+            "document.readyState == complete",
+        )
+        .await
+        .map_err(Into::into)
+    }
+
     async fn quit(&self) -> RuntimeResult<()>;
 }
 
@@ -137,7 +193,7 @@ pub use thirtyfour_adapter::ThirtyfourDriver;
 #[cfg(feature = "cdp")]
 mod cdp_adapter;
 #[cfg(feature = "cdp")]
-pub use cdp_adapter::CdpDriver;
+pub use cdp_adapter::{CdpDriver, CookieData, SessionState};
 
 // ===========================================================================
 // Tests

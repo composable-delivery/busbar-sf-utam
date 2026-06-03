@@ -512,8 +512,8 @@ fn test_key_debug() {
 fn test_wait_config_default() {
     use std::time::Duration;
     let config = WaitConfig::default();
-    assert_eq!(config.timeout, Duration::from_secs(10));
-    assert_eq!(config.poll_interval, Duration::from_millis(500));
+    assert_eq!(config.timeout, Duration::from_secs(20));
+    assert_eq!(config.poll_interval, Duration::from_millis(200));
 }
 
 #[test]

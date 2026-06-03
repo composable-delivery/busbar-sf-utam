@@ -160,12 +160,23 @@ impl DynamicPageObject {
             })?;
         let selector = resolve_selector(selector_ast, &HashMap::new())?;
 
+        // Always poll for the root element to come into *existence*, rather
+        // than doing a one-shot find. This mirrors UTAM-JS
+        // `UtamBaseRootPageObject.__beforeLoad__`, which wraps the root
+        // `findElement` in `waitFor(() => getRootElement())` and retries
+        // (swallowing not-found throws) until the explicit-wait timeout.
+        //
+        // It is the whole reason a `load()` immediately after navigating into
+        // a Lightning SPA is safe: while the app is still booting, the root
+        // custom element is not in the DOM yet, so a one-shot find 404s
+        // instantly and races the SPA. Polling for presence bridges that gap —
+        // restoring page-to-page navigation inside a plan. `beforeLoad`
+        // predicates (below) then run as an *additional* readiness gate, not as
+        // the trigger for polling.
         let has_before_load = !ast.before_load.is_empty();
-        let root = if has_before_load {
-            driver.wait_for_element(&selector, std::time::Duration::from_secs(10)).await?
-        } else {
-            driver.find_element(&selector).await?
-        };
+        let root = driver
+            .wait_for_element(&selector, utam_core::wait::WaitConfig::default().timeout)
+            .await?;
 
         let element_index = build_element_index(&ast);
         let before_load = ast.before_load.clone();
@@ -365,10 +376,19 @@ impl DynamicPageObject {
     }
 
     /// Resolve a single element by name from the DOM.
+    ///
+    /// When `wait_present` is true (the default for value/action getters), the
+    /// leaf lookup polls for the element to come into *existence* — mirroring
+    /// what `load()` already does for the root — so a compose step doesn't race
+    /// a freshly-rendered SPA panel/modal. Probe actions (`isPresent`,
+    /// `isVisible`, `waitForAbsence`, `waitForInvisible`, `containsElement`) and
+    /// `nullable` elements pass `false` so a legitimately-absent element returns
+    /// promptly instead of blocking for the full timeout.
     async fn resolve_element(
         &self,
         name: &str,
         args: &HashMap<String, RuntimeValue>,
+        wait_present: bool,
     ) -> RuntimeResult<DynamicElement> {
         // Special "root" pseudo-element — returns the root element itself
         if name == "root" {
@@ -423,12 +443,26 @@ impl DynamicPageObject {
                     elem_ast,
                 ));
             }
-            match shadow.find_element(&selector).await {
-                Ok(el) => el,
-                Err(_) if elem_ast.nullable => {
-                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+            if wait_present && !elem_ast.nullable {
+                let css = selector_css(&selector);
+                find_one_present(
+                    || async {
+                        match shadow.find_element(&selector).await {
+                            Ok(el) => Ok(el),
+                            Err(_) => self.driver.find_element_deep(&css).await,
+                        }
+                    },
+                    name,
+                )
+                .await?
+            } else {
+                match shadow.find_element(&selector).await {
+                    Ok(el) => el,
+                    Err(_) if elem_ast.nullable => {
+                        return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+                    }
+                    Err(e) => return Err(e),
                 }
-                Err(e) => return Err(e),
             }
         } else if selector_ast.return_all {
             let handles = scope.find_elements(&selector).await?;
@@ -442,6 +476,18 @@ impl DynamicPageObject {
                 })?,
                 elem_ast,
             ));
+        } else if wait_present && !elem_ast.nullable {
+            let css = selector_css(&selector);
+            find_one_present(
+                || async {
+                    match scope.find_element(&selector).await {
+                        Ok(el) => Ok(el),
+                        Err(_) => self.driver.find_element_deep(&css).await,
+                    }
+                },
+                name,
+            )
+            .await?
         } else {
             match scope.find_element(&selector).await {
                 Ok(el) => el,
@@ -473,6 +519,52 @@ fn wrap_element(handle: Box<dyn ElementHandle>, ast: &ElementAst) -> DynamicElem
         _ => vec![],
     };
     DynamicElement::new(handle, &types)
+}
+
+/// Poll for a single element to come into *existence* within `scope`, returning
+/// it once found. This mirrors the root-existence polling in
+/// `PageObject::load`, extended to leaf elements: a compose step that targets a
+/// panel/modal/field which renders a beat after a navigation or a click no
+/// longer races the render and fails with a spurious "no such element". On
+/// timeout it returns `ElementNotFound` just like the one-shot path did.
+async fn find_one_present<F, Fut>(find: F, name: &str) -> RuntimeResult<Box<dyn ElementHandle>>
+where
+    F: Fn() -> Fut,
+    Fut: std::future::Future<Output = RuntimeResult<Box<dyn ElementHandle>>>,
+{
+    utam_core::wait::wait_for(
+        || async { Ok(find().await.ok()) },
+        &utam_core::wait::WaitConfig::default(),
+        "element to be present",
+    )
+    .await
+    .map_err(|_| RuntimeError::ElementNotFound {
+        element: name.to_string(),
+        reason: "element did not appear within the wait timeout".into(),
+    })
+}
+
+/// Whether resolving the element targeted by `apply` should wait for it to be
+/// present. Probe/absence actions must observe the *current* state without
+/// blocking, so they opt out of presence-waiting.
+fn wants_presence_wait(apply: Option<&str>) -> bool {
+    !matches!(
+        apply,
+        Some("isPresent")
+            | Some("isVisible")
+            | Some("waitForAbsence")
+            | Some("waitForInvisible")
+            | Some("containsElement")
+    )
+}
+
+/// The CSS string carried by a runtime `Selector`, for the deep-pierce
+/// fallback. Non-CSS selectors yield an empty string (deep find then no-ops).
+fn selector_css(sel: &Selector) -> String {
+    match sel {
+        Selector::Css(s) => s.clone(),
+        _ => String::new(),
+    }
 }
 
 /// Build a flat name→(ast, in_shadow, parent_name) index from a PageObjectAst,
@@ -567,7 +659,8 @@ fn execute_compose<'a>(
                 if elem_name == "document" {
                     None
                 } else {
-                    let el = match page.resolve_element(elem_name, method_args).await {
+                    let wait_present = wants_presence_wait(stmt.apply.as_deref());
+                    let el = match page.resolve_element(elem_name, method_args, wait_present).await {
                         Ok(el) => el,
                         Err(RuntimeError::NullableAbsent { .. }) => {
                             last_result = RuntimeValue::Null;
@@ -713,7 +806,13 @@ fn execute_compose<'a>(
                             } else {
                                 apply.strip_prefix("get").unwrap_or(apply).to_lowercase()
                             };
-                            let el = child.resolve_element(&elem_name, &sub_args).await?;
+                            let el = child
+                                .resolve_element(
+                                    &elem_name,
+                                    &sub_args,
+                                    wants_presence_wait(Some(apply.as_str())),
+                                )
+                                .await?;
                             last_result = RuntimeValue::Element(Box::new(el.clone()));
                             last_element = Some(el);
                             continue;
@@ -967,7 +1066,8 @@ impl PageObjectRuntime for DynamicPageObject {
         name: &str,
         args: &HashMap<String, RuntimeValue>,
     ) -> RuntimeResult<DynamicElement> {
-        self.resolve_element(name, args).await
+        // Public getter — wait for the element to be present (UTAM getter semantics).
+        self.resolve_element(name, args, true).await
     }
 
     fn method_signatures(&self) -> Vec<MethodInfo> {

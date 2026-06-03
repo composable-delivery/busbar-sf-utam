@@ -155,28 +155,51 @@ fn test_codegen_all_page_objects() {
     let mut total = 0;
     let mut passed = 0;
     let mut failed = Vec::new();
+    let mut results = Vec::new();
 
     for entry in walkdir::WalkDir::new(&po_dir)
         .into_iter()
-        .filter_map(|e| e.ok())
-        .filter(|e| e.path().extension().is_some_and(|ext| ext == "json"))
+        .filter_map(|entry_result| entry_result.ok())
+        .filter(|entry| {
+            entry
+                .path()
+                .file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| name.ends_with(".utam.json"))
+        })
     {
         let path = entry.path();
-        let name = path.strip_prefix(&po_dir).unwrap().to_string_lossy().to_string();
+        let relative_path = path.strip_prefix(&po_dir).unwrap();
+        let path_for_report = relative_path.to_string_lossy().replace('\\', "/");
+        let name = path_for_report.trim_end_matches(".utam.json").to_string();
         total += 1;
 
         let json = match std::fs::read_to_string(path) {
-            Ok(j) => j,
-            Err(e) => {
-                failed.push(format!("{name}: read error: {e}"));
+            Ok(json) => json,
+            Err(error) => {
+                failed.push(format!("{name}: read error: {error}"));
+                results.push(coverage_entry(
+                    name,
+                    path_for_report,
+                    "failed",
+                    "read",
+                    Some(error.to_string()),
+                ));
                 continue;
             }
         };
 
         let ast: utam_compiler::ast::PageObjectAst = match serde_json::from_str(&json) {
-            Ok(a) => a,
-            Err(e) => {
-                failed.push(format!("{name}: parse error: {e}"));
+            Ok(ast) => ast,
+            Err(error) => {
+                failed.push(format!("{name}: parse error: {error}"));
+                results.push(coverage_entry(
+                    name,
+                    path_for_report,
+                    "failed",
+                    "parse",
+                    Some(error.to_string()),
+                ));
                 continue;
             }
         };
@@ -186,8 +209,20 @@ fn test_codegen_all_page_objects() {
         let config = utam_compiler::codegen::CodeGenConfig { module_name: Some(module_name) };
         let generator = CodeGenerator::new(ast, config);
         match generator.generate() {
-            Ok(_) => passed += 1,
-            Err(e) => failed.push(format!("{name}: codegen error: {e}")),
+            Ok(_) => {
+                passed += 1;
+                results.push(coverage_entry(name, path_for_report, "passed", "codegen", None));
+            }
+            Err(error) => {
+                failed.push(format!("{name}: codegen error: {error}"));
+                results.push(coverage_entry(
+                    name,
+                    path_for_report,
+                    "failed",
+                    "codegen",
+                    Some(error.to_string()),
+                ));
+            }
         }
     }
 
@@ -198,6 +233,7 @@ fn test_codegen_all_page_objects() {
             eprintln!("  ! {f}");
         }
     }
+    write_definition_coverage_report(total, passed, &results);
 
     // Allow some failures (complex page objects may hit unimplemented features)
     // but the majority should compile
@@ -207,4 +243,59 @@ fn test_codegen_all_page_objects() {
         "Codegen pass rate too low: {passed}/{total} ({:.0}%). Expected >80%",
         pass_rate * 100.0
     );
+}
+
+fn coverage_entry(
+    name: String,
+    path: String,
+    status: &'static str,
+    kind: &'static str,
+    error: Option<String>,
+) -> serde_json::Value {
+    serde_json::json!({
+        "name": name,
+        "path": path,
+        "status": status,
+        "kind": kind,
+        "error": error,
+    })
+}
+
+fn write_definition_coverage_report(
+    total: usize,
+    passed: usize,
+    results: &[serde_json::Value],
+) {
+    let Some(dir) = std::env::var("PAGEOBJECT_COVERAGE_DIR")
+        .ok()
+        .filter(|dir| !dir.trim().is_empty())
+    else {
+        return;
+    };
+
+    let dir = PathBuf::from(dir);
+    std::fs::create_dir_all(&dir).unwrap_or_else(|error| {
+        panic!(
+            "failed to create page object coverage directory {}: {error}",
+            dir.display()
+        )
+    });
+
+    let report = serde_json::json!({
+        "schema_version": 1,
+        "source": "utam-runtime/tests/compiled_page_objects.rs",
+        "total": total,
+        "passed": passed,
+        "failed": total.saturating_sub(passed),
+        "results": results,
+    });
+    let json = serde_json::to_string_pretty(&report)
+        .expect("definition coverage report must serialize to JSON");
+    let path = dir.join("definition-coverage.json");
+    std::fs::write(&path, json).unwrap_or_else(|error| {
+        panic!(
+            "failed to write page object definition coverage report {}: {error}",
+            path.display()
+        )
+    });
 }
