@@ -418,22 +418,37 @@ impl UtamDriver for CdpDriver {
     ) -> RuntimeResult<Box<dyn ElementHandle>> {
         let css = css_selector(selector).to_string();
         let page = Arc::clone(&self.page);
-        utam_core::wait::wait_for(
+        // Capture the most recent underlying find error. A transient error
+        // during navigation is still swallowed-and-retried (correct), but if
+        // the find fails *persistently* we surface its real cause instead of an
+        // opaque "Timeout waiting for <selector>" — which otherwise hides
+        // whether the element is genuinely absent vs. a context-destroyed /
+        // stale-node / DOM-agent error that no amount of waiting will resolve.
+        let last_err: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+        let outcome = utam_core::wait::wait_for(
             || async {
                 match page.find_element(&css).await {
                     Ok(el) => Ok(Some(el)),
-                    Err(_) => Ok(None),
+                    Err(e) => {
+                        *last_err.lock().unwrap() = Some(e.to_string());
+                        Ok(None)
+                    }
                 }
             },
             &utam_core::wait::WaitConfig { timeout, ..Default::default() },
             &format!("CDP element {selector:?}"),
         )
-        .await
-        .map(|el| {
-            Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) })
-                as Box<dyn ElementHandle>
-        })
-        .map_err(Into::into)
+        .await;
+        match outcome {
+            Ok(el) => Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) })),
+            Err(timeout_err) => match last_err.into_inner().unwrap() {
+                Some(detail) => Err(RuntimeError::ElementNotFound {
+                    element: css,
+                    reason: format!("not found within {timeout:?}; last find error: {detail}"),
+                }),
+                None => Err(timeout_err.into()),
+            },
+        }
     }
 
     async fn quit(&self) -> RuntimeResult<()> {

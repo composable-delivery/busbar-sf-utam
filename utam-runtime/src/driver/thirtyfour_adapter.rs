@@ -89,19 +89,34 @@ impl UtamDriver for ThirtyfourDriver {
     ) -> RuntimeResult<Box<dyn ElementHandle>> {
         let by = selector_to_by(selector);
         let driver = self.inner.clone();
-        utam_core::wait::wait_for(
+        // Capture the last underlying find error so a persistent failure
+        // surfaces its real cause rather than an opaque timeout (see the CDP
+        // adapter for the rationale); transient errors are still retried.
+        let last_err: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+        let outcome = utam_core::wait::wait_for(
             || async {
                 match driver.find(by.clone()).await {
                     Ok(el) => Ok(Some(el)),
-                    Err(_) => Ok(None),
+                    Err(e) => {
+                        *last_err.lock().unwrap() = Some(e.to_string());
+                        Ok(None)
+                    }
                 }
             },
             &utam_core::wait::WaitConfig { timeout, ..Default::default() },
             &format!("element with selector {selector:?}"),
         )
-        .await
-        .map(|el| Box::new(ThirtyfourElement(el)) as Box<dyn ElementHandle>)
-        .map_err(Into::into)
+        .await;
+        match outcome {
+            Ok(el) => Ok(Box::new(ThirtyfourElement(el))),
+            Err(timeout_err) => match last_err.into_inner().unwrap() {
+                Some(detail) => Err(crate::error::RuntimeError::ElementNotFound {
+                    element: format!("{selector:?}"),
+                    reason: format!("not found within {timeout:?}; last find error: {detail}"),
+                }),
+                None => Err(timeout_err.into()),
+            },
+        }
     }
 
     async fn find_element_deep(&self, css: &str) -> RuntimeResult<Box<dyn ElementHandle>> {
