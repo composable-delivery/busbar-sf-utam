@@ -85,7 +85,7 @@ impl BaseElement {
     /// Check if the element has focus
     pub async fn is_focused(&self) -> UtamResult<bool> {
         let script = "return document.activeElement === arguments[0];";
-        let result = self.inner.handle.execute(script, vec![self.inner.to_json()?]).await?;
+        let result = self.inner.handle().execute(script, vec![self.inner.to_json()?]).await?;
         Ok(result.json().as_bool().unwrap_or(false))
     }
 

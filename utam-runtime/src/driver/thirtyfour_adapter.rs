@@ -205,7 +205,7 @@ impl ElementHandle for ThirtyfourElement {
     async fn is_focused(&self) -> RuntimeResult<bool> {
         let result = self
             .0
-            .handle
+            .handle()
             .execute(
                 "return document.activeElement === arguments[0];",
                 vec![self.0.to_json().map_err(to_rt)?],
@@ -220,17 +220,17 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn double_click(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver.action_chain().double_click_element(&self.0).perform().await.map_err(to_rt)
     }
 
     async fn right_click(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver.action_chain().context_click_element(&self.0).perform().await.map_err(to_rt)
     }
 
     async fn click_and_hold(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver.action_chain().click_and_hold_element(&self.0).perform().await.map_err(to_rt)
     }
 
@@ -239,7 +239,7 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn blur(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver
             .execute("arguments[0].blur();", vec![self.0.to_json().map_err(to_rt)?])
             .await
@@ -282,7 +282,7 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn scroll_into_view(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver
             .execute("arguments[0].scrollIntoView();", vec![self.0.to_json().map_err(to_rt)?])
             .await
@@ -291,7 +291,7 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn drag_by_offset(&self, x: i64, y: i64) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver
             .action_chain()
             .drag_and_drop_element_by_offset(&self.0, x, y)
