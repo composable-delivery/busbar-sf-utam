@@ -261,24 +261,16 @@ fn coverage_entry(
     })
 }
 
-fn write_definition_coverage_report(
-    total: usize,
-    passed: usize,
-    results: &[serde_json::Value],
-) {
-    let Some(dir) = std::env::var("PAGEOBJECT_COVERAGE_DIR")
-        .ok()
-        .filter(|dir| !dir.trim().is_empty())
+fn write_definition_coverage_report(total: usize, passed: usize, results: &[serde_json::Value]) {
+    let Some(dir) =
+        std::env::var("PAGEOBJECT_COVERAGE_DIR").ok().filter(|dir| !dir.trim().is_empty())
     else {
         return;
     };
 
     let dir = PathBuf::from(dir);
     std::fs::create_dir_all(&dir).unwrap_or_else(|error| {
-        panic!(
-            "failed to create page object coverage directory {}: {error}",
-            dir.display()
-        )
+        panic!("failed to create page object coverage directory {}: {error}", dir.display())
     });
 
     let report = serde_json::json!({
@@ -293,9 +285,6 @@ fn write_definition_coverage_report(
         .expect("definition coverage report must serialize to JSON");
     let path = dir.join("definition-coverage.json");
     std::fs::write(&path, json).unwrap_or_else(|error| {
-        panic!(
-            "failed to write page object definition coverage report {}: {error}",
-            path.display()
-        )
+        panic!("failed to write page object definition coverage report {}: {error}", path.display())
     });
 }

@@ -660,7 +660,8 @@ fn execute_compose<'a>(
                     None
                 } else {
                     let wait_present = wants_presence_wait(stmt.apply.as_deref());
-                    let el = match page.resolve_element(elem_name, method_args, wait_present).await {
+                    let el = match page.resolve_element(elem_name, method_args, wait_present).await
+                    {
                         Ok(el) => el,
                         Err(RuntimeError::NullableAbsent { .. }) => {
                             last_result = RuntimeValue::Null;
