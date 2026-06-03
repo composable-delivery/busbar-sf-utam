@@ -13,7 +13,7 @@ categories = ["development-tools::testing", "web-programming"]
 
 [workspace.dependencies]
 # Browser automation
-thirtyfour = "0.36.1"
+thirtyfour = "0.37.1"
 chromiumoxide = { version = "0.9", features = ["bytes"], default-features = false }
 tokio = { version = "1", features = ["full"] }
 async-trait = "0.1"
