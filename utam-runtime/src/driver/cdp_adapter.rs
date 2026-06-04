@@ -440,7 +440,9 @@ impl UtamDriver for CdpDriver {
         )
         .await;
         match outcome {
-            Ok(el) => Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) })),
+            Ok(el) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+            }
             Err(timeout_err) => match last_err.into_inner().unwrap() {
                 Some(detail) => Err(RuntimeError::ElementNotFound {
                     element: css,
