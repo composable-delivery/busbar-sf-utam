@@ -9,8 +9,12 @@ use std::time::Duration;
 use async_trait::async_trait;
 use chromiumoxide::browser::Browser;
 use chromiumoxide::cdp::browser_protocol::network::{CookieParam, CookieSameSite, TimeSinceEpoch};
+use chromiumoxide::cdp::js_protocol::runtime::{
+    CallArgument, CallFunctionOnParams, CallFunctionOnReturns, EvaluateParams, GetPropertiesParams,
+    RemoteObjectId,
+};
+use chromiumoxide::error::CdpError;
 use chromiumoxide::page::Page;
-use chromiumoxide::Element;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 
@@ -44,50 +48,6 @@ fn to_rt(e: chromiumoxide::error::CdpError) -> RuntimeError {
         return RuntimeError::Utam(utam_core::error::UtamError::Timeout { condition: msg });
     }
     RuntimeError::UnsupportedAction { action: "CDP".into(), element_type: msg }
-}
-
-/// Whether a chromiumoxide error means "the selector matched nothing".
-///
-/// chromiumoxide's `find_elements` returns `Err(CdpError::NotFound)` when ZERO
-/// elements match, whereas the `find_elements` contract (and WebDriver, and
-/// every caller in this crate) treats "find all, possibly none" as an empty
-/// Vec. We use this to translate the not-found case back to an empty result so
-/// the CDP and WebDriver adapters behave identically. It deliberately mirrors
-/// the substring set `to_rt` uses to bucket `ElementNotFound`.
-fn is_not_found(e: &chromiumoxide::error::CdpError) -> bool {
-    message_is_not_found(&format!("{e}"))
-}
-
-/// Substring test for "selector matched nothing", split out so it can be
-/// unit-tested without constructing a `CdpError` (which has no public ctor).
-fn message_is_not_found(msg: &str) -> bool {
-    let lower = msg.to_lowercase();
-    // "notfound" (no space) catches chromiumoxide's bare `CdpError::NotFound`
-    // Display; the spaced variants catch the protocol/DOM-domain messages.
-    lower.contains("not found")
-        || lower.contains("notfound")
-        || lower.contains("no such element")
-        || lower.contains("unable to locate")
-        || lower.contains("could not find")
-}
-
-/// Whether a chromiumoxide error means "the node handle I queried *through* is
-/// stale" — i.e. the cached parent node ID no longer exists in the DOM.
-///
-/// This is distinct from "selector matched nothing": it happens when a DOM
-/// mutation (e.g. opening a utility-bar panel) detaches/replaces a node that we
-/// captured earlier and are now scoping a child query under. chromiumoxide
-/// reports it via the DevTools "Could not find node with given id" message.
-/// WebDriver's element references survive such mutations, so to match its
-/// behavior we re-resolve the child against the live page when we see this.
-fn is_stale_node(e: &chromiumoxide::error::CdpError) -> bool {
-    message_is_stale_node(&format!("{e}"))
-}
-
-/// Substring test for the stale-node case, split out for unit testing (see
-/// `is_stale_node`; `CdpError` has no public constructor).
-fn message_is_stale_node(msg: &str) -> bool {
-    msg.to_lowercase().contains("node with given id")
 }
 
 fn css_selector(sel: &Selector) -> &str {
@@ -382,33 +342,29 @@ impl UtamDriver for CdpDriver {
     }
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        let el = self.page.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+        let css = css_selector(selector);
+        match ObjElement::query_document(&self.page, css).await.map_err(to_rt)? {
+            Some(el) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+            }
+            None => Err(RuntimeError::ElementNotFound {
+                element: css.to_string(),
+                reason: "no match for selector".into(),
+            }),
+        }
     }
 
     async fn find_elements(
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        // `find_elements` means "find all matches, possibly none". chromiumoxide
-        // returns Err(CdpError::NotFound) for ZERO matches, but WebDriver — and
-        // this trait's contract, and every caller (discovery's
-        // confirm_page_object_match, get_element's `handles.is_empty()` nullable
-        // check) — expect an empty Vec. Propagating the error here is what made
-        // CDP diverge: an absent element surfaced as a StaleSelector *failure*
-        // under CDP while WebDriver saw a clean empty result and passed. Map
-        // not-found to an empty Vec; any other error still propagates.
-        match self.page.find_elements(css_selector(selector)).await {
-            Ok(els) => Ok(els
-                .into_iter()
-                .map(|e| {
-                    Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                        as Box<dyn ElementHandle>
-                })
-                .collect()),
-            Err(e) if is_not_found(&e) => Ok(Vec::new()),
-            Err(e) => Err(to_rt(e)),
-        }
+        // "find all matches, possibly none" → an empty Vec for zero matches
+        // (matching WebDriver and the trait contract). querySelectorAll on an
+        // empty match returns `[]`, so this falls out naturally.
+        let els = ObjElement::query_all_document(&self.page, css_selector(selector))
+            .await
+            .map_err(to_rt)?;
+        Ok(wrap_elements(els, &self.page))
     }
 
     async fn wait_for_element(
@@ -436,8 +392,9 @@ impl UtamDriver for CdpDriver {
         let attempt = std::time::Duration::from_secs(5).min(timeout);
         let outcome = utam_core::wait::wait_for(
             || async {
-                match tokio::time::timeout(attempt, page.find_element(&css)).await {
-                    Ok(Ok(el)) => Ok(Some(el)),
+                match tokio::time::timeout(attempt, ObjElement::query_document(&page, &css)).await {
+                    Ok(Ok(Some(el))) => Ok(Some(el)),
+                    Ok(Ok(None)) => Ok(None), // not present yet — keep polling
                     Ok(Err(e)) => {
                         *last_err.lock().unwrap() = Some(e.to_string());
                         Ok(None)
@@ -474,12 +431,262 @@ impl UtamDriver for CdpDriver {
 }
 
 // ---------------------------------------------------------------------------
+// ObjElement — a Runtime-domain element handle
+// ---------------------------------------------------------------------------
+
+/// An element handle backed by a Runtime **object id**, not a DOM `NodeId`.
+///
+/// All resolution and operations go through `Runtime.evaluate` /
+/// `Runtime.callFunctionOn` — never the CDP **DOM** domain. On a busy Lightning
+/// record page the DOM domain's `getDocument`/`querySelector` responses *hang*
+/// (chromiumoxide's handler is starved by the page's DOM-mutation event flood),
+/// while the Runtime domain stays responsive (~1ms). Resolving via JS is what
+/// makes finds reliable on heavy pages. It mirrors the slice of chromiumoxide's
+/// `Element` API this adapter used, so the `ElementHandle` impl below is
+/// unchanged.
+#[derive(Debug)]
+struct ObjElement {
+    object_id: RemoteObjectId,
+    page: Arc<Page>,
+}
+
+impl ObjElement {
+    /// Resolve `document.querySelector(css)` to a handle, or `None`.
+    async fn query_document(page: &Arc<Page>, css: &str) -> Result<Option<ObjElement>, CdpError> {
+        Self::eval_object(page, format!("document.querySelector({})", js_arg(css))).await
+    }
+
+    /// Resolve `document.querySelectorAll(css)` to handles.
+    async fn query_all_document(page: &Arc<Page>, css: &str) -> Result<Vec<ObjElement>, CdpError> {
+        Self::eval_array(page, format!("Array.from(document.querySelectorAll({}))", js_arg(css)))
+            .await
+    }
+
+    async fn eval_object(page: &Arc<Page>, expr: String) -> Result<Option<ObjElement>, CdpError> {
+        let params = EvaluateParams::builder()
+            .expression(expr)
+            .return_by_value(false)
+            .await_promise(false)
+            .build()
+            .map_err(CdpError::msg)?;
+        let object_id = page.execute(params).await?.result.result.object_id;
+        Ok(object_id.map(|object_id| ObjElement { object_id, page: Arc::clone(page) }))
+    }
+
+    async fn eval_array(page: &Arc<Page>, expr: String) -> Result<Vec<ObjElement>, CdpError> {
+        let params = EvaluateParams::builder()
+            .expression(expr)
+            .return_by_value(false)
+            .await_promise(false)
+            .build()
+            .map_err(CdpError::msg)?;
+        match page.execute(params).await?.result.result.object_id {
+            None => Ok(Vec::new()),
+            Some(arr) => array_elements(page, &arr).await,
+        }
+    }
+
+    /// Call a function on this element, result returned by value.
+    async fn call_js_fn(
+        &self,
+        decl: impl Into<String>,
+        await_promise: bool,
+    ) -> Result<CallFunctionOnReturns, CdpError> {
+        let params = CallFunctionOnParams::builder()
+            .object_id(self.object_id.clone())
+            .function_declaration(decl)
+            .return_by_value(true)
+            .await_promise(await_promise)
+            .build()
+            .map_err(CdpError::msg)?;
+        Ok(self.page.execute(params).await?.result)
+    }
+
+    /// Call a function returning a single element handle (or `None`).
+    async fn call_object(
+        &self,
+        decl: &str,
+        args: Vec<serde_json::Value>,
+    ) -> Result<Option<ObjElement>, CdpError> {
+        let object_id = self.call_raw(decl, args).await?.result.object_id;
+        Ok(object_id.map(|object_id| ObjElement { object_id, page: Arc::clone(&self.page) }))
+    }
+
+    /// Call a function returning an array of element handles.
+    async fn call_array(
+        &self,
+        decl: &str,
+        args: Vec<serde_json::Value>,
+    ) -> Result<Vec<ObjElement>, CdpError> {
+        match self.call_raw(decl, args).await?.result.object_id {
+            None => Ok(Vec::new()),
+            Some(arr) => array_elements(&self.page, &arr).await,
+        }
+    }
+
+    async fn call_raw(
+        &self,
+        decl: &str,
+        args: Vec<serde_json::Value>,
+    ) -> Result<CallFunctionOnReturns, CdpError> {
+        let arguments = if args.is_empty() {
+            None
+        } else {
+            Some(
+                args.into_iter()
+                    .map(|v| CallArgument {
+                        value: Some(v),
+                        unserializable_value: None,
+                        object_id: None,
+                    })
+                    .collect(),
+            )
+        };
+        let params = CallFunctionOnParams {
+            arguments,
+            ..CallFunctionOnParams::builder()
+                .object_id(self.object_id.clone())
+                .function_declaration(decl.to_string())
+                .return_by_value(false)
+                .await_promise(false)
+                .build()
+                .map_err(CdpError::msg)?
+        };
+        Ok(self.page.execute(params).await?.result)
+    }
+
+    async fn inner_text(&self) -> Result<Option<String>, CdpError> {
+        let ret = self
+            .call_js_fn(
+                "function(){ return this.innerText != null ? this.innerText : this.textContent; }",
+                false,
+            )
+            .await?;
+        Ok(ret.result.value.and_then(|v| v.as_str().map(String::from)))
+    }
+
+    async fn attribute(&self, name: &str) -> Result<Option<String>, CdpError> {
+        let ret = self
+            .call_js_fn(
+                format!("function(){{ return this.getAttribute({}); }}", js_arg(name)),
+                false,
+            )
+            .await?;
+        Ok(ret.result.value.and_then(|v| v.as_str().map(String::from)))
+    }
+
+    async fn type_str(&self, text: &str) -> Result<(), CdpError> {
+        // JS-only typing (focus, append, fire input/change) — avoids the Input
+        // and DOM domains entirely.
+        self.call_js_fn(
+            format!(
+                "function(){{ this.focus(); this.value = (this.value || '') + {}; \
+                 this.dispatchEvent(new Event('input', {{bubbles:true}})); \
+                 this.dispatchEvent(new Event('change', {{bubbles:true}})); }}",
+                js_arg(text)
+            ),
+            false,
+        )
+        .await?;
+        Ok(())
+    }
+
+    async fn press_key(&self, key: &str) -> Result<(), CdpError> {
+        self.call_js_fn(
+            format!(
+                "function(){{ var k = {}; ['keydown','keyup'].forEach(function(t){{ \
+                 this.dispatchEvent(new KeyboardEvent(t, {{key:k, bubbles:true, cancelable:true}})); \
+                 }}.bind(this)); }}",
+                js_arg(key)
+            ),
+            false,
+        )
+        .await?;
+        Ok(())
+    }
+
+    async fn scroll_into_view(&self) -> Result<(), CdpError> {
+        self.call_js_fn(
+            "function(){ this.scrollIntoView({block:'center', inline:'center'}); }",
+            false,
+        )
+        .await?;
+        Ok(())
+    }
+
+    async fn find_element(&self, css: &str) -> Result<ObjElement, CdpError> {
+        match self
+            .call_object(
+                "function(s){ return this.querySelector(s); }",
+                vec![serde_json::json!(css)],
+            )
+            .await?
+        {
+            Some(el) => Ok(el),
+            None => Err(CdpError::msg(format!("Element not found: {css}"))),
+        }
+    }
+
+    async fn find_elements(&self, css: &str) -> Result<Vec<ObjElement>, CdpError> {
+        self.call_array(
+            "function(s){ return Array.from(this.querySelectorAll(s)); }",
+            vec![serde_json::json!(css)],
+        )
+        .await
+    }
+
+    async fn shadow_query(&self, css: &str) -> Result<Option<ObjElement>, CdpError> {
+        self.call_object(
+            "function(s){ return this.shadowRoot ? this.shadowRoot.querySelector(s) : null; }",
+            vec![serde_json::json!(css)],
+        )
+        .await
+    }
+
+    async fn shadow_query_all(&self, css: &str) -> Result<Vec<ObjElement>, CdpError> {
+        self.call_array(
+            "function(s){ return this.shadowRoot ? Array.from(this.shadowRoot.querySelectorAll(s)) : []; }",
+            vec![serde_json::json!(css)],
+        )
+        .await
+    }
+}
+
+/// Quote a string as a JS literal for safe embedding in a function body.
+fn js_arg(s: &str) -> String {
+    serde_json::to_string(s).unwrap_or_else(|_| "\"\"".to_string())
+}
+
+/// Expand a Runtime array object into element handles via `Runtime.getProperties`.
+async fn array_elements(
+    page: &Arc<Page>,
+    array_id: &RemoteObjectId,
+) -> Result<Vec<ObjElement>, CdpError> {
+    let params = GetPropertiesParams::builder()
+        .object_id(array_id.clone())
+        .own_properties(true)
+        .build()
+        .map_err(CdpError::msg)?;
+    let props = page.execute(params).await?.result.result;
+    let mut out = Vec::new();
+    for p in props {
+        if p.name.parse::<usize>().is_err() {
+            continue; // skip "length" and any non-index properties
+        }
+        if let Some(object_id) = p.value.and_then(|o| o.object_id) {
+            out.push(ObjElement { object_id, page: Arc::clone(page) });
+        }
+    }
+    Ok(out)
+}
+
+// ---------------------------------------------------------------------------
 // CdpElement
 // ---------------------------------------------------------------------------
 
 #[derive(Debug)]
 struct CdpElement {
-    inner: Arc<Element>,
+    inner: Arc<ObjElement>,
     page: Arc<Page>,
 }
 
@@ -663,56 +870,38 @@ impl ElementHandle for CdpElement {
             .await
             .map_err(to_rt)?;
         if js_bool(ret) {
-            // We can't clone Element, so the shadow root queries via the
-            // same element reference. This works as long as the element
-            // stays alive in the DOM (which it should for shadow hosts).
-            Ok(Some(Box::new(CdpShadowRootViaPage { page: Arc::clone(&self.page) })))
+            // Scope shadow queries to *this* host's shadow root via Runtime
+            // (`this.shadowRoot.querySelector`), so the traversal is exact
+            // rather than relying on global shadow-piercing.
+            Ok(Some(Box::new(CdpShadowRoot {
+                host: Arc::clone(&self.inner),
+                page: Arc::clone(&self.page),
+            })))
         } else {
             Ok(None)
         }
     }
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        let css = css_selector(selector);
-        match self.inner.find_element(css).await {
-            Ok(child) => {
-                Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
-            }
-            // Our cached parent node went stale (the DOM mutated since we
-            // captured it). WebDriver would still resolve the child here, so
-            // re-resolve against the live page to match its behavior.
-            Err(e) if is_stale_node(&e) => {
-                let child = self.page.find_element(css).await.map_err(to_rt)?;
-                Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
-            }
-            Err(e) => Err(to_rt(e)),
-        }
+        // Scoped child query via `this.querySelector` (Runtime), not the DOM
+        // domain. Object handles carry no DOM NodeId, so there is no
+        // stale-node case to re-resolve — a detached element simply yields no
+        // match.
+        let child = self.inner.find_element(css_selector(selector)).await.map_err(to_rt)?;
+        Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
     }
 
     async fn find_elements(
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        let css = css_selector(selector);
-        match self.inner.find_elements(css).await {
-            Ok(children) => Ok(wrap_elements(children, &self.page)),
-            // Stale cached parent node (DOM mutated since capture): re-resolve
-            // against the live page, mirroring WebDriver, instead of failing.
-            Err(e) if is_stale_node(&e) => match self.page.find_elements(css).await {
-                Ok(children) => Ok(wrap_elements(children, &self.page)),
-                Err(e) if is_not_found(&e) => Ok(Vec::new()),
-                Err(e) => Err(to_rt(e)),
-            },
-            // See CdpDriver::find_elements: not-found means "zero matches" →
-            // empty Vec, matching WebDriver and the trait contract.
-            Err(e) if is_not_found(&e) => Ok(Vec::new()),
-            Err(e) => Err(to_rt(e)),
-        }
+        let children = self.inner.find_elements(css_selector(selector)).await.map_err(to_rt)?;
+        Ok(wrap_elements(children, &self.page))
     }
 }
 
-/// Wrap chromiumoxide `Element`s into boxed `ElementHandle`s sharing `page`.
-fn wrap_elements(els: Vec<Element>, page: &Arc<Page>) -> Vec<Box<dyn ElementHandle>> {
+/// Wrap `ObjElement`s into boxed `ElementHandle`s sharing `page`.
+fn wrap_elements(els: Vec<ObjElement>, page: &Arc<Page>) -> Vec<Box<dyn ElementHandle>> {
     els.into_iter()
         .map(|e| {
             Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(page) })
@@ -722,90 +911,42 @@ fn wrap_elements(els: Vec<Element>, page: &Arc<Page>) -> Vec<Box<dyn ElementHand
 }
 
 // ---------------------------------------------------------------------------
-// CdpShadowRoot — uses page-level queries (chromiumoxide pierces shadow DOM)
+// CdpShadowRoot — queries scoped to a host element's shadow root via Runtime
 // ---------------------------------------------------------------------------
 
 #[derive(Debug)]
-struct CdpShadowRootViaPage {
+struct CdpShadowRoot {
+    host: Arc<ObjElement>,
     page: Arc<Page>,
 }
 
 #[async_trait]
-impl ShadowRootHandle for CdpShadowRootViaPage {
+impl ShadowRootHandle for CdpShadowRoot {
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        // chromiumoxide's find_element pierces shadow DOM by default
-        let el = self.page.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+        let css = css_selector(selector);
+        match self.host.shadow_query(css).await.map_err(to_rt)? {
+            Some(el) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+            }
+            None => Err(RuntimeError::ElementNotFound {
+                element: css.to_string(),
+                reason: "no match in shadow root".into(),
+            }),
+        }
     }
 
     async fn find_elements(
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        // See CdpDriver::find_elements: not-found means "zero matches" → empty
-        // Vec, matching WebDriver and the trait contract, not a hard error.
-        match self.page.find_elements(css_selector(selector)).await {
-            Ok(els) => Ok(els
-                .into_iter()
-                .map(|e| {
-                    Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                        as Box<dyn ElementHandle>
-                })
-                .collect()),
-            Err(e) if is_not_found(&e) => Ok(Vec::new()),
-            Err(e) => Err(to_rt(e)),
-        }
+        let els = self.host.shadow_query_all(css_selector(selector)).await.map_err(to_rt)?;
+        Ok(wrap_elements(els, &self.page))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn not_found_messages_map_to_empty() {
-        // The chromiumoxide "zero matches" variants we translate to an empty
-        // Vec so CDP's find_elements matches WebDriver's Ok(vec![]) contract.
-        for m in [
-            "Element was not found",
-            "no such element",
-            "Unable to locate element",
-            "could not find node with given id",
-            "NotFound",
-        ] {
-            assert!(message_is_not_found(m), "expected not-found for {m:?}");
-        }
-    }
-
-    #[test]
-    fn real_errors_do_not_map_to_empty() {
-        // A genuine driver error must still propagate, not be swallowed as
-        // "zero matches".
-        for m in ["connection refused", "Timeout waiting for response", "protocol error"] {
-            assert!(!message_is_not_found(m), "expected real error for {m:?}");
-        }
-    }
-
-    #[test]
-    fn stale_node_messages_are_detected() {
-        // A DOM mutation invalidates a cached parent node id; chromiumoxide
-        // reports it via "Could not find node with given id". We re-resolve the
-        // child against the live page when we see this, matching WebDriver.
-        for m in ["Could not find node with given id", "DOM Error: No node with given id found"] {
-            assert!(message_is_stale_node(m), "expected stale-node for {m:?}");
-        }
-    }
-
-    #[test]
-    fn non_stale_errors_are_not_stale_node() {
-        // Plain "zero matches" and unrelated errors must NOT trigger the
-        // page-level re-resolution fallback — only a genuinely stale parent
-        // node should, so a child legitimately absent from its scope still
-        // propagates as not-found.
-        for m in ["Element was not found", "no such element", "connection refused"] {
-            assert!(!message_is_stale_node(m), "did not expect stale-node for {m:?}");
-        }
-    }
 
     #[test]
     fn session_state_round_trips_through_json() {
