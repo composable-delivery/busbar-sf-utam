@@ -425,12 +425,27 @@ impl UtamDriver for CdpDriver {
         // whether the element is genuinely absent vs. a context-destroyed /
         // stale-node / DOM-agent error that no amount of waiting will resolve.
         let last_err: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+        // Bound each individual find attempt. On a busy Lightning record page
+        // the CDP `DOM.getDocument`/`querySelector` call can *hang* — not error —
+        // because chromiumoxide's single handler task is saturated by the page's
+        // flood of CDP events (DOM mutations / network) while related lists load.
+        // A single in-flight find would then consume the entire wait budget and
+        // report a bare timeout with no cause. Capping each attempt cancels a hung
+        // call so a later attempt can succeed once the page settles, and records
+        // the hang so it is no longer invisible.
+        let attempt = std::time::Duration::from_secs(5).min(timeout);
         let outcome = utam_core::wait::wait_for(
             || async {
-                match page.find_element(&css).await {
-                    Ok(el) => Ok(Some(el)),
-                    Err(e) => {
+                match tokio::time::timeout(attempt, page.find_element(&css)).await {
+                    Ok(Ok(el)) => Ok(Some(el)),
+                    Ok(Err(e)) => {
                         *last_err.lock().unwrap() = Some(e.to_string());
+                        Ok(None)
+                    }
+                    Err(_) => {
+                        *last_err.lock().unwrap() = Some(format!(
+                            "find did not return within {attempt:?} (CDP command hang)"
+                        ));
                         Ok(None)
                     }
                 }
