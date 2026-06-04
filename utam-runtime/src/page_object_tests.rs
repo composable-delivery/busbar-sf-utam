@@ -608,3 +608,110 @@ async fn find_known_page_objects_skips_when_bitmap_false() {
     let matched = crate::discovery::find_known_page_objects(&driver, &registry).await.unwrap();
     assert!(matched.is_empty());
 }
+
+// ---------------------------------------------------------------------------
+// Pure page_object helpers + UtamDriver default trait methods
+//
+// These were added by the element-resolution rewrite. The pure helpers
+// (wants_presence_wait, selector_css) and the two trait *default*
+// implementations (find_element_deep, wait_for_document_ready) are
+// unit-coverable without a live browser; cover them here (a coverage-excluded
+// file, so the supporting stub's unimplemented! arms don't skew patch %).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn wants_presence_wait_classifies_apply_kinds() {
+    // Presence/visibility/absence checks manage their own waiting, so the
+    // generic presence-wait must NOT be applied for them.
+    for skip in ["isPresent", "isVisible", "waitForAbsence", "waitForInvisible", "containsElement"]
+    {
+        assert!(!wants_presence_wait(Some(skip)), "{skip} should opt out of presence wait");
+    }
+    // Anything else (incl. None / a plain getter) wants the presence wait.
+    assert!(wants_presence_wait(None));
+    assert!(wants_presence_wait(Some("getText")));
+}
+
+#[test]
+fn selector_css_extracts_css_only() {
+    assert_eq!(selector_css(&Selector::Css("div.x".into())), "div.x");
+    // Non-CSS selectors have no CSS form -> empty string.
+    assert_eq!(selector_css(&Selector::AccessibilityId("a11y".into())), "");
+}
+
+/// Driver double exercising the UtamDriver *default* methods. `ready` controls
+/// what `execute_script` returns so `wait_for_document_ready`'s default polling
+/// loop can reach both its ready and not-ready arms deterministically.
+struct DefaultMethodsDriver {
+    ready: bool,
+}
+
+#[async_trait]
+impl UtamDriver for DefaultMethodsDriver {
+    async fn navigate(&self, _: &str) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    async fn current_url(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn title(&self) -> RuntimeResult<String> {
+        unimplemented!()
+    }
+    async fn screenshot_png(&self) -> RuntimeResult<Vec<u8>> {
+        unimplemented!()
+    }
+    async fn execute_script(
+        &self,
+        _: &str,
+        _: Vec<serde_json::Value>,
+    ) -> RuntimeResult<serde_json::Value> {
+        Ok(serde_json::Value::Bool(self.ready))
+    }
+    async fn find_element(&self, _: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
+        unimplemented!()
+    }
+    async fn find_elements(&self, _: &Selector) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
+        unimplemented!()
+    }
+    async fn wait_for_element(
+        &self,
+        _: &Selector,
+        _: std::time::Duration,
+    ) -> RuntimeResult<Box<dyn ElementHandle>> {
+        unimplemented!()
+    }
+    async fn quit(&self) -> RuntimeResult<()> {
+        unimplemented!()
+    }
+    // find_element_deep / wait_for_document_ready intentionally NOT overridden
+    // — we want to exercise the trait defaults.
+}
+
+#[tokio::test]
+async fn default_find_element_deep_is_unsupported() {
+    // The default impl reports the backend doesn't support deep find.
+    let driver = DefaultMethodsDriver { ready: true };
+    let err = driver.find_element_deep("div.modal").await.unwrap_err();
+    assert!(matches!(err, crate::error::RuntimeError::ElementNotFound { .. }));
+}
+
+#[tokio::test]
+async fn default_wait_for_document_ready_settles_when_complete() {
+    // readyState === 'complete' -> resolves Ok promptly.
+    let driver = DefaultMethodsDriver { ready: true };
+    driver
+        .wait_for_document_ready(std::time::Duration::from_secs(1))
+        .await
+        .expect("should settle when document is complete");
+}
+
+#[tokio::test]
+async fn default_wait_for_document_ready_times_out_when_never_ready() {
+    // readyState never 'complete' -> the default polling loop times out.
+    let driver = DefaultMethodsDriver { ready: false };
+    let err = driver
+        .wait_for_document_ready(std::time::Duration::from_millis(150))
+        .await
+        .expect_err("should time out when document never completes");
+    let _ = err; // a timeout error of some RuntimeError variant
+}
