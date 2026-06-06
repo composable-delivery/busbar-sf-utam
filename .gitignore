@@ -17,3 +17,6 @@ lcov.info
 # Insta snapshot review files
 *.snap.new
 .pending-snapshots/
+
+.sf/
+.sfdx/
