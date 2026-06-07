@@ -306,9 +306,9 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         // manager itself (and its activeWorkspace child) ARE present, so the
         // PO is still meaningfully exercised — the tabset element is an
         // inherently dynamic artifact of navigation history.
-        ("navex/workspaceManager", "tabset") => {
-            Some("console workspace tab bar; absent on initial app landing before any sub-tab is opened")
-        }
+        ("navex/workspaceManager", "tabset") => Some(
+            "console workspace tab bar; absent on initial app landing before any sub-tab is opened",
+        ),
         // The bubble's popover body is empty unless a tooltip/popover is
         // actively displayed; primitiveBubble is a shared, separate root PO
         // with no method to trigger one, so the content div isn't reliably
