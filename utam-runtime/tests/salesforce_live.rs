@@ -92,6 +92,20 @@ fn d_console_coverage() {
         let url = format!("{}/lightning/app/UTAM_Console", session.instance_url);
         session.navigate(&url).await;
 
+        // The console workspace manager renders after the global shell (header)
+        // is visible.  `navigate` returns as soon as the header appears, so
+        // wait explicitly for the console chrome before running discovery.
+        if let Err(e) = session
+            .wait_for_element(
+                utam_runtime::driver::Selector::Css(".navexWorkspaceManager".to_string()),
+                "console workspace manager",
+                std::time::Duration::from_secs(20),
+            )
+            .await
+        {
+            eprintln!("WARNING: console workspace manager did not appear: {e}");
+        }
+
         let result = coverage::discover_and_test(session, "console").await;
         write_and_assert(result, "console");
     });

@@ -299,6 +299,16 @@ pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
         ("navex/workspace", "listView") => {
             Some("list-view container; not present on the Setup page context")
         }
+        // The console workspace tab bar (one:ConsoleTabset / .oneConsoleTabset)
+        // only renders once at least one workspace sub-tab has been opened.
+        // On initial navigation to a console app before any records have been
+        // opened, the tab bar container is absent from the DOM.  The workspace
+        // manager itself (and its activeWorkspace child) ARE present, so the
+        // PO is still meaningfully exercised — the tabset element is an
+        // inherently dynamic artifact of navigation history.
+        ("navex/workspaceManager", "tabset") => {
+            Some("console workspace tab bar; absent on initial app landing before any sub-tab is opened")
+        }
         // The bubble's popover body is empty unless a tooltip/popover is
         // actively displayed; primitiveBubble is a shared, separate root PO
         // with no method to trigger one, so the content div isn't reliably
@@ -594,6 +604,7 @@ mod tests {
         assert!(member_skip_reason("global/header", "getSearch").is_some());
         assert!(member_skip_reason("global/header", "backButton").is_some());
         assert!(member_skip_reason("navex/workspace", "listView").is_some());
+        assert!(member_skip_reason("navex/workspaceManager", "tabset").is_some());
         assert!(member_skip_reason("global/header", "notifications").is_none());
         assert!(member_skip_reason("some/other", "whatever").is_none());
     }
