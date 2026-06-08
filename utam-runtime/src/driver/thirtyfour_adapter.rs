@@ -89,19 +89,68 @@ impl UtamDriver for ThirtyfourDriver {
     ) -> RuntimeResult<Box<dyn ElementHandle>> {
         let by = selector_to_by(selector);
         let driver = self.inner.clone();
-        utam_core::wait::wait_for(
+        // Capture the last underlying find error so a persistent failure
+        // surfaces its real cause rather than an opaque timeout (see the CDP
+        // adapter for the rationale); transient errors are still retried.
+        let last_err: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+        let outcome = utam_core::wait::wait_for(
             || async {
                 match driver.find(by.clone()).await {
                     Ok(el) => Ok(Some(el)),
-                    Err(_) => Ok(None),
+                    Err(e) => {
+                        *last_err.lock().unwrap() = Some(e.to_string());
+                        Ok(None)
+                    }
                 }
             },
             &utam_core::wait::WaitConfig { timeout, ..Default::default() },
             &format!("element with selector {selector:?}"),
         )
-        .await
-        .map(|el| Box::new(ThirtyfourElement(el)) as Box<dyn ElementHandle>)
-        .map_err(Into::into)
+        .await;
+        match outcome {
+            Ok(el) => Ok(Box::new(ThirtyfourElement(el))),
+            Err(timeout_err) => match last_err.into_inner().unwrap() {
+                Some(detail) => Err(crate::error::RuntimeError::ElementNotFound {
+                    element: format!("{selector:?}"),
+                    reason: format!("not found within {timeout:?}; last find error: {detail}"),
+                }),
+                None => Err(timeout_err.into()),
+            },
+        }
+    }
+
+    async fn find_element_deep(&self, css: &str) -> RuntimeResult<Box<dyn ElementHandle>> {
+        // Recursively pierce every shadow root from the document, returning the
+        // first match. Mirrors the MCP `shadow_query` traversal so page objects
+        // can reach overlay/modal content that lives outside the modeled tree.
+        let script = r#"
+var sel = arguments[0];
+function pierce(root, sel) {
+    try {
+        var el = root.querySelector(sel);
+        if (el) return el;
+        var all = root.querySelectorAll('*');
+        for (var i = 0; i < all.length; i++) {
+            if (all[i].shadowRoot) {
+                var found = pierce(all[i].shadowRoot, sel);
+                if (found) return found;
+            }
+        }
+    } catch (e) {}
+    return null;
+}
+return pierce(document, sel);
+"#;
+        let ret = self
+            .inner
+            .execute(script, vec![serde_json::Value::String(css.to_string())])
+            .await
+            .map_err(to_rt)?;
+        let el = ret.element().map_err(|_| crate::error::RuntimeError::ElementNotFound {
+            element: css.to_string(),
+            reason: "no element matched the deep shadow-piercing find".into(),
+        })?;
+        Ok(Box::new(ThirtyfourElement(el)))
     }
 
     async fn quit(&self) -> RuntimeResult<()> {
@@ -171,7 +220,7 @@ impl ElementHandle for ThirtyfourElement {
     async fn is_focused(&self) -> RuntimeResult<bool> {
         let result = self
             .0
-            .handle
+            .handle()
             .execute(
                 "return document.activeElement === arguments[0];",
                 vec![self.0.to_json().map_err(to_rt)?],
@@ -186,17 +235,17 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn double_click(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver.action_chain().double_click_element(&self.0).perform().await.map_err(to_rt)
     }
 
     async fn right_click(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver.action_chain().context_click_element(&self.0).perform().await.map_err(to_rt)
     }
 
     async fn click_and_hold(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver.action_chain().click_and_hold_element(&self.0).perform().await.map_err(to_rt)
     }
 
@@ -205,7 +254,7 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn blur(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver
             .execute("arguments[0].blur();", vec![self.0.to_json().map_err(to_rt)?])
             .await
@@ -248,7 +297,7 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn scroll_into_view(&self) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver
             .execute("arguments[0].scrollIntoView();", vec![self.0.to_json().map_err(to_rt)?])
             .await
@@ -257,7 +306,7 @@ impl ElementHandle for ThirtyfourElement {
     }
 
     async fn drag_by_offset(&self, x: i64, y: i64) -> RuntimeResult<()> {
-        let driver = WebDriver { handle: self.0.handle.clone() };
+        let driver = self.0.handle().clone();
         driver
             .action_chain()
             .drag_and_drop_element_by_offset(&self.0, x, y)

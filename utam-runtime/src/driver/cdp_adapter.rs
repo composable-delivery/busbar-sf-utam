@@ -8,8 +8,13 @@ use std::time::Duration;
 
 use async_trait::async_trait;
 use chromiumoxide::browser::Browser;
+use chromiumoxide::cdp::browser_protocol::network::{CookieParam, CookieSameSite, TimeSinceEpoch};
+use chromiumoxide::cdp::js_protocol::runtime::{
+    CallArgument, CallFunctionOnParams, CallFunctionOnReturns, EvaluateParams, GetPropertiesParams,
+    RemoteObjectId,
+};
+use chromiumoxide::error::CdpError;
 use chromiumoxide::page::Page;
-use chromiumoxide::Element;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 
@@ -103,17 +108,45 @@ impl CdpDriver {
         &self.page
     }
 
-    /// Capture a checkpoint of the current browser state.
-    pub async fn save_checkpoint(&self) -> RuntimeResult<BrowserCheckpoint> {
+    /// Capture a [`SessionState`] snapshot of the current browser: the full
+    /// cookie jar plus `localStorage` / `sessionStorage` and the current URL.
+    ///
+    /// Cookies are read via the CDP **Network** domain (`Network.getCookies`),
+    /// *not* `document.cookie`. This is the whole point of the upgrade: the
+    /// Salesforce session cookie (`sid`) is **HttpOnly** and therefore invisible
+    /// to `document.cookie` — a JS-based capture silently drops the very cookie
+    /// that constitutes the authenticated session. The Network domain returns
+    /// HttpOnly/Secure cookies, so the captured state can actually warm-start a
+    /// logged-in org.
+    pub async fn save_checkpoint(&self) -> RuntimeResult<SessionState> {
         let url = self.page.url().await.map_err(to_rt)?.unwrap_or_default();
 
         let cookies = self
             .page
-            .evaluate("document.cookie")
+            .get_cookies()
             .await
             .map_err(to_rt)?
-            .into_value::<String>()
-            .unwrap_or_default();
+            .into_iter()
+            .map(|c| CookieData {
+                name: c.name,
+                value: c.value,
+                domain: c.domain,
+                path: c.path,
+                // CDP reports a negative `expires` (and `session = true`) for
+                // session cookies; normalize those to `None`.
+                expires: if c.session || c.expires < 0.0 { None } else { Some(c.expires) },
+                http_only: c.http_only,
+                secure: c.secure,
+                same_site: c.same_site.map(|s| {
+                    match s {
+                        CookieSameSite::Strict => "Strict",
+                        CookieSameSite::Lax => "Lax",
+                        CookieSameSite::None => "None",
+                    }
+                    .to_string()
+                }),
+            })
+            .collect();
 
         let local_storage = self
             .page
@@ -149,13 +182,52 @@ impl CdpDriver {
             .into_value::<String>()
             .unwrap_or_else(|_| "{}".into());
 
-        Ok(BrowserCheckpoint { url, cookies, local_storage, session_storage })
+        Ok(SessionState { url, cookies, local_storage, session_storage })
     }
 
-    /// Restore a previously captured checkpoint.
-    pub async fn restore_checkpoint(&self, checkpoint: &BrowserCheckpoint) -> RuntimeResult<()> {
+    /// Restore a previously captured [`SessionState`] onto this browser.
+    ///
+    /// Order matters: cookies are set **before** navigation so the page load is
+    /// already authenticated (each `CookieParam` carries its own domain/path, so
+    /// `Network.setCookies` works with no page loaded). Storage is restored
+    /// **after** navigation, because `localStorage`/`sessionStorage` are
+    /// origin-scoped and only writable once the document for that origin exists.
+    pub async fn restore_checkpoint(&self, checkpoint: &SessionState) -> RuntimeResult<()> {
+        // 1) Cookies first — authenticates the navigation in step 2.
+        if !checkpoint.cookies.is_empty() {
+            let params = checkpoint
+                .cookies
+                .iter()
+                .map(|c| {
+                    let mut b = CookieParam::builder()
+                        .name(c.name.clone())
+                        .value(c.value.clone())
+                        .domain(c.domain.clone())
+                        .path(c.path.clone())
+                        .secure(c.secure)
+                        .http_only(c.http_only);
+                    if let Some(exp) = c.expires {
+                        b = b.expires(TimeSinceEpoch::new(exp));
+                    }
+                    if let Some(ss) = &c.same_site {
+                        if let Ok(parsed) = ss.parse::<CookieSameSite>() {
+                            b = b.same_site(parsed);
+                        }
+                    }
+                    b.build()
+                })
+                .collect::<Result<Vec<_>, _>>()
+                .map_err(|e| RuntimeError::UnsupportedAction {
+                    action: "restore_checkpoint cookies".into(),
+                    element_type: e,
+                })?;
+            self.page.set_cookies(params).await.map_err(to_rt)?;
+        }
+
+        // 2) Navigate (now carrying the restored cookies).
         self.page.goto(&checkpoint.url).await.map_err(to_rt)?;
 
+        // 3) Storage — origin-scoped, so only after the document exists.
         let ls_escaped = checkpoint.local_storage.replace('\\', "\\\\").replace('\'', "\\'");
         self.page
             .evaluate(format!(
@@ -176,13 +248,44 @@ impl CdpDriver {
     }
 }
 
-/// Serializable snapshot of browser state for checkpoint/restore.
+/// Serializable snapshot of a browser session — the full cookie jar plus
+/// `localStorage` / `sessionStorage` and the captured URL.
+///
+/// This is designed to round-trip through an **external store** (Neon/Redis):
+/// it derives `Serialize`/`Deserialize` and contains no live handles, so a
+/// stateless/serverless host can persist it between invocations and replay it
+/// onto any fresh (or pooled) remote browser via [`CdpDriver::restore_checkpoint`].
+/// That makes the browser fungible — the authoritative state lives in the store,
+/// not in a long-lived process — which is what serverless hosting requires, and
+/// it doubles as a local warm-start (snapshot a logged-in org once, skip the
+/// re-login on every author→test→heal cycle).
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct BrowserCheckpoint {
+pub struct SessionState {
+    /// Page URL at capture time; the restore target.
     pub url: String,
-    pub cookies: String,
+    /// Full cookie jar, captured via the CDP Network domain so **HttpOnly**
+    /// cookies (notably Salesforce's `sid`) are included.
+    pub cookies: Vec<CookieData>,
+    /// `localStorage` for the captured origin, as a JSON object string.
     pub local_storage: String,
+    /// `sessionStorage` for the captured origin, as a JSON object string.
     pub session_storage: String,
+}
+
+/// A single cookie in a [`SessionState`]. Mirrors the fields needed to faithfully
+/// re-create the cookie on restore (CDP-agnostic so the persisted JSON is stable).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CookieData {
+    pub name: String,
+    pub value: String,
+    pub domain: String,
+    pub path: String,
+    /// Seconds since epoch; `None` for a session cookie.
+    pub expires: Option<f64>,
+    pub http_only: bool,
+    pub secure: bool,
+    /// `"Strict"` | `"Lax"` | `"None"`, if the cookie set one.
+    pub same_site: Option<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -239,22 +342,29 @@ impl UtamDriver for CdpDriver {
     }
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        let el = self.page.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+        let css = css_selector(selector);
+        match ObjElement::query_document(&self.page, css).await.map_err(to_rt)? {
+            Some(el) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+            }
+            None => Err(RuntimeError::ElementNotFound {
+                element: css.to_string(),
+                reason: "no match for selector".into(),
+            }),
+        }
     }
 
     async fn find_elements(
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        let els = self.page.find_elements(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(els
-            .into_iter()
-            .map(|e| {
-                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                    as Box<dyn ElementHandle>
-            })
-            .collect())
+        // "find all matches, possibly none" → an empty Vec for zero matches
+        // (matching WebDriver and the trait contract). querySelectorAll on an
+        // empty match returns `[]`, so this falls out naturally.
+        let els = ObjElement::query_all_document(&self.page, css_selector(selector))
+            .await
+            .map_err(to_rt)?;
+        Ok(wrap_elements(els, &self.page))
     }
 
     async fn wait_for_element(
@@ -264,22 +374,55 @@ impl UtamDriver for CdpDriver {
     ) -> RuntimeResult<Box<dyn ElementHandle>> {
         let css = css_selector(selector).to_string();
         let page = Arc::clone(&self.page);
-        utam_core::wait::wait_for(
+        // Capture the most recent underlying find error. A transient error
+        // during navigation is still swallowed-and-retried (correct), but if
+        // the find fails *persistently* we surface its real cause instead of an
+        // opaque "Timeout waiting for <selector>" — which otherwise hides
+        // whether the element is genuinely absent vs. a context-destroyed /
+        // stale-node / DOM-agent error that no amount of waiting will resolve.
+        let last_err: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+        // Bound each individual find attempt. On a busy Lightning record page
+        // the CDP `DOM.getDocument`/`querySelector` call can *hang* — not error —
+        // because chromiumoxide's single handler task is saturated by the page's
+        // flood of CDP events (DOM mutations / network) while related lists load.
+        // A single in-flight find would then consume the entire wait budget and
+        // report a bare timeout with no cause. Capping each attempt cancels a hung
+        // call so a later attempt can succeed once the page settles, and records
+        // the hang so it is no longer invisible.
+        let attempt = std::time::Duration::from_secs(5).min(timeout);
+        let outcome = utam_core::wait::wait_for(
             || async {
-                match page.find_element(&css).await {
-                    Ok(el) => Ok(Some(el)),
-                    Err(_) => Ok(None),
+                match tokio::time::timeout(attempt, ObjElement::query_document(&page, &css)).await {
+                    Ok(Ok(Some(el))) => Ok(Some(el)),
+                    Ok(Ok(None)) => Ok(None), // not present yet — keep polling
+                    Ok(Err(e)) => {
+                        *last_err.lock().unwrap() = Some(e.to_string());
+                        Ok(None)
+                    }
+                    Err(_) => {
+                        *last_err.lock().unwrap() = Some(format!(
+                            "find did not return within {attempt:?} (CDP command hang)"
+                        ));
+                        Ok(None)
+                    }
                 }
             },
             &utam_core::wait::WaitConfig { timeout, ..Default::default() },
             &format!("CDP element {selector:?}"),
         )
-        .await
-        .map(|el| {
-            Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) })
-                as Box<dyn ElementHandle>
-        })
-        .map_err(Into::into)
+        .await;
+        match outcome {
+            Ok(el) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+            }
+            Err(timeout_err) => match last_err.into_inner().unwrap() {
+                Some(detail) => Err(RuntimeError::ElementNotFound {
+                    element: css,
+                    reason: format!("not found within {timeout:?}; last find error: {detail}"),
+                }),
+                None => Err(timeout_err.into()),
+            },
+        }
     }
 
     async fn quit(&self) -> RuntimeResult<()> {
@@ -288,12 +431,262 @@ impl UtamDriver for CdpDriver {
 }
 
 // ---------------------------------------------------------------------------
+// ObjElement — a Runtime-domain element handle
+// ---------------------------------------------------------------------------
+
+/// An element handle backed by a Runtime **object id**, not a DOM `NodeId`.
+///
+/// All resolution and operations go through `Runtime.evaluate` /
+/// `Runtime.callFunctionOn` — never the CDP **DOM** domain. On a busy Lightning
+/// record page the DOM domain's `getDocument`/`querySelector` responses *hang*
+/// (chromiumoxide's handler is starved by the page's DOM-mutation event flood),
+/// while the Runtime domain stays responsive (~1ms). Resolving via JS is what
+/// makes finds reliable on heavy pages. It mirrors the slice of chromiumoxide's
+/// `Element` API this adapter used, so the `ElementHandle` impl below is
+/// unchanged.
+#[derive(Debug)]
+struct ObjElement {
+    object_id: RemoteObjectId,
+    page: Arc<Page>,
+}
+
+impl ObjElement {
+    /// Resolve `document.querySelector(css)` to a handle, or `None`.
+    async fn query_document(page: &Arc<Page>, css: &str) -> Result<Option<ObjElement>, CdpError> {
+        Self::eval_object(page, format!("document.querySelector({})", js_arg(css))).await
+    }
+
+    /// Resolve `document.querySelectorAll(css)` to handles.
+    async fn query_all_document(page: &Arc<Page>, css: &str) -> Result<Vec<ObjElement>, CdpError> {
+        Self::eval_array(page, format!("Array.from(document.querySelectorAll({}))", js_arg(css)))
+            .await
+    }
+
+    async fn eval_object(page: &Arc<Page>, expr: String) -> Result<Option<ObjElement>, CdpError> {
+        let params = EvaluateParams::builder()
+            .expression(expr)
+            .return_by_value(false)
+            .await_promise(false)
+            .build()
+            .map_err(CdpError::msg)?;
+        let object_id = page.execute(params).await?.result.result.object_id;
+        Ok(object_id.map(|object_id| ObjElement { object_id, page: Arc::clone(page) }))
+    }
+
+    async fn eval_array(page: &Arc<Page>, expr: String) -> Result<Vec<ObjElement>, CdpError> {
+        let params = EvaluateParams::builder()
+            .expression(expr)
+            .return_by_value(false)
+            .await_promise(false)
+            .build()
+            .map_err(CdpError::msg)?;
+        match page.execute(params).await?.result.result.object_id {
+            None => Ok(Vec::new()),
+            Some(arr) => array_elements(page, &arr).await,
+        }
+    }
+
+    /// Call a function on this element, result returned by value.
+    async fn call_js_fn(
+        &self,
+        decl: impl Into<String>,
+        await_promise: bool,
+    ) -> Result<CallFunctionOnReturns, CdpError> {
+        let params = CallFunctionOnParams::builder()
+            .object_id(self.object_id.clone())
+            .function_declaration(decl)
+            .return_by_value(true)
+            .await_promise(await_promise)
+            .build()
+            .map_err(CdpError::msg)?;
+        Ok(self.page.execute(params).await?.result)
+    }
+
+    /// Call a function returning a single element handle (or `None`).
+    async fn call_object(
+        &self,
+        decl: &str,
+        args: Vec<serde_json::Value>,
+    ) -> Result<Option<ObjElement>, CdpError> {
+        let object_id = self.call_raw(decl, args).await?.result.object_id;
+        Ok(object_id.map(|object_id| ObjElement { object_id, page: Arc::clone(&self.page) }))
+    }
+
+    /// Call a function returning an array of element handles.
+    async fn call_array(
+        &self,
+        decl: &str,
+        args: Vec<serde_json::Value>,
+    ) -> Result<Vec<ObjElement>, CdpError> {
+        match self.call_raw(decl, args).await?.result.object_id {
+            None => Ok(Vec::new()),
+            Some(arr) => array_elements(&self.page, &arr).await,
+        }
+    }
+
+    async fn call_raw(
+        &self,
+        decl: &str,
+        args: Vec<serde_json::Value>,
+    ) -> Result<CallFunctionOnReturns, CdpError> {
+        let arguments = if args.is_empty() {
+            None
+        } else {
+            Some(
+                args.into_iter()
+                    .map(|v| CallArgument {
+                        value: Some(v),
+                        unserializable_value: None,
+                        object_id: None,
+                    })
+                    .collect(),
+            )
+        };
+        let params = CallFunctionOnParams {
+            arguments,
+            ..CallFunctionOnParams::builder()
+                .object_id(self.object_id.clone())
+                .function_declaration(decl.to_string())
+                .return_by_value(false)
+                .await_promise(false)
+                .build()
+                .map_err(CdpError::msg)?
+        };
+        Ok(self.page.execute(params).await?.result)
+    }
+
+    async fn inner_text(&self) -> Result<Option<String>, CdpError> {
+        let ret = self
+            .call_js_fn(
+                "function(){ return this.innerText != null ? this.innerText : this.textContent; }",
+                false,
+            )
+            .await?;
+        Ok(ret.result.value.and_then(|v| v.as_str().map(String::from)))
+    }
+
+    async fn attribute(&self, name: &str) -> Result<Option<String>, CdpError> {
+        let ret = self
+            .call_js_fn(
+                format!("function(){{ return this.getAttribute({}); }}", js_arg(name)),
+                false,
+            )
+            .await?;
+        Ok(ret.result.value.and_then(|v| v.as_str().map(String::from)))
+    }
+
+    async fn type_str(&self, text: &str) -> Result<(), CdpError> {
+        // JS-only typing (focus, append, fire input/change) — avoids the Input
+        // and DOM domains entirely.
+        self.call_js_fn(
+            format!(
+                "function(){{ this.focus(); this.value = (this.value || '') + {}; \
+                 this.dispatchEvent(new Event('input', {{bubbles:true}})); \
+                 this.dispatchEvent(new Event('change', {{bubbles:true}})); }}",
+                js_arg(text)
+            ),
+            false,
+        )
+        .await?;
+        Ok(())
+    }
+
+    async fn press_key(&self, key: &str) -> Result<(), CdpError> {
+        self.call_js_fn(
+            format!(
+                "function(){{ var k = {}; ['keydown','keyup'].forEach(function(t){{ \
+                 this.dispatchEvent(new KeyboardEvent(t, {{key:k, bubbles:true, cancelable:true}})); \
+                 }}.bind(this)); }}",
+                js_arg(key)
+            ),
+            false,
+        )
+        .await?;
+        Ok(())
+    }
+
+    async fn scroll_into_view(&self) -> Result<(), CdpError> {
+        self.call_js_fn(
+            "function(){ this.scrollIntoView({block:'center', inline:'center'}); }",
+            false,
+        )
+        .await?;
+        Ok(())
+    }
+
+    async fn find_element(&self, css: &str) -> Result<ObjElement, CdpError> {
+        match self
+            .call_object(
+                "function(s){ return this.querySelector(s); }",
+                vec![serde_json::json!(css)],
+            )
+            .await?
+        {
+            Some(el) => Ok(el),
+            None => Err(CdpError::msg(format!("Element not found: {css}"))),
+        }
+    }
+
+    async fn find_elements(&self, css: &str) -> Result<Vec<ObjElement>, CdpError> {
+        self.call_array(
+            "function(s){ return Array.from(this.querySelectorAll(s)); }",
+            vec![serde_json::json!(css)],
+        )
+        .await
+    }
+
+    async fn shadow_query(&self, css: &str) -> Result<Option<ObjElement>, CdpError> {
+        self.call_object(
+            "function(s){ return this.shadowRoot ? this.shadowRoot.querySelector(s) : null; }",
+            vec![serde_json::json!(css)],
+        )
+        .await
+    }
+
+    async fn shadow_query_all(&self, css: &str) -> Result<Vec<ObjElement>, CdpError> {
+        self.call_array(
+            "function(s){ return this.shadowRoot ? Array.from(this.shadowRoot.querySelectorAll(s)) : []; }",
+            vec![serde_json::json!(css)],
+        )
+        .await
+    }
+}
+
+/// Quote a string as a JS literal for safe embedding in a function body.
+fn js_arg(s: &str) -> String {
+    serde_json::to_string(s).unwrap_or_else(|_| "\"\"".to_string())
+}
+
+/// Expand a Runtime array object into element handles via `Runtime.getProperties`.
+async fn array_elements(
+    page: &Arc<Page>,
+    array_id: &RemoteObjectId,
+) -> Result<Vec<ObjElement>, CdpError> {
+    let params = GetPropertiesParams::builder()
+        .object_id(array_id.clone())
+        .own_properties(true)
+        .build()
+        .map_err(CdpError::msg)?;
+    let props = page.execute(params).await?.result.result;
+    let mut out = Vec::new();
+    for p in props {
+        if p.name.parse::<usize>().is_err() {
+            continue; // skip "length" and any non-index properties
+        }
+        if let Some(object_id) = p.value.and_then(|o| o.object_id) {
+            out.push(ObjElement { object_id, page: Arc::clone(page) });
+        }
+    }
+    Ok(out)
+}
+
+// ---------------------------------------------------------------------------
 // CdpElement
 // ---------------------------------------------------------------------------
 
 #[derive(Debug)]
 struct CdpElement {
-    inner: Arc<Element>,
+    inner: Arc<ObjElement>,
     page: Arc<Page>,
 }
 
@@ -381,7 +774,15 @@ impl ElementHandle for CdpElement {
     }
 
     async fn click(&self) -> RuntimeResult<()> {
-        self.inner.click().await.map_err(to_rt)?;
+        // Use JavaScript `.click()` rather than CDP's coordinate-based
+        // `Input.dispatchMouseEvent`.  The JS method fires the click event
+        // directly on the element and propagates it through the DOM in the
+        // same way a user click does, which is essential for SPA frameworks
+        // (e.g. Lightning) that intercept click events via event delegation
+        // and route navigation programmatically.  CDP input events can miss
+        // the router when the element's viewport coordinates are imprecise
+        // in headless mode.  `focus`/`blur` already use this pattern.
+        self.inner.call_js_fn("function(){ this.click(); }", false).await.map_err(to_rt)?;
         Ok(())
     }
 
@@ -469,16 +870,23 @@ impl ElementHandle for CdpElement {
             .await
             .map_err(to_rt)?;
         if js_bool(ret) {
-            // We can't clone Element, so the shadow root queries via the
-            // same element reference. This works as long as the element
-            // stays alive in the DOM (which it should for shadow hosts).
-            Ok(Some(Box::new(CdpShadowRootViaPage { page: Arc::clone(&self.page) })))
+            // Scope shadow queries to *this* host's shadow root via Runtime
+            // (`this.shadowRoot.querySelector`), so the traversal is exact
+            // rather than relying on global shadow-piercing.
+            Ok(Some(Box::new(CdpShadowRoot {
+                host: Arc::clone(&self.inner),
+                page: Arc::clone(&self.page),
+            })))
         } else {
             Ok(None)
         }
     }
 
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
+        // Scoped child query via `this.querySelector` (Runtime), not the DOM
+        // domain. Object handles carry no DOM NodeId, so there is no
+        // stale-node case to re-resolve — a detached element simply yields no
+        // match.
         let child = self.inner.find_element(css_selector(selector)).await.map_err(to_rt)?;
         Ok(Box::new(CdpElement { inner: Arc::new(child), page: Arc::clone(&self.page) }))
     }
@@ -488,44 +896,88 @@ impl ElementHandle for CdpElement {
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
         let children = self.inner.find_elements(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(children
-            .into_iter()
-            .map(|e| {
-                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                    as Box<dyn ElementHandle>
-            })
-            .collect())
+        Ok(wrap_elements(children, &self.page))
     }
 }
 
+/// Wrap `ObjElement`s into boxed `ElementHandle`s sharing `page`.
+fn wrap_elements(els: Vec<ObjElement>, page: &Arc<Page>) -> Vec<Box<dyn ElementHandle>> {
+    els.into_iter()
+        .map(|e| {
+            Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(page) })
+                as Box<dyn ElementHandle>
+        })
+        .collect()
+}
+
 // ---------------------------------------------------------------------------
-// CdpShadowRoot — uses page-level queries (chromiumoxide pierces shadow DOM)
+// CdpShadowRoot — queries scoped to a host element's shadow root via Runtime
 // ---------------------------------------------------------------------------
 
 #[derive(Debug)]
-struct CdpShadowRootViaPage {
+struct CdpShadowRoot {
+    host: Arc<ObjElement>,
     page: Arc<Page>,
 }
 
 #[async_trait]
-impl ShadowRootHandle for CdpShadowRootViaPage {
+impl ShadowRootHandle for CdpShadowRoot {
     async fn find_element(&self, selector: &Selector) -> RuntimeResult<Box<dyn ElementHandle>> {
-        // chromiumoxide's find_element pierces shadow DOM by default
-        let el = self.page.find_element(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+        let css = css_selector(selector);
+        match self.host.shadow_query(css).await.map_err(to_rt)? {
+            Some(el) => {
+                Ok(Box::new(CdpElement { inner: Arc::new(el), page: Arc::clone(&self.page) }))
+            }
+            None => Err(RuntimeError::ElementNotFound {
+                element: css.to_string(),
+                reason: "no match in shadow root".into(),
+            }),
+        }
     }
 
     async fn find_elements(
         &self,
         selector: &Selector,
     ) -> RuntimeResult<Vec<Box<dyn ElementHandle>>> {
-        let els = self.page.find_elements(css_selector(selector)).await.map_err(to_rt)?;
-        Ok(els
-            .into_iter()
-            .map(|e| {
-                Box::new(CdpElement { inner: Arc::new(e), page: Arc::clone(&self.page) })
-                    as Box<dyn ElementHandle>
-            })
-            .collect())
+        let els = self.host.shadow_query_all(css_selector(selector)).await.map_err(to_rt)?;
+        Ok(wrap_elements(els, &self.page))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn session_state_round_trips_through_json() {
+        // SessionState is the contract persisted to an external store; lock its
+        // serialized shape and prove an HttpOnly cookie survives the round trip.
+        let state = SessionState {
+            url: "https://example.my.salesforce.com/lightning/page/home".into(),
+            cookies: vec![CookieData {
+                name: "sid".into(),
+                value: "00D...!secret".into(),
+                domain: ".my.salesforce.com".into(),
+                path: "/".into(),
+                expires: None, // session cookie
+                http_only: true,
+                secure: true,
+                same_site: Some("None".into()),
+            }],
+            local_storage: "{}".into(),
+            session_storage: "{}".into(),
+        };
+
+        let json = serde_json::to_string(&state).expect("serialize");
+        let back: SessionState = serde_json::from_str(&json).expect("deserialize");
+
+        assert_eq!(back.url, state.url);
+        assert_eq!(back.cookies.len(), 1);
+        let c = &back.cookies[0];
+        assert_eq!(c.name, "sid");
+        assert!(c.http_only, "HttpOnly flag must survive — it's the whole point");
+        assert!(c.secure);
+        assert_eq!(c.expires, None);
+        assert_eq!(c.same_site.as_deref(), Some("None"));
     }
 }

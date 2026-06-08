@@ -3,7 +3,10 @@
 //! This module provides support for switching into iframe contexts and back.
 //! Uses RAII pattern for automatic context cleanup.
 
+use std::sync::Arc;
+
 use thirtyfour::prelude::*;
+use thirtyfour::session::handle::SessionHandle;
 
 use crate::error::UtamResult;
 
@@ -50,10 +53,11 @@ impl FrameElement {
         // Clone the element to enter frame (enter_frame consumes self)
         let element = self.inner.clone();
 
-        // SAFETY: WebDriver is a simple wrapper around Arc<SessionHandle>.
-        // We're constructing it from the same handle that's already in use by
-        // the WebElement, so this is safe and maintains all existing session state.
-        let driver = WebDriver { handle: element.handle.clone() };
+        // thirtyfour 0.37 no longer allows constructing a WebDriver from a
+        // handle outside the crate, but every operation FrameContext needs
+        // (`find`, `enter_parent_frame`) lives on SessionHandle — which is what
+        // WebDriver derefs to anyway. Hold the element's handle directly.
+        let driver = element.handle().clone();
 
         // Switch to the frame context
         element.enter_frame().await?;
@@ -85,7 +89,7 @@ impl FrameElement {
 /// operation of switching back to parent frame. For more reliable cleanup,
 /// prefer explicitly calling `exit()` when possible.
 pub struct FrameContext {
-    driver: WebDriver,
+    driver: Arc<SessionHandle>,
     // Flag to prevent double-exit when exit() is called explicitly
     exited: bool,
 }

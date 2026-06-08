@@ -21,7 +21,11 @@ pub struct WaitConfig {
 
 impl Default for WaitConfig {
     fn default() -> Self {
-        Self { timeout: Duration::from_secs(10), poll_interval: Duration::from_millis(500) }
+        // Matches UTAM-JS canonical defaults: DEFAULT_EXPLICIT_WAIT_TIMEOUT
+        // (20000 ms) and DEFAULT_POLLING_INTERVAL (200 ms). The 20s ceiling
+        // gives a Lightning SPA room to boot and render a freshly-navigated
+        // page's root before a `load()` gives up.
+        Self { timeout: Duration::from_secs(20), poll_interval: Duration::from_millis(200) }
     }
 }
 
@@ -81,8 +85,8 @@ mod tests {
     #[test]
     fn test_wait_config_default_values() {
         let config = WaitConfig::default();
-        assert_eq!(config.timeout, Duration::from_secs(10));
-        assert_eq!(config.poll_interval, Duration::from_millis(500));
+        assert_eq!(config.timeout, Duration::from_secs(20));
+        assert_eq!(config.poll_interval, Duration::from_millis(200));
     }
 
     #[test]

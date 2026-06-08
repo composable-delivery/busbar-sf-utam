@@ -160,12 +160,23 @@ impl DynamicPageObject {
             })?;
         let selector = resolve_selector(selector_ast, &HashMap::new())?;
 
+        // Always poll for the root element to come into *existence*, rather
+        // than doing a one-shot find. This mirrors UTAM-JS
+        // `UtamBaseRootPageObject.__beforeLoad__`, which wraps the root
+        // `findElement` in `waitFor(() => getRootElement())` and retries
+        // (swallowing not-found throws) until the explicit-wait timeout.
+        //
+        // It is the whole reason a `load()` immediately after navigating into
+        // a Lightning SPA is safe: while the app is still booting, the root
+        // custom element is not in the DOM yet, so a one-shot find 404s
+        // instantly and races the SPA. Polling for presence bridges that gap —
+        // restoring page-to-page navigation inside a plan. `beforeLoad`
+        // predicates (below) then run as an *additional* readiness gate, not as
+        // the trigger for polling.
         let has_before_load = !ast.before_load.is_empty();
-        let root = if has_before_load {
-            driver.wait_for_element(&selector, std::time::Duration::from_secs(10)).await?
-        } else {
-            driver.find_element(&selector).await?
-        };
+        let root = driver
+            .wait_for_element(&selector, utam_core::wait::WaitConfig::default().timeout)
+            .await?;
 
         let element_index = build_element_index(&ast);
         let before_load = ast.before_load.clone();
@@ -365,10 +376,19 @@ impl DynamicPageObject {
     }
 
     /// Resolve a single element by name from the DOM.
+    ///
+    /// When `wait_present` is true (the default for value/action getters), the
+    /// leaf lookup polls for the element to come into *existence* — mirroring
+    /// what `load()` already does for the root — so a compose step doesn't race
+    /// a freshly-rendered SPA panel/modal. Probe actions (`isPresent`,
+    /// `isVisible`, `waitForAbsence`, `waitForInvisible`, `containsElement`) and
+    /// `nullable` elements pass `false` so a legitimately-absent element returns
+    /// promptly instead of blocking for the full timeout.
     async fn resolve_element(
         &self,
         name: &str,
         args: &HashMap<String, RuntimeValue>,
+        wait_present: bool,
     ) -> RuntimeResult<DynamicElement> {
         // Special "root" pseudo-element — returns the root element itself
         if name == "root" {
@@ -423,12 +443,26 @@ impl DynamicPageObject {
                     elem_ast,
                 ));
             }
-            match shadow.find_element(&selector).await {
-                Ok(el) => el,
-                Err(_) if elem_ast.nullable => {
-                    return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+            if wait_present && !elem_ast.nullable {
+                let css = selector_css(&selector);
+                find_one_present(
+                    || async {
+                        match shadow.find_element(&selector).await {
+                            Ok(el) => Ok(el),
+                            Err(_) => self.driver.find_element_deep(&css).await,
+                        }
+                    },
+                    name,
+                )
+                .await?
+            } else {
+                match shadow.find_element(&selector).await {
+                    Ok(el) => el,
+                    Err(_) if elem_ast.nullable => {
+                        return Err(RuntimeError::NullableAbsent { element: name.to_string() });
+                    }
+                    Err(e) => return Err(e),
                 }
-                Err(e) => return Err(e),
             }
         } else if selector_ast.return_all {
             let handles = scope.find_elements(&selector).await?;
@@ -442,6 +476,18 @@ impl DynamicPageObject {
                 })?,
                 elem_ast,
             ));
+        } else if wait_present && !elem_ast.nullable {
+            let css = selector_css(&selector);
+            find_one_present(
+                || async {
+                    match scope.find_element(&selector).await {
+                        Ok(el) => Ok(el),
+                        Err(_) => self.driver.find_element_deep(&css).await,
+                    }
+                },
+                name,
+            )
+            .await?
         } else {
             match scope.find_element(&selector).await {
                 Ok(el) => el,
@@ -473,6 +519,52 @@ fn wrap_element(handle: Box<dyn ElementHandle>, ast: &ElementAst) -> DynamicElem
         _ => vec![],
     };
     DynamicElement::new(handle, &types)
+}
+
+/// Poll for a single element to come into *existence* within `scope`, returning
+/// it once found. This mirrors the root-existence polling in
+/// `PageObject::load`, extended to leaf elements: a compose step that targets a
+/// panel/modal/field which renders a beat after a navigation or a click no
+/// longer races the render and fails with a spurious "no such element". On
+/// timeout it returns `ElementNotFound` just like the one-shot path did.
+async fn find_one_present<F, Fut>(find: F, name: &str) -> RuntimeResult<Box<dyn ElementHandle>>
+where
+    F: Fn() -> Fut,
+    Fut: std::future::Future<Output = RuntimeResult<Box<dyn ElementHandle>>>,
+{
+    utam_core::wait::wait_for(
+        || async { Ok(find().await.ok()) },
+        &utam_core::wait::WaitConfig::default(),
+        "element to be present",
+    )
+    .await
+    .map_err(|_| RuntimeError::ElementNotFound {
+        element: name.to_string(),
+        reason: "element did not appear within the wait timeout".into(),
+    })
+}
+
+/// Whether resolving the element targeted by `apply` should wait for it to be
+/// present. Probe/absence actions must observe the *current* state without
+/// blocking, so they opt out of presence-waiting.
+fn wants_presence_wait(apply: Option<&str>) -> bool {
+    !matches!(
+        apply,
+        Some("isPresent")
+            | Some("isVisible")
+            | Some("waitForAbsence")
+            | Some("waitForInvisible")
+            | Some("containsElement")
+    )
+}
+
+/// The CSS string carried by a runtime `Selector`, for the deep-pierce
+/// fallback. Non-CSS selectors yield an empty string (deep find then no-ops).
+fn selector_css(sel: &Selector) -> String {
+    match sel {
+        Selector::Css(s) => s.clone(),
+        _ => String::new(),
+    }
 }
 
 /// Build a flat name→(ast, in_shadow, parent_name) index from a PageObjectAst,
@@ -567,7 +659,9 @@ fn execute_compose<'a>(
                 if elem_name == "document" {
                     None
                 } else {
-                    let el = match page.resolve_element(elem_name, method_args).await {
+                    let wait_present = wants_presence_wait(stmt.apply.as_deref());
+                    let el = match page.resolve_element(elem_name, method_args, wait_present).await
+                    {
                         Ok(el) => el,
                         Err(RuntimeError::NullableAbsent { .. }) => {
                             last_result = RuntimeValue::Null;
@@ -623,15 +717,11 @@ fn execute_compose<'a>(
             // 4. Resolve arguments for this statement
             let stmt_args = resolve_compose_args(&stmt.args, method_args)?;
 
-            // 5. Handle matcher assertions (e.g. stringContains on a result)
-            if let Some(matcher) = &stmt.matcher {
-                let matcher_args = resolve_compose_args(&matcher.args, method_args)?;
-                let matched = evaluate_matcher(&matcher.matcher_type, &last_result, &matcher_args);
-                last_result = RuntimeValue::Bool(matched);
-                continue;
-            }
-
-            // 6. Execute the action
+            // 5. Execute the action. A matcher on this statement, if present,
+            //    is applied to the action's result *afterwards* (step 6), not
+            //    before — otherwise the action would be skipped and the matcher
+            //    would test the previous statement's result instead of this
+            //    one's (e.g. `document.getUrl()` stringContains url).
             if let Some(apply) = &stmt.apply {
                 // Handle "waitFor" with predicate specially
                 if apply == "waitFor" {
@@ -717,7 +807,13 @@ fn execute_compose<'a>(
                             } else {
                                 apply.strip_prefix("get").unwrap_or(apply).to_lowercase()
                             };
-                            let el = child.resolve_element(&elem_name, &sub_args).await?;
+                            let el = child
+                                .resolve_element(
+                                    &elem_name,
+                                    &sub_args,
+                                    wants_presence_wait(Some(apply.as_str())),
+                                )
+                                .await?;
                             last_result = RuntimeValue::Element(Box::new(el.clone()));
                             last_element = Some(el);
                             continue;
@@ -751,6 +847,17 @@ fn execute_compose<'a>(
             } else if let Some(el) = element {
                 last_result = RuntimeValue::Element(Box::new(el.clone()));
                 last_element = Some(el);
+            }
+
+            // 6. Apply a matcher to this statement's result, if present. This
+            //    runs AFTER the action so the matcher tests the action's own
+            //    result. A matcher-only statement (no action above) leaves
+            //    last_result untouched, so it tests the previous statement's
+            //    result — the intended assertion form.
+            if let Some(matcher) = &stmt.matcher {
+                let matcher_args = resolve_compose_args(&matcher.args, method_args)?;
+                let matched = evaluate_matcher(&matcher.matcher_type, &last_result, &matcher_args);
+                last_result = RuntimeValue::Bool(matched);
             }
         }
 
@@ -891,15 +998,36 @@ fn json_to_runtime_value(v: &serde_json::Value) -> RuntimeValue {
     }
 }
 
-/// Execute document-level actions (getUrl, getTitle, etc.)
+/// Execute document-level actions (getUrl, getTitle, containsElement, ...).
+///
+/// The UTAM `document` object is the root of the DOM, not a regular element,
+/// so it has its own small dispatch table.  `containsElement` is the key one
+/// page objects use for presence checks (e.g. `isCreateMenuPresent`): it
+/// queries the whole document for a CSS selector and returns a boolean.
 async fn execute_document_action(
     page: &DynamicPageObject,
     action: &str,
-    _args: &[RuntimeValue],
+    args: &[RuntimeValue],
 ) -> RuntimeResult<RuntimeValue> {
     match action {
         "getUrl" => Ok(RuntimeValue::String(page.driver.current_url().await?)),
         "getTitle" => Ok(RuntimeValue::String(page.driver.title().await?)),
+        // `containsElement(locator)` — the compose layer normalizes the
+        // locator arg to its underlying CSS string, so we receive a plain
+        // string here.
+        "containsElement" => {
+            let css = match args.first() {
+                Some(RuntimeValue::String(s)) => s.clone(),
+                _ => {
+                    return Err(RuntimeError::UnsupportedAction {
+                        action: "containsElement".to_string(),
+                        element_type: "document (expected a string/locator argument)".to_string(),
+                    })
+                }
+            };
+            let found = page.driver.find_elements(&Selector::Css(css)).await?;
+            Ok(RuntimeValue::Bool(!found.is_empty()))
+        }
         _ => Err(RuntimeError::UnsupportedAction {
             action: action.to_string(),
             element_type: "document".to_string(),
@@ -939,7 +1067,8 @@ impl PageObjectRuntime for DynamicPageObject {
         name: &str,
         args: &HashMap<String, RuntimeValue>,
     ) -> RuntimeResult<DynamicElement> {
-        self.resolve_element(name, args).await
+        // Public getter — wait for the element to be present (UTAM getter semantics).
+        self.resolve_element(name, args, true).await
     }
 
     fn method_signatures(&self) -> Vec<MethodInfo> {
@@ -975,215 +1104,10 @@ impl PageObjectRuntime for DynamicPageObject {
 // Tests
 // ---------------------------------------------------------------------------
 
+// Unit tests live in a sibling file (still a private child module via `#[path]`,
+// so they keep access to private items) and are excluded from coverage in
+// codecov.yml — the in-memory driver doubles are test scaffolding, not
+// production code. See page_object_tests.rs.
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_resolve_selector_simple_css() {
-        let ast = SelectorAst {
-            css: Some("button.submit".into()),
-            accessid: None,
-            classchain: None,
-            uiautomator: None,
-            args: vec![],
-            return_all: false,
-        };
-        let sel = resolve_selector(&ast, &HashMap::new()).unwrap();
-        assert!(matches!(sel, Selector::Css(s) if s == "button.submit"));
-    }
-
-    #[test]
-    fn test_resolve_selector_parameterized() {
-        let ast = SelectorAst {
-            css: Some("div[data-id='%s']".into()),
-            accessid: None,
-            classchain: None,
-            uiautomator: None,
-            args: vec![SelectorArgAst { name: "id".into(), arg_type: "string".into() }],
-            return_all: false,
-        };
-        let mut args = HashMap::new();
-        args.insert("id".into(), RuntimeValue::String("abc123".into()));
-        let sel = resolve_selector(&ast, &args).unwrap();
-        assert!(matches!(sel, Selector::Css(s) if s == "div[data-id='abc123']"));
-    }
-
-    #[test]
-    fn test_resolve_selector_missing_arg() {
-        let ast = SelectorAst {
-            css: Some("div[data-id='%s']".into()),
-            accessid: None,
-            classchain: None,
-            uiautomator: None,
-            args: vec![SelectorArgAst { name: "id".into(), arg_type: "string".into() }],
-            return_all: false,
-        };
-        let result = resolve_selector(&ast, &HashMap::new());
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_resolve_selector_accessid() {
-        let ast = SelectorAst {
-            css: None,
-            accessid: Some("login-button".into()),
-            classchain: None,
-            uiautomator: None,
-            args: vec![],
-            return_all: false,
-        };
-        let sel = resolve_selector(&ast, &HashMap::new()).unwrap();
-        assert!(matches!(sel, Selector::AccessibilityId(s) if s == "login-button"));
-    }
-
-    #[test]
-    fn test_build_element_index() {
-        let json = r#"{
-            "root": true,
-            "selector": { "css": ".page" },
-            "elements": [
-                { "name": "button", "selector": { "css": "button" } },
-                { "name": "input", "selector": { "css": "input" } }
-            ],
-            "shadow": {
-                "elements": [
-                    { "name": "inner", "selector": { "css": ".inner" } }
-                ]
-            }
-        }"#;
-        let ast: PageObjectAst = serde_json::from_str(json).unwrap();
-        let index = build_element_index(&ast);
-        assert_eq!(index.len(), 3);
-        assert!(!index["button"].1); // not in shadow
-        assert!(!index["input"].1);
-        assert!(index["inner"].1); // in shadow
-    }
-
-    #[test]
-    fn test_resolve_compose_args_references() {
-        let compose_args = vec![ComposeArgAst::Named {
-            name: "username".into(),
-            arg_type: "argumentReference".into(),
-        }];
-        let mut method_args = HashMap::new();
-        method_args.insert("username".into(), RuntimeValue::String("admin".into()));
-
-        let resolved = resolve_compose_args(&compose_args, &method_args).unwrap();
-        assert_eq!(resolved.len(), 1);
-        assert_eq!(resolved[0].as_str().unwrap(), "admin");
-    }
-
-    #[test]
-    fn test_resolve_compose_args_literal() {
-        let compose_args = vec![ComposeArgAst::Value(serde_json::json!(42))];
-        let resolved = resolve_compose_args(&compose_args, &HashMap::new()).unwrap();
-        assert_eq!(resolved.len(), 1);
-        assert!(matches!(resolved[0], RuntimeValue::Number(42)));
-    }
-
-    #[test]
-    fn test_json_to_runtime_value() {
-        assert!(matches!(json_to_runtime_value(&serde_json::json!(null)), RuntimeValue::Null));
-        assert!(matches!(
-            json_to_runtime_value(&serde_json::json!(true)),
-            RuntimeValue::Bool(true)
-        ));
-        assert!(matches!(json_to_runtime_value(&serde_json::json!(42)), RuntimeValue::Number(42)));
-        assert!(
-            matches!(json_to_runtime_value(&serde_json::json!("hi")), RuntimeValue::String(s) if s == "hi")
-        );
-    }
-
-    #[test]
-    fn test_json_to_runtime_value_locator_css() {
-        // Typed locator literal: {"type": "locator", "value": {"css": ".foo"}}
-        // must produce RuntimeValue::String(".foo") so actions like
-        // containsElement(locator) receive the CSS string they expect.
-        let v = serde_json::json!({ "type": "locator", "value": { "css": ".foo" } });
-        match json_to_runtime_value(&v) {
-            RuntimeValue::String(s) => assert_eq!(s, ".foo"),
-            other => panic!("expected String(.foo), got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn test_json_to_runtime_value_typed_literal() {
-        // {"type": "string", "value": "hi"} unwraps to the inner value.
-        let v = serde_json::json!({ "type": "string", "value": "hi" });
-        match json_to_runtime_value(&v) {
-            RuntimeValue::String(s) => assert_eq!(s, "hi"),
-            other => panic!("expected String(hi), got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn test_json_to_runtime_value_locator_accessid() {
-        let v = serde_json::json!({ "type": "locator", "value": { "accessid": "my-id" } });
-        match json_to_runtime_value(&v) {
-            RuntimeValue::String(s) => assert_eq!(s, "my-id"),
-            other => panic!("expected String, got {other:?}"),
-        }
-    }
-
-    #[test]
-    fn test_method_signatures_introspection() {
-        let json = r#"{
-            "root": true,
-            "selector": { "css": ".page" },
-            "elements": [
-                { "name": "user", "type": ["editable"], "selector": { "css": "input" } },
-                { "name": "btn", "type": ["clickable"], "selector": { "css": "button" } }
-            ],
-            "methods": [
-                {
-                    "name": "login",
-                    "args": [
-                        { "name": "username", "type": "string" },
-                        { "name": "password", "type": "string" }
-                    ],
-                    "compose": []
-                },
-                {
-                    "name": "getTitle",
-                    "compose": [],
-                    "returnType": "string"
-                }
-            ]
-        }"#;
-        let ast: PageObjectAst = serde_json::from_str(json).unwrap();
-        let index = build_element_index(&ast);
-        let page_obj_description = match &ast.description {
-            Some(DescriptionAst::Simple(s)) => Some(s.clone()),
-            Some(DescriptionAst::Detailed { text, .. }) => Some(text.join(" ")),
-            None => None,
-        };
-
-        // Check element index
-        assert_eq!(index.len(), 2);
-        assert!(index.contains_key("user"));
-        assert!(index.contains_key("btn"));
-
-        // Check method signatures
-        let sigs: Vec<MethodInfo> = ast
-            .methods
-            .iter()
-            .map(|m| MethodInfo {
-                name: m.name.clone(),
-                args: m
-                    .args
-                    .iter()
-                    .map(|a| ArgInfo { name: a.name.clone(), arg_type: a.arg_type.clone() })
-                    .collect(),
-                return_type: m.return_type.clone(),
-            })
-            .collect();
-        assert_eq!(sigs.len(), 2);
-        assert_eq!(sigs[0].name, "login");
-        assert_eq!(sigs[0].args.len(), 2);
-        assert_eq!(sigs[0].args[0].name, "username");
-        assert_eq!(sigs[1].name, "getTitle");
-        assert_eq!(sigs[1].return_type, Some("string".into()));
-        assert!(page_obj_description.is_none());
-    }
-}
+#[path = "page_object_tests.rs"]
+mod tests;

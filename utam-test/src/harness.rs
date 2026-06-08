@@ -249,9 +249,10 @@ impl Drop for TestHarness {
     fn drop(&mut self) {
         // Best-effort cleanup: spawn a detached task to quit the driver.
         // This prevents leaking browser processes when tests panic.
-        let handle = self.driver.handle.clone();
+        // WebDriver is Clone (a thin Arc<SessionHandle> wrapper) and quit()
+        // consumes the clone, leaving `self.driver` intact for normal drop.
+        let driver = self.driver.clone();
         tokio::spawn(async move {
-            let driver = WebDriver { handle };
             let _ = driver.quit().await;
         });
     }

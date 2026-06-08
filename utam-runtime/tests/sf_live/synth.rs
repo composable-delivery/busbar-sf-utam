@@ -207,17 +207,137 @@ pub fn default_value_for_type(utam_type: &str) -> RuntimeValue {
 
 /// Default runtime value for an arg based on name + type.
 ///
-/// We deliberately use empty strings for `string` args when there's no
-/// curated override.  Name-based "smart" guesses (e.g. "Users" for
-/// ariaLabel) are worse than empty strings in practice: empty matches
-/// nothing deterministically (`[aria-label='']` → no match → clean
-/// "not found" error, easily classified), while a specific value like
-/// "Users" matches inconsistently across pages and produces flaky
-/// stale-selector errors that aren't actually selector bugs.
+/// Used only for non-string args (numbers default to 0, booleans to false),
+/// where the default is a legitimate value to exercise with.
 ///
-/// For methods where a specific value matters, use `override_args`.
+/// String args are different: an empty string makes a parameterized selector
+/// (`[aria-label='%s']` → `[aria-label='']`) match nothing, so "calling" the
+/// member with an empty string isn't a real test — it's a guaranteed
+/// not-found that masquerades as a selector failure.  The runner therefore
+/// *skips* string-parameterized members that have no curated value (see
+/// `method_string_arg_names` / `element_selector_arg_names`) rather than
+/// fabricating one here.  Supply real values via `override_args` /
+/// `override_element_args` to actually exercise them.
 pub fn smart_default(_arg_name: &str, utam_type: &str) -> RuntimeValue {
     default_value_for_type(utam_type)
+}
+
+/// Names of an element's parameterized selector args (empty when the element
+/// has a fixed selector).  A parameterized selector can't be exercised
+/// meaningfully without a real value, so the runner skips such elements
+/// unless a curated override supplies one.
+pub fn element_selector_arg_names(po_ast: &PageObjectAst, element_name: &str) -> Vec<String> {
+    find_element(po_ast, element_name)
+        .and_then(|el| el.selector.as_ref())
+        .map(|sel| sel.args.iter().map(|a| a.name.clone()).collect())
+        .unwrap_or_default()
+}
+
+/// String-typed args a method requires (discovered by walking its compose
+/// tree + referenced element selectors).  An empty string can't satisfy
+/// these meaningfully, so the runner skips such methods unless a curated
+/// override supplies real values.
+pub fn method_string_arg_names(method: &MethodAst, po_ast: &PageObjectAst) -> Vec<String> {
+    collect_required_args(method, po_ast)
+        .into_iter()
+        .filter(|a| a.arg_type == "string")
+        .map(|a| a.name)
+        .collect()
+}
+
+/// Members of *standard* page objects that can't be exercised on a settled,
+/// standard desktop page — because they need an unavailable feature, a
+/// different form factor, or a transient/console state that isn't present.
+/// Reported as Skipped-with-reason, never failed: the object itself is
+/// standard and its other members are asserted for real.
+pub fn member_skip_reason(po_name: &str, member: &str) -> Option<&'static str> {
+    match (po_name, member) {
+        // The Copilot trigger only renders when Einstein Copilot is enabled;
+        // the wait-and-click method hard-waits for it and would time out.
+        ("global/header", "waitAndClickCoPilot") => {
+            Some("Einstein Copilot not enabled in a standard scratch org")
+        }
+        // The Agentforce setup home renders its standard chrome (page header,
+        // recent items, setup logo) but its agentic chat surface only exists
+        // when Agentforce is provisioned.
+        ("setup/agenticSetupHome", "agenticShell")
+        | ("setup/agenticSetupHome", "homeChatInput")
+        | ("setup/agenticSetupHome", "agenticSetupBroker") => {
+            Some("Agentforce not enabled in a standard scratch org")
+        }
+        // The header bundles a *mobile* global-search flow — an icon button
+        // (`button[data-key=search]`) and a mobile input
+        // (`.forceSearchInputMobile`) — that never renders on desktop
+        // Lightning (desktop search is a different component this PO doesn't
+        // model). getSearch drives that same mobile flow.
+        ("global/header", "searchInput")
+        | ("global/header", "searchIcon")
+        | ("global/header", "getSearch") => {
+            Some("mobile global-search flow; not present on desktop Lightning")
+        }
+        // The left-nav collapse toggle (`a.toggleNav`) only exists in
+        // console-style app layouts, not on standard desktop pages.
+        ("global/header", "stageLeftToggle") => {
+            Some("console-only nav toggle; absent on standard desktop pages")
+        }
+        // The in-app back button only renders after navigating within the
+        // app; it's absent on a directly-loaded page.
+        ("global/header", "backButton") => {
+            Some("in-app back button; present only after in-app navigation, not on a direct load")
+        }
+        // Transient load-state element — only in the DOM while the page is
+        // still spinning up, so it can't be resolved on a settled page.
+        ("setup/agenticSetupHome", "loadingSpinner") => {
+            Some("transient loading-state element; absent once the page has settled")
+        }
+        // The workspace-tab close button only renders for a closeable tab;
+        // the Setup workspace tab isn't closeable.
+        // navex/workspace models the record/list workspace; its `listView`
+        // element is the split list-view container, which isn't present on the
+        // Setup page (where this PO's root happens to match). Its sibling
+        // `agenticSetupHome` element is asserted for real.
+        ("navex/workspace", "listView") => {
+            Some("list-view container; not present on the Setup page context")
+        }
+        // The console workspace tab bar (one:ConsoleTabset / .oneConsoleTabset)
+        // only renders once at least one workspace sub-tab has been opened.
+        // On initial navigation to a console app before any records have been
+        // opened, the tab bar container is absent from the DOM.  The workspace
+        // manager itself (and its activeWorkspace child) ARE present, so the
+        // PO is still meaningfully exercised — the tabset element is an
+        // inherently dynamic artifact of navigation history.
+        ("navex/workspaceManager", "tabset") => Some(
+            "console workspace tab bar; absent on initial app landing before any sub-tab is opened",
+        ),
+        // The bubble's popover body is empty unless a tooltip/popover is
+        // actively displayed; primitiveBubble is a shared, separate root PO
+        // with no method to trigger one, so the content div isn't reliably
+        // drivable on a passive page.
+        ("lightning/primitiveBubble", "invisibleDiv")
+        | ("runtime_sales/lightningPrimitiveBubble", "invisibleDiv") => {
+            Some("popover body content; present only while a tooltip/popover is displayed")
+        }
+        _ => None,
+    }
+}
+
+/// Whole *standard* page objects that can't be exercised in the coverage
+/// contexts and so are Skipped-with-reason (never failed), like the gated
+/// objects. Reserved for objects that legitimately can't be loaded — e.g. a
+/// record-layout template whose `beforeLoad` waits on a selector that no
+/// longer matches current Lightning, so the page object never finishes
+/// loading. Documents the cause rather than silently passing or timing out.
+pub fn po_skip_reason(po_name: &str) -> Option<&'static str> {
+    match po_name {
+        // Both record-home templates share a generic root (`slds-template_*`)
+        // that discovery matches, but their beforeLoad blocks on a
+        // `slds-page-header_record-home` subheader that doesn't match the
+        // current Lightning record DOM, so load times out (~10s each).
+        "global/recordHomeTemplateDesktop" | "global/recordHomeWithSubheaderTemplateDesktop" => {
+            Some("record-home template beforeLoad waits on slds-page-header_record-home, which does not match current Lightning; never loads")
+        }
+        _ => None,
+    }
 }
 
 /// Page-object-specific argument overrides for methods that need real values.
@@ -436,6 +556,64 @@ mod tests {
     fn test_override_args_known() {
         let args = override_args("global/header", "getSearch").unwrap();
         assert!(matches!(args.get("searchTerm"), Some(RuntimeValue::String(_))));
+    }
+
+    #[test]
+    fn test_element_selector_arg_names() {
+        // Parameterized selector → its arg names are reported (so the runner
+        // skips it unless a curated value exists).
+        let po_json = r#"{
+            "root": true,
+            "selector": { "css": ".root" },
+            "elements": [
+                {
+                    "name": "byApi",
+                    "public": true,
+                    "selector": {
+                        "css": "div[data-id*='%s']",
+                        "args": [{ "name": "apiName", "type": "string" }]
+                    }
+                },
+                { "name": "fixed", "public": true, "selector": { "css": ".fixed" } }
+            ]
+        }"#;
+        let po: PageObjectAst = serde_json::from_str(po_json).unwrap();
+        assert_eq!(element_selector_arg_names(&po, "byApi"), vec!["apiName".to_string()]);
+        assert!(element_selector_arg_names(&po, "fixed").is_empty());
+    }
+
+    #[test]
+    fn test_method_string_arg_names() {
+        let po_json = r#"{
+            "root": true,
+            "selector": { "css": ".root" },
+            "methods": [{
+                "name": "getSearch",
+                "args": [{ "name": "searchTerm", "type": "string" }],
+                "compose": []
+            }]
+        }"#;
+        let po: PageObjectAst = serde_json::from_str(po_json).unwrap();
+        let m = &po.methods[0];
+        assert_eq!(method_string_arg_names(m, &po), vec!["searchTerm".to_string()]);
+    }
+
+    #[test]
+    fn test_member_skip_reason() {
+        assert!(member_skip_reason("global/header", "waitAndClickCoPilot").is_some());
+        assert!(member_skip_reason("global/header", "getSearch").is_some());
+        assert!(member_skip_reason("global/header", "backButton").is_some());
+        assert!(member_skip_reason("navex/workspace", "listView").is_some());
+        assert!(member_skip_reason("navex/workspaceManager", "tabset").is_some());
+        assert!(member_skip_reason("global/header", "notifications").is_none());
+        assert!(member_skip_reason("some/other", "whatever").is_none());
+    }
+
+    #[test]
+    fn test_po_skip_reason() {
+        assert!(po_skip_reason("global/recordHomeTemplateDesktop").is_some());
+        assert!(po_skip_reason("global/recordHomeWithSubheaderTemplateDesktop").is_some());
+        assert!(po_skip_reason("global/header").is_none());
     }
 
     #[test]

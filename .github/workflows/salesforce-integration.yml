@@ -14,13 +14,19 @@ on:
       - "utam-test/**"
       - "utam-core/**"
       - "salesforce-pageobjects/**"
+      - "force-app/**"
       - ".github/workflows/salesforce-integration.yml"
+      - ".github/workflows/provision-scratch-org.yml"
+      - ".github/workflows/deploy-baseline-metadata.yml"
   push:
     branches: [main]
     paths:
       - "utam-runtime/**"
       - "salesforce-pageobjects/**"
+      - "force-app/**"
       - ".github/workflows/salesforce-integration.yml"
+      - ".github/workflows/provision-scratch-org.yml"
+      - ".github/workflows/deploy-baseline-metadata.yml"
 
 # contents: write needed to push to gh-pages branch
 permissions:
@@ -47,7 +53,57 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Compile every page object
+        env:
+          PAGEOBJECT_COVERAGE_DIR: ${{ github.workspace }}/target/pageobject-coverage
         run: cargo test -p utam-runtime --test compiled_page_objects --all-features -- --nocapture
+
+      - name: Build page object definition coverage report
+        if: always()
+        run: |
+          DEF="target/pageobject-coverage/definition-coverage.json"
+          if [ -f "$DEF" ]; then
+            python3 scripts/build_pageobject_coverage_report.py \
+              --definition "$DEF" \
+              --output-dir target/pageobject-coverage
+          else
+            python3 scripts/build_pageobject_coverage_report.py \
+              --output-dir target/pageobject-coverage
+          fi
+          cat target/pageobject-coverage/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload page object definition coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pageobject-definition-coverage
+          path: target/pageobject-coverage/
+          retention-days: 14
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Ensure a valid shared scratch org exists and its auth URL is published
+  # to the `DevHub Scratch` environment as SCRATCH_ORG_AUTH_URL.  Reuses the
+  # existing org when it is still well within its lifetime, otherwise creates
+  # a fresh one (from snapshot or definition).  The `live` job reads the
+  # resulting secret so the tests always run against a current org instead of
+  # a hand-managed SF_AUTH_URL that silently expires.
+  # ──────────────────────────────────────────────────────────────────────────
+  provision:
+    name: Provision shared scratch org
+    uses: ./.github/workflows/provision-scratch-org.yml
+    secrets: inherit
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Deploy the force-app baseline metadata (UTAM Console app + utility bar +
+  # access permission set) into the freshly provisioned org so the live tests
+  # drive an org that actually contains the console/utility-bar surfaces.  Runs
+  # ONCE per workflow (not per matrix cell) and is fatal on failure so a broken
+  # baseline can't silently degrade coverage to "surface absent" skips.
+  # ──────────────────────────────────────────────────────────────────────────
+  deploy_metadata:
+    name: Deploy baseline metadata
+    needs: provision
+    uses: ./.github/workflows/deploy-baseline-metadata.yml
+    secrets: inherit
 
   # ──────────────────────────────────────────────────────────────────────────
   # Live integration tests.  Matrix over driver — every page context runs
@@ -57,7 +113,19 @@ jobs:
   live:
     name: Live (${{ matrix.driver }})
     runs-on: ubuntu-latest
-    environment: salesforce
+    # Low-privilege environment: holds ONLY the provisioned scratch org's
+    # auth URL (SCRATCH_ORG_AUTH_URL), published by the provision workflow.
+    # The Dev Hub management credentials (Dev Hub auth + GitHub-App key) stay
+    # isolated in the `DevHub Scratch` environment, which the live tests never
+    # touch — they just need a Salesforce org to drive.
+    environment: Scratch Org
+    # Live runs only AFTER the baseline metadata is deployed: provision mints
+    # the org, deploy_metadata seeds force-app into it, THEN the tests drive an
+    # org guaranteed to contain the seeded surfaces. deploy_metadata is fatal,
+    # so a broken baseline fails the pipeline here instead of silently
+    # degrading coverage to "surface absent". The jobs run in series, never in
+    # parallel.
+    needs: [provision, deploy_metadata]
     strategy:
       # Both matrix cells share one Salesforce org but safely: each run
       # tags its seeded records with a unique `{driver}-{timestamp}`
@@ -96,7 +164,8 @@ jobs:
 
       - name: Run live tests
         env:
-          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
+          # Auth URL for the shared scratch org, refreshed by the provision job.
+          SF_AUTH_URL: ${{ secrets.SCRATCH_ORG_AUTH_URL }}
           CHROMEDRIVER_URL: "http://localhost:9515"
           ALLURE_RESULTS_DIR: "/tmp/allure-results"
           DISPLAY: ":99"
@@ -120,10 +189,46 @@ jobs:
 
           FILTER="${{ inputs.test_filter }}"
           echo "=== Salesforce Live Tests (UTAM_DRIVER=${UTAM_DRIVER}) ==="
+          # `cargo test -- --ignored` exits 0 even when it runs ZERO tests
+          # (e.g. a filter that matches nothing), which would let the job go
+          # green without ever touching the org.  Capture output so we can
+          # assert real work happened — no silent pass.
+          test_exit=0
           if [ -n "$FILTER" ]; then
-            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --ignored --nocapture --test-threads=1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- "$FILTER" --ignored --nocapture --test-threads=1 2>&1 | tee /tmp/cargo-test.log
+            test_exit=${PIPESTATUS[0]}
           else
-            cargo test -p utam-runtime --test salesforce_live --all-features -- --ignored --nocapture --test-threads=1
+            cargo test -p utam-runtime --test salesforce_live --all-features -- --ignored --nocapture --test-threads=1 2>&1 | tee /tmp/cargo-test.log
+            test_exit=${PIPESTATUS[0]}
+          fi
+
+          # Guard against a silent no-op: at least one test must have run.
+          if ! grep -qE 'running [1-9][0-9]* test' /tmp/cargo-test.log; then
+            echo "::error::Live test run executed 0 tests (filter='${FILTER}') — the Salesforce org was never exercised. Failing to avoid a silent pass."
+            exit 1
+          fi
+
+          # Propagate cargo's REAL exit code.  `tee` always exits 0, so the
+          # pipeline's status is tee's, not cargo's — and this runner's
+          # default shell does NOT apply `-o pipefail`, so a failing test run
+          # (e.g. 3 failed coverage tests) was silently swallowed and the job
+          # went green.  `${PIPESTATUS[0]}` captured above is cargo's own
+          # status; fail the step on any non-zero value.
+          if [ "$test_exit" -ne 0 ]; then
+            echo "::error::Live tests failed (cargo test exit ${test_exit}) — see the test failures above."
+            exit "$test_exit"
+          fi
+
+          # On the default (unfiltered) CI path the coverage tests MUST emit
+          # per-page-object Allure results.  Zero result files means auth or
+          # navigation failed before any assertion ran — fail loudly.
+          if [ -z "$FILTER" ]; then
+            RESULT_COUNT=$(ls /tmp/allure-results/*-result.json 2>/dev/null | wc -l)
+            if [ "$RESULT_COUNT" -eq 0 ]; then
+              echo "::error::No Allure results were produced — the org did not yield any page-object coverage. Failing to avoid a silent pass."
+              exit 1
+            fi
+            echo "Produced ${RESULT_COUNT} Allure result file(s)."
           fi
 
       - name: Stop video recording
@@ -173,7 +278,7 @@ jobs:
   # ──────────────────────────────────────────────────────────────────────────
   report:
     name: Publish Allure report
-    needs: [live]
+    needs: [codegen, live]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -184,6 +289,14 @@ jobs:
         with:
           pattern: allure-results-*
           path: /tmp/artifacts/
+
+      - name: Download page object definition coverage artifact
+        if: always()
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: pageobject-definition-coverage
+          path: /tmp/pageobject-definition/
 
       - name: Merge results into a single directory
         run: |
@@ -200,6 +313,22 @@ jobs:
           fi
           COUNT=$(ls /tmp/allure-results/*-result.json 2>/dev/null | wc -l)
           echo "Merged ${COUNT} result files"
+
+      - name: Build page object coverage report
+        if: always()
+        run: |
+          DEF="/tmp/pageobject-definition/definition-coverage.json"
+          if [ -f "$DEF" ]; then
+            python3 scripts/build_pageobject_coverage_report.py \
+              --definition "$DEF" \
+              --allure-results /tmp/allure-results \
+              --output-dir /tmp/pageobject-coverage
+          else
+            python3 scripts/build_pageobject_coverage_report.py \
+              --allure-results /tmp/allure-results \
+              --output-dir /tmp/pageobject-coverage
+          fi
+          cat /tmp/pageobject-coverage/summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Generate Allure report
         id: allure
@@ -245,6 +374,10 @@ jobs:
           if [ -d /tmp/allure-report ]; then
             cp -r /tmp/allure-report/* "$DEPLOY_DIR/${BRANCH_DIR}/"
           fi
+          if [ -d /tmp/pageobject-coverage ]; then
+            mkdir -p "$DEPLOY_DIR/${BRANCH_DIR}/pageobject-coverage"
+            cp -r /tmp/pageobject-coverage/* "$DEPLOY_DIR/${BRANCH_DIR}/pageobject-coverage/"
+          fi
 
           # Index page listing all branch reports.
           {
@@ -289,6 +422,7 @@ jobs:
             echo "|--------|-------|"
             echo "| Matrix | WebDriver + CDP (both drivers exercised) |"
             echo "| Allure Report | [View](${PAGES_URL}/${BRANCH_DIR}/) |"
+            echo "| Page Object Coverage | [JSON](${PAGES_URL}/${BRANCH_DIR}/pageobject-coverage/pageobjects.json) / [CSV](${PAGES_URL}/${BRANCH_DIR}/pageobject-coverage/pageobjects.csv) |"
             echo "| All Reports | [Index](${PAGES_URL}/) |"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"

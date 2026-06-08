@@ -8,6 +8,7 @@
 use std::collections::HashMap;
 
 use super::failure::FailureKind;
+use super::inventory;
 use super::runner::{test_page_object, Outcome};
 use super::session::SalesforceSession;
 use utam_runtime::discovery::find_known_page_objects;
@@ -47,13 +48,42 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
         methods_skipped: 0,
         elements_passed: 0,
         elements_failed: 0,
+        elements_skipped: 0,
         loaded: true,
         failure_kinds: HashMap::new(),
     };
     let mut loaded_count = 0;
     let mut broken_count = 0;
+    let mut skipped_count = 0;
 
     for m in &matched {
+        // Honest scoping: an object that is out of scope for a standard
+        // scratch org (managed package / Experience / CMS feature) or that
+        // can't be loaded in these contexts (e.g. a stale-beforeLoad template)
+        // is recorded as Skipped with the reason — never failed, never a
+        // silent pass.
+        let skip_reason =
+            inventory::gated_reason(&m.name).or_else(|| super::synth::po_skip_reason(&m.name));
+        if let Some(reason) = skip_reason {
+            eprintln!("  [{:6}] {:48} skipped: {reason}", "SKIP", m.name);
+            results.push(
+                TestResultBuilder::new(m.name.clone())
+                    .full_name(format!("salesforce_live::generic::{page_context}::{}", m.name))
+                    .label("epic", "Salesforce Browser Testing")
+                    .label("feature", "Page Object Coverage")
+                    .label("story", m.name.clone())
+                    .label("suite", format!("Generic — {page_context}"))
+                    .label("severity", "minor")
+                    .parameter("driver", session.driver_name())
+                    .parameter("page_object", m.name.clone())
+                    .parameter("page_context", page_context)
+                    .parameter("skip_reason", reason)
+                    .finish(AllureStatus::Skipped),
+            );
+            skipped_count += 1;
+            continue;
+        }
+
         let (result, outcome) = test_page_object(session, &m.name, page_context).await;
         if outcome.loaded {
             loaded_count += 1;
@@ -62,6 +92,7 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
             totals.methods_skipped += outcome.methods_skipped;
             totals.elements_passed += outcome.elements_passed;
             totals.elements_failed += outcome.elements_failed;
+            totals.elements_skipped += outcome.elements_skipped;
         } else {
             broken_count += 1;
         }
@@ -77,13 +108,14 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
             AllureStatus::Unknown => "?",
         };
         eprintln!(
-            "  [{status:6}] {:48} methods: {}p/{}f/{}s  elements: {}p/{}f",
+            "  [{status:6}] {:48} methods: {}p/{}f/{}s  elements: {}p/{}f/{}s",
             m.name,
             outcome.methods_passed,
             outcome.methods_failed,
             outcome.methods_skipped,
             outcome.elements_passed,
             outcome.elements_failed,
+            outcome.elements_skipped,
         );
         results.push(result);
     }
@@ -94,16 +126,20 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
     sorted_kinds.sort_by_key(|b| std::cmp::Reverse(b.1));
 
     eprintln!(
-        "\n  Summary [{page_context}]: {} POs matched, {} loaded, {} broken",
+        "\n  Summary [{page_context}]: {} POs matched, {} loaded, {} broken, {} out-of-scope",
         matched.len(),
         loaded_count,
-        broken_count
+        broken_count,
+        skipped_count
     );
     eprintln!(
         "    Methods: {} passed, {} failed, {} skipped",
         totals.methods_passed, totals.methods_failed, totals.methods_skipped
     );
-    eprintln!("    Elements: {} passed, {} failed", totals.elements_passed, totals.elements_failed);
+    eprintln!(
+        "    Elements: {} passed, {} failed, {} skipped",
+        totals.elements_passed, totals.elements_failed, totals.elements_skipped
+    );
     if !sorted_kinds.is_empty() {
         eprintln!("    Failure breakdown:");
         for (kind, count) in &sorted_kinds {
@@ -116,9 +152,12 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
         .full_name(format!("salesforce_live::coverage::{page_context}::summary"))
         .description(format!(
             "Aggregate coverage across {} page objects discovered on the {} page. \
-             Each matched page object was loaded, every method was called with \
-             synthesized or curated arguments, every public element was resolved. \
-             Failure kinds are aggregated below to surface systemic patterns.",
+             Each matched page object was loaded; every method was EXECUTED against the live DOM \
+             with curated or synthesized arguments and its return value type-checked; every \
+             public element was resolved against the live DOM. This is a contract/smoke level \
+             check of the page-object↔DOM binding — it does NOT assert behavioral outcomes, and \
+             parameterized members without a curated value are counted under *_skipped, not \
+             passed. Failure kinds are aggregated below to surface systemic patterns.",
             matched.len(),
             page_context
         ))
@@ -132,11 +171,13 @@ pub async fn discover_and_test(session: &SalesforceSession, page_context: &str) 
         .parameter("matched", matched.len().to_string())
         .parameter("loaded", loaded_count.to_string())
         .parameter("broken", broken_count.to_string())
+        .parameter("out_of_scope", skipped_count.to_string())
         .parameter("methods_passed", totals.methods_passed.to_string())
         .parameter("methods_failed", totals.methods_failed.to_string())
         .parameter("methods_skipped", totals.methods_skipped.to_string())
         .parameter("elements_passed", totals.elements_passed.to_string())
         .parameter("elements_failed", totals.elements_failed.to_string())
+        .parameter("elements_skipped", totals.elements_skipped.to_string())
         .step(
             StepBuilder::start("discovery")
                 .parameter("page_objects_matched", matched.len().to_string())

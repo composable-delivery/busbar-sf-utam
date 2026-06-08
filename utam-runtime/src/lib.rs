@@ -33,7 +33,7 @@ pub use registry::PageObjectRegistry;
 pub use driver::ThirtyfourDriver;
 
 #[cfg(feature = "cdp")]
-pub use driver::CdpDriver;
+pub use driver::{CdpDriver, CookieData, SessionState};
 
 pub mod prelude {
     pub use crate::driver::{ElementHandle, Selector, UtamDriver};

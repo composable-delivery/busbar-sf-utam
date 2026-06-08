@@ -3,8 +3,11 @@
 //! Provides methods for focus, blur, scroll, and move operations.
 //! This is the foundation trait that other interaction traits extend.
 
+use std::sync::Arc;
+
 use async_trait::async_trait;
-use thirtyfour::{WebDriver, WebElement};
+use thirtyfour::session::handle::SessionHandle;
+use thirtyfour::WebElement;
 
 use crate::error::UtamResult;
 
@@ -17,13 +20,15 @@ pub trait Actionable: Send + Sync {
     /// Get the underlying WebElement
     fn inner(&self) -> &WebElement;
 
-    /// Get a WebDriver instance from the element's session handle
+    /// Get the element's session handle.
     ///
-    /// This method constructs a WebDriver by cloning the element's session handle.
-    /// The `handle` field is a public field of both WebDriver and WebElement in thirtyfour,
-    /// making this a safe and stable pattern.
-    fn driver(&self) -> WebDriver {
-        WebDriver { handle: self.inner().handle.clone() }
+    /// thirtyfour 0.37 made `WebElement::handle` a private field exposed via a
+    /// `handle()` accessor, and `WebDriver` can no longer be constructed from a
+    /// handle outside the crate. `SessionHandle` carries every operation these
+    /// traits use (`execute`, `action_chain`), and `WebDriver` itself just
+    /// derefs to `Arc<SessionHandle>`, so we work with the handle directly.
+    fn driver(&self) -> Arc<SessionHandle> {
+        self.inner().handle().clone()
     }
 
     /// Focus on this element
