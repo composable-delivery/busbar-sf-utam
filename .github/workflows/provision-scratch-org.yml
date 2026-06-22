@@ -80,7 +80,7 @@ jobs:
       snapshot_name: ${{ steps.reuse.outputs.snapshot_name || steps.provision.outputs.snapshot_name }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Mint GitHub App token
         id: app-token
